@@ -41,3 +41,92 @@
   color: #888;
 }
 
+.banner {
+  padding: 20px;
+}
+
+.form input {
+  width: 100%; /* Rende gli input larghi */
+  padding: 10px;
+  margin: 10px 0;
+  border: 2px solid #3498db; /* Bordo blu */
+  border-radius: 10px; /* Angoli stondati */
+  font-size: 16px;
+  outline: none; /* Rimuove il bordo blu quando clicchi */
+  transition: 0.3s;
+}
+
+.form input:focus {
+  border-color: #2ecc71; /* Cambia colore quando clicchi */
+  box-shadow: 0 0 8px rgba(46, 204, 113, 0.5);
+}
+
+.buttonForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; /* Distanza tra gli elementi */
+  padding: 20px;
+  border-radius: 15px; /* Angoli stondati */
+  background-color: #f8f9fa; /* Colore di sfondo chiaro */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Ombra leggera */
+}
+
+.buttonForm input[type="file"] {
+  padding: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.buttonForm button {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px; /* Bottoni stondati */
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.buttonForm button:first-of-type {
+  background-color: #28a745; /* Verde per "Salva" */
+  color: white;
+}
+
+.buttonForm button:last-of-type {
+  background-color: #dc3545; /* Rosso per "Annulla" */
+  color: white;
+}
+
+.buttonForm button:hover {
+  opacity: 0.8;
+}
+
+.preview-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 10px;
+  border: 2px solid #ccc;
+}
+
+.delete-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-top: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.delete-button:hover {
+  background-color: darkred;
+}
+
+select {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
