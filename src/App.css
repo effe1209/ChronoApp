@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  font-family:sans-serif;
 }
 
 .logo {
@@ -46,7 +47,7 @@
 }
 
 .form input {
-  width: 100%; /* Rende gli input larghi */
+  width: 70%; /* Rende gli input larghi */
   padding: 10px;
   margin: 10px 0;
   border: 2px solid #3498db; /* Bordo blu */
@@ -62,14 +63,11 @@
 }
 
 .buttonForm {
-  display: flex;
-  flex-direction: column;
+  justify-content: center;
+  flex-direction:row;
   align-items: center;
-  gap: 10px; /* Distanza tra gli elementi */
-  padding: 20px;
-  border-radius: 15px; /* Angoli stondati */
-  background-color: #f8f9fa; /* Colore di sfondo chiaro */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Ombra leggera */
+  gap: 20px; /* Distanza tra gli elementi */
+  display:flex;
 }
 
 .buttonForm input[type="file"] {
@@ -93,7 +91,7 @@
 }
 
 .buttonForm button:last-of-type {
-  background-color: #dc3545; /* Rosso per "Annulla" */
+  background-color: #b10112; /* Rosso per "Annulla" */
   color: white;
 }
 
@@ -111,17 +109,36 @@
 }
 
 .delete-button {
-  background-color: red;
-  color: white;
+  color: rgb(255, 0, 0);
   border: none;
-  padding: 5px 10px;
+  padding: 7px 10px;
   margin-top: 5px;
   cursor: pointer;
   border-radius: 5px;
+  align-items: center;
+  margin-left: 40%;
+  margin-right: 40%;
 }
 
 .delete-button:hover {
-  background-color: darkred;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px; /* Bottoni stondati */
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: rgba(255, 0, 0, 0.781);
+  color: white;
+}
+
+.delete-button button {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px; /* Bottoni stondati */
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: rgb(105, 25, 25);
+  color: white;
 }
 
 select {
