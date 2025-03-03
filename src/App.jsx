@@ -1,8 +1,12 @@
+import { storage } from "./firebase"; 
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { useState, useEffect } from "react";
 import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, db, collection, addDoc, getDocs, deleteDoc, doc } from "./firebase";
 import "./App.css"; // Importa il file CSS
+import { useRef } from "react";
 
 function App() {
+  const fileInputRef = useRef(null);
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,10 +46,17 @@ function App() {
   };
 
   const handleAddWatch = async () => {
-    if (newWatch.name && newWatch.brand && newWatch.year && newWatch.movement) {
+    if (
+      newWatch.name.trim() !== "" &&
+      newWatch.brand.trim() !== "" &&
+      newWatch.year > 0 &&
+      newWatch.movement.trim() !== "" &&
+      newWatch.image.trim() !== "" // Assicurati che l'immagine sia presente
+    ) {
       try {
+        console.log("Sto salvando:", newWatch); // DEBUG
         await addDoc(collection(db, "watches"), { ...newWatch, userId: user.uid });
-        fetchWatches();
+        fetchWatches(); // Ricarica gli orologi
         setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" });
         setMessage("Orologio aggiunto con successo!");
       } catch (error) {
@@ -55,37 +66,68 @@ function App() {
       setMessage("Compila tutti i campi!");
     }
   };
+  
 
   const fetchWatches = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "watches"));
-      const userWatches = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(watch => watch.userId === user?.uid);
+      const userWatches = querySnapshot.docs
+        .map(doc => {
+          console.log("Dati recuperati:", doc.data()); // DEBUG
+          return { id: doc.id, ...doc.data() };
+        })
+        .filter(watch => watch.userId === user?.uid);
+  
       setWatches(userWatches);
     } catch (error) {
       setMessage(error.message);
     }
   };
+  
 
-  const handleDeleteWatch = async (id) => {
+  const handleDeleteWatch = async (id, imageUrl) => {
     try {
-      await deleteDoc(doc(db, "watches", id));
+      if (imageUrl) {
+        const imageRef = ref(storage, imageUrl); // Usa correttamente Firebase Storage
+        await deleteObject(imageRef);
+      }
+  
+      await deleteDoc(doc(db, "watches", id)); // Elimina il documento Firestore
       fetchWatches();
       setMessage("Orologio eliminato con successo!");
     } catch (error) {
-      setMessage(error.message);
+      setMessage("Errore durante l'eliminazione: " + error.message);
     }
   };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewWatch({ ...newWatch, image: reader.result });
-      };
-      reader.readAsDataURL(file);
+  const handleCancel = () => {
+    setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" });
+    setMessage(null);
+  
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // Resetta il file input
     }
-  };
+  };  
+  
+
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+  
+    const storageRef = ref(storage, `watches/${user.uid}/${file.name}`);
+  
+    try {
+      await uploadBytes(storageRef, file);
+      const imageUrl = await getDownloadURL(storageRef); // Ottieni l'URL pubblico
+  
+      console.log("URL immagine:", imageUrl); // DEBUG
+      setNewWatch((prev) => ({ ...prev, image: imageUrl }));
+      setMessage("Immagine caricata con successo!");
+    } catch (error) {
+      setMessage("Errore nel caricamento dell'immagine: " + error.message);
+    }
+  };  
+  
 
   return (
     <div className="container">
@@ -124,12 +166,12 @@ function App() {
             </select>
             <div style={{ marginBottom: "10px" }}></div> {/* Spazio extra */}
             
-              <input type="file" accept="image/*" onChange={handleImageChange} />
+            <input type="file" accept="image/*" onChange={handleImageChange} ref={fileInputRef} />
               {newWatch.image && <img src={newWatch.image} alt="Anteprima" className="preview-image" />}
               <div style={{ marginBottom: "10px" }}></div> {/* Spazio extra */}
             <div className="buttonForm">
               <button onClick={handleAddWatch}>Salva</button>
-              <button onClick={() => setShowBanner(false)}>Annulla</button>
+              <button onClick={handleCancel}>Annulla</button>
             </div>
           </div>
 
@@ -138,10 +180,15 @@ function App() {
           <div className="watch-list">
             {watches.map((watch) => (
               <div key={watch.id} className="watch-card">
+                {watch.image ? (
+                  <img src={watch.image} alt={watch.name} className="watch-image" onError={(e) => e.target.style.display = 'none'} />
+                ) : (
+                  <p>Nessuna immagine disponibile</p>
+                )}
                 <h3>{watch.name}</h3>
                 <p>{watch.brand} - {watch.year} - {watch.movement}</p>
                 <div className="delete-button">
-                  <button className="delete-btn" onClick={() => handleDeleteWatch(watch.id)}>Elimina</button>
+                  <button className="delete-btn" onClick={() => handleDeleteWatch(watch.id, watch.image)}>Elimina</button>
                 </div>
               </div>
             ))}
