@@ -1,9 +1,13 @@
-import { storage } from "./firebase"; 
-import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
-import { useState, useEffect } from "react";
-import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, db, collection, addDoc, getDocs, deleteDoc, doc } from "./firebase";
-import "./App.css"; // Importa il file CSS
-import { useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import { createClient } from '@supabase/supabase-js';
+import imageCompression from 'browser-image-compression';
+import "./App.css";
+
+
+const supabaseUrl = "https://htopqijsvgaqjrvvgpjh.supabase.co";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0b3BxaWpzdmdhcWpydnZncGpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwMjQyOTcsImV4cCI6MjA1NjYwMDI5N30.pVzMwoPz1VL3EikMUbDaBwA6X47ehZb2Wu-P9-wk2a0"
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 function App() {
   const fileInputRef = useRef(null);
@@ -15,23 +19,46 @@ function App() {
   const [newWatch, setNewWatch] = useState({ name: "", brand: "", year: "", image: "", movement: "" });
 
   useEffect(() => {
-    if (user) fetchWatches();
-  }, [user]);
+    const fetchUser = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            setUser(session.user);
+            fetchWatches();
+        }
+    };
+    fetchUser();
+  }, []);
 
   const handleRegister = async () => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      setUser(userCredential.user);
-      setMessage("Registrazione avvenuta con successo!");
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        if (error) throw error;
+
+        setMessage("Registrazione avvenuta con successo! Controlla la tua email per confermare l'account.");
+
+        // Controlla la sessione dopo la registrazione
+        setTimeout(async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                setUser(session.user);
+            }
+        }, 3000); // Attendi qualche secondo per la sincronizzazione
     } catch (error) {
-      setMessage(error.message);
+        setMessage(error.message);
     }
-  };
+};
+
+
 
   const handleLogin = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      setUser(userCredential.user);
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      setUser(data.user);
+      setMessage("Accesso effettuato con successo!");
+
+      if (error) throw error;
+      setUser(user);
       setMessage("Accesso effettuato con successo!");
     } catch (error) {
       setMessage(error.message);
@@ -39,7 +66,7 @@ function App() {
   };
 
   const handleLogout = async () => {
-    await signOut(auth);
+    await supabase.auth.signOut();
     setUser(null);
     setWatches([]);
     setMessage("Disconnessione effettuata.");
@@ -50,17 +77,18 @@ function App() {
       newWatch.name.trim() !== "" &&
       newWatch.brand.trim() !== "" &&
       newWatch.year > 0 &&
-      newWatch.movement.trim() !== "" &&
-      newWatch.image.trim() !== "" // Assicurati che l'immagine sia presente
+      newWatch.movement.trim() !== ""
     ) {
       try {
-        console.log("Sto salvando:", newWatch); // DEBUG
-        await addDoc(collection(db, "watches"), { ...newWatch, userId: user.uid });
-        fetchWatches(); // Ricarica gli orologi
+        const { data, error } = await supabase
+          .from('watches')
+          .insert([{ ...newWatch, userId: user.id }]);  // Aggiungi l'ID utente
+        if (error) throw error;
+        fetchWatches();
         setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" });
         setMessage("Orologio aggiunto con successo!");
       } catch (error) {
-        setMessage(error.message);
+        setMessage("Errore durante l'inserimento: " + error.message);
       }
     } else {
       setMessage("Compila tutti i campi!");
@@ -68,15 +96,89 @@ function App() {
   };
   
 
+  const uploadImage = async (file) => {
+    // Controlla e aggiorna la sessione
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session) {
+        console.error("Errore nel recupero della sessione:", sessionError?.message);
+        return null;
+    }
+
+    const user = session.user; // Prende i dati aggiornati dell'utente
+    if (!user) {
+        console.error("L'utente non è autenticato!");
+        return null;
+    }
+
+    const filePath = `watches/${user.id}/${Date.now()}-${file.name}`;
+
+    const { data, error } = await supabase.storage
+        .from('fotoWatch')
+        .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false,
+            contentType: file.type
+        });
+
+    if (error) {
+        console.error("Errore nel caricamento dell'immagine:", error.message);
+        return null;
+    }
+
+    return filePath;
+};
+
+
+  const deleteImage = async (imageUrl) => {
+    if (!imageUrl) return;
+
+    const filePath = imageUrl.split('/storage/v1/object/public/images/')[1];
+
+    const { error } = await supabase.storage
+      .from('images')
+      .remove([filePath]);
+
+    if (error) {
+      console.error("Errore nell'eliminazione dell'immagine:", error.message);
+    }
+  };
+
+  const handleDeleteWatch = async (id, imageUrl) => {
+    try {
+      if (imageUrl) {
+        await deleteImage(imageUrl);
+      }
+
+      const { error } = await supabase
+        .from('watches')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+      fetchWatches();
+      setMessage("Orologio eliminato con successo!");
+    } catch (error) {
+      setMessage("Errore durante l'eliminazione: " + error.message);
+    }
+  };
+
   const fetchWatches = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, "watches"));
-      const userWatches = querySnapshot.docs
-        .map(doc => {
-          console.log("Dati recuperati:", doc.data()); // DEBUG
-          return { id: doc.id, ...doc.data() };
-        })
-        .filter(watch => watch.userId === user?.uid);
+      const { data, error } = await supabase
+        .from('watches')
+        .select('*')
+        .eq('userId', user.id);  // Usa l'ID dell'utente per filtrare gli orologi
+      if (error) throw error;
+  
+      const userWatches = await Promise.all(data.map(async (watch) => {
+        if (watch.image) {
+          const { publicURL, error } = supabase.storage
+            .from('fotoWatch')
+            .getPublicUrl(watch.image);
+          if (error) throw error;
+          watch.imageUrl = publicURL;
+        }
+        return watch;
+      }));
   
       setWatches(userWatches);
     } catch (error) {
@@ -85,49 +187,39 @@ function App() {
   };
   
 
-  const handleDeleteWatch = async (id, imageUrl) => {
-    try {
-      if (imageUrl) {
-        const imageRef = ref(storage, imageUrl); // Usa correttamente Firebase Storage
-        await deleteObject(imageRef);
-      }
-  
-      await deleteDoc(doc(db, "watches", id)); // Elimina il documento Firestore
-      fetchWatches();
-      setMessage("Orologio eliminato con successo!");
-    } catch (error) {
-      setMessage("Errore durante l'eliminazione: " + error.message);
-    }
-  };
-
   const handleCancel = () => {
     setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" });
     setMessage(null);
-  
+
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // Resetta il file input
+      fileInputRef.current.value = "";
     }
-  };  
-  
+  };
 
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-  
-    const storageRef = ref(storage, `watches/${user.uid}/${file.name}`);
-  
+
+    const options = {
+      maxSizeMB: 0.2,
+      maxWidthOrHeight: 800,
+      useWebWorker: true,
+    };
+
     try {
-      await uploadBytes(storageRef, file);
-      const imageUrl = await getDownloadURL(storageRef); // Ottieni l'URL pubblico
-  
-      console.log("URL immagine:", imageUrl); // DEBUG
-      setNewWatch((prev) => ({ ...prev, image: imageUrl }));
-      setMessage("Immagine caricata con successo!");
+      const compressedFile = await imageCompression(file, options);
+      const imageUrl = await uploadImage(compressedFile);
+
+      if (imageUrl) {
+        setNewWatch((prev) => ({ ...prev, image: imageUrl }));
+        setMessage("Immagine caricata con successo!");
+      } else {
+        setMessage("Errore nel caricamento dell'immagine.");
+      }
     } catch (error) {
       setMessage("Errore nel caricamento dell'immagine: " + error.message);
     }
-  };  
-  
+  };
 
   return (
     <div className="container">
@@ -156,7 +248,7 @@ function App() {
             <input type="text" placeholder="Nome" value={newWatch.name} onChange={(e) => setNewWatch({ ...newWatch, name: e.target.value })} />
             <input type="text" placeholder="Marca" value={newWatch.brand} onChange={(e) => setNewWatch({ ...newWatch, brand: e.target.value })} />
             <input type="number" placeholder="Anno" value={newWatch.year} onChange={(e) => setNewWatch({ ...newWatch, year: e.target.value })} />
-            <div style={{ marginBottom: "10px" }}></div> {/* Spazio extra */}
+            <div style={{ marginBottom: "10px" }}></div>
             <label><strong>Movimento: </strong></label>
             <select value={newWatch.movement} onChange={(e) => setNewWatch({ ...newWatch, movement: e.target.value })}>
               <option value="">Seleziona il movimento</option>
@@ -164,24 +256,28 @@ function App() {
               <option value="Carica Manuale">Carica Manuale</option>
               <option value="Quarzo">Quarzo</option>
             </select>
-            <div style={{ marginBottom: "10px" }}></div> {/* Spazio extra */}
-            
+            <div style={{ marginBottom: "10px" }}></div>
             <input type="file" accept="image/*" onChange={handleImageChange} ref={fileInputRef} />
-              {newWatch.image && <img src={newWatch.image} alt="Anteprima" className="preview-image" />}
-              <div style={{ marginBottom: "10px" }}></div> {/* Spazio extra */}
+            {newWatch.image && <img src={newWatch.image} alt="Anteprima" className="preview-image" />}
+            <div style={{ marginBottom: "10px" }}></div>
             <div className="buttonForm">
               <button onClick={handleAddWatch}>Salva</button>
               <button onClick={handleCancel}>Annulla</button>
             </div>
           </div>
 
-          <div style={{ marginBottom: "50px" }}></div> {/* Spazio extra */}
+          <div style={{ marginBottom: "50px" }}></div>
           <h2>Lista Orologi</h2>
           <div className="watch-list">
             {watches.map((watch) => (
               <div key={watch.id} className="watch-card">
-                {watch.image ? (
-                  <img src={watch.image} alt={watch.name} className="watch-image" onError={(e) => e.target.style.display = 'none'} />
+                {watch.imageUrl ? (
+                  <img
+                    src={watch.imageUrl}
+                    alt={watch.name}
+                    className="watch-image"
+                    onError={(e) => { e.target.src = "/fallback-image.jpg"; }}
+                  />
                 ) : (
                   <p>Nessuna immagine disponibile</p>
                 )}
