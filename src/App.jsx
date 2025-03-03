@@ -18,6 +18,20 @@ function App() {
   const [watches, setWatches] = useState([]);
   const [newWatch, setNewWatch] = useState({ name: "", brand: "", year: "", image: "", movement: "" });
 
+  const testConnection = async () => {
+    const { data, error } = await supabase
+      .from('watches') // Assicurati che il nome della tabella sia corretto
+      .select('*');
+    
+    if (error) {
+      console.error("Errore nella connessione:", error);
+    } else {
+      console.log("Dati ricevuti:", data);
+    }
+  };
+  
+  testConnection();
+  
   useEffect(() => {
     const fetchUser = async () => {
         const { data: { session } } = await supabase.auth.getSession();
@@ -76,22 +90,24 @@ function App() {
     if (
       newWatch.name.trim() !== "" &&
       newWatch.brand.trim() !== "" &&
-      newWatch.year > 0 &&
-      newWatch.movement.trim() !== ""
+      newWatch.year > 0 && !isNaN(newWatch.year) &&
+      newWatch.movement.trim() !== "" &&
+      (newWatch.image.trim() === "" || isValidImage(newWatch.image))
     ) {
       try {
         const { data, error } = await supabase
           .from('watches')
-          .insert([{ ...newWatch, userId: user.id }]);  // Aggiungi l'ID utente
+          .insert([{ ...newWatch, userId: user.id }]);
         if (error) throw error;
-        fetchWatches();
+  
+        setWatches((prev) => [...prev, data[0]]); // Aggiungi l'orologio appena inserito
         setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" });
         setMessage("Orologio aggiunto con successo!");
       } catch (error) {
         setMessage("Errore durante l'inserimento: " + error.message);
       }
     } else {
-      setMessage("Compila tutti i campi!");
+      setMessage("Compila tutti i campi correttamente!");
     }
   };
   
@@ -146,9 +162,9 @@ function App() {
   const handleDeleteWatch = async (id, imageUrl) => {
     try {
       if (imageUrl) {
-        await deleteImage(imageUrl);
+        await deleteImage(imageUrl); // Elimina l'immagine prima
       }
-
+  
       const { error } = await supabase
         .from('watches')
         .delete()
@@ -160,6 +176,7 @@ function App() {
       setMessage("Errore durante l'eliminazione: " + error.message);
     }
   };
+  
 
   const fetchWatches = async () => {
     try {
@@ -199,17 +216,17 @@ function App() {
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
+  
     const options = {
       maxSizeMB: 0.2,
       maxWidthOrHeight: 800,
       useWebWorker: true,
     };
-
+  
     try {
       const compressedFile = await imageCompression(file, options);
       const imageUrl = await uploadImage(compressedFile);
-
+  
       if (imageUrl) {
         setNewWatch((prev) => ({ ...prev, image: imageUrl }));
         setMessage("Immagine caricata con successo!");
@@ -220,6 +237,7 @@ function App() {
       setMessage("Errore nel caricamento dell'immagine: " + error.message);
     }
   };
+  
 
   return (
     <div className="container">
