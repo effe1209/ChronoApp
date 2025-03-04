@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useState, useEffect, useRef } from "react";
 import { createClient } from '@supabase/supabase-js';
 import imageCompression from 'browser-image-compression';
@@ -162,21 +161,11 @@ function App() {
 
     if (error) {
       console.error("Errore nell'eliminazione dell'immagine:", error.message);
-=======
-  const fetchWatches = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, "watches"));
-      const userWatches = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(watch => watch.userId === user?.uid);
-      setWatches(userWatches);
-    } catch (error) {
-      setMessage(error.message);
->>>>>>> parent of 2ba548d (fix image)
     }
   };
 
   const handleDeleteWatch = async (id) => {
     try {
-<<<<<<< HEAD
       if (imageUrl) {
         await deleteImage(imageUrl); // Elimina l'immagine prima
       }
@@ -251,24 +240,6 @@ function App() {
       }
     } catch (error) {
       setMessage("Errore nel caricamento dell'immagine: " + error.message);
-=======
-      await deleteDoc(doc(db, "watches", id));
-      fetchWatches();
-      setMessage("Orologio eliminato con successo!");
-    } catch (error) {
-      setMessage(error.message);
-    }
-  };
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewWatch({ ...newWatch, image: reader.result });
-      };
-      reader.readAsDataURL(file);
->>>>>>> parent of 2ba548d (fix image)
     }
   };
   
@@ -308,18 +279,10 @@ function App() {
               <option value="Carica Manuale">Carica Manuale</option>
               <option value="Quarzo">Quarzo</option>
             </select>
-<<<<<<< HEAD
             <div style={{ marginBottom: "10px" }}></div>
             <input type="file" accept="image/*" onChange={handleImageChange} ref={fileInputRef} />
             {newWatch.image && <img src={newWatch.image} alt="Anteprima" className="preview-image" />}
             <div style={{ marginBottom: "10px" }}></div>
-=======
-            <div style={{ marginBottom: "10px" }}></div> {/* Spazio extra */}
-            
-              <input type="file" accept="image/*" onChange={handleImageChange} />
-              {newWatch.image && <img src={newWatch.image} alt="Anteprima" className="preview-image" />}
-              <div style={{ marginBottom: "10px" }}></div> {/* Spazio extra */}
->>>>>>> parent of 2ba548d (fix image)
             <div className="buttonForm">
               <button onClick={handleAddWatch}>Salva</button>
               <button onClick={() => setShowBanner(false)}>Annulla</button>
@@ -331,7 +294,6 @@ function App() {
           <div className="watch-list">
             {watches.map((watch) => (
               <div key={watch.id} className="watch-card">
-<<<<<<< HEAD
                 {watch.imageUrl ? (
                   <img
                     src={watch.imageUrl}
@@ -342,8 +304,6 @@ function App() {
                 ) : (
                   <p>Nessuna immagine disponibile</p>
                 )}
-=======
->>>>>>> parent of 2ba548d (fix image)
                 <h3>{watch.name}</h3>
                 <p>{watch.brand} - {watch.year} - {watch.movement}</p>
                 <div className="delete-button">
