@@ -17,71 +17,63 @@ function App() {
   const [message, setMessage] = useState(null);
   const [watches, setWatches] = useState([]);
   const [newWatch, setNewWatch] = useState({ name: "", brand: "", year: "", image: "", movement: "" });
+  const [loading, setLoading] = useState(false);
 
+  // Funzione per testare la connessione al database
   const testConnection = async () => {
-    const { data, error } = await supabase
-      .from('watches') // Assicurati che il nome della tabella sia corretto
-      .select('*');
-    
+    const { data, error } = await supabase.rpc('now');
     if (error) {
-      console.error("Errore nella connessione:", error);
+      console.error("Errore di connessione a Supabase:", error);
     } else {
-      console.log("Dati ricevuti:", data);
+      console.log("Connessione a Supabase riuscita!");
     }
   };
   
-  testConnection();
-  
+
   useEffect(() => {
-    const fetchUser = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-            setUser(session.user);
-            fetchWatches();
-        }
+    testConnection();
+    const fetchUser  = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setUser (session.user);
+        fetchWatches(session.user.id); // Passa l'ID utente per il fetch
+      }
     };
-    fetchUser();
+    fetchUser ();
   }, []);
 
   const handleRegister = async () => {
+    setLoading(true);
     try {
-        const { data, error } = await supabase.auth.signUp({ email, password });
-        if (error) throw error;
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) throw error;
 
-        setMessage("Registrazione avvenuta con successo! Controlla la tua email per confermare l'account.");
-
-        // Controlla la sessione dopo la registrazione
-        setTimeout(async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                setUser(session.user);
-            }
-        }, 3000); // Attendi qualche secondo per la sincronizzazione
+      setMessage("Registrazione avvenuta con successo! Controlla la tua email per confermare l'account.");
+      setTimeout(() => fetchUser (), 3000); // Ricarica l'utente dopo 3 secondi
     } catch (error) {
-        setMessage(error.message);
+      setMessage("Errore: " + (error.message || "Si è verificato un errore."));
+    } finally {
+      setLoading(false);
     }
-};
-
-
+  };
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      setUser(data.user);
-      setMessage("Accesso effettuato con successo!");
-
-      if (error) throw error;
-      setUser(user);
+      setUser (data.user);
       setMessage("Accesso effettuato con successo!");
     } catch (error) {
-      setMessage(error.message);
+      setMessage("Errore: " + (error.message || "Si è verificato un errore."));
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    setUser(null);
+    setUser (null);
     setWatches([]);
     setMessage("Disconnessione effettuata.");
   };
@@ -93,14 +85,16 @@ function App() {
         const imageUrl = await uploadImage(newWatch.image);
         const { data, error } = await supabase
           .from('watches')
-          .insert([{ ...newWatch, userId: user.id }]);
+          .insert([{ ...newWatch, userid: user.id, image: imageUrl }]);
         if (error) throw error;
 
         setWatches((prev) => [...prev, data[0]]);
         setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" });
         setMessage("Orologio aggiunto con successo!");
       } catch (error) {
-        setMessage("Errore durante l'inserimento: " + error.message);
+        setMessage("Errore durante l'inserimento: " + (error.message || "Si è verificato un errore."));
+      } finally {
+        setLoading(false);
       }
     } else {
       setMessage("Compila tutti i campi correttamente!");
@@ -118,45 +112,45 @@ function App() {
   };
 
   const uploadImage = async (file) => {
-    // Controlla e aggiorna la sessione
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    if (sessionError || !session) {
-        console.error("Errore nel recupero della sessione:", sessionError?.message);
-        return null;
-    }
+    if (!file) return null;
 
-    const user = session.user; // Prende i dati aggiornati dell'utente
+    const user = supabase.auth.user();
     if (!user) {
-        console.error("L'utente non è autenticato!");
-        return null;
+      console.error("Utente non autenticato");
+      return null;
     }
 
     const filePath = `watches/${user.id}/${Date.now()}-${file.name}`;
 
     const { data, error } = await supabase.storage
-        .from('fotoWatch')
-        .upload(filePath, file, {
-            cacheControl: '3600',
-            upsert: false,
-            contentType: file.type
-        });
+      .from('fotoWatch')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type
+      });
 
     if (error) {
-        console.error("Errore nel caricamento dell'immagine:", error.message);
-        return null;
+      console.error("Errore nel caricamento dell'immagine:", error.message);
+      return null;
     }
 
-    return filePath;
+    // Genera l'URL pubblico
+    const { data: publicData } = supabase.storage
+      .from('fotoWatch')
+      .getPublicUrl(filePath);
+
+    return publicData.publicUrl;
 };
 
 
   const deleteImage = async (imageUrl) => {
     if (!imageUrl) return;
 
-    const filePath = imageUrl.split('/storage/v1/object/public/images/')[1];
+    const filePath = imageUrl.split('/storage/v1/object/public/fotoWatch/')[1];
 
     const { error } = await supabase.storage
-      .from('images')
+      .from('fotoWatch')
       .remove([filePath]);
 
     if (error) {
@@ -164,47 +158,40 @@ function App() {
     }
   };
 
-  const handleDeleteWatch = async (id) => {
+  const handleDeleteWatch = async (id, imageUrl) => {
     try {
       if (imageUrl) {
-        await deleteImage(imageUrl); // Elimina l'immagine prima
+        await deleteImage(imageUrl);
       }
-  
+
       const { error } = await supabase
         .from('watches')
         .delete()
         .eq('id', id);
       if (error) throw error;
-      fetchWatches();
+      fetchWatches(user.id); // Ricarica la lista degli orologi
       setMessage("Orologio eliminato con successo!");
     } catch (error) {
-      setMessage("Errore durante l'eliminazione: " + error.message);
+      setMessage("Errore durante l'eliminazione: " + (error.message || "Si è verificato un errore."));
     }
   };
-  
 
-  const fetchWatches = async () => {
+  const fetchWatches = async (userid) => {
     try {
       const { data, error } = await supabase
         .from('watches')
         .select('*')
-        .eq('userId', user.id);  // Usa l'ID dell'utente per filtrare gli orologi
+        .eq('userid', userid);
       if (error) throw error;
   
-      const userWatches = await Promise.all(data.map(async (watch) => {
-        if (watch.image) {
-          const { publicURL, error } = supabase.storage
-            .from('fotoWatch')
-            .getPublicUrl(watch.image);
-          if (error) throw error;
-          watch.imageUrl = publicURL;
-        }
-        return watch;
+      const userWatches = data.map((watch) => ({
+        ...watch,
+        imageUrl: watch.image ? supabase.storage.from('fotoWatch').getPublicUrl(watch.image).data.publicUrl : null
       }));
   
       setWatches(userWatches);
     } catch (error) {
-      setMessage(error.message);
+      setMessage("Errore durante il recupero degli orologi: " + (error.message || "Si è verificato un errore."));
     }
   };
   
@@ -221,33 +208,27 @@ function App() {
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-  
+
     const options = {
       maxSizeMB: 0.2,
       maxWidthOrHeight: 800,
       useWebWorker: true,
     };
-  
+
     try {
       const compressedFile = await imageCompression(file, options);
-      const imageUrl = await uploadImage(compressedFile);
-  
-      if (imageUrl) {
-        setNewWatch((prev) => ({ ...prev, image: imageUrl }));
-        setMessage("Immagine caricata con successo!");
-      } else {
-        setMessage("Errore nel caricamento dell'immagine.");
-      }
+      setNewWatch((prev) => ({ ...prev, image: compressedFile })); // Salva il file compresso
+      setMessage("Immagine caricata con successo!");
     } catch (error) {
       setMessage("Errore nel caricamento dell'immagine: " + error.message);
     }
   };
-  
 
   return (
     <div className="container">
       <h1>La mia collezione di orologi</h1>
       {message && <p className="message">{message}</p>}
+      {loading && <p>Loading...</p>}
 
       {!user ? (
         <div className="form">
@@ -281,11 +262,11 @@ function App() {
             </select>
             <div style={{ marginBottom: "10px" }}></div>
             <input type="file" accept="image/*" onChange={handleImageChange} ref={fileInputRef} />
-            {newWatch.image && <img src={newWatch.image} alt="Anteprima" className="preview-image" />}
+            {newWatch.image && <img src={URL.createObjectURL(newWatch.image)} alt="Anteprima" className="preview-image" />}
             <div style={{ marginBottom: "10px" }}></div>
             <div className="buttonForm">
               <button onClick={handleAddWatch}>Salva</button>
-              <button onClick={() => setShowBanner(false)}>Annulla</button>
+              <button onClick={handleCancel}>Annulla</button>
             </div>
           </div>
 
