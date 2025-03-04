@@ -99,14 +99,6 @@ function App() {
     }
   };
 
-  const handleDeleteWatch = (id) => {
-    setWatches((prevWatches) => {
-      const updatedWatches = prevWatches.filter(watch => watch.id !== id);
-      localStorage.setItem("watches", JSON.stringify(updatedWatches)); // Aggiorna localStorage
-      return updatedWatches;
-    });
-  };
-
   const [selectedWatches, setSelectedWatches] = useState([]);
   
   const handleSelectWatch = (id) => {
