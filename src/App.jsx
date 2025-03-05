@@ -287,10 +287,10 @@ const testConnection = async () => {
   return (
     <div className="container">
       <div style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "20%", justifyContent: "center" }}>
-          <img src="/public/romanClock.svg" width="50" height="50" alt="Roman Clock" />
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "20%", justifyContent: "right" }}>
+          <img src="romanClock.svg" width="100" height="80"/>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%", justifyContent: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%", justifyContent: "left" }}>
           <h1>La mia collezione di orologi</h1>
         </div>
       </div>

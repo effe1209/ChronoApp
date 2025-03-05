@@ -156,3 +156,25 @@ select {
   border: 1px solid #ccc;
   font-size: 16px;
 }
+
+.titleList {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-start; /* Allinea gli elementi a sinistra */
+  grid-template-columns: auto;
+}
+
+@media (max-width: 768px) {
+  .titleList {
+    flex-direction: column; /* Imposta la disposizione verticale su schermi più piccoli */
+    align-items: center; /* Allinea al centro gli elementi */
+  }
+  
+  .titleList > div {
+    width: 100%; /* Imposta larghezza al 100% per ogni div */
+    justify-content: center; /* Allinea al centro */
+    flex-direction: column;
+
+  }
+}
