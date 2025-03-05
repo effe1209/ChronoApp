@@ -119,40 +119,37 @@ const testConnection = async () => {
       // Verifica se il form è valido
       if (isValidWatch(newWatch)) {
         console.log("Avvio dell'inserimento orologio");
-  
+        
         // Carica l'immagine se presente
         const imageUrl = newWatch.image ? await uploadImage(newWatch.image) : null;
         console.log("Immagine caricata con URL:", imageUrl);
-  
+        
         // Inserisci i dati nel database
         const { data, error } = await supabase
           .from("watches")
           .insert([{ ...newWatch, userid: user.id, image: imageUrl }]);
   
+        console.log("Dati restituiti dopo inserimento:", data);
+      
+  
         // Gestisci gli errori
         if (error) {
           throw error;
         }
-  
-        // Verifica se i dati sono correttamente stati inseriti
-        if (data && data.length > 0) {
-          setWatches((prev) => [...prev, data[0]]);
-          setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" });
-          setMessage("Orologio aggiunto con successo!");
-        } else {
-          setMessage("Nessun orologio trovato dopo l'inserimento.");
-        }
+
+        setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" });
+        setMessage("Orologio aggiunto con successo!");
+        fetchWatches(user.id);
       } else {
         setMessage("Compila tutti i campi correttamente!");
       }
     } catch (error) {
       console.error("Errore durante l'inserimento:", error);
       setMessage("Errore durante l'inserimento: " + (error.message || "Si è verificato un errore."));
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   };
-  
+
 
   const isValidWatch = (watch) => {
     return (
