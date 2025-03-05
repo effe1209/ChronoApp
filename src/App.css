@@ -157,15 +157,7 @@ select {
   font-size: 16px;
 }
 
-.titleList {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  justify-content: flex-start; /* Allinea gli elementi a sinistra */
-  grid-template-columns: auto;
-}
-
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
   .titleList {
     flex-direction: column; /* Imposta la disposizione verticale su schermi più piccoli */
     align-items: center; /* Allinea al centro gli elementi */
@@ -175,6 +167,10 @@ select {
     width: 100%; /* Imposta larghezza al 100% per ogni div */
     justify-content: center; /* Allinea al centro */
     flex-direction: column;
+  }
 
+  /* Riduci la dimensione del titolo su dispositivi mobili */
+  .titleList h1{
+    font-size: 1em !important; /* Puoi provare anche con 1rem o 0.9rem se vuoi più piccolo */
   }
 }

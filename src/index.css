@@ -39,7 +39,8 @@ body {
 h1 {
   color: #0c0c0c;
   font-family: 'Amoresa', sans-serif;
-  font-size: 50px;
+  font-size: 3em;
+  margin: auto;
 }
 
 
@@ -77,4 +78,32 @@ h1 {
   max-width: 150px;
   border-radius: 10px;
 }
+
+.titleList {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Allinea gli elementi a sinistra */
+  grid-template-columns: auto;
+  flex-direction: column;
+  font-size: 3em
+}
+
+@media (max-width: 1000px) {
+  .titleList {
+    flex-direction: column; /* Imposta la disposizione verticale su schermi più piccoli */
+    align-items: center; /* Allinea al centro gli elementi */
+  }
+  
+  .titleList > div {
+    width: 100%; /* Imposta larghezza al 100% per ogni div */
+    justify-content: center; /* Allinea al centro */
+    flex-direction: column;
+  }
+
+  /* Riduci la dimensione del titolo su dispositivi mobili */
+  .titleList h1{
+    font-size: 1em !important; /* Puoi provare anche con 1rem o 0.9rem se vuoi più piccolo */
+  }
+}
+
 
