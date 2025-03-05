@@ -1,45 +1,56 @@
 import { useState, useEffect, useRef } from "react";
-import { createClient } from '@supabase/supabase-js';
-import imageCompression from 'browser-image-compression';
+import { createClient } from "@supabase/supabase-js";
+import imageCompression from "browser-image-compression";
 import "./App.css";
 
-
 const supabaseUrl = "https://htopqijsvgaqjrvvgpjh.supabase.co";
-const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0b3BxaWpzdmdhcWpydnZncGpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwMjQyOTcsImV4cCI6MjA1NjYwMDI5N30.pVzMwoPz1VL3EikMUbDaBwA6X47ehZb2Wu-P9-wk2a0"
+const supabaseAnonKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0b3BxaWpzdmdhcWpydnZncGpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwMjQyOTcsImV4cCI6MjA1NjYwMDI5N30.pVzMwoPz1VL3EikMUbDaBwA6X47ehZb2Wu-P9-wk2a0";
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 function App() {
   const fileInputRef = useRef(null);
-  const [user, setUser ] = useState(null);
+  const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [watches, setWatches] = useState([]);
-  const [newWatch, setNewWatch] = useState({ name: "", brand: "", year: "", image: "", movement: "" });
+  const [newWatch, setNewWatch] = useState({
+    name: "",
+    brand: "",
+    year: "",
+    image: "",
+    movement: "",
+  });
   const [loading, setLoading] = useState(false);
 
   // Funzione per testare la connessione al database
-  const testConnection = async () => {
-    const { data, error } = await supabase.rpc('now');
+const testConnection = async () => {
+  try {
+    const { data, error } = await supabase.rpc("now");
     if (error) {
       console.error("Errore di connessione a Supabase:", error);
     } else {
       console.log("Connessione a Supabase riuscita!");
     }
-  };
-  
+  } catch (err) {
+    console.error("Errore imprevisto durante la connessione:", err);
+  }
+};
 
   useEffect(() => {
     testConnection();
-    const fetchUser  = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+    const fetchUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (session) {
-        setUser (session.user);
+        setUser(session.user);
         fetchWatches(session.user.id); // Passa l'ID utente per il fetch
       }
     };
-    fetchUser ();
+    fetchUser();
   }, []);
 
   const handleRegister = async () => {
@@ -48,8 +59,10 @@ function App() {
       const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) throw error;
 
-      setMessage("Registrazione avvenuta con successo! Controlla la tua email per confermare l'account.");
-      setTimeout(() => fetchUser (), 3000); // Ricarica l'utente dopo 3 secondi
+      setMessage(
+        "Registrazione avvenuta con successo! Controlla la tua email per confermare l'account.",
+      );
+      setTimeout(() => fetchUser(), 3000); // Ricarica l'utente dopo 3 secondi
     } catch (error) {
       setMessage("Errore: " + (error.message || "Si è verificato un errore."));
     } finally {
@@ -60,52 +73,93 @@ function App() {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      setUser (data.user);
-      setMessage("Accesso effettuato con successo!");
+      // Effettua la richiesta di login
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+  
+      // Se c'è un errore, lo gestiamo
+      if (error) {
+        console.error("Errore di login:", error);
+        throw error;
+      }
+  
+      // Se il login è andato a buon fine
+      if (data.user) {
+        setUser(data.user); // Imposta l'utente
+        setMessage("Accesso effettuato con successo!");
+        console.log("Dati utente:", data.user);
+  
+        // Carica gli orologi subito dopo il login
+        fetchWatches(data.user.id);
+      } else {
+        setMessage("Accesso non riuscito: Nessun utente trovato.");
+      }
     } catch (error) {
+      console.error("Errore durante il login:", error);
       setMessage("Errore: " + (error.message || "Si è verificato un errore."));
     } finally {
       setLoading(false);
     }
   };
+  
+  
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    setUser (null);
+    setUser(null);
     setWatches([]);
     setMessage("Disconnessione effettuata.");
   };
 
   const handleAddWatch = async () => {
-    if (isValidWatch(newWatch)) {
-      setLoading(true);
-      try {
-        const imageUrl = await uploadImage(newWatch.image);
+    setLoading(true);
+    try {
+      // Verifica se il form è valido
+      if (isValidWatch(newWatch)) {
+        console.log("Avvio dell'inserimento orologio");
+  
+        // Carica l'immagine se presente
+        const imageUrl = newWatch.image ? await uploadImage(newWatch.image) : null;
+        console.log("Immagine caricata con URL:", imageUrl);
+  
+        // Inserisci i dati nel database
         const { data, error } = await supabase
-          .from('watches')
+          .from("watches")
           .insert([{ ...newWatch, userid: user.id, image: imageUrl }]);
-        if (error) throw error;
-
-        setWatches((prev) => [...prev, data[0]]);
-        setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" });
-        setMessage("Orologio aggiunto con successo!");
-      } catch (error) {
-        setMessage("Errore durante l'inserimento: " + (error.message || "Si è verificato un errore."));
-      } finally {
-        setLoading(false);
+  
+        // Gestisci gli errori
+        if (error) {
+          throw error;
+        }
+  
+        // Verifica se i dati sono correttamente stati inseriti
+        if (data && data.length > 0) {
+          setWatches((prev) => [...prev, data[0]]);
+          setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" });
+          setMessage("Orologio aggiunto con successo!");
+        } else {
+          setMessage("Nessun orologio trovato dopo l'inserimento.");
+        }
+      } else {
+        setMessage("Compila tutti i campi correttamente!");
       }
-    } else {
-      setMessage("Compila tutti i campi correttamente!");
+    } catch (error) {
+      console.error("Errore durante l'inserimento:", error);
+      setMessage("Errore durante l'inserimento: " + (error.message || "Si è verificato un errore."));
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   const isValidWatch = (watch) => {
     return (
       watch.name.trim() !== "" &&
       watch.brand.trim() !== "" &&
-      watch.year > 0 && !isNaN(watch.year) &&
+      watch.year > 0 &&
+      !isNaN(watch.year) &&
       watch.movement.trim() !== "" &&
       (watch.image.trim() === "" || isValidImage(watch.image))
     );
@@ -123,11 +177,11 @@ function App() {
     const filePath = `watches/${user.id}/${Date.now()}-${file.name}`;
 
     const { data, error } = await supabase.storage
-      .from('fotoWatch')
+      .from("fotoWatch")
       .upload(filePath, file, {
-        cacheControl: '3600',
+        cacheControl: "3600",
         upsert: false,
-        contentType: file.type
+        contentType: file.type,
       });
 
     if (error) {
@@ -137,20 +191,19 @@ function App() {
 
     // Genera l'URL pubblico
     const { data: publicData } = supabase.storage
-      .from('fotoWatch')
+      .from("fotoWatch")
       .getPublicUrl(filePath);
 
     return publicData.publicUrl;
-};
-
+  };
 
   const deleteImage = async (imageUrl) => {
     if (!imageUrl) return;
 
-    const filePath = imageUrl.split('/storage/v1/object/public/fotoWatch/')[1];
+    const filePath = imageUrl.split("/storage/v1/object/public/fotoWatch/")[1];
 
     const { error } = await supabase.storage
-      .from('fotoWatch')
+      .from("fotoWatch")
       .remove([filePath]);
 
     if (error) {
@@ -164,37 +217,42 @@ function App() {
         await deleteImage(imageUrl);
       }
 
-      const { error } = await supabase
-        .from('watches')
-        .delete()
-        .eq('id', id);
+      const { error } = await supabase.from("watches").delete().eq("id", id);
       if (error) throw error;
       fetchWatches(user.id); // Ricarica la lista degli orologi
       setMessage("Orologio eliminato con successo!");
     } catch (error) {
-      setMessage("Errore durante l'eliminazione: " + (error.message || "Si è verificato un errore."));
+      setMessage(
+        "Errore durante l'eliminazione: " +
+          (error.message || "Si è verificato un errore."),
+      );
     }
   };
 
   const fetchWatches = async (userid) => {
     try {
       const { data, error } = await supabase
-        .from('watches')
-        .select('*')
-        .eq('userid', userid);
+        .from("watches")
+        .select("*")
+        .eq("userid", userid);
       if (error) throw error;
-  
+
       const userWatches = data.map((watch) => ({
         ...watch,
-        imageUrl: watch.image ? supabase.storage.from('fotoWatch').getPublicUrl(watch.image).data.publicUrl : null
+        imageUrl: watch.image
+          ? supabase.storage.from("fotoWatch").getPublicUrl(watch.image).data
+              .publicUrl
+          : null,
       }));
-  
+
       setWatches(userWatches);
     } catch (error) {
-      setMessage("Errore durante il recupero degli orologi: " + (error.message || "Si è verificato un errore."));
+      setMessage(
+        "Errore durante il recupero degli orologi: " +
+          (error.message || "Si è verificato un errore."),
+      );
     }
   };
-  
 
   const handleCancel = () => {
     setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" });
@@ -233,8 +291,18 @@ function App() {
       {!user ? (
         <div className="form">
           <h2>Registrati o Accedi</h2>
-          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <div className="button-group">
             <div className="buttonForm">
               <button onClick={handleRegister}>Registrati</button>
@@ -245,24 +313,65 @@ function App() {
       ) : (
         <>
           <div className="buttonForm">
-            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
           <h2>Aggiungi un nuovo orologio</h2>
           <div className="form">
-            <input type="text" placeholder="Nome" value={newWatch.name} onChange={(e) => setNewWatch({ ...newWatch, name: e.target.value })} />
-            <input type="text" placeholder="Marca" value={newWatch.brand} onChange={(e) => setNewWatch({ ...newWatch, brand: e.target.value })} />
-            <input type="number" placeholder="Anno" value={newWatch.year} onChange={(e) => setNewWatch({ ...newWatch, year: e.target.value })} />
+            <input
+              type="text"
+              placeholder="Nome"
+              value={newWatch.name}
+              onChange={(e) =>
+                setNewWatch({ ...newWatch, name: e.target.value })
+              }
+            />
+            <input
+              type="text"
+              placeholder="Marca"
+              value={newWatch.brand}
+              onChange={(e) =>
+                setNewWatch({ ...newWatch, brand: e.target.value })
+              }
+            />
+            <input
+              type="number"
+              placeholder="Anno"
+              value={newWatch.year}
+              onChange={(e) =>
+                setNewWatch({ ...newWatch, year: e.target.value })
+              }
+            />
             <div style={{ marginBottom: "10px" }}></div>
-            <label><strong>Movimento: </strong></label>
-            <select value={newWatch.movement} onChange={(e) => setNewWatch({ ...newWatch, movement: e.target.value })}>
+            <label>
+              <strong>Movimento: </strong>
+            </label>
+            <select
+              value={newWatch.movement}
+              onChange={(e) =>
+                setNewWatch({ ...newWatch, movement: e.target.value })
+              }
+            >
               <option value="">Seleziona il movimento</option>
               <option value="Automatico">Automatico</option>
               <option value="Carica Manuale">Carica Manuale</option>
               <option value="Quarzo">Quarzo</option>
             </select>
             <div style={{ marginBottom: "10px" }}></div>
-            <input type="file" accept="image/*" onChange={handleImageChange} ref={fileInputRef} />
-            {newWatch.image && <img src={URL.createObjectURL(newWatch.image)} alt="Anteprima" className="preview-image" />}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              ref={fileInputRef}
+            />
+            {newWatch.image && (
+              <img
+                src={URL.createObjectURL(newWatch.image)}
+                alt="Anteprima"
+                className="preview-image"
+              />
+            )}
             <div style={{ marginBottom: "10px" }}></div>
             <div className="buttonForm">
               <button onClick={handleAddWatch}>Salva</button>
@@ -280,15 +389,24 @@ function App() {
                     src={watch.imageUrl}
                     alt={watch.name}
                     className="watch-image"
-                    onError={(e) => { e.target.src = "/fallback-image.jpg"; }}
+                    onError={(e) => {
+                      e.target.src = "/fallback-image.jpg";
+                    }}
                   />
                 ) : (
                   <p>Nessuna immagine disponibile</p>
                 )}
                 <h3>{watch.name}</h3>
-                <p>{watch.brand} - {watch.year} - {watch.movement}</p>
+                <p>
+                  {watch.brand} - {watch.year} - {watch.movement}
+                </p>
                 <div className="delete-button">
-                  <button className="delete-btn" onClick={() => handleDeleteWatch(watch.id, watch.image)}>Elimina</button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDeleteWatch(watch.id, watch.image)}
+                  >
+                    Elimina
+                  </button>
                 </div>
               </div>
             ))}
