@@ -286,7 +286,16 @@ const testConnection = async () => {
 
   return (
     <div className="container">
-      <h1>La mia collezione di orologi</h1>
+      <div style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "20%", justifyContent: "center" }}>
+          <img src="/public/romanClock.svg" width="50" height="50" alt="Roman Clock" />
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%", justifyContent: "center" }}>
+          <h1>La mia collezione di orologi</h1>
+        </div>
+      </div>
+
+
       {message && <p className="message">{message}</p>}
       {loading && <p>Loading...</p>}
 
@@ -441,6 +450,5 @@ const testConnection = async () => {
     </div>
   );
 }
-
 
 export default App;

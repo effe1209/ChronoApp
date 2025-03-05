@@ -1,5 +1,5 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family:'Times New Roman', Times, serif;
   background-color: #5c3b3b;
   margin: 0;
   padding: 0;
@@ -15,9 +15,33 @@ body {
   border-radius: 10px;
 }
 
+@font-face {
+  font-family: 'Amoresa';
+  src: url('../font/Andrey-Sharonov-Amoresa-Regular.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'VnHelv';
+  src: url('../font/VnHelvNarrow2-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'minork';
+  src: url('../font/minorksans-light.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 h1 {
   color: #0c0c0c;
+  font-family: 'Amoresa', sans-serif;
+  font-size: 50px;
 }
+
 
 .add-button {
   background-color: #044b9cbe;
@@ -52,4 +76,24 @@ h1 {
   width: 100%;
   max-width: 150px;
   border-radius: 10px;
+}
+
+.titleList {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-start; /* Allinea gli elementi a sinistra */
+  grid-template-columns: auto;
+}
+
+@media (max-width: 768px) {
+  .titleList {
+    flex-direction: column; /* Imposta la disposizione verticale su schermi più piccoli */
+    align-items: center; /* Allinea al centro gli elementi */
+  }
+  
+  .titleList > div {
+    width: 100%; /* Imposta larghezza al 100% per ogni div */
+    justify-content: center; /* Allinea al centro */
+  }
 }
