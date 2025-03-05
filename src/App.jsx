@@ -22,6 +22,7 @@ function App() {
     year: "",
     image: "",
     movement: "",
+    color: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -137,7 +138,7 @@ const testConnection = async () => {
           throw error;
         }
 
-        setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" });
+        setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" , color: ""});
         setMessage("Orologio aggiunto con successo!");
         fetchWatches(user.id);
       } else {
@@ -157,22 +158,20 @@ const testConnection = async () => {
       watch.brand.trim() !== "" &&
       watch.year > 0 &&
       !isNaN(watch.year) &&
-      watch.movement.trim() !== "" &&
-      (watch.image.trim() === "" || isValidImage(watch.image))
+      watch.movement.trim() !== ""
     );
   };
 
   const uploadImage = async (file) => {
     if (!file) return null;
-
-    const user = supabase.auth.user();
-    if (!user) {
+  
+    if (!user.id) {
       console.error("Utente non autenticato");
       return null;
     }
-
+  
     const filePath = `watches/${user.id}/${Date.now()}-${file.name}`;
-
+  
     const { data, error } = await supabase.storage
       .from("fotoWatch")
       .upload(filePath, file, {
@@ -180,19 +179,23 @@ const testConnection = async () => {
         upsert: false,
         contentType: file.type,
       });
-
+  
     if (error) {
       console.error("Errore nel caricamento dell'immagine:", error.message);
       return null;
     }
-
+  
+    console.log("Dati immagine caricata:", data);
+  
     // Genera l'URL pubblico
-    const { data: publicData } = supabase.storage
+    const { data: publicData, error: urlError } = supabase.storage
       .from("fotoWatch")
       .getPublicUrl(filePath);
-
+  
+    console.log("URL immagine pubblica:", publicData.publicUrl);
     return publicData.publicUrl;
   };
+  
 
   const deleteImage = async (imageUrl) => {
     if (!imageUrl) return;
@@ -252,7 +255,7 @@ const testConnection = async () => {
   };
 
   const handleCancel = () => {
-    setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" });
+    setNewWatch({ name: "", brand: "", year: "", image: "", movement: "", color: ""});
     setMessage(null);
 
     if (fileInputRef.current) {
@@ -263,21 +266,23 @@ const testConnection = async () => {
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-
+  
     const options = {
       maxSizeMB: 0.2,
       maxWidthOrHeight: 800,
       useWebWorker: true,
     };
-
+  
     try {
       const compressedFile = await imageCompression(file, options);
+      console.log("File compresso:", compressedFile);  // Verifica il file compresso
       setNewWatch((prev) => ({ ...prev, image: compressedFile })); // Salva il file compresso
       setMessage("Immagine caricata con successo!");
     } catch (error) {
       setMessage("Errore nel caricamento dell'immagine: " + error.message);
     }
   };
+  
 
   return (
     <div className="container">
@@ -341,20 +346,43 @@ const testConnection = async () => {
               }
             />
             <div style={{ marginBottom: "10px" }}></div>
-            <label>
-              <strong>Movimento: </strong>
-            </label>
-            <select
-              value={newWatch.movement}
-              onChange={(e) =>
-                setNewWatch({ ...newWatch, movement: e.target.value })
-              }
-            >
-              <option value="">Seleziona il movimento</option>
-              <option value="Automatico">Automatico</option>
-              <option value="Carica Manuale">Carica Manuale</option>
-              <option value="Quarzo">Quarzo</option>
-            </select>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center"}}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%", justifyContent: "center"}}>
+                <label>
+                  <strong>Movimento: </strong>
+                </label>
+                <select
+                  value={newWatch.movement}
+                  onChange={(e) => setNewWatch({ ...newWatch, movement: e.target.value })}
+                >
+                  <option value="">Seleziona il movimento</option>
+                  <option value="Automatico">Automatico</option>
+                  <option value="Carica Manuale">Carica Manuale</option>
+                  <option value="Quarzo">Quarzo</option>
+                </select>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%" , justifyContent: "center"}}>
+                <label>
+                  <strong>Colore: </strong>
+                </label>
+                <select
+                  value={newWatch.color}
+                  onChange={(e) => setNewWatch({ ...newWatch, color: e.target.value })}
+                >
+                  <option value="" style={{ textAlign: "center" }}>Seleziona colore quadrante</option>
+                  <option value="Nero">Nero</option>
+                  <option value="Blu">Blu</option>
+                  <option value="Bianco">Bianco</option>
+                  <option value="Verde">Verde</option>
+                  <option value="Giallo">Giallo</option>
+                  <option value="Rosso">Rosso</option>
+                  <option value="Viola">Viola</option>
+                  <option value="Marrone">Marrone</option>
+                </select>
+              </div>
+            </div>
+
             <div style={{ marginBottom: "10px" }}></div>
             <input
               type="file"
@@ -381,9 +409,9 @@ const testConnection = async () => {
           <div className="watch-list">
             {watches.map((watch) => (
               <div key={watch.id} className="watch-card">
-                {watch.imageUrl ? (
+                {watch.image ? (
                   <img
-                    src={watch.imageUrl}
+                    src={watch.image}
                     alt={watch.name}
                     className="watch-image"
                     onError={(e) => {
@@ -393,9 +421,9 @@ const testConnection = async () => {
                 ) : (
                   <p>Nessuna immagine disponibile</p>
                 )}
-                <h3>{watch.name}</h3>
+                <h3>{watch.brand} {watch.name}</h3>
                 <p>
-                  {watch.brand} - {watch.year} - {watch.movement}
+                   {watch.year} - {watch.movement} - {watch.color}
                 </p>
                 <div className="delete-button">
                   <button
