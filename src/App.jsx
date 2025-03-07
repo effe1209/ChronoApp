@@ -72,6 +72,12 @@ const testConnection = async () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin(); // Chiamata alla funzione di login
+    }
+  };
+
   const handleLogin = async () => {
     setLoading(true);
     try {
@@ -84,7 +90,15 @@ const testConnection = async () => {
       // Se c'è un errore, lo gestiamo
       if (error) {
         console.error("Errore di login:", error);
-        throw error;
+  
+        // Verifica se l'errore riguarda l'email non registrata
+        if (error.message.includes('invalid_credentials')) {
+          setMessage('Questa email non è registrata. Per favore, registrati.');
+        } else {
+          setMessage('Errore nel login. Controlla le tue credenziali.');
+        }
+  
+        throw error; // Rilancia l'errore per gestirlo nel catch
       }
   
       // Se il login è andato a buon fine
@@ -105,6 +119,7 @@ const testConnection = async () => {
       setLoading(false);
     }
   };
+  
   
   
 
@@ -235,6 +250,39 @@ const testConnection = async () => {
     setNewWatch((prev) => ({ ...prev, image: file }));
   }
 };
+
+const [isModalVisible, setIsModalVisible] = useState(false);
+const [selectedWatch, setSelectedWatch] = useState(null);
+
+const handleDayWatch = async (userid) => {
+  try {
+    // Recupera la lista degli orologi associati all'utente
+    const { data, error } = await supabase
+      .from('watches')
+      .select('*')
+      .eq('userid', userid);
+
+    if (error) {
+      throw error;
+    }
+
+    if (data && data.length > 0) {
+      // Seleziona un orologio casuale
+      const randomIndex = Math.floor(Math.random() * data.length);
+      const randomWatch = data[randomIndex];
+      
+      // Imposta l'orologio selezionato
+      setSelectedWatch(randomWatch);
+      setIsModalVisible(true); // Mostra la modale con i dettagli dell'orologio
+    } else {
+      console.log('Nessun orologio trovato per questo utente.');
+    }
+  } catch (error) {
+    console.error('Errore nel recupero dell\'orologio:', error.message);
+  }
+};
+
+
 
 const uploadImage = async (file) => {
   if (!file) return null;
@@ -410,6 +458,7 @@ const uploadImage = async (file) => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown} // Aggiungi l'evento onKeyDown
           />
           <div className="button-group">
             <div className="buttonForm">
@@ -425,6 +474,33 @@ const uploadImage = async (file) => {
               Logout
             </button>
           </div>
+          <div style={{width: "100%", display:"flex", position:"flex", justifyContent:"center"}}>
+            <hr style={{ border: "1px solid #000", margin:"20px 0", width: "700px", display:"flex", position:"flex", justifyContent:"center"}}></hr>
+          </div>
+          <div className="functionButton">
+            <button className="funzioniButton" onClick={() => handleDayWatch(user.id)}>
+              DayWatch
+            </button>
+          </div>
+          
+          {isModalVisible && selectedWatch && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <h2>Orologio del Giorno</h2>
+                <img src={selectedWatch.image} alt={selectedWatch.name} className="modal-image" />
+                <p><strong>Nome:</strong> {selectedWatch.name}</p>
+                <p><strong>Marca:</strong> {selectedWatch.brand}</p>
+                <p><strong>Anno:</strong> {selectedWatch.year}</p>
+                <p><strong>Movimento:</strong> {selectedWatch.movement}</p>
+                <p><strong>Colore:</strong> {selectedWatch.color}</p>
+                <div>
+                  <button onClick={() => setIsModalVisible(false)}>Chiudi</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+
           <h3>Aggiungi un nuovo orologio</h3>
           <div className="form">
             <input
@@ -461,7 +537,7 @@ const uploadImage = async (file) => {
                 <select
                   value={newWatch.movement}
                   onChange={(e) => setNewWatch({ ...newWatch, movement: e.target.value })}
-                  style={{ width: "400px", textAlign: "center", display: "flex"}}
+                  style={{textAlign: "center", display: "flex"}}
                 >
                   <option className="menuTendina" value="">Seleziona il movimento</option>
                   <option className="menuTendina" value="Automatico">Automatico</option>
@@ -552,6 +628,15 @@ const uploadImage = async (file) => {
                   {watch.movement} - {watch.year}
                   {watch.color ? ' - '+watch.color : ''}
                 </p>
+                <div className="modifyButton">
+                  <button
+                    className="modify-btn"
+                    onClick={() => handleModifyWatch(watch.id, watch.image)}
+                  >
+                    Modifica
+                  </button>
+
+                </div>
                 <div className="delete-button">
                   <button
                     className="delete-btn"
@@ -560,6 +645,7 @@ const uploadImage = async (file) => {
                     Elimina
                   </button>
                 </div>
+                
               </div>
             ))}
           </div>
