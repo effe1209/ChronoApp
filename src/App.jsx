@@ -282,14 +282,117 @@ const testConnection = async () => {
       setMessage("Errore nel caricamento dell'immagine: " + error.message);
     }
   };
+
+
+  // Orologio Funzionante
+  var inc = 1000;
+
+  async function clock() {
+      const date = new Date();
+
+      const hours = ((date.getHours() + 11) % 12 + 1);
+      const minutes = date.getMinutes();
+      const seconds = date.getSeconds();
+
+      const hour = (hours + minutes / 60) * 30;
+      const minute = (minutes + seconds / 60) * 6;
+      const second = seconds * 6;
+
+      // Correzione nei selettori e nei template string
+      document.querySelector('.hour').style.transform = `rotate(${hour}deg)`;
+      document.querySelector('.minute').style.transform = `rotate(${minute}deg)`;
+      document.querySelector('.second').style.transform = `rotate(${second}deg)`;
+  }
+
+  const numbers = document.querySelectorAll(".number");
+  const clockRadius = 145; // Raggio interno per i numeri
+  const clockCenterX = 15; // Centro X del quadrante
+  const clockCenterY = 12; // Centro Y del quadrante
+  
+  numbers.forEach((num, index) => {
+      const angle = (index - 2) * 30; // Ogni numero è 30° più avanti rispetto al precedente
+      const radian = angle * (Math.PI / 180);
+  
+      const x = clockCenterX + clockRadius * Math.cos(radian) - num.clientWidth / 2;
+      const y = clockCenterY + clockRadius * Math.sin(radian) - num.clientHeight / 2;
+  
+      num.style.left = `${x}px`;
+      num.style.top = `${y}px`;
+  
+      // Applica la rotazione opposta all'angolo per mantenere il testo dritto
+      num.style.transform = `rotate(${(angle)+90}deg)`;
+  });
   
 
+  const dots = document.querySelectorAll(".dot");
+  const clockRadiusDot = 170; // Raggio per i puntini (esterno ai numeri)
+  const clockPointCenterX = 0; // Centro X del quadrante
+  const clockPointCenterY = 0; // Centro Y del quadrante
+
+  dots.forEach((dot, index) => {
+      const angle = index * 30; // Ogni puntino è 30° più avanti rispetto al precedente
+      const radian = angle * (Math.PI / 180);
+  
+      const x = clockPointCenterX + clockRadiusDot * Math.cos(radian) - dot.clientWidth / 2;
+      const y = clockPointCenterY + clockRadiusDot * Math.sin(radian) - dot.clientHeight / 2;
+  
+      dot.style.left = `${x}px`;
+      dot.style.top = `${y}px`;
+  });
+  
+
+
+  clock();
+  setInterval(clock, 1000);
+
   return (
+    
     <div className="container">
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ display: "flex", alignItems: "center", width: "50%", justifyContent: "center" }}>
-          <img src="romanClock.svg" width="150" height="150"/>
+      <div className="clockContainer">
+        <div class="clock">
+        <div class="wrap">
+        <div class="numbers">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="number" data-num="1">I</div>
+          <div class="number" data-num="2">II</div>
+          <div class="number" data-num="3">III</div>
+          <div class="number" data-num="4">IV</div>
+          <div class="number" data-num="5">V</div>
+          <div class="number" data-num="6">VI</div>
+          <div class="number" data-num="7">VII</div>
+          <div class="number" data-num="8">VIII</div>
+          <div class="number" data-num="9">IX</div>
+          <div class="number" data-num="10">X</div>
+          <div class="number" data-num="11">XI</div>
+          <div class="number" data-num="12">XII</div>
+    <div class="hour"></div>
+    <div class="minute"></div>
+    <div class="second"></div>
+    <div class="point"></div>
+  </div>
+</div>
+
         </div>
+      </div>
+
+
+
+
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+       {/*  <div style={{ display: "flex", alignItems: "center", width: "50%", justifyContent: "center" }}>
+          <img src="romanClock.svg" width="150" height="150"/>
+        </div> */}
         <div className="titleList" style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "center" }}>
           <h1>La mia collezione di orologi</h1>
         </div>
@@ -328,7 +431,7 @@ const testConnection = async () => {
               Logout
             </button>
           </div>
-          <h2>Aggiungi un nuovo orologio</h2>
+          <h3>Aggiungi un nuovo orologio</h3>
           <div className="form">
             <input
               type="text"
@@ -355,65 +458,72 @@ const testConnection = async () => {
               }
             />
             <div style={{ marginBottom: "10px" }}></div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center"}}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%", justifyContent: "center"}}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", width: "100%"}}>
+              <div className="selectMenu">
                 <label>
                   <strong>Movimento: </strong>
                 </label>
+                <div style={{ marginBottom: "10px" }}></div>
                 <select
                   value={newWatch.movement}
                   onChange={(e) => setNewWatch({ ...newWatch, movement: e.target.value })}
+                  style={{ width: "400px", textAlign: "center", display: "flex"}}
                 >
-                  <option value="">Seleziona il movimento</option>
-                  <option value="Automatico">Automatico</option>
-                  <option value="Carica Manuale">Carica Manuale</option>
-                  <option value="Quarzo">Quarzo</option>
+                  <option className="menuTendina" value="">Seleziona il movimento</option>
+                  <option className="menuTendina" value="Automatico">Automatico</option>
+                  <option className="menuTendina" value="Carica Manuale">Carica Manuale</option>
+                  <option className="menuTendina" value="Quarzo">Quarzo</option>
                 </select>
               </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%" , justifyContent: "center"}}>
+              <div className="selectMenu">
                 <label>
                   <strong>Colore: </strong>
                 </label>
+                <div style={{ marginBottom: "10px" }}></div>
                 <select
                   value={newWatch.color}
                   onChange={(e) => setNewWatch({ ...newWatch, color: e.target.value })}
+                  style={{width: "400px", textAlign: "center", display: "flex"}}
                 >
-                  <option value="" style={{ textAlign: "center" }}>Seleziona colore quadrante</option>
-                  <option value="Nero">Nero</option>
-                  <option value="Blu">Blu</option>
-                  <option value="Bianco">Bianco</option>
-                  <option value="Verde">Verde</option>
-                  <option value="Giallo">Giallo</option>
-                  <option value="Rosso">Rosso</option>
-                  <option value="Viola">Viola</option>
-                  <option value="Marrone">Marrone</option>
+                  <option className="menuTendina" value="" style={{ textAlign: "center" }}>Seleziona colore quadrante</option>
+                  <option className="menuTendina" value="Nero">Nero</option>
+                  <option className="menuTendina" value="Blu">Blu</option>
+                  <option className="menuTendina" value="Bianco">Bianco</option>
+                  <option className="menuTendina" value="Verde">Verde</option>
+                  <option className="menuTendina" value="Giallo">Giallo</option>
+                  <option className="menuTendina" value="Rosso">Rosso</option>
+                  <option className="menuTendina" value="Viola">Viola</option>
+                  <option className="menuTendina" value="Marrone">Marrone</option>
                 </select>
               </div>
             </div>
 
             <div style={{ marginBottom: "10px" }}></div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              ref={fileInputRef}
-            />
-            {newWatch.image && (
-              <img
-                src={URL.createObjectURL(newWatch.image)}
-                alt="Anteprima"
-                className="preview-image"
+            <div className="inputImmagine">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                ref={fileInputRef}
+                style={{width:"25%", marginBottom:"2px"}}
               />
-            )}
-            <div style={{ marginBottom: "10px" }}></div>
+            </div>
+            {newWatch.image && (
+                <img
+                  src={URL.createObjectURL(newWatch.image)}
+                  alt="Anteprima"
+                  className="preview-image"
+                />
+              )}
+            <div style={{ marginBottom: "30px" }}></div>
             <div className="buttonForm">
               <button onClick={handleAddWatch}>Salva</button>
               <button onClick={handleCancel}>Annulla</button>
             </div>
           </div>
 
-          <div style={{ marginBottom: "50px" }}></div>
+
           <h2>Lista Orologi</h2>
           <div className="watch-list">
             {watches.map((watch) => (
@@ -430,9 +540,11 @@ const testConnection = async () => {
                 ) : (
                   <p>Nessuna immagine disponibile</p>
                 )}
-                <h3>{watch.brand} {watch.name}</h3>
+                <h4>{watch.brand}</h4>
+                <h3 className="textCard">{watch.name}</h3>
                 <p>
-                   {watch.year} - {watch.movement} - {watch.color}
+                  {watch.movement} - {watch.year}
+                  {watch.color ? ' - '+watch.color : ''}
                 </p>
                 <div className="delete-button">
                   <button
