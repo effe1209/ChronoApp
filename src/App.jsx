@@ -11,6 +11,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 function App() {
   const fileInputRef = useRef(null);
+  const colorInputRef = useRef(null);
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -117,30 +118,28 @@ const testConnection = async () => {
   const handleAddWatch = async () => {
     setLoading(true);
     try {
-      // Verifica se il form è valido
       if (isValidWatch(newWatch)) {
         console.log("Avvio dell'inserimento orologio");
-        
-        // Carica l'immagine se presente
+
+        // Carica l'immagine e ottieni l'URL
         const imageUrl = newWatch.image ? await uploadImage(newWatch.image) : null;
         console.log("Immagine caricata con URL:", imageUrl);
-        
+
         // Inserisci i dati nel database
         const { data, error } = await supabase
           .from("watches")
-          .insert([{ ...newWatch, userid: user.id, image: imageUrl }]);
-  
-        console.log("Dati restituiti dopo inserimento:", data);
-      
-  
-        // Gestisci gli errori
+          .insert([{ ...newWatch, userid: user.id, image: imageUrl }])
+          .select("*"); // Recupera i dati appena inseriti
+
         if (error) {
           throw error;
         }
 
-        setNewWatch({ name: "", brand: "", year: "", image: "", movement: "" , color: ""});
+        // Aggiorna la lista locale degli orologi per mostrare subito quello nuovo
+        setWatches((prevWatches) => [...prevWatches, data[0]]);
+
+        setNewWatch({ name: "", brand: "", year: "", image: "", movement: "", color: "" });
         setMessage("Orologio aggiunto con successo!");
-        fetchWatches(user.id);
       } else {
         setMessage("Compila tutti i campi correttamente!");
       }
@@ -149,7 +148,8 @@ const testConnection = async () => {
       setMessage("Errore durante l'inserimento: " + (error.message || "Si è verificato un errore."));
     }
     setLoading(false);
-  };
+};
+
 
 
   const isValidWatch = (watch) => {
@@ -161,41 +161,6 @@ const testConnection = async () => {
       watch.movement.trim() !== ""
     );
   };
-
-  const uploadImage = async (file) => {
-    if (!file) return null;
-  
-    if (!user.id) {
-      console.error("Utente non autenticato");
-      return null;
-    }
-  
-    const filePath = `watches/${user.id}/${Date.now()}-${file.name}`;
-  
-    const { data, error } = await supabase.storage
-      .from("fotoWatch")
-      .upload(filePath, file, {
-        cacheControl: "3600",
-        upsert: false,
-        contentType: file.type,
-      });
-  
-    if (error) {
-      console.error("Errore nel caricamento dell'immagine:", error.message);
-      return null;
-    }
-  
-    console.log("Dati immagine caricata:", data);
-  
-    // Genera l'URL pubblico
-    const { data: publicData, error: urlError } = supabase.storage
-      .from("fotoWatch")
-      .getPublicUrl(filePath);
-  
-    console.log("URL immagine pubblica:", publicData.publicUrl);
-    return publicData.publicUrl;
-  };
-  
 
   const deleteImage = async (imageUrl) => {
     if (!imageUrl) return;
@@ -263,25 +228,44 @@ const testConnection = async () => {
     }
   };
 
-  const handleImageChange = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-  
-    const options = {
-      maxSizeMB: 0.2,
-      maxWidthOrHeight: 800,
-      useWebWorker: true,
-    };
-  
-    try {
-      const compressedFile = await imageCompression(file, options);
-      console.log("File compresso:", compressedFile);  // Verifica il file compresso
-      setNewWatch((prev) => ({ ...prev, image: compressedFile })); // Salva il file compresso
-      setMessage("Immagine caricata con successo!");
-    } catch (error) {
-      setMessage("Errore nel caricamento dell'immagine: " + error.message);
-    }
-  };
+ // Funzione per gestire la selezione del file
+ const handleImageChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    setNewWatch((prev) => ({ ...prev, image: file }));
+  }
+};
+
+const uploadImage = async (file) => {
+  if (!file) return null;
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    alert("Devi essere loggato per caricare immagini!");
+    return null;
+  }
+
+  const userId = user.id;
+  const fileName = `${userId}/${Date.now()}-${file.name}`;
+  const bucketName = "fotoWatch";
+
+  const { data, error } = await supabase
+    .storage
+    .from(bucketName)
+    .upload(fileName, file, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+
+  if (error) {
+    console.error("Errore nell'upload:", error);
+    alert(`Errore durante il caricamento: ${error.message}`);
+    return null;
+  }
+
+  // Costruisci l'URL pubblico
+  return `https://htopqijsvgaqjrvvgpjh.supabase.co/storage/v1/object/public/${bucketName}/${fileName}`;
+};
 
 
   // Orologio Funzionante
@@ -298,10 +282,20 @@ const testConnection = async () => {
       const minute = (minutes + seconds / 60) * 6;
       const second = seconds * 6;
 
-      // Correzione nei selettori e nei template string
-      document.querySelector('.hour').style.transform = `rotate(${hour}deg)`;
-      document.querySelector('.minute').style.transform = `rotate(${minute}deg)`;
-      document.querySelector('.second').style.transform = `rotate(${second}deg)`;
+      // Controlla se gli elementi esistono prima di modificarli
+      const hourHand = document.querySelector('.hour');
+      const minuteHand = document.querySelector('.minute');
+      const secondHand = document.querySelector('.second');
+
+      if (hourHand) {
+          hourHand.style.transform = `rotate(${hour}deg)`;
+      }
+      if (minuteHand) {
+          minuteHand.style.transform = `rotate(${minute}deg)`;
+      }
+      if (secondHand) {
+          secondHand.style.transform = `rotate(${second}deg)`;
+      }
   }
 
   const numbers = document.querySelectorAll(".number");
@@ -349,37 +343,37 @@ const testConnection = async () => {
     
     <div className="container">
       <div className="clockContainer">
-        <div class="clock">
-        <div class="wrap">
-        <div class="numbers">
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="number" data-num="1">I</div>
-          <div class="number" data-num="2">II</div>
-          <div class="number" data-num="3">III</div>
-          <div class="number" data-num="4">IV</div>
-          <div class="number" data-num="5">V</div>
-          <div class="number" data-num="6">VI</div>
-          <div class="number" data-num="7">VII</div>
-          <div class="number" data-num="8">VIII</div>
-          <div class="number" data-num="9">IX</div>
-          <div class="number" data-num="10">X</div>
-          <div class="number" data-num="11">XI</div>
-          <div class="number" data-num="12">XII</div>
-    <div class="hour"></div>
-    <div class="minute"></div>
-    <div class="second"></div>
-    <div class="point"></div>
+        <div className="clock">
+        <div className="wrap">
+        <div className="numbers">
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="number" data-num="1">I</div>
+          <div className="number" data-num="2">II</div>
+          <div className="number" data-num="3">III</div>
+          <div className="number" data-num="4">IV</div>
+          <div className="number" data-num="5">V</div>
+          <div className="number" data-num="6">VI</div>
+          <div className="number" data-num="7">VII</div>
+          <div className="number" data-num="8">VIII</div>
+          <div className="number" data-num="9">IX</div>
+          <div className="number" data-num="10">X</div>
+          <div className="number" data-num="11">XI</div>
+          <div className="number" data-num="12">XII</div>
+    <div className="hour"></div>
+    <div className="minute"></div>
+    <div className="second"></div>
+    <div className="point"></div>
   </div>
 </div>
 
@@ -475,47 +469,59 @@ const testConnection = async () => {
                   <option className="menuTendina" value="Quarzo">Quarzo</option>
                 </select>
               </div>
-
-              <div className="selectMenu">
-                <label>
+              <label>
                   <strong>Colore: </strong>
                 </label>
-                <div style={{ marginBottom: "10px" }}></div>
-                <select
-                  value={newWatch.color}
-                  onChange={(e) => setNewWatch({ ...newWatch, color: e.target.value })}
-                  style={{width: "400px", textAlign: "center", display: "flex"}}
+              <div className="color-picker-container">
+                {/* Input nascosto */}
+                <div style={{width:"10px", position:"absolute"}}>
+                  <input
+                    type="color"
+                    id="color"
+                    ref={colorInputRef}
+                    className="hidden-color-input"
+                    value={newWatch.color}
+                    onChange={(e) => setNewWatch({ ...newWatch, color: e.target.value })}
+                  />
+                </div>
+                {/* Bottone personalizzato */}
+                <button
+                  className="color-picker-button"
+                  onClick={() => colorInputRef.current.click()}
+                  style={{ backgroundColor: newWatch.color || "#ffffff" }}
                 >
-                  <option className="menuTendina" value="" style={{ textAlign: "center" }}>Seleziona colore quadrante</option>
-                  <option className="menuTendina" value="Nero">Nero</option>
-                  <option className="menuTendina" value="Blu">Blu</option>
-                  <option className="menuTendina" value="Bianco">Bianco</option>
-                  <option className="menuTendina" value="Verde">Verde</option>
-                  <option className="menuTendina" value="Giallo">Giallo</option>
-                  <option className="menuTendina" value="Rosso">Rosso</option>
-                  <option className="menuTendina" value="Viola">Viola</option>
-                  <option className="menuTendina" value="Marrone">Marrone</option>
-                </select>
+                  🎨 Scegli un colore
+                </button>
+
+                {/* Mostra il colore selezionato */}
+                {newWatch.color && <p className="selected-color">Colore selezionato: {newWatch.color}</p>}
               </div>
             </div>
 
             <div style={{ marginBottom: "10px" }}></div>
-            <div className="inputImmagine">
+            <div className="upload-container">
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
                 ref={fileInputRef}
-                style={{width:"25%", marginBottom:"2px"}}
+                className="hidden-input"
+                id="file-upload"
               />
+              {/* Bottone personalizzato */}
+              <button className="upload-button" onClick={() => fileInputRef.current.click()}>
+                📸 Seleziona un'immagine
+              </button>
             </div>
             {newWatch.image && (
                 <img
                   src={URL.createObjectURL(newWatch.image)}
                   alt="Anteprima"
                   className="preview-image"
+                  width="100"
                 />
-              )}
+            )}
+            
             <div style={{ marginBottom: "30px" }}></div>
             <div className="buttonForm">
               <button onClick={handleAddWatch}>Salva</button>
