@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family:'Times New Roman', Times, serif;
   /* background-color: #5c3b3b; */
@@ -140,6 +146,11 @@ h3{
   /* Riduci la dimensione del titolo su dispositivi mobili */
   .titleList h1{
     font-size: 1.8em !important; /* Puoi provare anche con 1rem o 0.9rem se vuoi più piccolo */
+  }
+
+  /* Riduci la dimensione del titolo su dispositivi mobili */
+  .titleList h3{
+    font-size: 1.5em !important; /* Puoi provare anche con 1rem o 0.9rem se vuoi più piccolo */
   }
 }
 

@@ -251,6 +251,7 @@ const testConnection = async () => {
   }
 };
 
+
 const [isModalVisible, setIsModalVisible] = useState(false);
 const [selectedWatch, setSelectedWatch] = useState(null);
 
@@ -281,6 +282,100 @@ const handleDayWatch = async (userid) => {
     console.error('Errore nel recupero dell\'orologio:', error.message);
   }
 };
+
+
+const [isModifyVisible, setIsModifyVisible] = useState(false);
+const [modifyWatch, setModifyWatch] = useState(null);
+const [updatedWatch, setUpdatedWatch] = useState({
+  name: '',
+  brand: '',
+  year: '',
+  movement: '',
+  color: '',
+  image: '', // Questo campo verrà aggiornato quando viene selezionata un'immagine
+});
+
+const handleModifyWatch = async (userid, watchid) => {
+  const { data, error } = await supabase
+      .from('watches')
+      .select('*')
+      .eq('userid', userid)
+      .eq('id', watchid);
+
+  if (error) {
+    console.error("Errore nel recupero dell'orologio:", error);
+    return;
+  }
+  if (data && data.length > 0) {
+    const watch = data[0];
+    setModifyWatch(watch);
+    setUpdatedWatch({
+      name: watch.name,
+      brand: watch.brand,
+      year: watch.year,
+      movement: watch.movement,
+      color: watch.color,
+      image: watch.image || '', // Se l'immagine è vuota, assegna una stringa vuota
+    });
+    setIsModifyVisible(true);
+  }
+}
+
+const handleSaveChanges = async () => {
+  try {
+    let updatedData = { ...updatedWatch };
+
+    // Ottieni il percorso dell'immagine esistente se presente
+    const oldImageUrl = modifyWatch.image; 
+
+    // Se c'è una nuova immagine, caricala su Supabase Storage e ottieni l'URL
+    if (newWatch.image instanceof File) {
+      const imageUrl = await uploadImage(newWatch.image);
+      console.log("Immagine caricata con URL:", imageUrl);
+      
+      // Aggiorna il campo immagine con il nuovo URL
+      updatedData.image = imageUrl;
+
+      // Se esiste un'immagine precedente, eliminarla
+      if (oldImageUrl) {
+        await deleteImage(oldImageUrl);
+      }
+    }
+
+    // Aggiorna il database con i nuovi dati
+    const { error } = await supabase
+      .from('watches')
+      .update(updatedData)
+      .eq('id', modifyWatch.id);
+
+    if (error) {
+      console.error("Errore nell'aggiornamento dell'orologio:", error);
+      return;
+    }
+
+    console.log("Orologio aggiornato con successo!");
+    setIsModifyVisible(false);
+    
+  } catch (error) {
+    console.error("Errore durante il salvataggio delle modifiche:", error);
+  }
+};
+
+
+// Gestione del caricamento immagine
+const handleImageModify = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setUpdatedWatch(prevState => ({
+        ...prevState,
+        image: reader.result, // Imposta il risultato dell'immagine come URL di base64
+      }));
+    };
+    reader.readAsDataURL(file);
+  }
+}
 
 
 
@@ -473,35 +568,11 @@ const uploadImage = async (file) => {
             <button className="logout-btn" onClick={handleLogout}>
               Logout
             </button>
-          </div>
-          <div style={{width: "100%", display:"flex", position:"flex", justifyContent:"center"}}>
-            <hr style={{ border: "1px solid #000", margin:"20px 0", width: "700px", display:"flex", position:"flex", justifyContent:"center"}}></hr>
-          </div>
-          <div className="functionButton">
-            <button className="funzioniButton" onClick={() => handleDayWatch(user.id)}>
-              DayWatch
-            </button>
-          </div>
-          
-          {isModalVisible && selectedWatch && (
-            <div className="modal-overlay">
-              <div className="modal-content">
-                <h2>Orologio del Giorno</h2>
-                <img src={selectedWatch.image} alt={selectedWatch.name} className="modal-image" />
-                <p><strong>Nome:</strong> {selectedWatch.name}</p>
-                <p><strong>Marca:</strong> {selectedWatch.brand}</p>
-                <p><strong>Anno:</strong> {selectedWatch.year}</p>
-                <p><strong>Movimento:</strong> {selectedWatch.movement}</p>
-                <p><strong>Colore:</strong> {selectedWatch.color}</p>
-                <div>
-                  <button onClick={() => setIsModalVisible(false)}>Chiudi</button>
-                </div>
-              </div>
-            </div>
-          )}
+          </div> 
 
-
-          <h3>Aggiungi un nuovo orologio</h3>
+          <div className="titleList">
+            <h3 style={{padding:"20px"}}>Aggiungi un nuovo orologio</h3>
+          </div>
           <div className="form">
             <input
               type="text"
@@ -605,6 +676,147 @@ const uploadImage = async (file) => {
             </div>
           </div>
 
+          <div style={{width: "100%", display:"flex", position:"flex", justifyContent:"center", marginTop:"30px"}}>
+            <hr style={{ border: "1px solid #000", margin:"20px 0", width: "700px", display:"flex", position:"flex", justifyContent:"center"}}></hr>
+          </div>
+          <div className="functionButton">
+            <button className="funzioniButton" onClick={() => handleDayWatch(user.id)}>
+              DayWatch
+            </button>
+          </div>
+          {isModalVisible && selectedWatch && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <h2>Orologio del Giorno</h2>
+                <img src={selectedWatch.image} alt=" Nessuna Foto" className="modal-image" />
+                <p><strong>Nome:</strong> {selectedWatch.name}</p>
+                <p><strong>Marca:</strong> {selectedWatch.brand}</p>
+                <p><strong>Anno:</strong> {selectedWatch.year}</p>
+                <p><strong>Movimento:</strong> {selectedWatch.movement}</p>
+                <p><strong>Colore:</strong> {selectedWatch.color}</p>
+                <div className="functionButton">
+                  <button className="funzioniButton" onClick={() => setIsModalVisible(false)}>Chiudi</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Area di MODIFICA */}
+          {isModifyVisible && modifyWatch && (
+            <div className="modal-overlay">
+              <div className="modal-content">
+                <h2>Modifica Orologio</h2>
+                <img src={updatedWatch.image || "/fallback-image.jpg"} alt=" Nessuna Foto" className="modal-image" />
+                
+                <div className="formModify" style={{ fontFamily: "minork" }}>
+                  <div>
+                    <label>Nome: </label>
+                    <input
+                      type="text"
+                      value={updatedWatch.name}
+                      onChange={(e) => setUpdatedWatch({ ...updatedWatch, name: e.target.value })}
+                    />
+                  </div>
+
+                  <div>
+                    <label>Marca: </label>
+                    <input
+                      type="text"
+                      value={updatedWatch.brand}
+                      onChange={(e) => setUpdatedWatch({ ...updatedWatch, brand: e.target.value })}
+                    />
+                  </div>
+
+                  <div>
+                    <label>Anno: </label>
+                    <input
+                      type="text"
+                      value={updatedWatch.year}
+                      onChange={(e) => setUpdatedWatch({ ...updatedWatch, year: e.target.value })}
+                    />
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", width: "100%" }}>
+                    <div className="selectMenu">
+                      <label>
+                        <strong>Movimento: </strong>
+                      </label>
+                      <div style={{ marginBottom: "10px" }}></div>
+                      <select
+                        value={updatedWatch.movement}
+                        onChange={(e) => setUpdatedWatch({ ...updatedWatch, movement: e.target.value })}
+                        style={{ textAlign: "center", display: "flex", border: "1px solid green" }}
+                      >
+                        <option className="menuTendina" value="">Seleziona il movimento</option>
+                        <option className="menuTendina" value="Automatico">Automatico</option>
+                        <option className="menuTendina" value="Carica Manuale">Carica Manuale</option>
+                        <option className="menuTendina" value="Quarzo">Quarzo</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div style={{ marginBottom: "10px" }}></div>
+
+                  <label>
+                    <strong>Colore: </strong>
+                  </label>
+                  <div className="color-picker-container">
+                    {/* Input nascosto */}
+                    <div style={{ width: "10px", position: "absolute" }}>
+                      <input
+                        type="color"
+                        id="color"
+                        ref={colorInputRef}
+                        className="hidden-color-input"
+                        value={updatedWatch.color}
+                        onChange={(e) => setUpdatedWatch({ ...updatedWatch, color: e.target.value })}
+                      />
+                    </div>
+                    {/* Bottone personalizzato */}
+                    <button
+                      className="color-picker-button"
+                      onClick={() => colorInputRef.current.click()}
+                      style={{ backgroundColor: updatedWatch.color || "#ffffff", border: "1px solid green" }}
+                    >
+                      🎨 Scegli un colore
+                    </button>
+
+                    {/* Mostra il colore selezionato */}
+                    {updatedWatch.color && <p className="selected-color">Colore selezionato: {updatedWatch.color}</p>}
+                  </div>
+
+                  {/* Caricamento immagine */}
+                  <div className="upload-container">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      ref={fileInputRef}
+                      className="hidden-input"
+                      id="file-upload"
+                    />
+                    <button className="upload-button" onClick={() => fileInputRef.current.click()}>
+                      📸 Seleziona un'immagine
+                    </button>
+                  </div>
+                  {newWatch.image && (
+                    <img
+                      src={URL.createObjectURL(newWatch.image)}
+                      alt="Anteprima"
+                      className="preview-imageMod"
+                      width="100"
+                    />
+                  )}
+                </div>
+
+                <div className="buttonForm">
+                  <button className="funzioniButton" onClick={handleSaveChanges}>Salva</button>
+                  <button className="funzioniButton" onClick={() => setIsModifyVisible(false)}>Chiudi</button>
+                </div>
+              </div>
+            </div>
+          )}
+
 
           <h2>Lista Orologi</h2>
           <div className="watch-list">
@@ -631,11 +843,10 @@ const uploadImage = async (file) => {
                 <div className="modifyButton">
                   <button
                     className="modify-btn"
-                    onClick={() => handleModifyWatch(watch.id, watch.image)}
+                    onClick={() => handleModifyWatch(user.id, watch.id)}  // Passa solo userid e watch.id
                   >
                     Modifica
                   </button>
-
                 </div>
                 <div className="delete-button">
                   <button
