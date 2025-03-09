@@ -1,7 +1,15 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
+}
+
+
+
+html.dark-mode {
+  color-scheme: dark;
+  background-color: #121212; /* Imposta il colore di sfondo per la modalità scura */
+  color: white; /* Colore del testo per la modalità scura */
 }
 
 body {
@@ -14,6 +22,72 @@ body {
   /* background: url(https://htopqijsvgaqjrvvgpjh.supabase.co/storage/v1/object/public/fotoWatch//Sfondo.jpg) center / cover no-repeat fixed; */
   background: url(https://htopqijsvgaqjrvvgpjh.supabase.co/storage/v1/object/public/fotoWatch//SfondoBello.jpg) center / cover no-repeat fixed;
   font-size: 18px;
+
+  /* Modalità chiara */
+  /* Modalità chiara */
+  color: black;
+  background-color: white; /* Aggiungi un colore di sfondo chiaro per la modalità chiara */
+  transition: background 0.4s ease-in-out, color 0.4s ease-in-out;
+}
+
+/* Modalità scura */
+.dark-mode {
+  background-color: #12121200; /* Colore di sfondo scuro */
+  color: white; /* Colore testo chiaro per modalità scura */
+  background: url(https://htopqijsvgaqjrvvgpjh.supabase.co/storage/v1/object/public/fotoWatch//SfondoScuro.jpg) center / cover no-repeat fixed;
+}
+
+.dark-mode body {
+  color: white; /* Cambia il colore del testo in bianco quando in modalità scura */
+  transition: background 0.4s ease-in-out, color 0.4s ease-in-out;
+  background-color: aqua;
+}
+
+.dark-mode h3 {
+  color: #ffffff;
+  font-size: 2em;
+  margin: auto;
+  font-style: normal;
+  font-weight: normal;
+  padding: 10px;
+}
+
+.dark-mode .watch-card {
+  /* background: rgb(250, 214, 214); */
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 15px;
+
+  border-radius: 10px;
+  text-align: center;
+}
+
+.dark-mode .modal-content{
+  
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+
+  border: 1px solid rgba(95, 83, 97, 0.80);
+  border-radius: 20px;
+  /* background-color: rgba(255, 255, 255, 0.45); */
+  background-color: rgba(95, 83, 97, 0.80);
+  backdrop-filter: blur(25px);
+}
+
+.dark-mode .selectMenu > select{
+  color: #ffffff;
+  background-color: #0c0c0c;
+  border: 0px;
+}
+
+.dark-mode h1 {
+  color: #ffffff;
+}
+
+.dark-mode h2 {
+  color: #ffffff;
 }
 
 .container {
@@ -25,6 +99,7 @@ body {
   border-radius: 20px;
   /* background-color: rgba(255, 255, 255, 0.45); */
   background-color: rgba(188, 160, 192, 0.45);
+  font-size: 19px;
   
   
   /* background-color: rgba(255, 255, 255, 0.45); */
@@ -116,6 +191,9 @@ h3{
   text-align: center;
 }
 
+
+
+
 .watch-image {
   width: 100%;
   max-width: 150px;
@@ -150,6 +228,10 @@ h3{
 
   /* Riduci la dimensione del titolo su dispositivi mobili */
   .titleList h3{
+    font-size: 1.5em !important; /* Puoi provare anche con 1rem o 0.9rem se vuoi più piccolo */
+  }
+
+  .modal-content h2 {
     font-size: 1.5em !important; /* Puoi provare anche con 1rem o 0.9rem se vuoi più piccolo */
   }
 }

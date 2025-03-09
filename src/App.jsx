@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 import imageCompression from "browser-image-compression";
+
 import "./App.css";
 
 const supabaseUrl = "https://htopqijsvgaqjrvvgpjh.supabase.co";
@@ -8,6 +9,37 @@ const supabaseAnonKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0b3BxaWpzdmdhcWpydnZncGpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwMjQyOTcsImV4cCI6MjA1NjYwMDI5N30.pVzMwoPz1VL3EikMUbDaBwA6X47ehZb2Wu-P9-wk2a0";
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+
+function DarkModeSwitch() {
+  const [isDark, setIsDark] = useState(
+    localStorage.getItem("theme") === "dark"
+  );
+
+  useEffect(() => {
+    if (isDark) {
+      document.body.classList.add("dark-mode");
+      document.documentElement.setAttribute("style", "color-scheme:dark"); // Impostiamo color-scheme a dark
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark-mode");
+      document.documentElement.setAttribute("style", "color-scheme:light"); // Impostiamo color-scheme a light
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDark]);
+
+  return (
+    <div className="slideWrap">
+      <input
+        type="checkbox"
+        id="s5"
+        checked={isDark}
+        onChange={() => setIsDark(!isDark)}
+      />
+      <label className="slider-v3" htmlFor="s5"></label>
+    </div>
+  );
+}
 
 function App() {
   const fileInputRef = useRef(null);
@@ -36,10 +68,10 @@ const testConnection = async () => {
     } else {
       console.log("Connessione a Supabase riuscita!");
     }
-  } catch (err) {
-    console.error("Errore imprevisto durante la connessione:", err);
-  }
-};
+    } catch (err) {
+      console.error("Errore imprevisto durante la connessione:", err);
+    }
+  };
 
   useEffect(() => {
     testConnection();
@@ -163,7 +195,7 @@ const testConnection = async () => {
       setMessage("Errore durante l'inserimento: " + (error.message || "Si è verificato un errore."));
     }
     setLoading(false);
-};
+  };
 
 
 
@@ -244,171 +276,157 @@ const testConnection = async () => {
   };
 
  // Funzione per gestire la selezione del file
- const handleImageChange = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    setNewWatch((prev) => ({ ...prev, image: file }));
-  }
-};
-
-
-const [isModalVisible, setIsModalVisible] = useState(false);
-const [selectedWatch, setSelectedWatch] = useState(null);
-
-const handleDayWatch = async (userid) => {
-  try {
-    // Recupera la lista degli orologi associati all'utente
-    const { data, error } = await supabase
-      .from('watches')
-      .select('*')
-      .eq('userid', userid);
-
-    if (error) {
-      throw error;
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setNewWatch((prev) => ({ ...prev, image: file }));
     }
-
-    if (data && data.length > 0) {
-      // Seleziona un orologio casuale
-      const randomIndex = Math.floor(Math.random() * data.length);
-      const randomWatch = data[randomIndex];
-      
-      // Imposta l'orologio selezionato
-      setSelectedWatch(randomWatch);
-      setIsModalVisible(true); // Mostra la modale con i dettagli dell'orologio
-    } else {
-      console.log('Nessun orologio trovato per questo utente.');
-    }
-  } catch (error) {
-    console.error('Errore nel recupero dell\'orologio:', error.message);
-  }
-};
+  };
 
 
-const [isModifyVisible, setIsModifyVisible] = useState(false);
-const [modifyWatch, setModifyWatch] = useState(null);
-const [updatedWatch, setUpdatedWatch] = useState({
-  name: '',
-  brand: '',
-  year: '',
-  movement: '',
-  color: '',
-  image: '', // Questo campo verrà aggiornato quando viene selezionata un'immagine
-});
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedWatch, setSelectedWatch] = useState(null);
 
-const handleModifyWatch = async (userid, watchid) => {
-  const { data, error } = await supabase
-      .from('watches')
-      .select('*')
-      .eq('userid', userid)
-      .eq('id', watchid);
+  const handleDayWatch = async (userid) => {
+    try {
+      // Recupera la lista degli orologi associati all'utente
+      const { data, error } = await supabase
+        .from('watches')
+        .select('*')
+        .eq('userid', userid);
 
-  if (error) {
-    console.error("Errore nel recupero dell'orologio:", error);
-    return;
-  }
-  if (data && data.length > 0) {
-    const watch = data[0];
-    setModifyWatch(watch);
-    setUpdatedWatch({
-      name: watch.name,
-      brand: watch.brand,
-      year: watch.year,
-      movement: watch.movement,
-      color: watch.color,
-      image: watch.image || '', // Se l'immagine è vuota, assegna una stringa vuota
-    });
-    setIsModifyVisible(true);
-  }
-}
-
-const handleSaveChanges = async () => {
-  try {
-    let updatedData = { ...updatedWatch };
-
-    // Ottieni il percorso dell'immagine esistente se presente
-    const oldImageUrl = modifyWatch.image; 
-
-    // Se c'è una nuova immagine, caricala su Supabase Storage e ottieni l'URL
-    if (newWatch.image instanceof File) {
-      const imageUrl = await uploadImage(newWatch.image);
-      console.log("Immagine caricata con URL:", imageUrl);
-      
-      // Aggiorna il campo immagine con il nuovo URL
-      updatedData.image = imageUrl;
-
-      // Se esiste un'immagine precedente, eliminarla
-      if (oldImageUrl) {
-        await deleteImage(oldImageUrl);
+      if (error) {
+        throw error;
       }
-    }
 
-    // Aggiorna il database con i nuovi dati
-    const { error } = await supabase
-      .from('watches')
-      .update(updatedData)
-      .eq('id', modifyWatch.id);
+      if (data && data.length > 0) {
+        // Seleziona un orologio casuale
+        const randomIndex = Math.floor(Math.random() * data.length);
+        const randomWatch = data[randomIndex];
+        
+        // Imposta l'orologio selezionato
+        setSelectedWatch(randomWatch);
+        setIsModalVisible(true); // Mostra la modale con i dettagli dell'orologio
+      } else {
+        console.log('Nessun orologio trovato per questo utente.');
+      }
+    } catch (error) {
+      console.error('Errore nel recupero dell\'orologio:', error.message);
+    }
+  };
+
+
+  const [isModifyVisible, setIsModifyVisible] = useState(false);
+  const [modifyWatch, setModifyWatch] = useState(null);
+  const [updatedWatch, setUpdatedWatch] = useState({
+    name: '',
+    brand: '',
+    year: '',
+    movement: '',
+    color: '',
+    image: '', // Questo campo verrà aggiornato quando viene selezionata un'immagine
+  });
+
+  const handleModifyWatch = async (userid, watchid) => {
+    const { data, error } = await supabase
+        .from('watches')
+        .select('*')
+        .eq('userid', userid)
+        .eq('id', watchid);
 
     if (error) {
-      console.error("Errore nell'aggiornamento dell'orologio:", error);
+      console.error("Errore nel recupero dell'orologio:", error);
       return;
     }
-
-    console.log("Orologio aggiornato con successo!");
-    setIsModifyVisible(false);
-    
-  } catch (error) {
-    console.error("Errore durante il salvataggio delle modifiche:", error);
-  }
-};
-
-
-// Gestione del caricamento immagine
-const handleImageModify = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setUpdatedWatch(prevState => ({
-        ...prevState,
-        image: reader.result, // Imposta il risultato dell'immagine come URL di base64
-      }));
-    };
-    reader.readAsDataURL(file);
-  }
-}
-
-
-
-const uploadImage = async (file) => {
-  if (!file) return null;
-
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    alert("Devi essere loggato per caricare immagini!");
-    return null;
+    if (data && data.length > 0) {
+      const watch = data[0];
+      setModifyWatch(watch);
+      setUpdatedWatch({
+        name: watch.name,
+        brand: watch.brand,
+        year: watch.year,
+        movement: watch.movement,
+        color: watch.color,
+        image: watch.image || '', // Se l'immagine è vuota, assegna una stringa vuota
+      });
+      setIsModifyVisible(true);
+    }
   }
 
-  const userId = user.id;
-  const fileName = `${userId}/${Date.now()}-${file.name}`;
-  const bucketName = "fotoWatch";
+  const handleSaveChanges = async () => {
+    try {
+      let updatedData = { ...updatedWatch };
 
-  const { data, error } = await supabase
-    .storage
-    .from(bucketName)
-    .upload(fileName, file, {
-      cacheControl: "3600",
-      upsert: false,
-    });
+      // Ottieni il percorso dell'immagine esistente se presente
+      const oldImageUrl = modifyWatch.image; 
 
-  if (error) {
-    console.error("Errore nell'upload:", error);
-    alert(`Errore durante il caricamento: ${error.message}`);
-    return null;
-  }
+      // Se c'è una nuova immagine, caricala su Supabase Storage e ottieni l'URL
+      if (newWatch.image instanceof File) {
+        const imageUrl = await uploadImage(newWatch.image);
+        console.log("Immagine caricata con URL:", imageUrl);
+        
+        // Aggiorna il campo immagine con il nuovo URL
+        updatedData.image = imageUrl;
 
-  // Costruisci l'URL pubblico
-  return `https://htopqijsvgaqjrvvgpjh.supabase.co/storage/v1/object/public/${bucketName}/${fileName}`;
-};
+        // Se esiste un'immagine precedente, eliminarla
+        if (oldImageUrl) {
+          await deleteImage(oldImageUrl);
+        }
+      }
+
+      // Aggiorna il database con i nuovi dati
+      const { error } = await supabase
+        .from('watches')
+        .update(updatedData)
+        .eq('id', modifyWatch.id);
+
+      if (error) {
+        console.error("Errore nell'aggiornamento dell'orologio:", error);
+        return;
+      }
+
+      console.log("Orologio aggiornato con successo!");
+      setIsModifyVisible(false);
+      
+    } catch (error) {
+      console.error("Errore durante il salvataggio delle modifiche:", error);
+    }
+  };
+
+
+
+  const uploadImage = async (file) => {
+    if (!file) return null;
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      alert("Devi essere loggato per caricare immagini!");
+      return null;
+    }
+
+    const userId = user.id;
+    const fileName = `${userId}/${Date.now()}-${file.name}`;
+    const bucketName = "fotoWatch";
+
+    const { data, error } = await supabase
+      .storage
+      .from(bucketName)
+      .upload(fileName, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (error) {
+      console.error("Errore nell'upload:", error);
+      alert(`Errore durante il caricamento: ${error.message}`);
+      return null;
+    }
+
+    // Costruisci l'URL pubblico
+    return `https://htopqijsvgaqjrvvgpjh.supabase.co/storage/v1/object/public/${bucketName}/${fileName}`;
+  };
+  
+
 
 
   // Orologio Funzionante
@@ -476,50 +494,51 @@ const uploadImage = async (file) => {
       dot.style.left = `${x}px`;
       dot.style.top = `${y}px`;
   });
-  
-
 
   clock();
   setInterval(clock, 1000);
 
   return (
-    
+
     <div className="container">
+
+      <DarkModeSwitch />
+
+
       <div className="clockContainer">
         <div className="clock">
-        <div className="wrap">
-        <div className="numbers">
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="number" data-num="1">I</div>
-          <div className="number" data-num="2">II</div>
-          <div className="number" data-num="3">III</div>
-          <div className="number" data-num="4">IV</div>
-          <div className="number" data-num="5">V</div>
-          <div className="number" data-num="6">VI</div>
-          <div className="number" data-num="7">VII</div>
-          <div className="number" data-num="8">VIII</div>
-          <div className="number" data-num="9">IX</div>
-          <div className="number" data-num="10">X</div>
-          <div className="number" data-num="11">XI</div>
-          <div className="number" data-num="12">XII</div>
-    <div className="hour"></div>
-    <div className="minute"></div>
-    <div className="second"></div>
-    <div className="point"></div>
-  </div>
-</div>
-
+          <div className="wrap">
+            <div className="numbers">
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="dot"></div>
+              <div className="number" data-num="1">I</div>
+              <div className="number" data-num="2">II</div>
+              <div className="number" data-num="3">III</div>
+              <div className="number" data-num="4">IV</div>
+              <div className="number" data-num="5">V</div>
+              <div className="number" data-num="6">VI</div>
+              <div className="number" data-num="7">VII</div>
+              <div className="number" data-num="8">VIII</div>
+              <div className="number" data-num="9">IX</div>
+              <div className="number" data-num="10">X</div>
+              <div className="number" data-num="11">XI</div>
+              <div className="number" data-num="12">XII</div>
+              <div className="hour"></div>
+              <div className="minute"></div>
+              <div className="second"></div>
+              <div className="point"></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -538,6 +557,7 @@ const uploadImage = async (file) => {
 
       {message && <p className="message">{message}</p>}
       {loading && <p>Loading...</p>}
+      <div style={{ marginBottom: "20px" }}></div>
 
       {!user ? (
         <div className="form">
