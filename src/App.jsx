@@ -1,6 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 import imageCompression from "browser-image-compression";
+// import Swiper core and required modules
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
 
 import "./App.css";
 
@@ -674,6 +684,7 @@ const testConnection = async () => {
                 ref={fileInputRef}
                 className="hidden-input"
                 id="file-upload"
+                multiple
               />
               {/* Bottone personalizzato */}
               <button className="upload-button" onClick={() => fileInputRef.current.click()}>
@@ -686,6 +697,7 @@ const testConnection = async () => {
                   alt="Anteprima"
                   className="preview-image"
                   width="100"
+                  loading="lazy"
                 />
             )}
             
@@ -700,15 +712,20 @@ const testConnection = async () => {
             <hr style={{ border: "1px solid #000", margin:"20px 0", width: "700px", display:"flex", position:"flex", justifyContent:"center"}}></hr>
           </div>
           <div className="functionButton">
-            <button className="funzioniButton" onClick={() => handleDayWatch(user.id)}>
-              DayWatch
-            </button>
+            <div className="funzioniButton">
+              <div className="buttonBackground"></div>
+              <button onClick={() => handleDayWatch(user.id)}>
+                DayWatch
+              </button>
+            </div>
           </div>
+
+
           {isModalVisible && selectedWatch && (
             <div className="modal-overlay">
               <div className="modal-content">
                 <h2>Orologio del Giorno</h2>
-                <img src={selectedWatch.image} alt=" Nessuna Foto" className="modal-image" />
+                <img src={selectedWatch.image} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
                 <p><strong>Nome:</strong> {selectedWatch.name}</p>
                 <p><strong>Marca:</strong> {selectedWatch.brand}</p>
                 <p><strong>Anno:</strong> {selectedWatch.year}</p>
@@ -726,7 +743,7 @@ const testConnection = async () => {
             <div className="modal-overlay">
               <div className="modal-content">
                 <h2>Modifica Orologio</h2>
-                <img src={updatedWatch.image || "/fallback-image.jpg"} alt=" Nessuna Foto" className="modal-image" />
+                <img src={updatedWatch.image || "/fallback-image.jpg"} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
                 
                 <div className="formModify" style={{ fontFamily: "minork" }}>
                   <div>
@@ -825,6 +842,7 @@ const testConnection = async () => {
                       alt="Anteprima"
                       className="preview-imageMod"
                       width="100"
+                      loading="lazy"
                     />
                   )}
                 </div>
@@ -847,6 +865,7 @@ const testConnection = async () => {
                     src={watch.image}
                     alt={watch.name}
                     className="watch-image"
+                    loading="lazy"
                     onError={(e) => {
                       e.target.src = "/fallback-image.jpg";
                     }}

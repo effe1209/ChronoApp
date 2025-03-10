@@ -122,9 +122,11 @@
   width: 100%;
   max-width: 200px;
   height: auto;
+  max-height: 300px; /* Limita l'altezza massima a 300px */
   border-radius: 10px;
   object-fit: cover;
 }
+
 
 
 .delete-button {
@@ -471,7 +473,7 @@ select {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: 0.3s;
+  
   display: flex;
   justify-content: center;
   gap: 20px;
@@ -487,13 +489,53 @@ select {
   cursor: pointer;
   font-size: 18px;
   font-family: 'minork';
+  transition: 1.3s;
 }
 
-.functionButton:hover {
+.functionButton button:hover {
   color: #0056b3;
+  color: white;
   transform: scale(1.4);
-
+  transform: translateX(40px);
 }
+
+.funzioniButton {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 10px 20px;
+  position: relative;
+  z-index: 2; /* Assicura che il bottone stia sopra l'orologio */
+}
+
+/* Effetto Hover */
+.funzioniButton:hover .buttonBackground {
+  /* left: 10%; */ /* Fa apparire l'orologio dietro il bottone */
+  opacity: 1;
+  transform: rotate(360deg);
+  transform: rotate(0.5turn);
+}
+
+.buttonBackground {
+  position: absolute;
+  top: 20px; /* Nasconde l'orologio sotto il bottone */
+  left: 12%;
+  transform: translateX(-50%);
+  width: 40px; /* Regola la dimensione dell'orologio */
+  height: 40px;
+  /* background-image: url('/orologio_back.svg'); */
+  background-image: url('/clessidra.svg');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0; /* Inizialmente invisibile */
+  transition: 1.8s, opacity 1.3s ease-in-out;
+  margin-top: 8%;
+  /* rotate: 30deg; */
+}
+
 
 .modal-overlay {
   position: fixed;
