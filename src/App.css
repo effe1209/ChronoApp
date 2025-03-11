@@ -205,16 +205,19 @@ select {
   align-items: center;
   height: 30vh;
   justify-content: center;
+  overflow: hidden;
 }
 
 .clock {
   border-radius: 100%;
-  background: rgba(126, 120, 120, 0.8);
+  /* background: rgba(126, 120, 120, 0.8); */
   font-family: "Montserrat";
   border: 3px solid rgba(0, 0, 0, 0.65);
   box-shadow: inset 0px 0px 50px 0 rgba(0, 0, 0, 0.7);
   width: 180px;
   height: 180px;
+  backdrop-filter: blur(50px);
+  backdrop-filter: brightness(0);
 }
 
 .wrap {
@@ -293,6 +296,7 @@ select {
   display: flex;
   justify-content: center;
   align-items: center;
+  backdrop-filter: invert;
 }
 
 .number {
@@ -669,4 +673,196 @@ input[type="checkbox"]:checked + .slider-v3::before {
   color: #0056b3;
   color: white;
   transform: rotate(1turn)
+}
+
+/*-------------SCROLLARE MARCHE-----------------*/
+
+.scroll {
+  white-space: nowrap; /* Impedisce il testo di andare a capo */
+  overflow: hidden; /* Nasconde il testo fuori dal contenitore */
+  display:styk;
+  width: 99%;
+  justify-content: center;
+  position:absolute;
+  z-index: -1;
+  height: auto;
+}
+
+.scroll div {
+  display: flex;
+  animation: animate 10s linear infinite;
+  margin-bottom: 10%;
+  min-width: 200%;
+  align-items: center;
+}
+
+.scroll div span {
+  display: inline-flex;
+  margin: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  background: #ffffff;
+  color: #000000;
+  text-align: center;
+}
+
+.scroll2 {
+  white-space: nowrap; /* Impedisce il testo di andare a capo */
+  overflow: hidden; /* Nasconde il testo fuori dal contenitore */
+  display: flex;
+  width: 99%;
+  position: absolute;
+  z-index: -1;
+}
+
+.scroll2 div {
+  display: flex;
+  min-width: 200%; /* Raddoppia la larghezza per permettere la continuità */
+  animation: animate 6s linear infinite;
+}
+
+.scroll2 div span {
+  display: inline-flex;
+  margin: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  background: #ffffff;
+  color: #000000;
+  text-align: center;
+}
+
+
+
+.scroll3 {
+  white-space: nowrap; /* Impedisce il testo di andare a capo */
+  overflow: hidden; /* Nasconde il testo fuori dal contenitore */
+  width: 99%;
+  justify-content: center;
+  position:absolute;
+  z-index: -1;
+}
+
+.scroll3 div {
+  display: inline-block;
+  animation: animate 8s linear infinite;
+  margin-top: 10%;
+  min-width: 200%;
+}
+
+.scroll3 div span {
+  display: inline-flex;
+  margin: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  text-align: center;
+  background:whitesmoke;
+}
+
+
+
+/*-----------------------------------------------------------*/
+/* DARK MODE*/
+.dark-mode .scroll {
+  white-space: nowrap; /* Impedisce il testo di andare a capo */
+  overflow: hidden; /* Nasconde il testo fuori dal contenitore */
+  width: 99%;
+  justify-content: center;
+  position:absolute;
+  z-index: -1;
+  height: auto;
+}
+
+.dark-mode .scroll div {
+  display: inline-block;
+  animation: animate 10s linear infinite;
+  margin-bottom: 10%;
+  min-width: 200%;
+}
+
+.dark-mode .scroll div span {
+  display: inline-flex;
+  margin: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  background: #333;
+  color: #fff;
+  transition: 0.5s;
+  text-align: center;
+}
+
+
+
+.dark-mode .scroll2 {
+  white-space: nowrap; /* Impedisce il testo di andare a capo */
+  overflow: hidden; /* Nasconde il testo fuori dal contenitore */
+  width: 99%;
+  justify-content: center;
+  position:absolute;
+  z-index: -1;
+}
+
+.dark-mode .scroll2 div {
+  display: inline-block;
+  animation: animate 6s linear infinite;
+  min-width: 200%;
+}
+
+.dark-mode .scroll2 div span {
+  display: inline-flex;
+  margin: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  background: #333;
+  color: #fff;
+  transition: 0.5s;
+  text-align: center;
+}
+
+.dark-mode .scroll3 {
+  white-space: nowrap; /* Impedisce il testo di andare a capo */
+  overflow: hidden; /* Nasconde il testo fuori dal contenitore */
+  width: 99%;
+  justify-content: center;
+  position:absolute;
+  z-index: -1;
+}
+
+.dark-mode .scroll3 div {
+  display: inline-block;
+  animation: animate s linear infinite;
+  margin-top: 10%;
+  min-width: 200%;
+}
+
+.dark-mode .scroll3 div span {
+  display: inline-flex;
+  margin: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  background: #333;
+  color: #fff;
+  transition: 0.5s;
+  text-align: center;
+}
+
+/* Animazione continua senza scatti */
+@keyframes animate {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }

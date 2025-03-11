@@ -18,6 +18,75 @@ const supabaseAnonKey =
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 
+export function ScrollingBrands1() {
+  useEffect(() => {
+    const scrollDiv = document.querySelector(".scroll div");
+    scrollDiv.innerHTML += scrollDiv.innerHTML; // Duplica il contenuto
+  }, []);
+
+  return (
+    <div className="scroll">
+      <div>
+          <span>rolex</span>
+          <span>tissot</span>
+          <span>audemarspiguet</span>
+          <span>citizen</span>
+          <span>casio</span>
+          <span>orient</span>
+          <span>hublot</span>
+          <span>tudor</span>
+          <span>oris</span>
+      </div>
+    </div>
+  );
+}
+
+export function ScrollingBrands2() {
+  useEffect(() => {
+    const scrollDiv = document.querySelector(".scroll2 div");
+    scrollDiv.innerHTML += scrollDiv.innerHTML; // Duplica il contenuto
+  }, []);
+
+  return (
+    <div className="scroll2">
+      <div>
+        <span>alpina</span>
+        <span>bulova</span>
+        <span>patek philippe</span>
+        <span>zenith</span>
+        <span>cartier</span>
+        <span>seiko</span>
+        <span>omega</span>
+        <span>longines</span>
+        <span>mido</span>
+      </div>
+    </div>
+  );
+}
+
+export function ScrollingBrands3() {
+  useEffect(() => {
+    const scrollDiv = document.querySelector(".scroll3 div");
+    scrollDiv.innerHTML += scrollDiv.innerHTML; // Duplica il contenuto
+  }, []);
+
+  return (
+    <div className="scroll3">
+      <div>
+          <span>hamilton</span>
+          <span>iwc</span>
+          <span>swatch</span>
+          <span>maurice lacroix</span>
+          <span>timex</span>
+          <span>breitling</span>
+          <span>panerai</span>
+          <span>jaeger-lecoultre</span>
+          <span>lorenz</span>
+      </div>
+    </div>
+  );
+}
+
 
 const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
   // Inizializza lo stato da localStorage o imposta il valore di default
@@ -649,8 +718,14 @@ const testConnection = async () => {
 
       <DarkModeSwitch />
 
+      
+
 
       <div className="clockContainer">
+      <ScrollingBrands1></ScrollingBrands1>
+      <ScrollingBrands2></ScrollingBrands2>
+      <ScrollingBrands3></ScrollingBrands3>
+
         <div className="clock">
           <div className="wrap">
             <div className="numbers">
