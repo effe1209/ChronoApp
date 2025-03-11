@@ -2,13 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 import imageCompression from "browser-image-compression";
 
-import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
-
 import "./App.css";
 
 const supabaseUrl = "https://htopqijsvgaqjrvvgpjh.supabase.co";
@@ -16,136 +9,6 @@ const supabaseAnonKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0b3BxaWpzdmdhcWpydnZncGpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwMjQyOTcsImV4cCI6MjA1NjYwMDI5N30.pVzMwoPz1VL3EikMUbDaBwA6X47ehZb2Wu-P9-wk2a0";
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-
-
-const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
-  // Stato per gestire la visualizzazione della lista o del carosello
-  const [isCarouselView, setIsCarouselView] = useState(false);
-
-  // Funzione per alternare tra la vista lista e la vista carosello
-  const toggleView = () => {
-    setIsCarouselView(!isCarouselView);
-  };
-
-  return (
-    <div>
-      {/* Bottone per alternare tra lista e carosello */}
-      <div className="buttonView">
-        <button onClick={toggleView} >
-          {isCarouselView ? 'Mostra Lista' : 'Mostra Carosello'}
-        </button>
-      </div>
-
-      {/* Se è la vista lista */}
-      {!isCarouselView && (
-        <div className="watch-list">
-          {watches.map((watch) => (
-            <div key={watch.id} className="watch-card">
-              {watch.image ? (
-                <img
-                  src={watch.image}
-                  alt={watch.name}
-                  className="watch-image"
-                  loading="lazy"
-                  onError={(e) => {
-                    e.target.src = "/fallback-image.jpg";
-                  }}
-                />
-              ) : (
-                <p>Nessuna immagine disponibile</p>
-              )}
-              <h4>{watch.brand}</h4>
-              <h3 className="textCard">{watch.name}</h3>
-              <p>
-                {watch.movement} - {watch.year}
-                {watch.color ? ' - ' + watch.color : ''}
-              </p>
-              <div className="modifyButton">
-                <button
-                  className="modify-btn"
-                  onClick={() => handleModifyWatch(user.id, watch.id)}
-                >
-                  Modifica
-                </button>
-              </div>
-              <div className="delete-button">
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDeleteWatch(watch.id, watch.image)}
-                >
-                  Elimina
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Se è la vista carosello */}
-      {isCarouselView && (
-        <Swiper
-          modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
-          spaceBetween={20}
-          slidesPerView={1}  // Mostra una sola card per slide
-          navigation
-          pagination={{ clickable: true }}
-          scrollbar={{ draggable: true }}
-          onSwiper={(swiper) => console.log(swiper)}
-          onSlideChange={() => console.log('slide change')}
-          autoplay={{
-            delay: 3000, // Tempo in millisecondi tra ogni slide (3 secondi)
-            disableOnInteraction: false, // Mantiene l'autoplay anche se l'utente interagisce
-          }}
-        >
-        {watches.map((watch) => (
-          <SwiperSlide key={watch.id}>
-            <div className="watch-card">
-              {watch.image ? (
-                <img
-                  src={watch.image}
-                  alt={watch.name}
-                  className="watch-imageCarosel"
-                  loading="lazy"
-                  onError={(e) => {
-                    e.target.src = "/fallback-image.jpg";
-                  }}
-                />
-              ) : (
-                <p>Nessuna immagine disponibile</p>
-              )}
-              <h4 style={{fontSize:"34px"}}>{watch.brand}</h4>
-              <h3 className="textCard" style={{fontSize:"42px"}}>{watch.name}</h3>
-              <p style={{fontSize:"26px"}}>
-                {watch.movement} - {watch.year}
-                {watch.color ? " - " + watch.color : ""}
-              </p>
-              <div className="modifyButton">
-                <button
-                  className="modify-btn"
-                  onClick={() => handleModifyWatch(user.id, watch.id)} // Passa solo userid e watch.id
-                >
-                  Modifica
-                </button>
-              </div>
-              <div className="delete-button">
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDeleteWatch(watch.id, watch.image)}
-                >
-                  Elimina
-                </button>
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-      
-      )}
-    </div>
-  );
-};
-
 
 
 function DarkModeSwitch() {
@@ -728,7 +591,7 @@ const testConnection = async () => {
           </div> 
 
           <div className="titleList">
-            <h3>Aggiungi un nuovo orologio</h3>
+            <h3 style={{padding:"20px"}}>Aggiungi un nuovo orologio</h3>
           </div>
           <div className="form">
             <input
@@ -984,13 +847,48 @@ const testConnection = async () => {
 
 
           <h2>Lista Orologi</h2>
-          <WatchList 
-            watches={watches} 
-            handleModifyWatch={handleModifyWatch} 
-            handleDeleteWatch={handleDeleteWatch} 
-            user={user}
-          />
-
+          <div className="watch-list">
+            {watches.map((watch) => (
+              <div key={watch.id} className="watch-card">
+                {watch.image ? (
+                  <img
+                    src={watch.image}
+                    alt={watch.name}
+                    className="watch-image"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.src = "/fallback-image.jpg";
+                    }}
+                  />
+                ) : (
+                  <p>Nessuna immagine disponibile</p>
+                )}
+                <h4>{watch.brand}</h4>
+                <h3 className="textCard">{watch.name}</h3>
+                <p>
+                  {watch.movement} - {watch.year}
+                  {watch.color ? ' - '+watch.color : ''}
+                </p>
+                <div className="modifyButton">
+                  <button
+                    className="modify-btn"
+                    onClick={() => handleModifyWatch(user.id, watch.id)}  // Passa solo userid e watch.id
+                  >
+                    Modifica
+                  </button>
+                </div>
+                <div className="delete-button">
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDeleteWatch(watch.id, watch.image)}
+                  >
+                    Elimina
+                  </button>
+                </div>
+                
+              </div>
+            ))}
+          </div>
         </>
       )}
     </div>
