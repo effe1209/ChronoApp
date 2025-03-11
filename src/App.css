@@ -601,11 +601,16 @@ select {
 /* SLider dark-mode */
 .slideWrap {
   position:relative;
-  width: 100%;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: sticky;
+  top: 10px;
+  z-index: 1000;
+  backdrop-filter: blur(25px);
+  border-radius: 20px;
+  padding: 10px;
 }
 
 .menu {
@@ -620,7 +625,6 @@ select {
   padding-right: 10px;
   font-size: 18px;
   position: relative;
-  
 }
 
 .menu nav {

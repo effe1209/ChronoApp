@@ -17,14 +17,37 @@ const supabaseAnonKey =
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener("click", function (e) {
-      e.preventDefault();
-      document.querySelector(this.getAttribute("href")).scrollIntoView({
-        behavior: "smooth"
-      });
-    });
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener("click", function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute("href"));
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
   });
+});
+
+let timeout;
+window.addEventListener("scroll", () => {
+  const slideWrap = document.querySelector(".slideWrap");
+
+  // Applica il blur solo se la pagina non è in alto
+  if (window.scrollY > 30) {
+    slideWrap.style.backdropFilter = "blur(25px)";
+  } else {
+    slideWrap.style.backdropFilter = "none";
+  }
+
+  clearTimeout(timeout);
+  timeout = setTimeout(() => {
+    // Rimuove il blur solo se lo scroll è fermo E la pagina è in alto
+    if (window.scrollY === 0) {
+      slideWrap.style.backdropFilter = "none";
+    }
+  }, 200); // Dopo 200ms di inattività
+});
+
+
 
 export function ScrollingBrands1() {
   useEffect(() => {
@@ -94,7 +117,6 @@ export function ScrollingBrands3() {
     </div>
   );
 }
-
 
 const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
   // Inizializza lo stato da localStorage o imposta il valore di default

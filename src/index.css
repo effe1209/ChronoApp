@@ -10,6 +10,7 @@ html.dark-mode {
   color-scheme: dark;
   background-color: #121212; /* Imposta il colore di sfondo per la modalità scura */
   color: white; /* Colore del testo per la modalità scura */
+  scroll-behavior: smooth;
 }
 
 body {
