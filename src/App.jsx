@@ -20,12 +20,19 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 
 const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
-  // Stato per gestire la visualizzazione della lista o del carosello
-  const [isCarouselView, setIsCarouselView] = useState(false);
+  // Inizializza lo stato da localStorage o imposta il valore di default
+  const [isCarouselView, setIsCarouselView] = useState(() => {
+    const savedView = localStorage.getItem('viewMode');
+    return savedView ? JSON.parse(savedView) : false; // false per la vista lista, true per il carosello
+  });
 
-  // Funzione per alternare tra la vista lista e la vista carosello
+  // Salva lo stato della vista in localStorage ogni volta che cambia
+  useEffect(() => {
+    localStorage.setItem('viewMode', JSON.stringify(isCarouselView));
+  }, [isCarouselView]);
+
   const toggleView = () => {
-    setIsCarouselView(!isCarouselView);
+    setIsCarouselView(prevState => !prevState); // Alterna la vista
   };
 
   return (
