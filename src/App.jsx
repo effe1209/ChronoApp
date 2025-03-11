@@ -98,10 +98,11 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
           navigation
           pagination={{ clickable: true }}
           scrollbar={{ draggable: true }}
+          style={{borderRadius:"20px"}}
           onSwiper={(swiper) => console.log(swiper)}
           onSlideChange={() => console.log('slide change')}
           autoplay={{
-            delay: 3000, // Tempo in millisecondi tra ogni slide (3 secondi)
+            delay: 5000, // Tempo in millisecondi tra ogni slide (3 secondi)
             disableOnInteraction: false, // Mantiene l'autoplay anche se l'utente interagisce
           }}
         >
