@@ -605,8 +605,93 @@ select {
   height: 40px;
   display: flex;
   align-items: center;
-  justify-content: right;
+  justify-content: space-between;
 }
+
+.menu {
+  margin-right: 20px; /* Distanza tra il menu e lo switch */
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;  /* Allinea gli elementi verticalmente */
+  justify-content:center; /* Puoi usare flex-start per mantenerli a sinistra o center per centrarli orizzontalmente */
+  height:40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 18px;
+  position: relative;
+  
+}
+
+.menu nav {
+  display: flex; /* Usa flexbox per il layout dei link */
+  gap: 10px; /* Distanza tra i link */
+  position: relative;
+}
+
+.menu nav a {
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-decoration: none;
+  color: #000;
+  justify-items: center;
+  border-radius: 20px;
+  align-items: center;
+  align-content: center; 
+  transition: 0.5s;
+  position: relative;
+  transition: 0.3s ease;
+}
+
+.menu nav a:hover {
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1); /* Ombra leggera */
+}
+/*-------------DARK MODE------------------*/
+.dark-mode .menu {
+  margin-right: 20px; /* Distanza tra il menu e lo switch */
+  background: rgba(58, 58, 58, 0.8);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;  /* Allinea gli elementi verticalmente */
+  justify-content:center; /* Puoi usare flex-start per mantenerli a sinistra o center per centrarli orizzontalmente */
+  height:40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 18px;
+  position: relative;
+}
+
+.dark-mode .menu nav {
+  display: flex; /* Usa flexbox per il layout dei link */
+  gap: 10px; /* Distanza tra i link */
+  position: relative;
+}
+
+.dark-mode .menu nav a {
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-decoration: none;
+  color: #ffcc00;
+  font-weight: bold;
+  justify-items: center;
+  border-radius: 20px;
+  align-items: center;
+  align-content: center; 
+  transition: 0.5s;
+  position: relative;
+  transition: 0.3s ease;
+}
+
+.dark-mode .menu nav a:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1); /* Ombra leggera */
+}
+
 
 /* Nasconde il checkbox */
 input[type="checkbox"] {
@@ -622,7 +707,7 @@ input[type="checkbox"] {
   cursor: pointer;
   border-radius: 20px;
   transition: background 0.4s ease-in-out;
-  background: #ccc;
+  background: rgba(255, 255, 255, 0.6);
 }
 
 /* Cerchio interno dello switch */

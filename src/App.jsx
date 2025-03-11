@@ -17,6 +17,14 @@ const supabaseAnonKey =
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener("click", function (e) {
+      e.preventDefault();
+      document.querySelector(this.getAttribute("href")).scrollIntoView({
+        behavior: "smooth"
+      });
+    });
+  });
 
 export function ScrollingBrands1() {
   useEffect(() => {
@@ -107,7 +115,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
   return (
     <div>
       {/* Bottone per alternare tra lista e carosello */}
-      <div className="buttonView">
+      <div className="buttonView" id="listWatch">
         <button onClick={toggleView} >
           {isCarouselView ? 'Mostra Lista' : 'Mostra Carosello'}
         </button>
@@ -224,7 +232,6 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
 };
 
 
-
 function DarkModeSwitch() {
   const [isDark, setIsDark] = useState(
     localStorage.getItem("theme") === "dark"
@@ -244,6 +251,13 @@ function DarkModeSwitch() {
 
   return (
     <div className="slideWrap">
+      <div className="menu">
+        <nav>
+          <a href="#home">Home</a>
+          <a href="#function">Funzioni</a>
+          <a href="#listWatch">Lista Orologi</a>
+        </nav>
+      </div>
       <input
         type="checkbox"
         id="s5"
@@ -714,7 +728,7 @@ const testConnection = async () => {
 
   return (
 
-    <div className="container">
+    <div className="container" id="home">
 
       <DarkModeSwitch />
 
@@ -921,7 +935,7 @@ const testConnection = async () => {
           <div style={{width: "100%", display:"flex", position:"flex", justifyContent:"center", marginTop:"30px"}}>
             <hr style={{ border: "1px solid #000", margin:"20px 0", width: "700px", display:"flex", position:"flex", justifyContent:"center"}}></hr>
           </div>
-          <div className="functionButton">
+          <div id="function" className="functionButton">
             <div className="funzioniButton">
               <div className="buttonBackground"></div>
               <button onClick={() => handleDayWatch(user.id)}>
