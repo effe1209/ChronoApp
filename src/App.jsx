@@ -714,6 +714,7 @@ const testConnection = async () => {
     return `https://htopqijsvgaqjrvvgpjh.supabase.co/storage/v1/object/public/${bucketName}/${fileName}`;
   };
   
+  const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 
 
@@ -958,7 +959,7 @@ const testConnection = async () => {
                 <button
                   className="color-picker-button"
                   onClick={() => colorInputRef.current.click()}
-                  style={{ backgroundColor: newWatch.color || "#ffffff" }}
+                  style={{ backgroundColor: newWatch.color}}
                 >
                   🎨 Scegli un colore
                 </button>
