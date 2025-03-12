@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 import imageCompression from "browser-image-compression";
+import Avatar from 'react-avatar';
 
 import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -47,7 +48,13 @@ window.addEventListener("scroll", () => {
   }, 200); // Dopo 200ms di inattività
 });
 
-
+export function UserProfile({ email }) {
+  return (
+    <div>
+      <Avatar name={email.split('@')[0]} size="70" round={true} />
+    </div>
+  );
+}
 
 export function ScrollingBrands1() {
   useEffect(() => {
@@ -221,27 +228,29 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
               ) : (
                 <p>Nessuna immagine disponibile</p>
               )}
-              <h4 style={{fontSize:"34px"}}>{watch.brand}</h4>
-              <h3 className="textCard" style={{fontSize:"42px"}}>{watch.name}</h3>
-              <p style={{fontSize:"26px"}}>
+              <h4 style={{fontSize:"22px"}}>{watch.brand}</h4>
+              <h3 className="textCard" style={{fontSize:"42px", padding:"2%"}}>{watch.name}</h3>
+              <p>
                 {watch.movement} - {watch.year}
                 {watch.color ? " - " + watch.color : ""}
               </p>
-              <div className="modifyButton">
-                <button
-                  className="modify-btn"
-                  onClick={() => handleModifyWatch(user.id, watch.id)} // Passa solo userid e watch.id
-                >
-                  Modifica
-                </button>
-              </div>
-              <div className="delete-button">
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDeleteWatch(watch.id, watch.image)}
-                >
-                  Elimina
-                </button>
+              <div className="cardBottoni">
+                <div className="modifyButton">
+                  <button
+                    className="modify-btn"
+                    onClick={() => handleModifyWatch(user.id, watch.id)} // Passa solo userid e watch.id
+                  >
+                    Modifica
+                  </button>
+                </div>
+                <div className="delete-button">
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDeleteWatch(watch.id, watch.image)}
+                  >
+                    Elimina
+                  </button>
+                </div>
               </div>
             </div>
           </SwiperSlide>
@@ -254,32 +263,43 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
 };
 
 
+
+
 function DarkModeSwitch() {
   const [isDark, setIsDark] = useState(
     localStorage.getItem("theme") === "dark"
   );
+  const [menuOpen, setMenuOpen] = useState(false); // Stato per il menu
 
   useEffect(() => {
     if (isDark) {
       document.body.classList.add("dark-mode");
-      document.documentElement.setAttribute("style", "color-scheme:dark"); // Impostiamo color-scheme a dark
+      document.documentElement.setAttribute("style", "color-scheme:dark");
       localStorage.setItem("theme", "dark");
     } else {
       document.body.classList.remove("dark-mode");
-      document.documentElement.setAttribute("style", "color-scheme:light"); // Impostiamo color-scheme a light
+      document.documentElement.setAttribute("style", "color-scheme:light");
       localStorage.setItem("theme", "light");
     }
   }, [isDark]);
 
   return (
     <div className="slideWrap">
-      <div className="menu">
+      {/* Pulsante Hamburger per il Mobile */}
+      <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
+        ☰
+      </button>
+
+      {/* Menu di Navigazione */}
+      <div className={`menu ${menuOpen ? "open" : ""}`}>
         <nav>
           <a href="#home">Home</a>
           <a href="#function">Funzioni</a>
           <a href="#listWatch">Lista Orologi</a>
         </nav>
       </div>
+
+      {/* Switch Dark Mode */}
       <input
         type="checkbox"
         id="s5"
@@ -290,6 +310,7 @@ function DarkModeSwitch() {
     </div>
   );
 }
+
 
 function App() {
   const fileInputRef = useRef(null);
@@ -337,9 +358,22 @@ const testConnection = async () => {
     fetchUser();
   }, []);
 
+  // Carica l'email dal localStorage quando il componente si monta
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('email');
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
+  }, []);
+
   const handleRegister = async () => {
     setLoading(true);
     try {
+      if (!email || !password) {
+        setMessage("Email e password sono obbligatori.");
+        return;
+      }
+
       const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) throw error;
 
@@ -362,6 +396,7 @@ const testConnection = async () => {
 
   const handleLogin = async () => {
     setLoading(true);
+    localStorage.setItem('email', email);
     try {
       // Effettua la richiesta di login
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -386,6 +421,7 @@ const testConnection = async () => {
       // Se il login è andato a buon fine
       if (data.user) {
         setUser(data.user); // Imposta l'utente
+        
         setMessage("Accesso effettuato con successo!");
         console.log("Dati utente:", data.user);
   
@@ -410,6 +446,8 @@ const testConnection = async () => {
     setUser(null);
     setWatches([]);
     setMessage("Disconnessione effettuata.");
+    localStorage.removeItem('email');
+    setEmail('');
   };
 
   const handleAddWatch = async () => {
@@ -840,11 +878,20 @@ const testConnection = async () => {
         </div>
       ) : (
         <>
-          <div className="buttonForm">
-            <button className="logout-btn" onClick={handleLogout}>
-              Logout
-            </button>
-          </div> 
+          <div className="profile-info">
+            <h4>Benvenuto, {email.split('@')[0]}</h4>
+          </div>
+          <div className="profile-log">
+            <div className="profile-picture">
+              <UserProfile email={email} />
+            </div>
+            
+            <div className="buttonForm">
+              <button className="logout-btn" onClick={handleLogout}>
+                Logout
+              </button>
+            </div> 
+            </div>
 
           <div className="titleList">
             <h3>Aggiungi un nuovo orologio</h3>

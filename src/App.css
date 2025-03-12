@@ -358,7 +358,7 @@ select {
 }
 
 .upload-button {
-  background-color: #6200ea;
+  background-color: #000;
   color: white;
   padding: 10px 20px;
   font-size: 16px;
@@ -371,7 +371,7 @@ select {
 }
 
 .upload-button:hover {
-  background-color: #3700b3;
+  background-color: #222;
 }
 
 .file-name {
@@ -437,7 +437,7 @@ select {
   color: white;
   padding: 10px 15px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s;
@@ -598,20 +598,6 @@ select {
   align-items: center;
 }
 
-/* SLider dark-mode */
-.slideWrap {
-  position:relative;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 10px;
-  z-index: 1000;
-  backdrop-filter: blur(25px);
-  border-radius: 20px;
-  padding: 10px;
-}
 
 .menu {
   margin-right: 20px; /* Distanza tra il menu e lo switch */
@@ -627,32 +613,15 @@ select {
   position: relative;
 }
 
-.menu nav {
-  display: flex; /* Usa flexbox per il layout dei link */
-  gap: 10px; /* Distanza tra i link */
-  position: relative;
+/* Pulsante hamburger - di default nascosto su desktop */
+.menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
 }
 
-.menu nav a {
-  padding: 5px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  text-decoration: none;
-  color: #000;
-  justify-items: center;
-  border-radius: 20px;
-  align-items: center;
-  align-content: center; 
-  transition: 0.5s;
-  position: relative;
-  transition: 0.3s ease;
-}
-
-.menu nav a:hover {
-  background-color: rgba(255, 255, 255, 1);
-  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1); /* Ombra leggera */
-}
 /*-------------DARK MODE------------------*/
 .dark-mode .menu {
   margin-right: 20px; /* Distanza tra il menu e lo switch */
@@ -769,7 +738,6 @@ input[type="checkbox"]:checked + .slider-v3::before {
 .scroll {
   white-space: nowrap; /* Impedisce il testo di andare a capo */
   overflow: hidden; /* Nasconde il testo fuori dal contenitore */
-  display:styk;
   width: 99%;
   justify-content: center;
   position:absolute;
@@ -778,7 +746,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
 }
 
 .scroll div {
-  display: flex;
+  display: inline-block;
   animation: animate 10s linear infinite;
   margin-bottom: 10%;
   min-width: 200%;
@@ -786,7 +754,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
 }
 
 .scroll div span {
-  display: inline-flex;
+  display: inline-block;
   margin: 10px;
   padding: 5px 10px;
   border-radius: 5px;
@@ -794,6 +762,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   text-transform: uppercase;
   background: #ffffff;
   color: #000000;
+  transition: 0.5s;
   text-align: center;
 }
 
@@ -804,16 +773,17 @@ input[type="checkbox"]:checked + .slider-v3::before {
   width: 99%;
   position: absolute;
   z-index: -1;
+  height: auto;
 }
 
 .scroll2 div {
-  display: flex;
+  display: inline-block;
   min-width: 200%; /* Raddoppia la larghezza per permettere la continuità */
   animation: animate 6s linear infinite;
 }
 
 .scroll2 div span {
-  display: inline-flex;
+  display: inline-block;
   margin: 10px;
   padding: 5px 10px;
   border-radius: 5px;
@@ -822,6 +792,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   background: #ffffff;
   color: #000000;
   text-align: center;
+  transition: 0.5s;
 }
 
 
@@ -833,6 +804,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   justify-content: center;
   position:absolute;
   z-index: -1;
+  height: auto;
 }
 
 .scroll3 div {
@@ -896,6 +868,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   justify-content: center;
   position:absolute;
   z-index: -1;
+  height: auto;
 }
 
 .dark-mode .scroll2 div {
@@ -928,13 +901,13 @@ input[type="checkbox"]:checked + .slider-v3::before {
 
 .dark-mode .scroll3 div {
   display: inline-block;
-  animation: animate s linear infinite;
+  animation: animate 8s linear infinite;
   margin-top: 10%;
   min-width: 200%;
 }
 
 .dark-mode .scroll3 div span {
-  display: inline-flex;
+  display: inline-block;
   margin: 10px;
   padding: 5px 10px;
   border-radius: 5px;
@@ -955,3 +928,237 @@ input[type="checkbox"]:checked + .slider-v3::before {
     transform: translateX(-50%);
   }
 }
+
+
+
+
+
+
+
+/* Wrapper principale */
+.slideWrap {
+  position: relative;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 10px;
+  z-index: 1000;
+  backdrop-filter: blur(25px);
+  border-radius: 20px;
+  padding: 10px;
+}
+
+/* Menu classico */
+.menu {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+/* Pulsante hamburger - di default nascosto su desktop */
+.menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Stile del menu */
+.menu nav {
+  display: flex;
+  gap: 10px;
+}
+
+.menu nav a {
+  padding: 5px 10px;
+  text-decoration: none;
+  color: #000;
+  border-radius: 20px;
+  transition: 0.3s ease;
+}
+
+.menu nav a:hover {
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Media Query per Mobile */
+@media (max-width: 750px) {
+  /* Nasconde il menu classico e mostra l'hamburger */
+  .menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    flex-direction: column;
+  }
+
+  .dark-mode .menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    background: rgba(58, 58, 58, 0.8);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    flex-direction: column;
+  }
+  
+
+  /* Mostra il pulsante hamburger */
+  .menu-btn {
+    display: block;
+    color: white;
+  }
+
+  .dark-mode .menu-btn {
+    display: block;
+    color: #000;
+  }
+
+  /* Mostra il menu quando è aperto */
+  .menu.open {
+    display: flex;
+  }
+}
+
+@media (max-width: 850px) {
+
+  .scroll div{
+    margin-bottom: 20%;
+  }
+
+  .dark-mode .scroll div{
+    margin-bottom: 20%;
+  }
+
+  .scroll3 div{
+    margin-top: 20%;
+  }
+
+  .dark-mode .scroll3 div{
+    margin-top: 20%;
+  }
+}
+
+@media (max-width: 450px) {
+
+  .scroll div{
+    margin-bottom: 30%;
+  }
+
+  .dark-mode .scroll div{
+    margin-bottom: 30%;
+  }
+
+  .scroll3 div{
+    margin-top: 30%;
+  }
+
+  .dark-mode .scroll3 div{
+    margin-top: 30%;
+  }
+}
+
+/* Switch Dark Mode */
+.slider-v3 {
+  width: 80px;
+  height: 40px;
+  border-radius: 20px;
+  transition: background 0.4s ease-in-out;
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+}
+
+.slider-v3::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.4s ease-in-out, background-color 0.4s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Stato attivo */
+input[type="checkbox"]:checked + .slider-v3 {
+  background: #333;
+}
+
+input[type="checkbox"]:checked + .slider-v3::before {
+  transform: translateX(40px);
+  background-color: #ffcc00;
+}
+
+.swiper-horizontal > .swiper-scrollbar, .swiper-scrollbar.swiper-scrollbar-horizontal {
+  position:fixed;
+}
+
+.swiper-slide .watch-card .cardBottoni {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 3%;
+  gap: 5%;
+  margin-top: 2%;
+}
+
+.swiper-slide .watch-card .cardBottoni .delete-button{
+  margin: 0%;
+  padding: 0%;
+}
+
+.swiper-slide .watch-card .cardBottoni .modify-btn{
+  margin: 0%;
+  font-size: 18px;
+  padding: 5px 15px;
+}
+
+.swiper-slide .watch-card .cardBottoni .modifyButton {
+  margin: 0%;
+  padding: 0%;
+  font-size: 18px;
+}
+
+/* -------------Profilo------------------- */
+
+.profile-log {
+  display: flex;
+  justify-content: center;
+  gap: 3%;
+}
+
+.profile-picture {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 20px #4ECDC4, 0 0 40px #349090;
+  animation: glow-border 1.5s infinite alternate;
+}
+
+.profile-info {
+  margin-bottom: 2%;
+}
+
+@keyframes glow-border {
+  0% {
+    box-shadow: 0 0 20px #4ECDC4, 0 0 40px #349090;
+  }
+  100% {
+    box-shadow: 0 0 50px #4ECDC4, 0 0 70px #349090;
+  }
+}
+
+
