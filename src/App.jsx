@@ -1001,10 +1001,10 @@ const testConnection = async () => {
             </div>
           </div>
 
-          <div style={{width: "100%", display:"flex", position:"flex", justifyContent:"center", marginTop:"30px"}}>
+          <div id="function" style={{width: "100%", display:"flex", position:"flex", justifyContent:"center", marginTop:"30px"}}>
             <hr style={{ border: "1px solid #000", margin:"20px 0", width: "700px", display:"flex", position:"flex", justifyContent:"center"}}></hr>
           </div>
-          <div id="function" className="functionButton">
+          <div className="functionButton">
             <div className="funzioniButton">
               <div className="buttonBackground"></div>
               <button onClick={() => handleDayWatch(user.id)}>
