@@ -155,43 +155,49 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
         <div className="watch-list">
           {watches.map((watch) => (
             <div key={watch.id} className="watch-card">
-              {watch.image ? (
-                <img
-                  src={watch.image}
-                  alt={watch.name}
-                  className="watch-image"
-                  loading="lazy"
-                  onError={(e) => {
-                    e.target.src = "/fallback-image.jpg";
-                  }}
-                />
-              ) : (
-                <p>Nessuna immagine disponibile</p>
-              )}
-              <h4>{watch.brand}</h4>
-              <h3 className="textCard">{watch.name}</h3>
-              <p>
-                {watch.movement} - {watch.year}
-                {watch.color ? ' - ' + watch.color : ''}
-              </p>
-              <div className="modifyButton">
-                <button
-                  className="modify-btn"
-                  onClick={() => handleModifyWatch(user.id, watch.id)}
-                >
-                  Modifica
-                </button>
-              </div>
-              <div className="delete-button">
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDeleteWatch(watch.id, watch.image)}
-                >
-                  Elimina
-                </button>
+              <div className="GRID">
+                {watch.image ? (
+                  <img
+                    src={watch.image}
+                    alt={watch.name}
+                    className="watch-image"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.src = "/fallback-image.jpg";
+                    }}
+                  />
+                ) : (
+                  <img src="public/orologio_back.svg" alt="Default" className="watch-image"/>
+                )}
+                <div className="CaratteristicheCard">
+                  <h4>{watch.brand}</h4>
+                  <h3 className="textCard">{watch.name}</h3>
+                  <p>
+                    {watch.movement} - {watch.year}
+                    {watch.color ? ' - ' + watch.color : ''}
+                  </p>
+                </div>
+                <div className="cardBottoni">
+                  <div className="modifyButton">
+                    <button
+                      className="modify-btn"
+                      onClick={() => handleModifyWatch(user.id, watch.id)}
+                    >
+                      Modifica
+                    </button>
+                  </div>
+                  <div className="delete-button">
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDeleteWatch(watch.id, watch.image)}
+                    >
+                      Elimina
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          ))}
+            ))}
         </div>
       )}
 
@@ -226,7 +232,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
                   }}
                 />
               ) : (
-                <p>Nessuna immagine disponibile</p>
+                <img src="public/orologio_back.svg" alt="Default" className="watch-image"/>
               )}
               <h4 style={{fontSize:"22px"}}>{watch.brand}</h4>
               <h3 className="textCard" style={{fontSize:"42px", padding:"2%"}}>{watch.name}</h3>
@@ -317,6 +323,7 @@ function App() {
   const colorInputRef = useRef(null);
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
+  const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [watches, setWatches] = useState([]);
@@ -365,6 +372,14 @@ const testConnection = async () => {
       setEmail(savedEmail);
     }
   }, []);
+
+  useEffect(() => {
+    const savedNickname = localStorage.getItem('nickname');
+    if (savedNickname) {
+      setNickname(savedNickname);
+    }
+  }, []);
+  
 
   const handleRegister = async () => {
     setLoading(true);
@@ -436,10 +451,7 @@ const testConnection = async () => {
     } finally {
       setLoading(false);
     }
-  };
-  
-  
-  
+  }; 
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -484,8 +496,6 @@ const testConnection = async () => {
     }
     setLoading(false);
   };
-
-
 
   const isValidWatch = (watch) => {
     return (
@@ -879,14 +889,14 @@ const testConnection = async () => {
         </div>
       ) : (
         <>
+          
           <div className="profile-info">
+            <div className="profile-picture">
+                <UserProfile email={email} />
+            </div>
             <h4>Benvenuto, {email.split('@')[0]}</h4>
           </div>
           <div className="profile-log">
-            <div className="profile-picture">
-              <UserProfile email={email} />
-            </div>
-            
             <div className="buttonForm">
               <button className="logout-btn" onClick={handleLogout}>
                 Logout
@@ -1005,6 +1015,7 @@ const testConnection = async () => {
           <div id="function" style={{width: "100%", display:"flex", position:"flex", justifyContent:"center", marginTop:"30px"}}>
             <hr style={{ border: "1px solid #000", margin:"20px 0", width: "700px", display:"flex", position:"flex", justifyContent:"center"}}></hr>
           </div>
+          <h2 style={{paddingBottom:"2%"}}>Funzioni</h2>
           <div className="functionButton">
             <div className="funzioniButton">
               <div className="buttonBackground"></div>
@@ -1093,7 +1104,7 @@ const testConnection = async () => {
                   </label>
                   <div className="color-picker-container">
                     {/* Input nascosto */}
-                    <div style={{ width: "10px", position: "absolute" }}>
+                    <div style={{ width: "10px", position: "absolute", opacity:"0"}}>
                       <input
                         type="color"
                         id="color"
@@ -1101,6 +1112,7 @@ const testConnection = async () => {
                         className="hidden-color-input"
                         value={updatedWatch.color}
                         onChange={(e) => setUpdatedWatch({ ...updatedWatch, color: e.target.value })}
+                        style={{opacity:"0"}}
                       />
                     </div>
                     {/* Bottone personalizzato */}

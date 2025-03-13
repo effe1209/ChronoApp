@@ -51,13 +51,29 @@
   padding: 10px;
   margin: 10px 0;
   border: 2px solid #186599b4; /* Bordo blu */
-  border-radius: 10px; /* Angoli stondati */
+  border-radius: 20px; /* Angoli stondati */
   font-size: 18px;
   outline: none; /* Rimuove il bordo blu quando clicchi */
   transition: 0.3s;
   font-family: 'minork';
   border: none;
   align-items: center;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.dark-mode .form input {
+  width: 70%; /* Rende gli input larghi */
+  padding: 10px;
+  margin: 10px 0;
+  border: 2px solid #186599b4; /* Bordo blu */
+  border-radius: 20px; /* Angoli stondati */
+  font-size: 18px;
+  outline: none; /* Rimuove il bordo blu quando clicchi */
+  transition: 0.3s;
+  font-family: 'minork';
+  border: none;
+  align-items: center;
+  background-color: rgba(58, 58, 58, 0.8);
 }
 
 .inputImmagine {
@@ -72,7 +88,6 @@
   align-items: center;
   gap: 20px; /* Distanza tra gli elementi */
   display:flex;
-  
 }
 
 .buttonForm input[type="file"] {
@@ -85,37 +100,35 @@
   padding: 10px 15px;
   font-size: 18px;
   border: none;
-  border-radius: 8px; /* Bottoni stondati */
   cursor: pointer;
-  transition: 0.3s;
+  transition: 2s;
   font-family: 'minork';
-  transition: transform 0.3s ease-in-out;
+  border-radius: 20px;
+  border: 3px solid rgba(37, 98, 126, 1);
+  background-color: rgba(37, 98, 126, 1);
+  color: white;
+  width: 100px;
+  transition: transform 0.5s ease-in-out, background-color 0.5s ease-in-out;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.buttonForm button:first-of-type {
-  background-color: #28a745; /* Verde per "Salva" */
-  color: white;
-}
-
-.buttonForm button:last-of-type {
-  background-color: #b10112; /* Rosso per "Annulla" */
-  color: white;
-}
 
 .buttonForm button:hover {
-  opacity: 0.8;
-  transform: scale(1.03);
+  background-color: transparent;
+  transform: scale(1.05);
+  font-weight: bold;
 }
 
 .preview-image {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  max-height: 200px;
   border-radius: 10px;
-  margin-top: 3px;
-  border: 2px solid #ccc;
-  margin-bottom: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
 }
 
 .watch-image {
@@ -147,6 +160,8 @@
   margin-left: 20%;
   margin-right: 20%;
   margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .delete-button button:hover {
@@ -156,18 +171,22 @@
   cursor: pointer;
   transition: 0.3s;
   color: white;
-  transform: scale(1.5);
+  transform: scale(1.3);
 }
 
 .delete-button button {
   padding: 10px 15px;
   font-size: 18px;
   border: none;
-  border-radius: 8px; /* Bottoni stondati */
+  border-radius: 20px; /* Bottoni stondati */
   cursor: pointer;
   transition: 0.3s;
   background-color: rgb(105, 25, 25);
   color: white;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 select {
@@ -358,12 +377,12 @@ select {
 }
 
 .upload-button {
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, .60);
   color: black;
   padding: 10px 20px;
   font-size: 16px;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   cursor: pointer;
   transition: background 0.3s;
   margin: 20px;
@@ -382,13 +401,7 @@ select {
   color: #333;
 }
 
-.preview-image {
-  margin-top: 10px;
-  width: 200px;
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+
 
 .preview-imageMod {
   margin-top: 10px;
@@ -412,6 +425,7 @@ select {
   color: #00000000;
   background-color: #00000000;
   width: 2px;
+  opacity: 0;
 }
 
 .color-picker-button {
@@ -419,10 +433,10 @@ select {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 20px;
   color: #000000;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-  background-color: white;
+  background-color: rgba(255, 255, 255, .60);
 }
 
 .dark-mode .color-picker-button {
@@ -430,10 +444,10 @@ select {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 20px;
   color: #ffffff;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-  background-color: #000;
+  background-color: rgba(58, 58, 58, 0.8);
 }
 
 .selected-color {
@@ -441,34 +455,38 @@ select {
   color: #333;
 }
 
-.modifyButton {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-}
-
 .modify-btn {
   background-color: rgba(37, 98, 126, 0.8);
   color: white;
   padding: 10px 15px;
   border: none;
-  border-radius: 8px;
+  border-radius: 20px;
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s;
+  transition: background 0.3s ease, transform 0.3s;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
   margin-bottom: 10px;
   margin-top: 20px;
+  height: 44px;
+}
+
+
+.dark-mode .modify-btn {
+  background-color: #ffcc00;
+  color: black;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  height: 44px;
 }
 
 .modify-btn:hover {
-  background-color: #2980b9; /* Blu più scuro */
-  transform: scale(1.05);
-}
-
-.modify-btn:active {
-  background-color: #1c6ea4; /* Blu ancora più scuro per effetto pressione */
-  transform: scale(0.95);
+  transform: scale(1.3);
+  border-radius: 10px;
 }
 
 /* Modale */
@@ -510,11 +528,12 @@ select {
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 20px;
   cursor: pointer;
   font-size: 18px;
   font-family: 'minork';
   transition: 1.3s;
+  height: 44px;
 }
 
 .functionButton button:hover {
@@ -735,17 +754,32 @@ input[type="checkbox"]:checked + .slider-v3::before {
   background-color: rgba(37, 98, 126, 0.8);
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 20px;
   cursor: pointer;
   font-size: 18px;
   font-family: 'minork';
   transition: 1.2s;
+  height: 44px;
+
 }
 
 .buttonView button:hover {
-  color: #0056b3;
-  color: white;
-  transform: rotate(1turn)
+  transform: scale(1.05);
+}
+
+.dark-mode .buttonView button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  background-color: #ffcc00;
+  color: black;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 18px;
+  font-family: 'minork';
+  transition: 1.2s;
+  height: 44px;
+
 }
 
 /*-------------SCROLLARE MARCHE-----------------*/
@@ -784,7 +818,6 @@ input[type="checkbox"]:checked + .slider-v3::before {
 .scroll2 {
   white-space: nowrap; /* Impedisce il testo di andare a capo */
   overflow: hidden; /* Nasconde il testo fuori dal contenitore */
-  display: flex;
   width: 99%;
   position: absolute;
   z-index: -1;
@@ -990,9 +1023,10 @@ input[type="checkbox"]:checked + .slider-v3::before {
 .menu nav a {
   padding: 5px 10px;
   text-decoration: none;
-  color: #000;
+  color: rgba(37, 98, 126, 1);;
   border-radius: 20px;
   transition: 0.3s ease;
+  font-weight: bold;
 }
 
 .menu nav a:hover {
@@ -1125,7 +1159,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   flex-direction: row;
   justify-content: center;
   margin-bottom: 3%;
-  gap: 5%;
+  gap: 2%;
   margin-top: 2%;
 }
 
@@ -1161,6 +1195,8 @@ input[type="checkbox"]:checked + .slider-v3::before {
   overflow: hidden;
   box-shadow: 0 0 20px #4ECDC4, 0 0 40px #349090;
   animation: glow-border 1.5s infinite alternate;
+  justify-self: center;
+  margin-bottom: 2%;
 }
 
 .profile-info {
@@ -1178,7 +1214,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
 
 .dark-mode .upload-button {
   color: #ffffff;
-  background-color: #000000;
+  background-color:rgba(58, 58, 58, 0.8);
 }
 
 .CardImage {
@@ -1189,4 +1225,84 @@ input[type="checkbox"]:checked + .slider-v3::before {
   border-radius: 10px;
   object-fit: cover;
   display: flex;
+}
+
+.dark-mode input::placeholder {
+  color: #ffffff;
+  opacity: 1; /* Per assicurarti che il colore sia visibile */
+}
+
+input::placeholder {
+  color: #000000;
+  opacity: 1; /* Per assicurarti che il colore sia visibile */
+}
+
+.dark-mode .buttonForm button {
+  padding: 10px 15px;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  transition: 2s;
+  font-family: 'minork';
+  border-radius: 20px;
+  border: 3px solid #ffcc00;
+  background-color: #ffcc00;
+  color: black;
+  width: 100px;
+  transition: transform 0.5s ease-in-out, background-color 0.5s ease-in-out;
+  height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.dark-mode .buttonForm button:hover {
+  background-color: transparent;
+  transform: scale(1.05);
+  color: #ffcc00;
+  font-weight: bold;
+}
+
+.CaratteristicheCard {
+  height:fit-content;
+}
+
+.AzioniCard {
+  display: flex;
+  justify-items: flex-start;
+}
+
+.cardBottoni {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 3%;
+  gap: 10%;
+  margin-top: 5%;
+}
+
+.watch-card .cardBottoni .delete-button{
+  margin: 0%;
+  padding: 0%;
+}
+
+.watch-card .cardBottoni .modify-btn{
+  margin: 0%;
+  font-size: 18px;
+  padding: 5px 15px;
+}
+
+.watch-card .cardBottoni .modifyButton {
+  margin: 0%;
+  padding: 0%;
+  display: flex;
+}
+
+.GRID{
+  width: 100%;
+  height: 100%;
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+  align-content: space-between;
 }
