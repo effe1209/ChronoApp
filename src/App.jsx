@@ -379,6 +379,11 @@ const testConnection = async () => {
       setNickname(savedNickname);
     }
   }, []);
+
+    // Salva il nickname quando cambia
+  useEffect(() => {
+    localStorage.setItem("nickname", nickname);
+  }, [nickname]);
   
 
   const handleRegister = async () => {
@@ -868,6 +873,12 @@ const testConnection = async () => {
         <div className="form">
           <h2>Registrati o Accedi</h2>
           <input
+            type="nickname"
+            placeholder="Nickname"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+          />
+          <input
             type="email"
             placeholder="Email"
             value={email}
@@ -894,7 +905,7 @@ const testConnection = async () => {
             <div className="profile-picture">
                 <UserProfile email={email} />
             </div>
-            <h4>Benvenuto, {email.split('@')[0]}</h4>
+            <h4 className="Saluti">Benvenuto, {nickname}</h4>
           </div>
           <div className="profile-log">
             <div className="buttonForm">
