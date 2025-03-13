@@ -125,149 +125,6 @@ export function ScrollingBrands3() {
   );
 }
 
-const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
-  // Inizializza lo stato da localStorage o imposta il valore di default
-  const [isCarouselView, setIsCarouselView] = useState(() => {
-    const savedView = localStorage.getItem('viewMode');
-    return savedView ? JSON.parse(savedView) : false; // false per la vista lista, true per il carosello
-  });
-
-  // Salva lo stato della vista in localStorage ogni volta che cambia
-  useEffect(() => {
-    localStorage.setItem('viewMode', JSON.stringify(isCarouselView));
-  }, [isCarouselView]);
-
-  const toggleView = () => {
-    setIsCarouselView(prevState => !prevState); // Alterna la vista
-  };
-
-  return (
-    <div>
-      {/* Bottone per alternare tra lista e carosello */}
-      <div className="buttonView" id="listWatch">
-        <button onClick={toggleView} >
-          {isCarouselView ? 'Mostra Lista' : 'Mostra Carosello'}
-        </button>
-      </div>
-
-      {/* Se è la vista lista */}
-      {!isCarouselView && (
-        <div className="watch-list">
-          {watches.map((watch) => (
-            <div key={watch.id} className="watch-card">
-              <div className="GRID">
-                {watch.image ? (
-                  <img
-                    src={watch.image}
-                    alt={watch.name}
-                    className="watch-image"
-                    loading="lazy"
-                    onError={(e) => {
-                      e.target.src = "/fallback-image.jpg";
-                    }}
-                  />
-                ) : (
-                  <img src="public/orologio_back.svg" alt="Default" className="watch-image"/>
-                )}
-                <div className="CaratteristicheCard">
-                  <h4>{watch.brand}</h4>
-                  <h3 className="textCard">{watch.name}</h3>
-                  <p>
-                    {watch.movement} - {watch.year}
-                    {watch.color ? ' - ' + watch.color : ''}
-                  </p>
-                </div>
-                <div className="cardBottoni">
-                  <div className="modifyButton">
-                    <button
-                      className="modify-btn"
-                      onClick={() => handleModifyWatch(user.id, watch.id)}
-                    >
-                      Modifica
-                    </button>
-                  </div>
-                  <div className="delete-button">
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDeleteWatch(watch.id, watch.image)}
-                    >
-                      Elimina
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            ))}
-        </div>
-      )}
-
-      {/* Se è la vista carosello */}
-      {isCarouselView && (
-        <Swiper
-          modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
-          spaceBetween={20}
-          slidesPerView={1}  // Mostra una sola card per slide
-          navigation
-          pagination={{ clickable: true }}
-          scrollbar={{ draggable: true }}
-          style={{borderRadius:"20px"}}
-          onSwiper={(swiper) => console.log(swiper)}
-          onSlideChange={() => console.log('slide change')}
-          autoplay={{
-            delay: 5000, // Tempo in millisecondi tra ogni slide (3 secondi)
-            disableOnInteraction: false, // Mantiene l'autoplay anche se l'utente interagisce
-          }}
-        >
-        {watches.map((watch) => (
-          <SwiperSlide key={watch.id}>
-            <div className="watch-card">
-              {watch.image ? (
-                <img
-                  src={watch.image}
-                  alt={watch.name}
-                  className="watch-imageCarosel"
-                  loading="lazy"
-                  onError={(e) => {
-                    e.target.src = "/fallback-image.jpg";
-                  }}
-                />
-              ) : (
-                <img src="public/orologio_back.svg" alt="Default" className="watch-image"/>
-              )}
-              <h4 style={{fontSize:"22px"}}>{watch.brand}</h4>
-              <h3 className="textCard" style={{fontSize:"42px", padding:"2%"}}>{watch.name}</h3>
-              <p>
-                {watch.movement} - {watch.year}
-                {watch.color ? " - " + watch.color : ""}
-              </p>
-              <div className="cardBottoni">
-                <div className="modifyButton">
-                  <button
-                    className="modify-btn"
-                    onClick={() => handleModifyWatch(user.id, watch.id)} // Passa solo userid e watch.id
-                  >
-                    Modifica
-                  </button>
-                </div>
-                <div className="delete-button">
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDeleteWatch(watch.id, watch.image)}
-                  >
-                    Elimina
-                  </button>
-                </div>
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-      
-      )}
-    </div>
-  );
-};
-
 
 
 
@@ -618,6 +475,7 @@ const testConnection = async () => {
     }
   };
 
+  const [isInfoVisible, setIsInfoVisible] = useState(false);
 
   const [isModifyVisible, setIsModifyVisible] = useState(false);
   const [modifyWatch, setModifyWatch] = useState(null);
@@ -655,6 +513,177 @@ const testConnection = async () => {
       setIsModifyVisible(true);
     }
   }
+
+  const handleInfoWatch = async (userid, watchid) => {
+    const { data, error } = await supabase
+        .from('watches')
+        .select('*')
+        .eq('userid', userid)
+        .eq('id', watchid);
+
+    if (error) {
+      console.error("Errore nel recupero dell'orologio:", error);
+      return;
+    }
+    if (data && data.length > 0) {
+      const watch = data[0];
+      setSelectedWatch(watch); 
+      setIsInfoVisible(true);
+    }
+  }
+
+  
+const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
+  // Inizializza lo stato da localStorage o imposta il valore di default
+  const [isCarouselView, setIsCarouselView] = useState(() => {
+    const savedView = localStorage.getItem('viewMode');
+    return savedView ? JSON.parse(savedView) : false; // false per la vista lista, true per il carosello
+  });
+
+  // Salva lo stato della vista in localStorage ogni volta che cambia
+  useEffect(() => {
+    localStorage.setItem('viewMode', JSON.stringify(isCarouselView));
+  }, [isCarouselView]);
+
+  const toggleView = () => {
+    setIsCarouselView(prevState => !prevState); // Alterna la vista
+  };
+
+  return (
+    <div>
+      {/* Bottone per alternare tra lista e carosello */}
+      <div className="buttonView" id="listWatch">
+        <button onClick={toggleView} >
+          {isCarouselView ? 'Mostra Lista' : 'Mostra Carosello'}
+        </button>
+      </div>
+
+      {/* Se è la vista lista */}
+      {!isCarouselView && (
+        <div className="watch-list">
+          {watches.map((watch) => (
+            <div key={watch.id} className="watch-card">
+              <div className="GRID">
+                {watch.image ? (
+                  <img
+                    src={watch.image}
+                    alt={watch.name}
+                    className="watch-image"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.src = "/fallback-image.jpg";
+                    }}
+                  />
+                ) : (
+                  <img src="public/orologio_back.svg" alt="Default" className="watch-image"/>
+                )}
+                <div className="CaratteristicheCard">
+                  <h4>{watch.brand}</h4>
+                  <h3 className="textCard">{watch.name}</h3>
+                  <p>
+                    {watch.movement} - {watch.year}
+                    {watch.color ? ' - ' + watch.color : ''}
+                  </p>
+                </div>
+                
+                <div className="cardBottoni">
+                  <div className="modifyButton">
+                    <button
+                      className="modify-btn"
+                      onClick={() => handleModifyWatch(user.id, watch.id)}
+                    >
+                      Modifica
+                    </button>
+                  </div>
+                  <div className="delete-button">
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDeleteWatch(watch.id, watch.image)}
+                    >
+                      Elimina
+                    </button>
+                  </div>
+                  <div className="InfoButton">
+                  <button
+                    className="modify-btn"
+                      onClick={() => handleInfoWatch(user.id, watch.id)}
+                    >
+                    Info
+                  </button>
+                </div>
+                </div>
+              </div>
+            </div>
+            ))}
+        </div>
+      )}
+
+      {/* Se è la vista carosello */}
+      {isCarouselView && (
+        <Swiper
+          modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
+          spaceBetween={20}
+          slidesPerView={1}  // Mostra una sola card per slide
+          navigation
+          pagination={{ clickable: true }}
+          scrollbar={{ draggable: true }}
+          style={{borderRadius:"20px"}}
+          onSwiper={(swiper) => console.log(swiper)}
+          onSlideChange={() => console.log('slide change')}
+          autoplay={{
+            delay: 5000, // Tempo in millisecondi tra ogni slide (3 secondi)
+            disableOnInteraction: false, // Mantiene l'autoplay anche se l'utente interagisce
+          }}
+        >
+        {watches.map((watch) => (
+          <SwiperSlide key={watch.id}>
+            <div className="watch-card">
+              {watch.image ? (
+                <img
+                  src={watch.image}
+                  alt={watch.name}
+                  className="watch-imageCarosel"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.src = "/fallback-image.jpg";
+                  }}
+                />
+              ) : (
+                <img src="public/orologio_back.svg" alt="Default" className="watch-image"/>
+              )}
+              <h4 style={{fontSize:"22px"}}>{watch.brand}</h4>
+              <h3 className="textCard" style={{fontSize:"42px", padding:"2%"}}>{watch.name}</h3>
+              <p>
+                {watch.movement} - {watch.year}
+                {watch.color ? " - " + watch.color : ""}
+              </p>
+              <div className="cardBottoni">
+                <div className="modifyButton">
+                  <button
+                    className="modify-btn"
+                    onClick={() => handleModifyWatch(user.id, watch.id)} // Passa solo userid e watch.id
+                  >
+                    Modifica
+                  </button>
+                </div>
+                <div className="delete-button">
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDeleteWatch(watch.id, watch.image)}
+                  >
+                    Elimina
+                  </button>
+                </div>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      
+      )}
+    </div>
+  );
+};
 
   const handleSaveChanges = async () => {
     try {
@@ -1171,6 +1200,28 @@ const testConnection = async () => {
               </div>
             </div>
           )}
+
+          {/* Area di INFO */}
+            {isInfoVisible && selectedWatch && (
+              <div className="modal-overlay">
+                <div className="modal-content">
+                  <div className="TileInfo">
+                    <h3>{selectedWatch.name}</h3>
+                  </div>
+                  <img src={selectedWatch.image || "public/orologio_back.svg"} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
+                  <div className="paragrafi">
+                    <p><strong>Marca:</strong> {selectedWatch.brand}</p>
+                    <p><strong>Movimento:</strong> {selectedWatch.movement}</p>
+                    <p><strong>Anno:</strong> {selectedWatch.year}</p>
+                    <p><strong>Colore:</strong> {selectedWatch.color}</p>
+                  </div>
+
+                  <div className="buttonForm">
+                    <button className="funzioniButton" onClick={() => setIsInfoVisible(false)}>Chiudi</button>
+                  </div>
+                </div>
+              </div>
+            )}
 
 
           <h2>Lista Orologi</h2>

@@ -593,7 +593,6 @@ select {
   align-items: center;
   z-index: 1000;
   border-radius: 20px;
-
 }
 
 .modal-content {
@@ -611,11 +610,14 @@ select {
 }
 
 .modal-image {
-  max-width: 60%;
-  height: auto;
   margin-bottom: 20px;
   border-radius: 10px;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
   max-height: 300px;
+  border-radius: 10px;
+  object-fit: cover;
 }
 
 .formModify input {
@@ -1279,6 +1281,7 @@ input::placeholder {
   margin-bottom: 3%;
   gap: 10%;
   margin-top: 5%;
+  flex-wrap: wrap-reverse;
 }
 
 .watch-card .cardBottoni .delete-button{
@@ -1309,14 +1312,37 @@ input::placeholder {
 
 
 .Saluti{
-  width: 20ch;
+  width: 100%;
   text-wrap: nowrap;
   overflow: hidden;
   animation: typing 2s steps(20);
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
 }
 
 @keyframes typing {
   from {
-    width: 0ch;
+    width: 0;
   }
+}
+
+.paragrafi {
+  padding-bottom: 20px;
+  font-family: 'minork';
+  font-size: 22px;
+}
+
+.TileInfo {
+  padding:5px 0 10px 0;
+  font-family: 'minork';
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  font-size: 30px;
+}
+
+.InfoButton {
+  margin-bottom: 20px;
+}
+.InfoButton button{
+  width: 100px;
 }
