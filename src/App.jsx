@@ -177,6 +177,7 @@ function DarkModeSwitch() {
 
 function App() {
   const fileInputRef = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const colorInputRef = useRef(null);
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
@@ -513,24 +514,26 @@ const testConnection = async () => {
       setIsModifyVisible(true);
     }
   }
-
+  
   const handleInfoWatch = async (userid, watchid) => {
+  
+    // Recupera i dati dal database
     const { data, error } = await supabase
-        .from('watches')
-        .select('*')
-        .eq('userid', userid)
-        .eq('id', watchid);
-
+      .from('watches')
+      .select('*')
+      .eq('userid', userid)
+      .eq('id', watchid);
+  
     if (error) {
       console.error("Errore nel recupero dell'orologio:", error);
       return;
     }
     if (data && data.length > 0) {
-      const watch = data[0];
-      setSelectedWatch(watch); 
+      setSelectedWatch(data[0]);
       setIsInfoVisible(true);
     }
-  }
+  };
+  
 
   
 const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
@@ -602,7 +605,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
                   <div className="InfoButton">
                   <button
                     className="modify-btn"
-                      onClick={() => handleInfoWatch(user.id, watch.id)}
+                    onClick={() => handleInfoWatch(user.id, watch.id)}
                     >
                     Info
                   </button>
@@ -1204,7 +1207,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
           {/* Area di INFO */}
             {isInfoVisible && selectedWatch && (
               <div className="modal-overlay">
-                <div className="modal-content">
+                <div className="modal-content" style={{bottom: position.y, left: position.x }}>
                   <div className="TileInfo">
                     <h3>{selectedWatch.name}</h3>
                   </div>
