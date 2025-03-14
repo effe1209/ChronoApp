@@ -1345,4 +1345,15 @@ input::placeholder {
 }
 .InfoButton button{
   width: 100px;
+  background-color: transparent;
+  border:3px solid rgba(37, 98, 126, 0.8);
+  color: rgba(37, 98, 126, 1);
+  /* backdrop-filter: blur(5px); */
+}
+
+.dark-mode .InfoButton button {
+  width: 100px;
+  background-color: transparent;
+  border:3px solid #ffcc00;
+  color: #ffcc00;
 }

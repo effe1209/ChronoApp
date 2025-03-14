@@ -578,12 +578,8 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
                   <img src="public/orologio_back.svg" alt="Default" className="watch-image"/>
                 )}
                 <div className="CaratteristicheCard">
-                  <h4>{watch.brand}</h4>
-                  <h3 className="textCard">{watch.name}</h3>
-                  <p>
-                    {watch.movement} - {watch.year}
-                    {watch.color ? ' - ' + watch.color : ''}
-                  </p>
+                  <h3 className="textCard" style={{padding:"20px"}}>{watch.name}</h3>
+
                 </div>
                 
                 <div className="cardBottoni">
@@ -651,30 +647,34 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
               ) : (
                 <img src="public/orologio_back.svg" alt="Default" className="watch-image"/>
               )}
-              <h4 style={{fontSize:"22px"}}>{watch.brand}</h4>
               <h3 className="textCard" style={{fontSize:"42px", padding:"2%"}}>{watch.name}</h3>
-              <p>
-                {watch.movement} - {watch.year}
-                {watch.color ? " - " + watch.color : ""}
-              </p>
               <div className="cardBottoni">
-                <div className="modifyButton">
+              <div className="InfoButton">
                   <button
                     className="modify-btn"
-                    onClick={() => handleModifyWatch(user.id, watch.id)} // Passa solo userid e watch.id
-                  >
-                    Modifica
+                      onClick={() => handleInfoWatch(user.id, watch.id)}
+                    >
+                    Info
                   </button>
                 </div>
-                <div className="delete-button">
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDeleteWatch(watch.id, watch.image)}
-                  >
-                    Elimina
-                  </button>
+                  <div className="modifyButton">
+                    <button
+                      className="modify-btn"
+                      onClick={() => handleModifyWatch(user.id, watch.id)}
+                    >
+                      Modifica
+                    </button>
+                  </div>
+                  <div className="delete-button">
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDeleteWatch(watch.id, watch.image)}
+                    >
+                      Elimina
+                    </button>
+                  </div>
+                 
                 </div>
-              </div>
             </div>
           </SwiperSlide>
         ))}
