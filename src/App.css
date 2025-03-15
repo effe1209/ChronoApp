@@ -610,7 +610,6 @@ select {
   width: 80%;
   max-width: 500px;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, .80);
   background-color: rgba(255, 255, 255, .80);
   backdrop-filter: blur(25px);
   height: fit-content;
@@ -626,7 +625,6 @@ select {
   width: 80%;
   max-width: 500px;
   text-align: center;
-  background-color: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(25px);
   padding: 20px;
   border-width: 1px;
@@ -634,6 +632,11 @@ select {
   border-color: rgba(255, 255, 255, 0.8);
   border-image: initial;
   border-radius: 20px;
+  height: fit-content;
+}
+
+.dark-mode .infoView .modal-content {
+  background-color: rgba(95, 83, 97, 0.80);
   height: fit-content;
 }
 
