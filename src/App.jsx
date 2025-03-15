@@ -1204,27 +1204,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
             </div>
           )}
 
-          {/* Area di INFO */}
-            {isInfoVisible && selectedWatch && (
-              <div className="modal-overlay">
-                <div className="modal-content" style={{bottom: position.y, left: position.x }}>
-                  <div className="TileInfo">
-                    <h3>{selectedWatch.name}</h3>
-                  </div>
-                  <img src={selectedWatch.image || "public/orologio_back.svg"} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
-                  <div className="paragrafi">
-                    <p><strong>Marca:</strong> {selectedWatch.brand}</p>
-                    <p><strong>Movimento:</strong> {selectedWatch.movement}</p>
-                    <p><strong>Anno:</strong> {selectedWatch.year}</p>
-                    <p><strong>Colore:</strong> {selectedWatch.color}</p>
-                  </div>
-
-                  <div className="buttonForm">
-                    <button className="funzioniButton" onClick={() => setIsInfoVisible(false)}>Chiudi</button>
-                  </div>
-                </div>
-              </div>
-            )}
+          
 
 
           <h2>Lista Orologi</h2>
@@ -1235,7 +1215,35 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
             user={user}
           />
 
+          {/* Area di INFO */}
+          {isInfoVisible && selectedWatch && (
+              <div className="modal-overlay">
+
+              </div>
+            )}
+            {isInfoVisible && selectedWatch && (
+              <div className="infoView">
+              <div className="modal-content">
+                <div className="TileInfo">
+                  <h3>{selectedWatch.name}</h3>
+                </div>
+                <img src={selectedWatch.image || "public/orologio_back.svg"} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
+                <div className="paragrafi">
+                  <p><strong>Marca:</strong> {selectedWatch.brand}</p>
+                  <p><strong>Movimento:</strong> {selectedWatch.movement}</p>
+                  <p><strong>Anno:</strong> {selectedWatch.year}</p>
+                  <p><strong>Colore:</strong> {selectedWatch.color}</p>
+                </div>
+
+                <div className="buttonForm">
+                  <button className="funzioniButton" onClick={() => setIsInfoVisible(false)}>Chiudi</button>
+                </div>
+              </div>
+              </div>
+            )}
+
         </>
+        
       )}
     </div>
   );
