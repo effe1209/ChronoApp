@@ -254,6 +254,11 @@ const testConnection = async () => {
 
       const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) throw error;
+      const userId = data.user.id;
+      const { data1, error1 } = await supabase
+        .from('user_profiles')
+        .upsert([
+      { id: userId, username: nickname }]);
 
       setMessage(
         "Registrazione avvenuta con successo! Controlla la tua email per confermare l'account.",
@@ -295,13 +300,27 @@ const testConnection = async () => {
   
         throw error; // Rilancia l'errore per gestirlo nel catch
       }
+
   
       // Se il login è andato a buon fine
       if (data.user) {
         setUser(data.user); // Imposta l'utente
+        const { data: userProfile, error: profileError } = await supabase
+        .from('user_profiles')
+        .select('username')
+        .eq('id', data.user.id)
+        .single();
+        
+      if (profileError) {
+        console.error("Errore nel recupero del nome utente:", profileError);
+        setMessage("Errore nel recupero del nome utente.");
+      } else {
+        setNickname(userProfile.username);
+      }
         
         setMessage("Accesso effettuato con successo!");
         console.log("Dati utente:", data.user);
+        
   
         // Carica gli orologi subito dopo il login
         fetchWatches(data.user.id);
