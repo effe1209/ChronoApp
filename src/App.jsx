@@ -597,7 +597,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
                     }}
                   />
                 ) : (
-                  <img src="public/orologio_back.svg" alt="Default" className="watch-image"/>
+                  <img src="orologio_back.svg" alt="Default" className="watch-image"/>
                 )}
                 <div className="CaratteristicheCard">
                   <h3 className="textCard" style={{padding:"20px"}}>{watch.name}</h3>
@@ -667,7 +667,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
                   }}
                 />
               ) : (
-                <img src="public/orologio_back.svg" alt="Default" className="watch-image"/>
+                <img src="orologio_back.svg" alt="Default" className="watch-image"/>
               )}
               <h3 className="textCard" style={{fontSize:"42px", padding:"2%"}}>{watch.name}</h3>
               <div className="cardBottoni">
@@ -1246,7 +1246,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
                 <div className="TileInfo">
                   <h3>{selectedWatch.name}</h3>
                 </div>
-                <img src={selectedWatch.image || "public/orologio_back.svg"} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
+                <img src={selectedWatch.image || "orologio_back.svg"} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
                 <div className="paragrafi">
                   <p><strong>Marca:</strong> {selectedWatch.brand}</p>
                   <p><strong>Movimento:</strong> {selectedWatch.movement}</p>
