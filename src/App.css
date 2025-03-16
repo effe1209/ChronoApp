@@ -142,9 +142,9 @@
 
 .watch-imageCarosel {
   width: 100%;
-  max-width: 500px;
+  max-width: 400px;
   height: auto;
-  max-height: 500px; /* Limita l'altezza massima a 300px */
+  max-height: 400px; /* Limita l'altezza massima a 300px */
   border-radius: 10px;
   object-fit: cover;
 }
@@ -518,7 +518,7 @@ select {
   cursor: pointer;
   
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   gap: 20px;
 }
 
@@ -549,9 +549,13 @@ select {
   color: white;
   font-size: 16px;
   cursor: pointer;
-  padding: 10px 20px;
+  /* padding: 10px 20px; */
   position: relative;
   z-index: 2; /* Assicura che il bottone stia sopra l'orologio */
+}
+
+.functionButton h4 {
+  font-size: 28.5px;
 }
 
 /* Effetto Hover */
@@ -564,8 +568,8 @@ select {
 
 .buttonBackground {
   position: absolute;
-  top: 20px; /* Nasconde l'orologio sotto il bottone */
-  left: 12%;
+  top: 0px; /* Nasconde l'orologio sotto il bottone */
+  left: 25%;
   transform: translateX(-50%);
   width: 40px; /* Regola la dimensione dell'orologio */
   height: 40px;
@@ -1388,4 +1392,24 @@ input::placeholder {
   background-color: transparent;
   border:3px solid #ffcc00;
   color: #ffcc00;
+}
+
+.modal-overlay .swiper-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-overlay .swiper-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90vw;  /* Occupa il 90% della larghezza dello schermo */
+  height: 80vh; /* Occupa il 80% dell'altezza dello schermo */
+  max-width: 1200px; /* Limite massimo di larghezza */
+  max-height: 700px; /* Limite massimo di altezza */
 }

@@ -177,7 +177,6 @@ function DarkModeSwitch() {
 
 function App() {
   const fileInputRef = useRef(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const colorInputRef = useRef(null);
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
@@ -486,6 +485,7 @@ const testConnection = async () => {
         
         // Imposta l'orologio selezionato
         setSelectedWatch(randomWatch);
+        setModalTitle("Orologio del Giorno")
         setIsModalVisible(true); // Mostra la modale con i dettagli dell'orologio
       } else {
         console.log('Nessun orologio trovato per questo utente.');
@@ -747,6 +747,88 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
     }
   };
 
+  const [modalTitle, setModalTitle] = useState(""); // Nuovo stato per il titolo
+  const [color, setColor] = useState(""); // Colore HEX
+  const [modalConsigli, setModalConsigli] = useState(false);
+  const [isCarouselVisible, setIsCarouselVisible] = useState(false); // Carosello visibile
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const img = new Image();
+      img.src = e.target.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+
+        // Prendiamo il colore al centro dell'immagine
+        const pixelData = ctx.getImageData(
+          img.width / 2,
+          img.height / 2,
+          1,
+          1
+        ).data;
+        const hexColor = rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
+
+        setColor(hexColor); // Salviamo il colore in stato
+        searchWatchesByColor(hexColor); // Cerchiamo gli orologi simili
+        setPreview(true)
+      };
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const rgbToHex = (r, g, b) => {
+    return (
+      "#" +
+      [r, g, b]
+        .map((x) => x.toString(16).padStart(2, "0"))
+        .join("")
+        .toUpperCase()
+    );
+  };
+
+    const searchWatchesByColor = async (hexColor) => {
+      // Convertiamo il colore HEX in R, G, B
+      const r = parseInt(hexColor.substring(1, 3), 16);
+      const g = parseInt(hexColor.substring(3, 5), 16);
+      const b = parseInt(hexColor.substring(5, 7), 16);
+    
+      // Recuperiamo tutti gli orologi dal database
+      let { data: watches, error } = await supabase.from("watches").select("*");
+    
+      if (error) {
+        console.error("Errore nella query Supabase:", error);
+        return;
+      }
+    
+      // Convertiamo HEX in RGB e calcoliamo la distanza
+      const calculateDistance = (colorHex) => {
+        const r2 = parseInt(colorHex.substring(1, 3), 16);
+        const g2 = parseInt(colorHex.substring(3, 5), 16);
+        const b2 = parseInt(colorHex.substring(5, 7), 16);
+        return Math.sqrt((r - r2) ** 2 + (g - g2) ** 2 + (b - b2) ** 2);
+      };
+    
+      // Ordiniamo gli orologi per distanza di colore
+      const sortedWatches = watches
+        .map((watch) => ({
+          ...watch,
+          distanza: calculateDistance(watch.color),
+        }))
+        .sort((a, b) => a.distanza - b.distanza)
+        .slice(0, 3); // Prendiamo solo i 3 più simili
+    
+      setWatches(sortedWatches);
+      setIsCarouselVisible(true); // Mostriamo il carosello
+    };
 
 
   const uploadImage = async (file) => {
@@ -1078,20 +1160,78 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
             <hr style={{ border: "1px solid #000", margin:"20px 0", width: "700px", display:"flex", position:"flex", justifyContent:"center"}}></hr>
           </div>
           <h2 style={{paddingBottom:"2%"}}>Funzioni</h2>
+          
           <div className="functionButton">
+          <div>
+            <h4>Orologio del Giorno</h4>
             <div className="funzioniButton">
               <div className="buttonBackground"></div>
+              
               <button onClick={() => handleDayWatch(user.id)}>
                 DayWatch
-              </button>
+              </button>              
             </div>
+            </div>
+            <div className="pickWatch">
+      <div>
+        <h4>Completa l'Outfit</h4>
+        <div className="upload-container">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            ref={fileInputRef}
+            className="hidden-input"
+            id="file-upload"
+          />
+          <button onClick={() => fileInputRef.current.click()}>
+            📸 Seleziona un'immagine
+          </button>
+        </div>
+      </div>
+
+      {/* MODALE SOLO CON IL CAROSELLO */}
+      {isCarouselVisible && watches.length > 0 && (
+        <div className="modal-overlay">
+          <div className="swiper-wrapper">
+            
+            <Swiper
+              modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
+              spaceBetween={10}
+              slidesPerView={1}
+              navigation
+              pagination={{ clickable: true }}
+            >
+              {watches.map((watch) => (
+                <SwiperSlide key={watch.id}>
+                  <div className="watch-card">
+                  <div style={{margin:"10px"}}></div>
+                  <h3>Orologi Consigliati</h3>
+                  <div style={{margin:"20px"}}></div>
+                    <img src={watch.image || "orologio_back.svg"} alt={watch.name} className="watch-imageCarosel" />
+                    <p>{watch.name}</p>
+                    <div style={{margin:"10px"}}></div>
+                    <button className="funzioniButton" onClick={() => {setIsCarouselVisible(false), fileInputRef.current.value = "";}}>Chiudi</button>
+                    <div style={{margin:"40px"}}></div>
+                  </div>
+                </SwiperSlide>
+              ))}
+              
+            </Swiper>
+            
           </div>
+        </div>
+      )}
+    </div>
+          </div>
+
+          
 
 
           {isModalVisible && selectedWatch && (
             <div className="modal-overlay">
               <div className="modal-content">
-                <h2>Orologio del Giorno</h2>
+                <h2>{modalTitle}</h2>
                 <img src={selectedWatch.image} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
                 <p><strong>Nome:</strong> {selectedWatch.name}</p>
                 <p><strong>Marca:</strong> {selectedWatch.brand}</p>
