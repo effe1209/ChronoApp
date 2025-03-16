@@ -646,8 +646,8 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
           pagination={{ clickable: true }}
           scrollbar={{ draggable: true }}
           style={{borderRadius:"20px"}}
-          onSwiper={(swiper) => console.log(swiper)}
-          onSlideChange={() => console.log('slide change')}
+/*           onSwiper={(swiper) => console.log(swiper)}
+          onSlideChange={() => console.log('slide change')} */
           autoplay={{
             delay: 5000, // Tempo in millisecondi tra ogni slide (3 secondi)
             disableOnInteraction: false, // Mantiene l'autoplay anche se l'utente interagisce
@@ -779,7 +779,6 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
 
         setColor(hexColor); // Salviamo il colore in stato
         searchWatchesByColor(hexColor); // Cerchiamo gli orologi simili
-        setPreview(true)
       };
     };
     reader.readAsDataURL(file);
@@ -1201,6 +1200,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
               slidesPerView={1}
               navigation
               pagination={{ clickable: true }}
+              scrollbar={{ draggable: true }}
             >
               {watches.map((watch) => (
                 <SwiperSlide key={watch.id}>
@@ -1209,9 +1209,9 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
                   <h3>Orologi Consigliati</h3>
                   <div style={{margin:"20px"}}></div>
                     <img src={watch.image || "orologio_back.svg"} alt={watch.name} className="watch-imageCarosel" />
-                    <p>{watch.name}</p>
+                    <p style={{fontSize:"32px", margin:"20px", fontWeight:"bold"}}>{watch.name}</p>
                     <div style={{margin:"10px"}}></div>
-                    <button className="funzioniButton" onClick={() => {setIsCarouselVisible(false), fileInputRef.current.value = "";}}>Chiudi</button>
+                    <button className="funzioniButton" onClick={() => {setIsCarouselVisible(false); fileInputRef.current.value = "";}}>Chiudi</button>
                     <div style={{margin:"40px"}}></div>
                   </div>
                 </SwiperSlide>
