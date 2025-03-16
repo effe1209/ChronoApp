@@ -1204,7 +1204,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
             >
               {watches.map((watch) => (
                 <SwiperSlide key={watch.id}>
-                  <div className="watch-card">
+                  <div className="watch-card" style={{marginRight:"40px", marginBottom:"-20px"}}>
                   <div style={{margin:"10px"}}></div>
                   <h3>Orologi Consigliati</h3>
                   <div style={{margin:"20px"}}></div>
