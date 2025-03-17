@@ -218,6 +218,7 @@ h3{
 .titleList h3 {
   padding: 20px;
   margin-top: 10px;
+  font-family: 'Amoresa';
 }
 
 @media (max-width: 750px) {
