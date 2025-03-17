@@ -533,7 +533,7 @@ select {
   cursor: pointer;
   font-size: 18px;
   font-family: 'minork';
-  transition: 1.3s;
+  transition: 0.8s;
   height: 44px;
 }
 
@@ -541,7 +541,7 @@ select {
   color: #0056b3;
   color: #ffffff;
   transform: scale(1.4);
-  transform: translateX(40px);
+  transform: translateX(30px);
 }
 
 .funzioniButton {

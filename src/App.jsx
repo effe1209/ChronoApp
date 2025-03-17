@@ -405,6 +405,10 @@ const testConnection = async () => {
   };
 
   const handleDeleteWatch = async (id, imageUrl) => {
+    const isConfirmed = window.confirm("Sei sicuro di voler eliminare questo orologio?");
+
+    if (!isConfirmed) return; // Se l'utente annulla, interrompi la funzione
+    
     try {
       if (imageUrl) {
         await deleteImage(imageUrl);
