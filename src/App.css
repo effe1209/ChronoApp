@@ -556,6 +556,11 @@ select {
 
 .functionButton h4 {
   font-size: 28.5px;
+  color: #000;
+}
+
+.dark-mode .functionButton h4 {
+  color: #ffffff;
 }
 
 /* Effetto Hover */

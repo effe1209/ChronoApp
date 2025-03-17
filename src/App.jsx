@@ -1166,57 +1166,57 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
             </div>
             </div>
             <div className="pickWatch">
-      <div>
-        <h4>Completa l'Outfit</h4>
-        <div className="upload-container">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            ref={fileInputRefOutfit}
-            className="hidden-input"
-            id="file-upload"
-          />
-          <button onClick={() => fileInputRefOutfit.current.click()}>
-            📸 Seleziona un'immagine
-          </button>
-        </div>
-      </div>
+              <div>
+                <h4>Completa l'Outfit</h4>
+                <div className="upload-container">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    ref={fileInputRefOutfit}
+                    className="hidden-input"
+                    id="file-upload"
+                  />
+                  <button onClick={() => fileInputRefOutfit.current.click()}>
+                    📸 Seleziona un'immagine
+                  </button>
+                </div>
+              </div>
 
-      {/* MODALE SOLO CON IL CAROSELLO */}
-      {isCarouselVisible && watches.length > 0 && (
-        <div className="modal-overlay">
-          <div className="swiper-wrapper">
-            
-            <Swiper
-              modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
-              spaceBetween={10}
-              slidesPerView={1}
-              navigation
-              pagination={{ clickable: true }}
-              scrollbar={{ draggable: true }}
-            >
-              {watchConsigliati.map((watch) => (
-                <SwiperSlide key={watch.id}>
-                  <div className="watch-card" style={{marginRight:"40px", marginBottom:"-20px"}}>
-                  <div style={{margin:"10px"}}></div>
-                  <h3>Orologi Consigliati</h3>
-                  <div style={{margin:"20px"}}></div>
-                    <img src={watch.image || "orologio_back.svg"} alt={watch.name} className="watch-imageCarosel" />
-                    <p style={{fontSize:"32px", margin:"20px", fontWeight:"bold"}}>{watch.name}</p>
-                    <div style={{margin:"10px"}}></div>
-                    <button className="funzioniButton" onClick={() => {setIsCarouselVisible(false); fileInputRef.current.value = ""; setWatchConsigliati = ([])}}>Chiudi</button>
-                    <div style={{margin:"40px"}}></div>
+              {/* MODALE SOLO CON IL CAROSELLO */}
+              {isCarouselVisible && watches.length > 0 && (
+                <div className="modal-overlay">
+                  <div className="swiper-wrapper">
+                    
+                    <Swiper
+                      modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
+                      spaceBetween={10}
+                      slidesPerView={1}
+                      navigation
+                      pagination={{ clickable: true }}
+                      scrollbar={{ draggable: true }}
+                    >
+                      {watchConsigliati.map((watch) => (
+                        <SwiperSlide key={watch.id}>
+                          <div className="watch-card" style={{marginRight:"40px", marginBottom:"-20px"}}>
+                          <div style={{margin:"10px"}}></div>
+                          <h3>Orologi Consigliati</h3>
+                          <div style={{margin:"20px"}}></div>
+                            <img src={watch.image || "orologio_back.svg"} alt={watch.name} className="watch-imageCarosel" />
+                            <p style={{fontSize:"32px", margin:"20px", fontWeight:"bold"}}>{watch.name}</p>
+                            <div style={{margin:"10px"}}></div>
+                            <button className="funzioniButton" onClick={() => {setIsCarouselVisible(false); fileInputRef.current.value = ""; setWatchConsigliati = ([])}}>Chiudi</button>
+                            <div style={{margin:"40px"}}></div>
+                          </div>
+                        </SwiperSlide>
+                      ))}
+                      
+                    </Swiper>
+                    
                   </div>
-                </SwiperSlide>
-              ))}
-              
-            </Swiper>
-            
-          </div>
-        </div>
-      )}
-    </div>
+                </div>
+              )}
+            </div>
           </div>
 
           
@@ -1226,7 +1226,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
             <div className="modal-overlay">
               <div className="modal-content">
                 <h2>{modalTitle}</h2>
-                <img src={selectedWatch.image} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
+                <img src={selectedWatch.image || "orologio_back.svg"} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
                 <p><strong>Nome:</strong> {selectedWatch.name}</p>
                 <p><strong>Marca:</strong> {selectedWatch.brand}</p>
                 <p><strong>Anno:</strong> {selectedWatch.year}</p>
