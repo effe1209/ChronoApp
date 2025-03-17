@@ -177,6 +177,7 @@ function DarkModeSwitch() {
 
 function App() {
   const fileInputRef = useRef(null);
+  const fileInputRefOutfit = useRef(null);
   const colorInputRef = useRef(null);
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
@@ -184,6 +185,7 @@ function App() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [watches, setWatches] = useState([]);
+  const [watchConsigliati, setWatchConsigliati] = useState([]);
   const [newWatch, setNewWatch] = useState({
     name: "",
     brand: "",
@@ -800,14 +802,6 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
       const g = parseInt(hexColor.substring(3, 5), 16);
       const b = parseInt(hexColor.substring(5, 7), 16);
     
-      // Recuperiamo tutti gli orologi dal database
-      let { data: watches, error } = await supabase.from("watches").select("*");
-    
-      if (error) {
-        console.error("Errore nella query Supabase:", error);
-        return;
-      }
-    
       // Convertiamo HEX in RGB e calcoliamo la distanza
       const calculateDistance = (colorHex) => {
         const r2 = parseInt(colorHex.substring(1, 3), 16);
@@ -825,7 +819,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
         .sort((a, b) => a.distanza - b.distanza)
         .slice(0, 3); // Prendiamo solo i 3 più simili
     
-      setWatches(sortedWatches);
+      setWatchConsigliati(sortedWatches);
       setIsCarouselVisible(true); // Mostriamo il carosello
     };
 
@@ -1179,11 +1173,11 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
             type="file"
             accept="image/*"
             onChange={handleImageUpload}
-            ref={fileInputRef}
+            ref={fileInputRefOutfit}
             className="hidden-input"
             id="file-upload"
           />
-          <button onClick={() => fileInputRef.current.click()}>
+          <button onClick={() => fileInputRefOutfit.current.click()}>
             📸 Seleziona un'immagine
           </button>
         </div>
@@ -1202,7 +1196,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
               pagination={{ clickable: true }}
               scrollbar={{ draggable: true }}
             >
-              {watches.map((watch) => (
+              {watchConsigliati.map((watch) => (
                 <SwiperSlide key={watch.id}>
                   <div className="watch-card" style={{marginRight:"40px", marginBottom:"-20px"}}>
                   <div style={{margin:"10px"}}></div>
@@ -1211,7 +1205,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
                     <img src={watch.image || "orologio_back.svg"} alt={watch.name} className="watch-imageCarosel" />
                     <p style={{fontSize:"32px", margin:"20px", fontWeight:"bold"}}>{watch.name}</p>
                     <div style={{margin:"10px"}}></div>
-                    <button className="funzioniButton" onClick={() => {setIsCarouselVisible(false); fileInputRef.current.value = "";}}>Chiudi</button>
+                    <button className="funzioniButton" onClick={() => {setIsCarouselVisible(false); fileInputRef.current.value = ""; setWatchConsigliati = ([])}}>Chiudi</button>
                     <div style={{margin:"40px"}}></div>
                   </div>
                 </SwiperSlide>
