@@ -120,6 +120,7 @@
   background-color: transparent;
   transform: scale(1.05);
   font-weight: bold;
+  color: rgba(37, 98, 126, 1);
 }
 
 .preview-image {
@@ -504,7 +505,7 @@ select {
 }
 
 .modal-content {
-  background: white;
+  background: rgba(255, 255, 255, .80);
   padding: 20px;
   border-radius: 8px;
   width: 400px;
@@ -538,7 +539,7 @@ select {
 
 .functionButton button:hover {
   color: #0056b3;
-  color: white;
+  color: #ffffff;
   transform: scale(1.4);
   transform: translateX(40px);
 }
@@ -552,6 +553,10 @@ select {
   /* padding: 10px 20px; */
   position: relative;
   z-index: 2; /* Assicura che il bottone stia sopra l'orologio */
+}
+
+.modal-content .functionButton button:hover {
+  transform: scale(1.1);
 }
 
 .functionButton h4 {
@@ -608,7 +613,7 @@ select {
   align-items: center;
   justify-content: center;
   position: sticky;
-  bottom: 0; /* Mantiene l'elemento sempre in basso */
+  bottom:9%; /* Mantiene l'elemento sempre in basso */
   width: 100%;
   z-index: 1001;
 }
@@ -620,7 +625,7 @@ select {
   max-width: 500px;
   text-align: center;
   background-color: rgba(255, 255, 255, .80);
-  backdrop-filter: blur(25px);
+  backdrop-filter: blur(5px);
   height: fit-content;
   z-index: 1001;
   display: flex;
@@ -634,7 +639,7 @@ select {
   width: 80%;
   max-width: 500px;
   text-align: center;
-  backdrop-filter: blur(25px);
+  backdrop-filter: blur(5px);
   padding: 20px;
   border-width: 1px;
   border-style: solid;
@@ -1420,4 +1425,5 @@ input::placeholder {
 .swiper-wrapper .watch-card {
   height: fit-content;
   border-radius: 20px;
+  backdrop-filter: blur(5px);
 }
