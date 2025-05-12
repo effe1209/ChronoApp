@@ -128,6 +128,7 @@ export function ScrollingBrands3() {
 
 
 
+
 function DarkModeSwitch() {
   const [isDark, setIsDark] = useState(
     localStorage.getItem("theme") === "dark"
@@ -186,6 +187,7 @@ function App() {
   const [message, setMessage] = useState(null);
   const [watches, setWatches] = useState([]);
   const [watchConsigliati, setWatchConsigliati] = useState([]);
+  const [showForm, setShowForm] = useState(false);
   const [newWatch, setNewWatch] = useState({
     name: "",
     brand: "",
@@ -1038,120 +1040,133 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
             <h4 className="Saluti">Benvenuto, {nickname}</h4>
           </div>
           <div className="profile-log">
-            <div className="buttonForm">
+            <div className="buttonForm"
+            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
               <button className="logout-btn" onClick={handleLogout}>
                 Logout
               </button>
-            </div> 
-            </div>
+              <span style={{ fontSize: "30px", color:"black"}}>✦</span> {/* Un simbolo decorativo */}
 
-          <div className="titleList">
-            <h3>Aggiungi un nuovo orologio</h3>
-          </div>
-          <div className="form">
-            <input
-              type="text"
-              placeholder="Nome"
-              value={newWatch.name}
-              onChange={(e) =>
-                setNewWatch({ ...newWatch, name: e.target.value })
-              }
-            />
-            <input
-              type="text"
-              placeholder="Marca"
-              value={newWatch.brand}
-              onChange={(e) =>
-                setNewWatch({ ...newWatch, brand: e.target.value })
-              }
-            />
-            <input
-              type="number"
-              placeholder="Anno"
-              value={newWatch.year}
-              onChange={(e) =>
-                setNewWatch({ ...newWatch, year: e.target.value })
-              }
-            />
-            <div style={{ marginBottom: "10px" }}></div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", width: "100%"}}>
-              <div className="selectMenu">
-                <label>
-                  <strong>Movimento: </strong>
-                </label>
-                <div style={{ marginBottom: "10px" }}></div>
-                <select
-                  value={newWatch.movement}
-                  onChange={(e) => setNewWatch({ ...newWatch, movement: e.target.value })}
-                  style={{textAlign: "center", display: "flex"}}
-                >
-                  <option className="menuTendina" value="">Seleziona il movimento</option>
-                  <option className="menuTendina" value="Automatico">Automatico</option>
-                  <option className="menuTendina" value="Carica Manuale">Carica Manuale</option>
-                  <option className="menuTendina" value="Quarzo">Quarzo</option>
-                </select>
-              </div>
-              <label>
-                  <strong>Colore: </strong>
-                </label>
-              <div className="color-picker-container">
-                {/* Input nascosto */}
-                <div style={{width:"10px", position:"absolute"}}>
-                  <input
-                    type="color"
-                    id="color"
-                    ref={colorInputRef}
-                    className="hidden-color-input"
-                    value={newWatch.color}
-                    onChange={(e) => setNewWatch({ ...newWatch, color: e.target.value })}
-                  />
-                </div>
-                {/* Bottone personalizzato */}
-                <button
-                  className="color-picker-button"
-                  onClick={() => colorInputRef.current.click()}
-                  style={{ backgroundColor: newWatch.color}}
-                >
-                  🎨 Scegli un colore
-                </button>
-
-                {/* Mostra il colore selezionato */}
-                {newWatch.color && <p className="selected-color">Colore selezionato: {newWatch.color}</p>}
-              </div>
-            </div>
-
-            <div style={{ marginBottom: "10px" }}></div>
-            <div className="upload-container">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                ref={fileInputRef}
-                className="hidden-input"
-                id="file-upload"
-                multiple
-              />
-              {/* Bottone personalizzato */}
-              <button className="upload-button" onClick={() => fileInputRef.current.click()}>
-                📸 Seleziona un'immagine
+              <button
+                onClick={() => setShowForm(!showForm)}
+                style={{ width: "200px", padding: "10px", paddingButtom: "10px",}}
+              >
+                {showForm ? "Nascondi Form" : "Aggiungi Orologio"}
               </button>
-            </div>
-            {newWatch.image && (
-                <img
-                  src={URL.createObjectURL(newWatch.image)}
-                  alt="Anteprima"
-                  className="preview-image"
-                  width="100"
-                  loading="lazy"
-                />
-            )}
-            
-            <div style={{ marginBottom: "30px" }}></div>
-            <div className="buttonForm">
-              <button onClick={handleAddWatch}>Salva</button>
-              <button onClick={handleCancel}>Annulla</button>
-            </div>
+
+            </div> 
           </div>
+            {showForm && (
+              <>
+                <div className="titleList">
+                  <h3>Aggiungi un nuovo orologio</h3>
+                </div>
+                <div className="form">
+                  <input
+                    type="text"
+                    placeholder="Nome"
+                    value={newWatch.name}
+                    onChange={(e) =>
+                      setNewWatch({ ...newWatch, name: e.target.value })
+                    }
+                  />
+                  <input
+                    type="text"
+                    placeholder="Marca"
+                    value={newWatch.brand}
+                    onChange={(e) =>
+                      setNewWatch({ ...newWatch, brand: e.target.value })
+                    }
+                  />
+                  <input
+                    type="number"
+                    placeholder="Anno"
+                    value={newWatch.year}
+                    onChange={(e) =>
+                      setNewWatch({ ...newWatch, year: e.target.value })
+                    }
+                  />
+                  <div style={{ marginBottom: "10px" }}></div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", width: "100%"}}>
+                    <div className="selectMenu">
+                      <label>
+                        <strong>Movimento: </strong>
+                      </label>
+                      <div style={{ marginBottom: "10px" }}></div>
+                      <select
+                        value={newWatch.movement}
+                        onChange={(e) => setNewWatch({ ...newWatch, movement: e.target.value })}
+                        style={{textAlign: "center", display: "flex"}}
+                      >
+                        <option className="menuTendina" value="">Seleziona il movimento</option>
+                        <option className="menuTendina" value="Automatico">Automatico</option>
+                        <option className="menuTendina" value="Carica Manuale">Carica Manuale</option>
+                        <option className="menuTendina" value="Quarzo">Quarzo</option>
+                      </select>
+                    </div>
+                    <label>
+                        <strong>Colore: </strong>
+                      </label>
+                    <div className="color-picker-container">
+                      {/* Input nascosto */}
+                      <div style={{width:"10px", position:"absolute"}}>
+                        <input
+                          type="color"
+                          id="color"
+                          ref={colorInputRef}
+                          className="hidden-color-input"
+                          value={newWatch.color}
+                          onChange={(e) => setNewWatch({ ...newWatch, color: e.target.value })}
+                        />
+                      </div>
+                      {/* Bottone personalizzato */}
+                      <button
+                        className="color-picker-button"
+                        onClick={() => colorInputRef.current.click()}
+                        style={{ backgroundColor: newWatch.color}}
+                      >
+                        🎨 Scegli un colore
+                      </button>
+
+                      {/* Mostra il colore selezionato */}
+                      {newWatch.color && <p className="selected-color">Colore selezionato: {newWatch.color}</p>}
+                    </div>
+                  </div>
+
+                  <div style={{ marginBottom: "10px" }}></div>
+                  <div className="upload-container">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      ref={fileInputRef}
+                      className="hidden-input"
+                      id="file-upload"
+                      multiple
+                    />
+                    {/* Bottone personalizzato */}
+                    <button className="upload-button" onClick={() => fileInputRef.current.click()}>
+                      📸 Seleziona un'immagine
+                    </button>
+                  </div>
+                  {newWatch.image && (
+                      <img
+                        src={URL.createObjectURL(newWatch.image)}
+                        alt="Anteprima"
+                        className="preview-image"
+                        width="100"
+                        loading="lazy"
+                      />
+                  )}
+                  
+                  <div style={{ marginBottom: "30px" }}></div>
+                  <div className="buttonForm">
+                    <button onClick={handleAddWatch}>Salva</button>
+                    <button onClick={handleCancel}>Annulla</button>
+                  </div>
+                </div>
+              </>
+            )}
 
           <div id="function" style={{width: "100%", display:"flex", position:"flex", justifyContent:"center", marginTop:"30px"}}>
             <hr style={{ border: "1px solid #000", margin:"20px 0", width: "700px", display:"flex", position:"flex", justifyContent:"center"}}></hr>
