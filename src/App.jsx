@@ -195,6 +195,7 @@ function App() {
     image: "",
     movement: "",
     color: "",
+    isFavorite: false,
   });
   const [loading, setLoading] = useState(false);
 
@@ -563,7 +564,7 @@ const testConnection = async () => {
   
 
   
-const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
+const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavoriteToggle, user }) => {
   // Inizializza lo stato da localStorage o imposta il valore di default
   const [isCarouselView, setIsCarouselView] = useState(() => {
     const savedView = localStorage.getItem('viewMode');
@@ -579,6 +580,25 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
     setIsCarouselView(prevState => !prevState); // Alterna la vista
   };
 
+// Funzione di confronto riutilizzabile per ordinare per nome
+  const sortByName = (a, b) => {
+    // Ordina alfabeticamente per il campo 'name'
+    return a.name.localeCompare(b.name);
+  };
+
+  // 1. FILTRAZIONE
+  const favoriteWatches = watches.filter(w => w.isFavorite);
+  const nonFavoriteWatches = watches.filter(w => !w.isFavorite);
+
+  // 2. ORDINAMENTO: Applica .sort() a ciascun array
+  // Nota: Dobbiamo creare una copia dell'array prima di chiamare .sort()
+  // per non modificare l'array originale (favoriteWatches/nonFavoriteWatches), 
+  // che è una buona pratica in React.
+  const sortedFavoriteWatches = [...favoriteWatches].sort(sortByName);
+  const sortedNonFavoriteWatches = [...nonFavoriteWatches].sort(sortByName);
+
+  // 3. UNIONE: Unisci i due array ordinati
+  const sortedWatches = [...sortedFavoriteWatches, ...sortedNonFavoriteWatches];
   return (
     <div>
       {/* Bottone per alternare tra lista e carosello */}
@@ -591,7 +611,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
       {/* Se è la vista lista */}
       {!isCarouselView && (
         <div className="watch-list">
-          {watches.map((watch) => (
+          {sortedWatches.map((watch) => (
             <div key={watch.id} className="watch-card">
               <div className="GRID">
                 {watch.image ? (
@@ -613,6 +633,17 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
                 </div>
                 
                 <div className="cardBottoni">
+
+                  <div className="favoriteButton">
+                    <button
+                      className="favorite-btn"
+                      onClick={() => handleFavoriteToggle(watch.id)} 
+                      title={watch.isFavorite ? 'Rimuovi dai Preferiti' : 'Aggiungi ai Preferiti'}
+                    >
+                      {watch.isFavorite ? '⭐' : '☆'}
+                    </button>
+                  </div>
+
                   <div className="modifyButton">
                     <button
                       className="modify-btn"
@@ -754,6 +785,51 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
       console.error("Errore durante il salvataggio delle modifiche:", error);
     }
   };
+
+  const handleFavoriteToggle = async (watchId) => {
+    // 1. Trova lo stato attuale dell'orologio prima di aggiornare
+    const currentWatch = watches.find(w => w.id === watchId);
+    
+    if (!currentWatch) {
+        console.error("Orologio non trovato.");
+        return;
+    }
+    
+    // Calcola il nuovo stato (inverte il valore booleano)
+    const newFavoriteState = !currentWatch.isFavorite;
+
+    // 2. Aggiornamento su SUPABASE (Persistenza)
+    console.log(`Aggiornamento watch ${watchId} a isFavorite: ${newFavoriteState}`);
+
+    const { error } = await supabase
+        .from('watches') // Sostituisci 'watches' con il nome della tua tabella se è diverso
+        .update({ isFavorite: newFavoriteState }) // Il campo da aggiornare
+        .eq('id', watchId); // La condizione di filtro (Row Level Security DEVE permettere questo aggiornamento)
+
+    if (error) {
+        console.error("Errore di Supabase durante l'aggiornamento dei preferiti:", error);
+        // È cruciale che lo stato locale NON venga aggiornato se il DB fallisce
+        // Potresti usare 'setMessage' per avvisare l'utente del fallimento
+        return; 
+    }
+
+    // 3. Aggiornamento dello Stato Locale in React
+    // L'aggiornamento avviene solo se Supabase ha avuto successo.
+    // Usiamo una funzione di aggiornamento basata sullo stato precedente (prevWatches)
+    setWatches(prevWatches =>
+        prevWatches.map(watch =>
+            watch.id === watchId
+                ? { ...watch, isFavorite: newFavoriteState } // Crea un NUOVO oggetto aggiornato
+                : watch // Lascia invariati gli altri
+        )
+    );
+
+    // [OPZIONALE] Se stai usando un modale con selectedWatch:
+    // setSelectedWatch(prevWatch => ({
+    //     ...prevWatch,
+    //     isFavorite: newFavoriteState
+    // }));
+};
 
   const [modalTitle, setModalTitle] = useState(""); // Nuovo stato per il titolo
   const [color, setColor] = useState(""); // Colore HEX
@@ -1383,7 +1459,8 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, user }) => {
           <WatchList 
             watches={watches} 
             handleModifyWatch={handleModifyWatch} 
-            handleDeleteWatch={handleDeleteWatch} 
+            handleDeleteWatch={handleDeleteWatch}
+            handleFavoriteToggle={handleFavoriteToggle}
             user={user}
           />
 
