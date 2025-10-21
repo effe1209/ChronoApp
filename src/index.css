@@ -193,8 +193,8 @@ h3{
   border-radius: 10px;
   text-align: center;
 
-  width: 85%;
-  display: inline-block;
+  /*width: 85%;*/
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   position: relative;
 }
 
@@ -308,7 +308,7 @@ h4 {
   background-color: transparent;
   border: none;
   /* Utilizza 'rem' o 'px' se preferisci, 'em' è relativo al font-size del genitore */
-  font-size: 1em; 
+  font-size: 1.2em; 
   cursor: pointer;
   
   /* Garantisce che l'icona non salti durante l'animazione */
@@ -317,6 +317,7 @@ h4 {
   /* Posizionamento nell'angolo in alto a destra */
   top: 10px;    /* Distanza dal bordo superiore */
   right: 10px;  /* Distanza dal bordo destro */
+  padding: 3.4px;
 }
 
 /* * ----------------------------------------------------

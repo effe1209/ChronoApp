@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useTransition, useLayoutEffect} from "react";
 import { createClient } from "@supabase/supabase-js";
 import imageCompression from "browser-image-compression";
 import Avatar from 'react-avatar';
@@ -9,6 +9,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import { motion } from 'framer-motion';
 
 import "./App.css";
 
@@ -199,6 +200,13 @@ function App() {
   });
   const [loading, setLoading] = useState(false);
 
+  useLayoutEffect(() => {
+        // Logica di misurazione del layout (per debug/risoluzione problemi di animazione)
+        console.log("Layout watches ricalcolato prima del paint.");
+        // Non è necessario inserire codice qui se lo usi solo come test risolutivo,
+        // la sua sola esecuzione nel ciclo corretto è ciò che può aiutare Framer Motion.
+    }, [watches]); // Si esegue ogni volta che l'array watches cambia
+    
   // Funzione per testare la connessione al database
 const testConnection = async () => {
   try {
@@ -471,6 +479,10 @@ const testConnection = async () => {
     }
   };
 
+  // ... all'interno del tuo componente funzionale
+const [isPending, startTransition] = useTransition(); 
+// isPending: un flag che diventa true mentre l'aggiornamento è in corso.
+// startTransition: la funzione che useremo per avvolgere l'aggiornamento non urgente.
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedWatch, setSelectedWatch] = useState(null);
@@ -645,7 +657,21 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
       {!isCarouselView && (
         <div className="watch-list">
           {sortedWatches.map((watch) => (
-            <div key={watch.id} className="watch-card">
+            // Sostituzione di <div> con <motion.div>
+            <motion.div 
+              key={watch.id} 
+              className="watch-card"
+              // Abilita la logica FLIP per animare i cambi di posizione.
+              layout 
+              // Opzionale: definisce lo stile dell'animazione (più naturale di un semplice "linear").
+              layoutScroll
+              transition={{ 
+                type: "spring",
+                // RIGIDITà e smorzamento per un effetto più "elastico"
+                stiffness: 150, 
+                damping: 60 
+              }}
+            >
               <div className="GRID">
                   <FavoriteButton
                     isFavorite={watch.isFavorite}
@@ -697,7 +723,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
                 </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
             ))}
         </div>
       )}
@@ -813,7 +839,52 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
     }
   };
 
-  const handleFavoriteToggle = async (watchId) => {
+//   const handleFavoriteToggle = async (watchId) => {
+//     // 1. Trova lo stato attuale dell'orologio prima di aggiornare
+//     const currentWatch = watches.find(w => w.id === watchId);
+    
+//     if (!currentWatch) {
+//         console.error("Orologio non trovato.");
+//         return;
+//     }
+    
+//     // Calcola il nuovo stato (inverte il valore booleano)
+//     const newFavoriteState = !currentWatch.isFavorite;
+
+//     // 2. Aggiornamento su SUPABASE (Persistenza)
+//     console.log(`Aggiornamento watch ${watchId} a isFavorite: ${newFavoriteState}`);
+
+//     const { error } = await supabase
+//         .from('watches') // Sostituisci 'watches' con il nome della tua tabella se è diverso
+//         .update({ isFavorite: newFavoriteState }) // Il campo da aggiornare
+//         .eq('id', watchId); // La condizione di filtro (Row Level Security DEVE permettere questo aggiornamento)
+
+//     if (error) {
+//         console.error("Errore di Supabase durante l'aggiornamento dei preferiti:", error);
+//         // È cruciale che lo stato locale NON venga aggiornato se il DB fallisce
+//         // Potresti usare 'setMessage' per avvisare l'utente del fallimento
+//         return; 
+//     }
+
+//     // 3. Aggiornamento dello Stato Locale in React
+//     // L'aggiornamento avviene solo se Supabase ha avuto successo.
+//     // Usiamo una funzione di aggiornamento basata sullo stato precedente (prevWatches)
+//     setWatches(prevWatches =>
+//         prevWatches.map(watch =>
+//             watch.id === watchId
+//                 ? { ...watch, isFavorite: newFavoriteState } // Crea un NUOVO oggetto aggiornato
+//                 : watch // Lascia invariati gli altri
+//         )
+//     );
+
+//     // [OPZIONALE] Se stai usando un modale con selectedWatch:
+//     // setSelectedWatch(prevWatch => ({
+//     //     ...prevWatch,
+//     //     isFavorite: newFavoriteState
+//     // }));
+// };
+
+const handleFavoriteToggle = async (watchId) => {
     // 1. Trova lo stato attuale dell'orologio prima di aggiornare
     const currentWatch = watches.find(w => w.id === watchId);
     
@@ -826,36 +897,28 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
     const newFavoriteState = !currentWatch.isFavorite;
 
     // 2. Aggiornamento su SUPABASE (Persistenza)
-    console.log(`Aggiornamento watch ${watchId} a isFavorite: ${newFavoriteState}`);
-
     const { error } = await supabase
-        .from('watches') // Sostituisci 'watches' con il nome della tua tabella se è diverso
-        .update({ isFavorite: newFavoriteState }) // Il campo da aggiornare
-        .eq('id', watchId); // La condizione di filtro (Row Level Security DEVE permettere questo aggiornamento)
+        .from('watches')
+        .update({ isFavorite: newFavoriteState })
+        .eq('id', watchId); 
 
     if (error) {
         console.error("Errore di Supabase durante l'aggiornamento dei preferiti:", error);
-        // È cruciale che lo stato locale NON venga aggiornato se il DB fallisce
-        // Potresti usare 'setMessage' per avvisare l'utente del fallimento
         return; 
     }
 
-    // 3. Aggiornamento dello Stato Locale in React
-    // L'aggiornamento avviene solo se Supabase ha avuto successo.
-    // Usiamo una funzione di aggiornamento basata sullo stato precedente (prevWatches)
-    setWatches(prevWatches =>
-        prevWatches.map(watch =>
-            watch.id === watchId
-                ? { ...watch, isFavorite: newFavoriteState } // Crea un NUOVO oggetto aggiornato
-                : watch // Lascia invariati gli altri
-        )
-    );
-
-    // [OPZIONALE] Se stai usando un modale con selectedWatch:
-    // setSelectedWatch(prevWatch => ({
-    //     ...prevWatch,
-    //     isFavorite: newFavoriteState
-    // }));
+    // 3. AGGIORNAMENTO CRUCIALE: Avvolgi setWatches in startTransition
+    // Questo dice a React di eseguire l'aggiornamento di stato (che causa il riordinamento)
+    // come una transizione, concedendo a Framer Motion il tempo di animare.
+    startTransition(() => {
+        setWatches(prevWatches =>
+            prevWatches.map(watch =>
+                watch.id === watchId
+                    ? { ...watch, isFavorite: newFavoriteState }
+                    : watch
+            )
+        );
+    });
 };
 
   const [modalTitle, setModalTitle] = useState(""); // Nuovo stato per il titolo
