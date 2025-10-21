@@ -666,7 +666,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
               // Opzionale: definisce lo stile dell'animazione (più naturale di un semplice "linear").
               layoutScroll
               transition={{ 
-                type: "spring",
+                type: "linear",
                 // RIGIDITà e smorzamento per un effetto più "elastico"
                 stiffness: 150, 
                 damping: 100 

@@ -194,10 +194,9 @@ h3{
   text-align: center;
 
   /*width: 85%;*/
+  display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   position: relative;
-  transform: none !important; 
-  transition: none !important;
 }
 
 
