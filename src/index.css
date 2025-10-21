@@ -193,8 +193,9 @@ h3{
   border-radius: 10px;
   text-align: center;
 
-  width: 80%;
+  width: 85%;
   display: inline-block;
+  position: relative;
 }
 
 
@@ -300,4 +301,38 @@ h4 {
   border: none;
   font-size: 1.5em;
   cursor: pointer;
+}
+
+/* Selettore fornito nel prompt */
+.favoriteButton__button {
+  background-color: transparent;
+  border: none;
+  /* Utilizza 'rem' o 'px' se preferisci, 'em' è relativo al font-size del genitore */
+  font-size: 1em; 
+  cursor: pointer;
+  
+  /* Garantisce che l'icona non salti durante l'animazione */
+  transition: transform 0.6s ease-out; 
+  position: absolute;
+  /* Posizionamento nell'angolo in alto a destra */
+  top: 10px;    /* Distanza dal bordo superiore */
+  right: 10px;  /* Distanza dal bordo destro */
+}
+
+/* * ----------------------------------------------------
+ * L'Animazione (La parte cruciale)
+ * ----------------------------------------------------
+ */
+
+/* Definizione del Keyframe: l'effetto "battito" */
+@keyframes heart-beat {
+  0% { transform: scale(1); }           /* Dimensione normale */
+  50% { transform: scale(1.3); }        /* Si ingrandisce del 30% a metà */
+  100% { transform: scale(1); }         /* Torna alla dimensione normale */
+}
+
+/* Classe applicata al bottone quando isAnimating è true */
+.favoriteButton__button.is-animating {
+  /* Applica l'animazione: nome, durata, timing function, numero di ripetizioni */
+  animation: heart-beat 1s ease-out 2;
 }

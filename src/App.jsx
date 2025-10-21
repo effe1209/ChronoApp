@@ -562,7 +562,40 @@ const testConnection = async () => {
     }
   };
   
+const FavoriteButton = ({ isFavorite, onToggle }) => {
+  const [isAnimating, setIsAnimating] = useState(false);
 
+  const handleClick = () => {
+    // 1. Attiva l'animazione (solo se non era già preferita, per un effetto più marcato)
+    if (!isFavorite) {
+      setIsAnimating(true);
+    }
+    // 2. Esegui la logica del toggle
+    onToggle();
+  };
+
+  // 3. Disattiva l'animazione dopo il tempo della transizione (es. 0.5s)
+  useEffect(() => {
+    if (isAnimating) {
+      const timer = setTimeout(() => setIsAnimating(false), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isAnimating]);
+
+  // Applica la classe 'is-animating' solo durante l'animazione
+  const animationClass = isAnimating ? 'is-animating' : '';
+
+  return (
+    <button
+      onClick={handleClick}
+      className={`favoriteButton__button ${animationClass}`}
+      // ... altre props
+    >
+      {/* Icona della stella piena o vuota */}
+      {isFavorite ? '⭐️' : '☆'}
+    </button>
+  );
+};
   
 const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavoriteToggle, user }) => {
   // Inizializza lo stato da localStorage o imposta il valore di default
@@ -580,7 +613,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
     setIsCarouselView(prevState => !prevState); // Alterna la vista
   };
 
-// Funzione di confronto riutilizzabile per ordinare per nome
+  // Funzione di confronto riutilizzabile per ordinare per nome
   const sortByName = (a, b) => {
     // Ordina alfabeticamente per il campo 'name'
     return a.name.localeCompare(b.name);
@@ -614,6 +647,10 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
           {sortedWatches.map((watch) => (
             <div key={watch.id} className="watch-card">
               <div className="GRID">
+                  <FavoriteButton
+                    isFavorite={watch.isFavorite}
+                    onToggle={() => handleFavoriteToggle(watch.id)}
+                  />
                 {watch.image ? (
                   <img
                     src={watch.image}
@@ -633,17 +670,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
                 </div>
                 
                 <div className="cardBottoni">
-
-                  <div className="favoriteButton">
-                    <button
-                      className="favorite-btn"
-                      onClick={() => handleFavoriteToggle(watch.id)} 
-                      title={watch.isFavorite ? 'Rimuovi dai Preferiti' : 'Aggiungi ai Preferiti'}
-                    >
-                      {watch.isFavorite ? '⭐' : '☆'}
-                    </button>
-                  </div>
-
+                  
                   <div className="modifyButton">
                     <button
                       className="modify-btn"
