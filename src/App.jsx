@@ -206,7 +206,7 @@ function App() {
         // Non è necessario inserire codice qui se lo usi solo come test risolutivo,
         // la sua sola esecuzione nel ciclo corretto è ciò che può aiutare Framer Motion.
     }, [watches]); // Si esegue ogni volta che l'array watches cambia
-    
+
   // Funzione per testare la connessione al database
 const testConnection = async () => {
   try {
@@ -662,14 +662,14 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
               key={watch.id} 
               className="watch-card"
               // Abilita la logica FLIP per animare i cambi di posizione.
-              layout 
+              layout="position"
               // Opzionale: definisce lo stile dell'animazione (più naturale di un semplice "linear").
               layoutScroll
               transition={{ 
                 type: "spring",
                 // RIGIDITà e smorzamento per un effetto più "elastico"
                 stiffness: 150, 
-                damping: 60 
+                damping: 100 
               }}
             >
               <div className="GRID">
