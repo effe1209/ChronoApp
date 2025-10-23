@@ -358,3 +358,42 @@ h4 {
       font-size: 1.2em;
   }
 }
+
+.decorative-symbol {
+  font-size: 30px;
+  color: rgb(0, 0, 0);
+  /* Altri stili se necessari, ad esempio margini o display */
+  display: inline-block; /* Utile per controlli di spacing */
+}
+
+.dark-mode .decorative-symbol {
+  font-size: 30px;
+  color: rgb(255, 255, 255);
+  /* Altri stili se necessari, ad esempio margini o display */
+  display: inline-block; /* Utile per controlli di spacing */
+}
+
+/* 1. Contenitore per centrare la linea */
+.separator-container {
+  width: 100%;
+  display: flex; /* Abilita flexbox per centrare il contenuto */
+  justify-content: center; /* Centra orizzontalmente l'elemento interno (la HR) */
+  margin-top: 30px; /* Spazio sopra come richiesto */
+}
+
+/* 2. Stile per la linea orizzontale */
+.custom-separator {
+  /* Resetta lo stile predefinito del browser per HR */
+  border: none;
+  border-top: 2px solid #000000; /* Definisce la linea nera sottile */
+  
+  /* Imposta la larghezza fissa */
+  width: 700px; 
+  
+  /* Aggiunge il margine verticale che avevi richiesto */
+  margin: 20px 0; 
+}
+
+.dark-mode .custom-separator {
+  border-top: 2px solid #ffffff; /* Definisce la linea bianca sottile per modalità scura */
+}

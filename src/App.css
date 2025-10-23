@@ -1373,7 +1373,7 @@ input::placeholder {
   animation: typing 2s steps(20);
   display: flex;
   justify-content: center;
-  padding-bottom: 20px;
+  padding-bottom: 7px;
 }
 
 @keyframes typing {

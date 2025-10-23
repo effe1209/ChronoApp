@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useTransition, useLayoutEffect} from "react";
+import { useState, useEffect, useRef, useTransition, useLayoutEffect, useMemo} from "react";
 import { createClient } from "@supabase/supabase-js";
 import imageCompression from "browser-image-compression";
 import Avatar from 'react-avatar';
@@ -380,7 +380,7 @@ const testConnection = async () => {
         // Aggiorna la lista locale degli orologi per mostrare subito quello nuovo
         setWatches((prevWatches) => [...prevWatches, data[0]]);
 
-        setNewWatch({ name: "", brand: "", year: "", image: "", movement: "", color: "", isFavorite: false, money: null });
+        setNewWatch({ name: "", brand: "", year: "", image: "", movement: "", color: "", isFavorite: false, money: "" });
         setMessage("Orologio aggiunto con successo!");
       } else {
         setMessage("Compila tutti i campi correttamente!");
@@ -398,7 +398,8 @@ const testConnection = async () => {
       watch.brand.trim() !== "" &&
       watch.year > 0 &&
       !isNaN(watch.year) &&
-      watch.movement.trim() !== ""
+      watch.movement.trim() !== "" &&
+      (watch.money === null || (!isNaN(watch.money) && watch.money >= 0))
     );
   };
 
@@ -463,6 +464,7 @@ const testConnection = async () => {
     }
   };
 
+
   const handleCancel = () => {
     setNewWatch({ name: "", brand: "", year: "", image: "", movement: "", color: ""});
     setMessage(null);
@@ -516,6 +518,41 @@ const [isPending, startTransition] = useTransition();
       console.error('Errore nel recupero dell\'orologio:', error.message);
     }
   };
+
+  const handleTotalMoney = () => {
+    // 1. Controlla che la lista non sia vuota
+    if (!watches || watches.length === 0) {
+        return 0;
+    }
+
+    // 2. Utilizza il metodo 'reduce' per sommare i valori
+    const total = watches.reduce((accumulator, watch) => {
+        // Estrai il valore 'money'. Assicurati che sia un numero valido.
+        // Usiamo Number() per la conversione. Se il valore è null, undefined, o non un numero, 
+        // Number() può restituire 0 o NaN. Qui usiamo un controllo aggiuntivo.
+        const moneyValue = Number(watch.money); 
+        
+        // Controlla se è un numero finito (non NaN, non Infinity)
+        if (Number.isFinite(moneyValue)) {
+            return accumulator + moneyValue;
+        }
+        
+        // Se non è valido (es. null o stringa vuota), aggiungi 0
+        return accumulator;
+        
+    }, 0); // Il valore iniziale dell'accumulatore è 0
+
+    return total;
+};
+
+const totalMoney = useMemo(() => {
+    if (!watches || watches.length === 0) return 0;
+    
+    return watches.reduce((acc, watch) => {
+        const moneyValue = Number(watch.money);
+        return Number.isFinite(moneyValue) ? acc + moneyValue : acc;
+    }, 0);
+}, [watches]); // La dipendenza è lo stato 'watches'
 
   const [isInfoVisible, setIsInfoVisible] = useState(false);
 
@@ -848,50 +885,6 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
     }
   };
 
-//   const handleFavoriteToggle = async (watchId) => {
-//     // 1. Trova lo stato attuale dell'orologio prima di aggiornare
-//     const currentWatch = watches.find(w => w.id === watchId);
-    
-//     if (!currentWatch) {
-//         console.error("Orologio non trovato.");
-//         return;
-//     }
-    
-//     // Calcola il nuovo stato (inverte il valore booleano)
-//     const newFavoriteState = !currentWatch.isFavorite;
-
-//     // 2. Aggiornamento su SUPABASE (Persistenza)
-//     console.log(`Aggiornamento watch ${watchId} a isFavorite: ${newFavoriteState}`);
-
-//     const { error } = await supabase
-//         .from('watches') // Sostituisci 'watches' con il nome della tua tabella se è diverso
-//         .update({ isFavorite: newFavoriteState }) // Il campo da aggiornare
-//         .eq('id', watchId); // La condizione di filtro (Row Level Security DEVE permettere questo aggiornamento)
-
-//     if (error) {
-//         console.error("Errore di Supabase durante l'aggiornamento dei preferiti:", error);
-//         // È cruciale che lo stato locale NON venga aggiornato se il DB fallisce
-//         // Potresti usare 'setMessage' per avvisare l'utente del fallimento
-//         return; 
-//     }
-
-//     // 3. Aggiornamento dello Stato Locale in React
-//     // L'aggiornamento avviene solo se Supabase ha avuto successo.
-//     // Usiamo una funzione di aggiornamento basata sullo stato precedente (prevWatches)
-//     setWatches(prevWatches =>
-//         prevWatches.map(watch =>
-//             watch.id === watchId
-//                 ? { ...watch, isFavorite: newFavoriteState } // Crea un NUOVO oggetto aggiornato
-//                 : watch // Lascia invariati gli altri
-//         )
-//     );
-
-//     // [OPZIONALE] Se stai usando un modale con selectedWatch:
-//     // setSelectedWatch(prevWatch => ({
-//     //     ...prevWatch,
-//     //     isFavorite: newFavoriteState
-//     // }));
-// };
 
 const handleFavoriteToggle = async (watchId) => {
     // 1. Trova lo stato attuale dell'orologio prima di aggiornare
@@ -1213,14 +1206,15 @@ const handleFavoriteToggle = async (watchId) => {
                 <UserProfile email={email} />
             </div>
             <h4 className="Saluti">Benvenuto, {nickname}</h4>
-          </div>
+          <p style={{ fontSize: "20px", paddingBottom: "20px"}}>Valore: {totalMoney.toLocaleString('it-IT')} €</p>
+           </div>
           <div className="profile-log">
             <div className="buttonForm"
             style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
               <button className="logout-btn" onClick={handleLogout}>
                 Logout
               </button>
-              <span style={{ fontSize: "30px", color:"black"}}>✦</span> {/* Un simbolo decorativo */}
+              <span className="decorative-symbol">✦</span>
 
               <button
                 onClick={() => setShowForm(!showForm)}
@@ -1351,8 +1345,8 @@ const handleFavoriteToggle = async (watchId) => {
               </>
             )}
 
-          <div id="function" style={{width: "100%", display:"flex", position:"flex", justifyContent:"center", marginTop:"30px"}}>
-            <hr style={{ border: "1px solid #000", margin:"20px 0", width: "700px", display:"flex", position:"flex", justifyContent:"center"}}></hr>
+          <div className="separator-container">
+            <hr className="custom-separator" />
           </div>
           <h2 style={{paddingBottom:"2%"}}>Funzioni</h2>
           
