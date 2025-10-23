@@ -748,6 +748,10 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
         {watches.map((watch) => (
           <SwiperSlide key={watch.id}>
             <div className="watch-card">
+              <FavoriteButton
+                    isFavorite={watch.isFavorite}
+                    onToggle={() => handleFavoriteToggle(watch.id)}
+                  />
               {watch.image ? (
                 <img
                   src={watch.image}
@@ -759,7 +763,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
                   }}
                 />
               ) : (
-                <img src="orologio_back.svg" alt="Default" className="watch-image"/>
+                <img src="orologio_back.svg" alt="Default" className="watch-imageCarosel"/>
               )}
               <h3 className="textCard" style={{fontSize:"42px", padding:"2%"}}>{watch.name}</h3>
               <div className="cardBottoni">

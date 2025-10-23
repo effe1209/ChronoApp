@@ -144,7 +144,7 @@
 .watch-imageCarosel {
   width: 100%;
   max-width: 400px;
-  height: auto;
+  height: 390px;
   max-height: 400px; /* Limita l'altezza massima a 300px */
   border-radius: 10px;
   object-fit: cover;
@@ -1207,8 +1207,9 @@ input[type="checkbox"]:checked + .slider-v3::before {
   flex-direction: row;
   justify-content: center;
   margin-bottom: 3%;
-  gap: 2%;
+  gap: 3%;
   margin-top: 2%;
+  align-content: center;
 }
 
 .swiper-slide .watch-card .cardBottoni .delete-button{
