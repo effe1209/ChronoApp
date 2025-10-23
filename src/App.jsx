@@ -1366,9 +1366,10 @@ const handleFavoriteToggle = async (watchId) => {
                     className="hidden-input"
                     id="file-upload"
                   />
-                  <button onClick={() => fileInputRefOutfit.current.click()}>
-                    📸 Seleziona un'immagine
-                  </button>
+                <button className="funzioniButton" onClick={() => fileInputRef.current.click()}>
+                    {/* La 📸 non ha bisogno di span */}
+                    📸 <span className="button-text-mobile">Seleziona un'immagine</span>
+                </button>
                 </div>
               </div>
 

@@ -534,7 +534,6 @@ select {
   font-size: 18px;
   font-family: 'minork';
   transition: 0.8s;
-  height: 44px;
 }
 
 .functionButton button:hover {
@@ -562,6 +561,15 @@ select {
 .functionButton h4 {
   font-size: 28.5px;
   color: #000;
+  height: 78px;
+}
+
+@media (max-width: 600px) {
+  .functionButton h4 {
+    /* Utilizza unità relative alla larghezza della viewport (vw) per l'adattamento */
+    font-size: 5vw; /* Il valore esatto dipende dal tuo design. 5vw è un buon punto di partenza. */
+    
+  }
 }
 
 .dark-mode .functionButton h4 {

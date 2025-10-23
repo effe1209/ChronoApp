@@ -340,3 +340,26 @@ h4 {
   /* Applica l'animazione: nome, durata, timing function, numero di ripetizioni */
   animation: heart-beat 1s ease-out 2;
 }
+
+.button-text-mobile {
+  /* Di default è visibile */
+  display: inline;
+}
+
+/* Media Query: Nascondi la scritta quando la larghezza massima è 600px (telefono) */
+@media (max-width: 600px) {
+  .button-text-mobile {
+    display: none;
+  }
+  
+  /* Opzionale: Centra o adatta il padding del bottone, dato che ora contiene solo l'icona */
+  .upload-button {
+      padding: 10px; /* Riduci il padding se necessario */
+      font-size: 1.2em;
+  }
+
+}
+
+.functionButton button:hover {
+    background-color: #007bff;
+} 
