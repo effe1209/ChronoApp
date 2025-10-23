@@ -197,6 +197,7 @@ function App() {
     movement: "",
     color: "",
     isFavorite: false,
+    money: null,
   });
   const [loading, setLoading] = useState(false);
 
@@ -379,7 +380,7 @@ const testConnection = async () => {
         // Aggiorna la lista locale degli orologi per mostrare subito quello nuovo
         setWatches((prevWatches) => [...prevWatches, data[0]]);
 
-        setNewWatch({ name: "", brand: "", year: "", image: "", movement: "", color: "" });
+        setNewWatch({ name: "", brand: "", year: "", image: "", movement: "", color: "", isFavorite: false, money: null });
         setMessage("Orologio aggiunto con successo!");
       } else {
         setMessage("Compila tutti i campi correttamente!");
@@ -527,6 +528,8 @@ const [isPending, startTransition] = useTransition();
     movement: '',
     color: '',
     image: '', // Questo campo verrà aggiornato quando viene selezionata un'immagine
+    isFavorite: false,
+    money: null,
   });
 
   const handleModifyWatch = async (userid, watchid) => {
@@ -550,6 +553,8 @@ const [isPending, startTransition] = useTransition();
         movement: watch.movement,
         color: watch.color,
         image: watch.image || '', // Se l'immagine è vuota, assegna una stringa vuota
+        isFavorite: watch.isFavorite,
+        money: watch.money || null,
       });
       setIsModifyVisible(true);
     }
@@ -1256,6 +1261,14 @@ const handleFavoriteToggle = async (watchId) => {
                       setNewWatch({ ...newWatch, year: e.target.value })
                     }
                   />
+                  <input
+                    type="number"
+                    placeholder="Prezzo di Acquisto (€)"
+                    value={newWatch.money}
+                    onChange={(e) =>
+                      setNewWatch({ ...newWatch, money: e.target.value })
+                    }
+                  />
                   <div style={{ marginBottom: "10px" }}></div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", width: "100%"}}>
                     <div className="selectMenu">
@@ -1366,7 +1379,7 @@ const handleFavoriteToggle = async (watchId) => {
                     className="hidden-input"
                     id="file-upload"
                   />
-                <button className="funzioniButton" onClick={() => fileInputRef.current.click()}>
+                <button onClick={() => fileInputRefOutfit.current.click()}>
                     {/* La 📸 non ha bisogno di span */}
                     📸 <span className="button-text-mobile">Seleziona un'immagine</span>
                 </button>
@@ -1462,6 +1475,15 @@ const handleFavoriteToggle = async (watchId) => {
                       value={updatedWatch.year}
                       onChange={(e) => setUpdatedWatch({ ...updatedWatch, year: e.target.value })}
                     />
+                  </div>
+
+                  <div>
+                    <label>Prezzo: </label>
+                  <input
+                    type="number"
+                    value={updatedWatch.money}
+                    onChange={(e) => setUpdatedWatch({ ...updatedWatch, money: e.target.value })}
+                  />
                   </div>
 
                   <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", width: "100%" }}>
@@ -1577,6 +1599,7 @@ const handleFavoriteToggle = async (watchId) => {
                   <p><strong>Movimento:</strong> {selectedWatch.movement}</p>
                   <p><strong>Anno:</strong> {selectedWatch.year}</p>
                   <p><strong>Colore:</strong> {selectedWatch.color}</p>
+                  <p><strong>Prezzo di Acquisto:</strong> {selectedWatch.money} €</p>
                 </div>
 
                 <div className="buttonForm">

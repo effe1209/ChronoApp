@@ -357,9 +357,4 @@ h4 {
       padding: 10px; /* Riduci il padding se necessario */
       font-size: 1.2em;
   }
-
 }
-
-.functionButton button:hover {
-    background-color: #007bff;
-} 
