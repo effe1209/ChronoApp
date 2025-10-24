@@ -195,8 +195,9 @@ h3{
 
   /*width: 85%;*/
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
   position: relative;
+
+  max-width: 286.06px;
 }
 
 
@@ -356,6 +357,21 @@ h4 {
   .upload-button {
       padding: 10px; /* Riduci il padding se necessario */
       font-size: 1.2em;
+  }
+
+  .select-image-button {
+    /* 1. Dimensioni Fisse */
+    width: 118.78px;     /* Imposta una larghezza fissa in pixel (o altra unità assoluta) */
+    height: 44px;     /* Imposta un'altezza fissa */
+    
+    /* 2. Assicurati che il contenuto si adatti o nascondi il testo se non c'è spazio */
+    /* Rendi il bottone un flex container per centrare o gestire meglio il contenuto */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Aggiungi 'overflow: hidden' se c'è il rischio che il contenuto ecceda */
+    overflow: hidden; 
   }
 }
 
