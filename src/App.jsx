@@ -1459,7 +1459,7 @@ const uploadImage = async (file) => {
           <div className="separator-container">
             <hr className="custom-separator" />
           </div>
-          <h2 style={{paddingBottom:"2%"}}>Funzioni</h2>
+          <h2 style={{paddingBottom:"2%"}} id="function">Funzioni</h2>
           
           <div className="functionButton">
           <div>
