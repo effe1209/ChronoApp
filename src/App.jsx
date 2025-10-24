@@ -789,7 +789,7 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
         >
         {watches.map((watch) => (
           <SwiperSlide key={watch.id}>
-            <div className="watch-card">
+            <div className="watch-card carousel-card">
               <FavoriteButton
                     isFavorite={watch.isFavorite}
                     onToggle={() => handleFavoriteToggle(watch.id)}
@@ -1512,7 +1512,7 @@ const uploadImage = async (file) => {
                           <div style={{margin:"20px"}}></div>
                             <img src={watch.image || "orologio_back.svg"} alt={watch.name} className="watch-imageCarosel" />
                             <p style={{fontSize:"32px", margin:"20px", fontWeight:"bold"}}>{watch.name}</p>
-                            <div style={{margin:"10px"}}></div>
+                            {/* <div style={{margin:"10px"}}></div> */}
                             <button className="funzioniButton" onClick={() => {setIsCarouselVisible(false); fileInputRef.current.value = ""; setWatchConsigliati = ([])}}>Chiudi</button>
                             <div style={{margin:"40px"}}></div>
                           </div>
