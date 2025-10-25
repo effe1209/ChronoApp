@@ -12,13 +12,9 @@ import 'swiper/css/scrollbar';
 import { motion } from 'framer-motion';
 
 import "./App.css";
-import { addWatchService } from './components/addWatch';
-
-const supabaseUrl = "https://htopqijsvgaqjrvvgpjh.supabase.co";
-const supabaseAnonKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0b3BxaWpzdmdhcWpydnZncGpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwMjQyOTcsImV4cCI6MjA1NjYwMDI5N30.pVzMwoPz1VL3EikMUbDaBwA6X47ehZb2Wu-P9-wk2a0";
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { addWatchService } from './components/watchService';
+import { supabase } from './components/supabaseClient';
+import AuthForm from './components/AuthForm';
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener("click", function (e) {
@@ -358,43 +354,9 @@ const testConnection = async () => {
     setEmail('');
   };
 
-  // const handleAddWatch = async () => {
-  //   setLoading(true);
-  //   try {
-  //     if (isValidWatch(newWatch)) {
-  //       console.log("Avvio dell'inserimento orologio");
-
-  //       // Carica l'immagine e ottieni l'URL
-  //       const imageUrl = newWatch.image ? await uploadImage(newWatch.image) : null;
-  //       console.log("Immagine caricata con URL:", imageUrl);
-
-  //       // Inserisci i dati nel database
-  //       const { data, error } = await supabase
-  //         .from("watches")
-  //         .insert([{ ...newWatch, userid: user.id, image: imageUrl }])
-  //         .select("*"); // Recupera i dati appena inseriti
-
-  //       if (error) {
-  //         throw error;
-  //       }
-
-  //       // Aggiorna la lista locale degli orologi per mostrare subito quello nuovo
-  //       setWatches((prevWatches) => [...prevWatches, data[0]]);
-
-  //       setNewWatch({ name: "", brand: "", year: "", image: "", movement: "", color: "", isFavorite: false, money: "" });
-  //       setMessage("Orologio aggiunto con successo!");
-  //     } else {
-  //       setMessage("Compila tutti i campi correttamente!");
-  //     }
-  //   } catch (error) {
-  //     console.error("Errore durante l'inserimento:", error);
-  //     setMessage("Errore durante l'inserimento: " + (error.message || "Si è verificato un errore."));
-  //   }
-  //   setLoading(false);
-  // };
-
-    const handleAddWatch = async () => {
-    // 1. Assembla gli stati da passare
+  const handleAddWatch = async () => {
+    // 1. Assembla solo gli stati da passare
+    //    (Puoi anche passarli direttamente, se preferisci)
     const stateOptions = {
       newWatch,
       user,
@@ -404,26 +366,10 @@ const testConnection = async () => {
       setMessage,
     };
 
-    // 2. Assembla i "tools" (dipendenze) da passare
-    const dependencies = {
-      supabase,
-      uploadImage,
-      isValidWatch,
-    };
-
-    // 3. Chiama il service "iniettando" entrambi gli oggetti
-    await addWatchService(stateOptions, dependencies);
-  };
-
-  const isValidWatch = (watch) => {
-    return (
-      watch.name.trim() !== "" &&
-      watch.brand.trim() !== "" &&
-      watch.year > 0 &&
-      !isNaN(watch.year) &&
-      watch.movement.trim() !== "" &&
-      (watch.money === null || (!isNaN(watch.money) && watch.money >= 0))
-    );
+    // 2. Chiama il service con UN SOLO argomento.
+    //    Sarà 'addWatchService' a importare e usare
+    //    supabase, uploadImage, e isValidWatch da solo.
+    await addWatchService(stateOptions);
   };
 
   const deleteImage = async (imageUrl) => {
@@ -1036,96 +982,6 @@ const dataURLtoBlob = (dataurl) => {
     return new Blob([u8arr], {type:mime});
 };
 
-const uploadImage = async (file) => {
-    if (!file) return null;
-    
-    // ------------------------------------------
-    // PASSO 1: COMPRESSIONE E RIDIMENSIONAMENTO
-    // ------------------------------------------
-    let fileToUpload = file;
-    
-    // Per un file più piccolo e ottimizzato:
-    const MAX_WIDTH = 1200; // Larghezza massima desiderata
-    const COMPRESSION_QUALITY = 0.8; // Qualità JPEG (0.0 a 1.0)
-    
-    try {
-        const dataUrl = await new Promise(resolve => {
-            const reader = new FileReader();
-            reader.onload = (e) => resolve(e.target.result);
-            reader.readAsDataURL(file);
-        });
-
-        const img = new Image();
-        img.src = dataUrl;
-        
-        await new Promise(resolve => img.onload = resolve);
-        
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        
-        // Calcola il ridimensionamento
-        const ratio = Math.min(MAX_WIDTH / img.width, 1);
-
-        canvas.width = img.width * ratio;
-        canvas.height = img.height * ratio;
-
-        // Disegna l'immagine ridimensionata sul canvas
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        
-        // Converti il canvas in un Blob compresso (JPEG)
-        const compressedBlob = await new Promise(resolve => {
-            canvas.toBlob(resolve, "image/jpeg", COMPRESSION_QUALITY);
-        });
-        
-        // Verifica la dimensione (solo per debug)
-        console.log(`Foto originale: ${file.size / 1024} KB`);
-        console.log(`Foto compressa: ${compressedBlob.size / 1024} KB`);
-        
-        // Crea un oggetto File dal Blob compresso per l'upload
-        fileToUpload = new File([compressedBlob], file.name, { 
-            type: compressedBlob.type, 
-            lastModified: Date.now() 
-        });
-
-    } catch (e) {
-        console.warn("Errore durante la compressione dell'immagine. Carico l'originale.", e);
-        // In caso di errore nella compressione, useremo il 'file' originale.
-        fileToUpload = file; 
-    }
-
-    // ------------------------------------------
-    // PASSO 2: UPLOAD A SUPABASE
-    // ------------------------------------------
-    
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      alert("Devi essere loggato per caricare immagini!");
-      return null;
-    }
-
-    const userId = user.id;
-    // NOTA: Usiamo il nome originale 'file.name' ma carichiamo il 'fileToUpload' (che è il compresso)
-    const fileName = `${userId}/${Date.now()}-${file.name}`; 
-    const bucketName = "fotoWatch";
-
-    const { data, error } = await supabase
-      .storage
-      .from(bucketName)
-      // Carichiamo il file compresso
-      .upload(fileName, fileToUpload, { 
-        cacheControl: "3600",
-        upsert: false,
-      });
-
-    if (error) {
-      console.error("Errore nell'upload:", error);
-      alert(`Errore durante il caricamento: ${error.message}`);
-      return null;
-    }
-
-    // Costruisci l'URL pubblico
-    return `https://htopqijsvgaqjrvvgpjh.supabase.co/storage/v1/object/public/${bucketName}/${fileName}`;
-  };
 
   // const uploadImage = async (file) => {
   //   if (!file) return null;
@@ -1307,34 +1163,18 @@ const uploadImage = async (file) => {
       <div style={{ marginBottom: "20px" }}></div>
 
       {!user ? (
-        <div className="form">
-          <h2>Registrati o Accedi</h2>
-          <input
-            type="nickname"
-            placeholder="Nickname"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={handleKeyDown} // Aggiungi l'evento onKeyDown
-          />
-          <div className="button-group">
-            <div className="buttonForm">
-              <button onClick={handleRegister}>Registrati</button>
-              <button onClick={handleLogin}>Accedi</button>
-            </div>
-          </div>
-        </div>
+        // QUI: Chiami il nuovo componente e passi tutto come props
+        <AuthForm
+          nickname={nickname}
+          setNickname={setNickname}
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          handleRegister={handleRegister}
+          handleLogin={handleLogin}
+          handleKeyDown={handleKeyDown}
+        />
       ) : (
         <>
           

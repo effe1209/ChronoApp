@@ -1,10 +1,14 @@
-// Gli import delle dipendenze sono stati RIMOSSI
-// import { supabase } from './supabaseClient';
-// import { uploadImage } from './utils/upload';
-// import { isValidWatch } from './utils/validation';
+// watchService.js (Approccio 1 - Modulare)
 
-// La firma della funzione ora accetta 'dependencies'
-export const addWatchService = async (options, dependencies) => {
+// 1. IMPORTA LE SUE DIPENDENZE ("TOOLS")
+// Corretti i percorsi. './' significa "cerca nella stessa cartella".
+// (Assumo che i tuoi file si chiamino così)
+import { supabase } from './supabaseClient';
+import { uploadImage } from './imageService'; // O './uploadImage' se hai chiamato il file così
+import { isValidWatch } from './validation';
+
+// 2. La firma della funzione ora accetta SOLO 'options'
+export const addWatchService = async (options) => {
   // Estrai tutte le dipendenze di STATO dall'oggetto options
   const {
     newWatch,
@@ -15,13 +19,14 @@ export const addWatchService = async (options, dependencies) => {
     setMessage,
   } = options;
 
-  // Estrai tutte le dipendenze "TOOLS" dall'oggetto dependencies
-  const { supabase, uploadImage, isValidWatch } = dependencies;
+  // 3. Il blocco "dependencies" è stato RIMOSSO
+  //    perché le dipendenze sono importate in cima al file.
 
   setLoading(true);
   try {
-    // La logica interna non cambia,
-    // ma ora usa le variabili prese da 'dependencies'
+    // 4. La logica interna non cambia.
+    //    Ora usa 'isValidWatch', 'uploadImage', e 'supabase'
+    //    che provengono dagli IMPORT in cima al file.
     if (isValidWatch(newWatch)) {
       console.log("Avvio dell'inserimento orologio");
 
@@ -63,3 +68,6 @@ export const addWatchService = async (options, dependencies) => {
   setLoading(false);
 };
 
+// Potresti aggiungere qui altre funzioni in futuro
+// export const deleteWatchService = async (options) => { ... }
+// export const fetchWatchesService = async (options) => { ... }
