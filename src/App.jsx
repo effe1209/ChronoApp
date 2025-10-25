@@ -12,6 +12,7 @@ import 'swiper/css/scrollbar';
 import { motion } from 'framer-motion';
 
 import "./App.css";
+import { addWatchService } from './components/addWatch';
 
 const supabaseUrl = "https://htopqijsvgaqjrvvgpjh.supabase.co";
 const supabaseAnonKey =
@@ -357,39 +358,61 @@ const testConnection = async () => {
     setEmail('');
   };
 
-  const handleAddWatch = async () => {
-    setLoading(true);
-    try {
-      if (isValidWatch(newWatch)) {
-        console.log("Avvio dell'inserimento orologio");
+  // const handleAddWatch = async () => {
+  //   setLoading(true);
+  //   try {
+  //     if (isValidWatch(newWatch)) {
+  //       console.log("Avvio dell'inserimento orologio");
 
-        // Carica l'immagine e ottieni l'URL
-        const imageUrl = newWatch.image ? await uploadImage(newWatch.image) : null;
-        console.log("Immagine caricata con URL:", imageUrl);
+  //       // Carica l'immagine e ottieni l'URL
+  //       const imageUrl = newWatch.image ? await uploadImage(newWatch.image) : null;
+  //       console.log("Immagine caricata con URL:", imageUrl);
 
-        // Inserisci i dati nel database
-        const { data, error } = await supabase
-          .from("watches")
-          .insert([{ ...newWatch, userid: user.id, image: imageUrl }])
-          .select("*"); // Recupera i dati appena inseriti
+  //       // Inserisci i dati nel database
+  //       const { data, error } = await supabase
+  //         .from("watches")
+  //         .insert([{ ...newWatch, userid: user.id, image: imageUrl }])
+  //         .select("*"); // Recupera i dati appena inseriti
 
-        if (error) {
-          throw error;
-        }
+  //       if (error) {
+  //         throw error;
+  //       }
 
-        // Aggiorna la lista locale degli orologi per mostrare subito quello nuovo
-        setWatches((prevWatches) => [...prevWatches, data[0]]);
+  //       // Aggiorna la lista locale degli orologi per mostrare subito quello nuovo
+  //       setWatches((prevWatches) => [...prevWatches, data[0]]);
 
-        setNewWatch({ name: "", brand: "", year: "", image: "", movement: "", color: "", isFavorite: false, money: "" });
-        setMessage("Orologio aggiunto con successo!");
-      } else {
-        setMessage("Compila tutti i campi correttamente!");
-      }
-    } catch (error) {
-      console.error("Errore durante l'inserimento:", error);
-      setMessage("Errore durante l'inserimento: " + (error.message || "Si è verificato un errore."));
-    }
-    setLoading(false);
+  //       setNewWatch({ name: "", brand: "", year: "", image: "", movement: "", color: "", isFavorite: false, money: "" });
+  //       setMessage("Orologio aggiunto con successo!");
+  //     } else {
+  //       setMessage("Compila tutti i campi correttamente!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Errore durante l'inserimento:", error);
+  //     setMessage("Errore durante l'inserimento: " + (error.message || "Si è verificato un errore."));
+  //   }
+  //   setLoading(false);
+  // };
+
+    const handleAddWatch = async () => {
+    // 1. Assembla gli stati da passare
+    const stateOptions = {
+      newWatch,
+      user,
+      setLoading,
+      setWatches,
+      setNewWatch,
+      setMessage,
+    };
+
+    // 2. Assembla i "tools" (dipendenze) da passare
+    const dependencies = {
+      supabase,
+      uploadImage,
+      isValidWatch,
+    };
+
+    // 3. Chiama il service "iniettando" entrambi gli oggetti
+    await addWatchService(stateOptions, dependencies);
   };
 
   const isValidWatch = (watch) => {
