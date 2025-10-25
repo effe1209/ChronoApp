@@ -33,10 +33,6 @@ ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassi
 ---
 
 ## Indice
-- [Installazione](#installazione)
-- [Ambiente e Variabili](#ambiente-e-variabili)
-- [Esecuzione in Locale](#esecuzione-in-locale)
-- [Deployment](#deployment)
 - [Screenshots](#screenshots)
 - [Contributing](#contributing)
 - [Contributors](#contributors)
