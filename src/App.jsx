@@ -807,9 +807,10 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
               ) : (
                 <img src="orologio_back.svg" alt="Default" className="watch-imageCarosel"/>
               )}
+              <div className="watchName_Button">
               <h3 className="textCard" style={{fontSize:"42px", padding:"2%"}}>{watch.name}</h3>
               <div className="cardBottoni">
-              <div className="InfoButton">
+                <div className="InfoButton">
                   <button
                     className="modify-btn"
                       onClick={() => handleInfoWatch(user.id, watch.id)}
@@ -833,6 +834,8 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
                       Elimina
                     </button>
                   </div>
+
+                </div>
                  
                 </div>
             </div>

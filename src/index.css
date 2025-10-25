@@ -416,3 +416,11 @@ h4 {
 .dark-mode .custom-separator {
   border-top: 2px solid #ffffff; /* Definisce la linea bianca sottile per modalità scura */
 }
+
+.watchName_Button {
+  display: grid;
+  align-content: center;
+  justify-items: stretch;
+  dap: 2%;
+  width: 100%;
+}
