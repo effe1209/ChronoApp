@@ -73,10 +73,6 @@ Linee guida rapide:
 
 ## Contributors
 
-Puoi elencare i contributors in vari modi. Esempio semplice:
-
-- effe1209 — Maintainer — https://github.com/effe1209
-
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section --> 
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
