@@ -13,7 +13,7 @@ ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassi
 - Orologio del Giorno: Selezione casuale di un orologio dalla collezione per suggerire cosa indossare.
 - Completa l'Outfit (Color Matching): Analisi del colore predominante di un'immagine caricata dall'utente (es. un outfit) e suggerimento degli orologi in collezione con il colore più simile.
 
-## Interfaccia Utente e Performance
+## Interfaccia Utente e Performance
 - Modalità Scuro/Chiaro: Toggle dinamico della Dark Mode.
 - Effetti Visivi: Effetto "frosted glass" sulla barra di navigazione.
 - Orologio Analogico Funzionante: Un orologio analogico in CSS e JavaScript puro che mostra l'ora attuale.
