@@ -6,9 +6,9 @@ ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassi
 
 ## Indice
 - [🚀 Funzionalità Principali](#-funzionalità-principali)
-- [Funzioni Intelligenti e Interattive](#)
-- [Interfaccia Utente e Performance](interfacc)
-- [🛠️ Stack Tecnologico]()
+- [Funzioni Intelligenti e Interattive](#funzioni-intelligenti-e-interattive)
+- [Interfaccia Utente e Performance](#-funzioni-intelligenti-e-interattive)
+- [🛠️ Stack Tecnologico](#️-stack-tecnologico)
 - [Screenshots](#screenshots)
 - [Contributing](#contributing)
 - [Contributors](#contributors)
