@@ -1,5 +1,6 @@
 # ⌚ ChroneApp - La tua collezione di orologi digitale
-ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassionati di orologi che desiderano catalogare, gestire e interagire con la propria collezione personale in modo intuitivo e visivamente accattivante.
+
+ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassionati di orologi che desiderano catalogare, gestire e interagire con la propria collezione personale in modo intuitivo e veloce.
 
 ## 🚀 Funzionalità Principali
 - Gestione e Visualizzazione della Collezione
@@ -28,3 +29,80 @@ ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassi
 | **Carosello** | **Swiper.js (via React)** | Componente leader per caroselli e slider. |
 | **Backend/DB** | **Supabase** | Backend-as-a-Service (Auth, Database PostgreSQL, Storage). |
 | **Storage** | **Supabase Storage** | Gestione dello storage delle immagini. |
+
+---
+
+## Indice
+- [Installazione](#installazione)
+- [Ambiente e Variabili](#ambiente-e-variabili)
+- [Esecuzione in Locale](#esecuzione-in-locale)
+- [Deployment](#deployment)
+- [Screenshots](#screenshots)
+- [Contributing](#contributing)
+- [Contributors](#contributors)
+- [Licenza](#licenza)
+- [Contatti](#contatti)
+- [Ringraziamenti](#ringraziamenti)
+
+---
+## Screenshots
+
+(aggiungi qui immagini o GIF del progetto per mostrare UI, carosello, modalità scura, ecc.)
+
+![Home](./docs/screenshots/home.png)
+![Carosello](./docs/screenshots/carousel.png)
+*(Sostituisci i percorsi con le immagini effettive nella cartella docs/screenshots)*
+
+## Contributing
+
+Grazie per voler contribuire! Puoi contribuire tramite:
+- Segnalazioni di bug (issue)
+- Proposte di funzionalità (issue)
+- Pull request con fix o miglioramenti
+
+Linee guida rapide:
+1. Fork del repository.
+2. Crea un branch feature/bugfix: git checkout -b feature/nome-feature
+3. Fai i tuoi cambiamenti e committa: git commit -m "Descrizione"
+4. Apri una pull request verso il branch principale del repo originale.
+
+
+## Roadmap
+
+- [ ] Pagine profilo utente avanzate
+- [ ] Filtri di ricerca avanzati per marca, prezzo, anno
+- [ ] Supporto multi-valuta
+- [ ] Integrazione con API esterne per valutazioni di mercato
+
+## Contributors
+
+Puoi elencare i contributors in vari modi. Esempio semplice:
+
+- effe1209 — Maintainer — https://github.com/effe1209
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+| Name | Role |
+| --- | --- |
+| [effe1209](https://github.com/effe1209) | 👨‍💻 Mantainer, Code |
+| [altroUtente](https://github.com/altroUtente) | 📝 Documentazione |
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+## Licenza
+
+Aggiungi una licenza per chiarire i termini. Esempio: MIT
+
+MIT License — vedi il file LICENSE.
+
+## Contatti
+
+- Maintainer: effe1209 — https://github.com/effe1209
+
+## Ringraziamenti
+
+- Supabase — per backend e storage
+- Framer Motion — per le animazioni
+- Swiper.js — per il carosello
