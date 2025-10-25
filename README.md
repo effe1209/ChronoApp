@@ -2,6 +2,22 @@
 
 ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassionati di orologi che desiderano catalogare, gestire e interagire con la propria collezione personale in modo intuitivo e veloce.
 
+---
+
+## Indice
+- [🚀 Funzionalità Principali](#-funzionalità-principali)
+- [Funzioni Intelligenti e Interattive](#)
+- [Interfaccia Utente e Performance](interfacc)
+- [🛠️ Stack Tecnologico]()
+- [Screenshots](#screenshots)
+- [Contributing](#contributing)
+- [Contributors](#contributors)
+- [Licenza](#licenza)
+- [Contatti](#contatti)
+- [Ringraziamenti](#ringraziamenti)
+
+---
+
 ## 🚀 Funzionalità Principali
 - Gestione e Visualizzazione della Collezione
 - Registrazione e Accesso Utente: Autenticazione sicura tramite Supabase.
@@ -30,17 +46,7 @@ ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassi
 | **Backend/DB** | **Supabase** | Backend-as-a-Service (Auth, Database PostgreSQL, Storage). |
 | **Storage** | **Supabase Storage** | Gestione dello storage delle immagini. |
 
----
 
-## Indice
-- [Screenshots](#screenshots)
-- [Contributing](#contributing)
-- [Contributors](#contributors)
-- [Licenza](#licenza)
-- [Contatti](#contatti)
-- [Ringraziamenti](#ringraziamenti)
-
----
 ## Screenshots
 
 (aggiungi qui immagini o GIF del progetto per mostrare UI, carosello, modalità scura, ecc.)
