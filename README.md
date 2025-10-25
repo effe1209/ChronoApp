@@ -1,12 +1,30 @@
-# React + Vite
+# ⌚ ChroneApp - La tua collezione di orologi digitale
+ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassionati di orologi che desiderano catalogare, gestire e interagire con la propria collezione personale in modo intuitivo e visivamente accattivante.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Funzionalità Principali
+- Gestione e Visualizzazione della Collezione
+- Registrazione e Accesso Utente: Autenticazione sicura tramite Supabase.
+- Gestione Orologi: Inserimento, modifica ed eliminazione degli orologi dalla collezione.
+- Vista Dinamica: Alternanza tra la visualizzazione a Griglia, con la possibilità di selezionare gli orologi preferiti, e la visualizzazione a Carosello.
+- Organizzazione Avanzata: Ordinamento automatico per Orologi Preferiti e per nome.
 
-Currently, two official plugins are available:
+## Funzioni Intelligenti e Interattive
+- Valore Totale: Calcolo in tempo reale del valore complessivo della collezione.
+- Orologio del Giorno: Selezione casuale di un orologio dalla collezione per suggerire cosa indossare.
+- Completa l'Outfit (Color Matching): Analisi del colore predominante di un'immagine caricata dall'utente (es. un outfit) e suggerimento degli orologi in collezione con il colore più simile.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Interfaccia Utente e Performance
+- Modalità Scuro/Chiaro: Toggle dinamico della Dark Mode.
+- Effetti Visivi: Effetto "frosted glass" sulla barra di navigazione.
+- Orologio Analogico Funzionante: Un orologio analogico in CSS e JavaScript puro che mostra l'ora attuale.
+- Brand Scroller: Liste di marchi in scorrimento continuo per un tocco estetico.
 
-## Expanding the ESLint configuration
+## 🛠️ Stack Tecnologico
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Categoria | Tecnologia | Note |
+| :--- | :--- | :--- |
+| **Frontend** | **React** (Hooks, `useMemo`, `useTransition`) | Sviluppo dell'interfaccia utente. |
+| **Styling/Animazioni** | **Framer Motion** | Per animazioni fluide del layout (effetto FLIP nel cambio di ordine dei preferiti). |
+| **Carosello** | **Swiper.js (via React)** | Componente leader per caroselli e slider. |
+| **Backend/DB** | **Supabase** | Backend-as-a-Service (Auth, Database PostgreSQL, Storage). |
+| **Storage** | **Supabase Storage** | Gestione dello storage delle immagini. |
