@@ -1254,13 +1254,14 @@ input[type="checkbox"]:checked + .slider-v3::before {
   animation: glow-border 1.5s infinite alternate;
   /* justify-self: center;
   margin-bottom: 2%; */
-  margin-left: auto;
-  margin-right: auto;
   margin-bottom: 2%; /* Questo lo avevi già */
 }
 
 .profile-info {
   margin-bottom: 2%;
+  display: flex;
+  flex-direction: column; /* Impila gli elementi verticalmente */
+  align-items: center;  /* Centra tutto orizzontalmente */  
 }
 
 @keyframes glow-border {
