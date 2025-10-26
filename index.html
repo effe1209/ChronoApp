@@ -2,16 +2,40 @@
 <html lang="it">
   <head>
     <meta charset="UTF-8" />
-    <!-- Per dispositivi Apple (iPhone, iPad) -->
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <!-- Rimuove i bordi e consente un effetto più fluido -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="icon" type="image/svg+xml" href="/iconSito.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WatchEFFE</title>
+    <title>ChronoApp</title>
+
+    <!-- 1. Il tuo Favicon originale (per il browser) -->
+    <link rel="icon" type="image/svg+xml" href="/iconSito.svg" />
+
+    <!-- 2. Descrizione e Colore Tema (Per PWA e Android) -->
+    <meta name="description" content="WatchEFFE - Collezione Orologi" />
+    <meta name="theme-color" content="#1a1a1a" /> <!-- Aggiorna col tuo colore -->
+
+    <!-- 3. Manifest (Per PWA e Android) -->
+    <!-- Ricorda di creare il file 'public/manifest.json' -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- 
+      4. TAG PER iOS (La tua richiesta) 
+      Questi sono i tag che mancavano
+    -->
+    
+    <!-- Il NOME che apparirà sotto l'icona sulla Home di iOS -->
+    <meta name="apple-mobile-web-app-title" content="WatchEFFE" />
+
+    <!-- L'ICONA (180x180px) che iOS userà -->
+    <!-- Ricorda di creare 'public/apple-touch-icon.png' -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    
+    <!-- Questi li avevi già, e sono corretti! -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
+
