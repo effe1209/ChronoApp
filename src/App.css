@@ -675,7 +675,7 @@ select {
 }
 
 .formModify input {
-  width: 70%; /* Rende gli input larghi */
+  width: 55%; /* Rende gli input larghi */
   padding: 10px;
   margin: 10px 0;
   border: 2px solid #186599b4; /* Bordo blu */
@@ -1252,8 +1252,11 @@ input[type="checkbox"]:checked + .slider-v3::before {
   overflow: hidden;
   box-shadow: 0 0 20px #4ECDC4, 0 0 40px #349090;
   animation: glow-border 1.5s infinite alternate;
-  justify-self: center;
-  margin-bottom: 2%;
+  /* justify-self: center;
+  margin-bottom: 2%; */
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2%; /* Questo lo avevi già */
 }
 
 .profile-info {
