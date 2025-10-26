@@ -800,8 +800,9 @@ input[type="checkbox"]:checked + .slider-v3::before {
 
 .buttonView {
   display: flex;
-  justify-content: flex-end;
   margin-bottom: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .buttonView button {
@@ -1583,5 +1584,11 @@ input::placeholder {
   .canvas_container {
     height: 250px; /* Riduci l'altezza del canvas su mobile */
     max-width: 100px;
+  }
+
+  .buttonView {
+  justify-content: center;
+  flex-wrap: wrap;
+  justify-content: center;
   }
 }
