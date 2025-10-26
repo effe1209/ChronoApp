@@ -15,6 +15,7 @@ import "./App.css";
 import { addWatchService } from './components/watchService';
 import { supabase } from './components/supabaseClient';
 import AuthForm from './components/AuthForm';
+import WatchAnalytics from './components/WatchAnalytics'; 
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener("click", function (e) {
@@ -197,6 +198,7 @@ function App() {
     money: null,
   });
   const [loading, setLoading] = useState(false);
+  const [isStatisticheVisible, setIsStatisticheVisible] = useState(false);
 
   useLayoutEffect(() => {
         // Logica di misurazione del layout (per debug/risoluzione problemi di animazione)
@@ -584,6 +586,10 @@ const totalMoney = useMemo(() => {
       setIsInfoVisible(true);
     }
   };
+
+const handleShowStats = () => {
+    setIsStatisticheVisible(true);
+  };
   
 const FavoriteButton = ({ isFavorite, onToggle }) => {
   const [isAnimating, setIsAnimating] = useState(false);
@@ -659,6 +665,12 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
     <div>
       {/* Bottone per alternare tra lista e carosello */}
       <div className="buttonView" id="listWatch">
+        <button
+          onClick={handleShowStats} // Usa il nuovo handler
+          style={{ width: "200px", padding: "10px"}}
+        >
+          📊 Mostra Statistiche
+        </button>
         <button onClick={toggleView} >
           {isCarouselView ? 'Mostra Lista' : 'Mostra Carosello'}
         </button>
@@ -1551,6 +1563,29 @@ const dataURLtoBlob = (dataurl) => {
             handleFavoriteToggle={handleFavoriteToggle}
             user={user}
           />
+
+          {isStatisticheVisible && (
+              <div className="modal-overlay"></div>
+            )}
+            {isStatisticheVisible && (
+              <div className="infoView-statistiche"> {/* <-- Stessa classe "cornice" */}
+                <div className="modal-content-statistiche"> {/* <-- Stessa classe "contenuto" */}
+
+                  <div className="TileInfo">
+                    <h4>Statistiche Collezione</h4>
+                  </div>
+                  
+                  {/* Qui "iniettiamo" il componente dei grafici.
+                    Lavora sui dati 'watches' già presenti in memoria.
+                  */}
+                  <WatchAnalytics watches={watches} />
+
+                  <div className="buttonForm">
+                    <button className="funzioniButton" onClick={() => setIsStatisticheVisible(false)}>Chiudi</button>
+                  </div>
+                </div>
+              </div>
+            )}
 
           {/* Area di INFO */}
           {isInfoVisible && selectedWatch && (

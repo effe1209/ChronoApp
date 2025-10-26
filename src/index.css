@@ -421,6 +421,6 @@ h4 {
   display: grid;
   align-content: center;
   justify-items: stretch;
-  dap: 2%;
+  gap: 2%;
   width: 100%;
 }

@@ -1447,3 +1447,141 @@ input::placeholder {
 .swiper-wrapper .watch-card .watch-imageCarosel {
   max-height: 375px;
 }
+
+
+.charts-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  /* gap: 20px; */
+  width: 100%;
+  max-width: 1200px; /* Limita la larghezza massima */
+  margin: 5px auto; /* Centra il contenitore */
+  background-color: var(--form-bg-color); /* Usa il colore di sfondo del tuo form */
+  border-radius: 20px;
+  height: 500px;
+}
+
+.chart-wrapper {
+  flex: 1; /* Ogni grafico cerca di occupare lo stesso spazio */
+  min-width: 300px; /* Larghezza minima prima di andare a capo */
+  max-width: 430px; /* Larghezza massima per un singolo grafico */
+  height: 43%; /* Altezza fissa per il canvas del grafico */
+  padding: 20px;
+  border-radius: 20px;
+  background-color: var(--bg-color); /* Sfondo interno per il grafico */
+  box-shadow: inset 0px 0px 240px rgba(0,0,0,100);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: auto;
+  height: 400px;
+}
+
+.chart-wrapper h3 {
+  margin-bottom: 15px;
+  text-align: center;
+  color: var(--text-color);
+}
+
+/* Messaggio di fallback se non ci sono dati */
+.chart-wrapper p {
+  margin-top: auto;
+  margin-bottom: auto;
+  color: var(--text-secondary-color);
+}
+
+.canvas_container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin-top: 10px;
+}
+
+.infoView-statistiche {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  bottom:8%; /* Mantiene l'elemento sempre in basso */
+  width: 100%;
+  z-index: 1001;
+}
+
+.dark-mode .infoView-statistiche .modal-content {
+  background-color: rgba(95, 83, 97, 0.80);
+  height: fit-content;
+}
+
+.modal-content-statistiche {
+  background: rgba(255, 255, 255, .80);
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+}
+
+.infoView-statistiche .modal-content-statistiche {
+  padding: 20px;
+  border-radius: 20px;
+  width: 80%;
+  max-width: 80%;
+  text-align: center;
+  background-color: rgba(255, 255, 255, .80);
+  backdrop-filter: blur(5px);
+  height: fit-content;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+
+.dark-mode .infoView-statistiche .modal-content-statistiche {
+  background-color: rgba(95, 83, 97, 0.80);
+  height: fit-content;
+}
+
+@media (max-width: 750px) {
+
+  .infoView-statistiche {
+    bottom:3%; /* Mantiene l'elemento sempre in basso */
+    width: 100%;
+    z-index: 1001;
+  }
+
+  /* Sovrascrive la larghezza per i telefoni */
+  .infoView-statistiche .modal-content-statistiche {
+    width: 90%; /* Usa il 90% della larghezza dello schermo */
+    max-width: 90%; /* Sovrascrive i 1000px */
+    max-height: 800px;
+  }
+
+  .infoView-statistiche .modal-content-statistiche h4 {
+    font-size: 22px;
+  }
+
+  /* Se anche i grafici al suo interno sbordano, 
+    dovrai aggiungere lo scroll interno.
+  */
+  .charts-container {
+    flex-direction: column; /* Impila i grafici */
+    overflow-y: auto;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .chart-wrapper {
+    left: 0%;
+    max-width: 200px; /* Limita la larghezza massima */
+    height: 300px; /* Riduci l'altezza su mobile */
+    margin-bottom: 2%;
+    padding: 0%;
+  }
+
+  .canvas_container {
+    height: 250px; /* Riduci l'altezza del canvas su mobile */
+    max-width: 100px;
+  }
+}
