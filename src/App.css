@@ -660,6 +660,7 @@ select {
 .dark-mode .infoView .modal-content {
   background-color: rgba(95, 83, 97, 0.80);
   height: fit-content;
+  backdrop-filter: blur(10px);
 }
 
 
@@ -1471,12 +1472,16 @@ input::placeholder {
   padding: 20px;
   border-radius: 20px;
   background-color: var(--bg-color); /* Sfondo interno per il grafico */
-  box-shadow: inset 0px 0px 240px rgba(0,0,0,100);
+  box-shadow: inset 0px 0px 240px rgba(95, 83, 97, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow: auto;
   height: 400px;
+}
+
+.dark-mode .chart-wrapper {
+  box-shadow: inset 0px 0px 240px rgba(0,0,0,100);
 }
 
 .chart-wrapper h3 {
@@ -1542,6 +1547,7 @@ input::placeholder {
 .dark-mode .infoView-statistiche .modal-content-statistiche {
   background-color: rgba(95, 83, 97, 0.80);
   height: fit-content;
+  backdrop-filter: blur(10px);
 }
 
 @media (max-width: 750px) {
