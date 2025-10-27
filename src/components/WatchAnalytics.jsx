@@ -95,7 +95,7 @@ const WatchAnalytics = ({ watches }) => {
   return (
     <div className="charts-container">
       <div className="chart-wrapper">
-        <h4 style={{padding: '10px'}}>Distribuzione Marche</h4>
+        <h4>Distribuzione Marche</h4>
         <div className="canvas_container">
         {watches && watches.length > 0 ? (
           <Pie data={brandChartData} options={options} />
@@ -106,7 +106,7 @@ const WatchAnalytics = ({ watches }) => {
       </div>
 
       <div className="chart-wrapper">
-        <h4 style={{padding: '10px'}}>Distribuzione Movimenti</h4>
+        <h4>Distribuzione Movimenti</h4>
         <div className="canvas_container">
         {watches && watches.length > 0 ? (
           <Pie data={movementChartData} options={options} />

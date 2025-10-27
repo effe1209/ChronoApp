@@ -193,7 +193,7 @@ function App() {
     year: "",
     image: "",
     movement: "",
-    color: "",
+    color: "rgba(58, 58, 58, 0.8)",
     isFavorite: false,
     money: null,
   });
@@ -437,7 +437,15 @@ const testConnection = async () => {
 
 
   const handleCancel = () => {
-    setNewWatch({ name: "", brand: "", year: "", image: "", movement: "", color: ""});
+   setNewWatch({ 
+      name: "", 
+      brand: "", 
+      year: "", 
+      image: "", 
+      movement: "", 
+      color: "#FFFFFF", // <-- SOLUZIONE (resetta a bianco, non a "")
+    });
+
     setMessage(null);
 
     if (fileInputRef.current) {
@@ -1271,32 +1279,31 @@ const dataURLtoBlob = (dataurl) => {
                       </select>
                     </div>
                     <label>
-                        <strong>Colore: </strong>
-                      </label>
-                    <div className="color-picker-container">
-                      {/* Input nascosto */}
-                      <div style={{width:"10px", position:"absolute"}}>
-                        <input
-                          type="color"
-                          id="color"
-                          ref={colorInputRef}
-                          className="hidden-color-input"
-                          value={newWatch.color}
-                          onChange={(e) => setNewWatch({ ...newWatch, color: e.target.value })}
-                        />
-                      </div>
-                      {/* Bottone personalizzato */}
-                      <button
-                        className="color-picker-button"
-                        onClick={() => colorInputRef.current.click()}
-                        style={{ backgroundColor: newWatch.color}}
-                      >
-                        🎨 Scegli un colore
-                      </button>
+                    <strong>Colore: </strong>
+                  </label>
+                  <div className="color-picker-container">
+                    {/* 1. Il bottone personalizzato (ora è solo estetico) */}
+                    {/* NON HA PIÙ 'onClick' */}
+                    <button
+                      type="button" // Aggiungi type="button" per evitare submit accidentali
+                      className="color-picker-button"
+                      style={{ backgroundColor: updatedWatch.color, border: "1px solid green" }}
+                      tabIndex="-1" // Rimuove il bottone dalla navigazione con TAB (l'input la gestirà)
+                    >
+                      🎨 Scegli un colore
+                    </button>
 
-                      {/* Mostra il colore selezionato */}
-                      {newWatch.color && <p className="selected-color">Colore selezionato: {newWatch.color}</p>}
-                    </div>
+                    <input
+                      type="color"
+                      id="color"
+                      className="color-input-overlay"
+                      value={updatedWatch.color}
+                      onChange={(e) => setUpdatedWatch({ ...updatedWatch, color: e.target.value })}
+                    />
+
+                    {/* Mostra il colore selezionato */}
+                    {updatedWatch.color && <p className="selected-color">Colore selezionato: {updatedWatch.color}</p>}
+                  </div>
                   </div>
 
                   <div style={{ marginBottom: "10px" }}></div>
@@ -1494,26 +1501,27 @@ const dataURLtoBlob = (dataurl) => {
                     <strong>Colore: </strong>
                   </label>
                   <div className="color-picker-container">
-                    {/* Input nascosto */}
-                    <div style={{ width: "10px", position: "absolute", opacity:"0"}}>
-                      <input
-                        type="color"
-                        id="color"
-                        ref={colorInputRef}
-                        className="hidden-color-input"
-                        value={updatedWatch.color}
-                        onChange={(e) => setUpdatedWatch({ ...updatedWatch, color: e.target.value })}
-                        style={{opacity:"0"}}
-                      />
-                    </div>
-                    {/* Bottone personalizzato */}
+                    {/* 1. Il bottone personalizzato (ora è solo estetico) */}
+                    {/* NON HA PIÙ 'onClick' */}
                     <button
+                      type="button" // Aggiungi type="button" per evitare submit accidentali
                       className="color-picker-button"
-                      onClick={() => colorInputRef.current.click()}
                       style={{ backgroundColor: updatedWatch.color || "#ffffff", border: "1px solid green" }}
+                      tabIndex="-1" // Rimuove il bottone dalla navigazione con TAB (l'input la gestirà)
                     >
                       🎨 Scegli un colore
                     </button>
+
+                    {/* 2. L'input REALE. Non è più "nascosto". */}
+                    {/* È un "overlay" invisibile posizionato SOPRA il bottone. */}
+                    {/* NON HA PIÙ 'ref'. Usa 'className="color-input-overlay"'. */}
+                    <input
+                      type="color"
+                      id="color"
+                      className="color-input-overlay"
+                      value={updatedWatch.color}
+                      onChange={(e) => setUpdatedWatch({ ...updatedWatch, color: e.target.value })}
+                    />
 
                     {/* Mostra il colore selezionato */}
                     {updatedWatch.color && <p className="selected-color">Colore selezionato: {updatedWatch.color}</p>}
