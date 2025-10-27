@@ -196,9 +196,11 @@ function App() {
     color: "",
     isFavorite: false,
     money: null,
+    features: [],
   });
   const [loading, setLoading] = useState(false);
   const [isStatisticheVisible, setIsStatisticheVisible] = useState(false);
+  const [isDetailsMenuOpen, setIsDetailsMenuOpen] = useState(false);
 
   useLayoutEffect(() => {
         // Logica di misurazione del layout (per debug/risoluzione problemi di animazione)
@@ -443,7 +445,10 @@ const testConnection = async () => {
       year: "", 
       image: "", 
       movement: "", 
-      color: "", // <-- SOLUZIONE (resetta a bianco, non a "")
+      color: "",
+      features: [],
+      isFavorite: false,
+      money: null,
     });
 
     setMessage(null);
@@ -498,32 +503,6 @@ const [isPending, startTransition] = useTransition();
     }
   };
 
-  const handleTotalMoney = () => {
-    // 1. Controlla che la lista non sia vuota
-    if (!watches || watches.length === 0) {
-        return 0;
-    }
-
-    // 2. Utilizza il metodo 'reduce' per sommare i valori
-    const total = watches.reduce((accumulator, watch) => {
-        // Estrai il valore 'money'. Assicurati che sia un numero valido.
-        // Usiamo Number() per la conversione. Se il valore è null, undefined, o non un numero, 
-        // Number() può restituire 0 o NaN. Qui usiamo un controllo aggiuntivo.
-        const moneyValue = Number(watch.money); 
-        
-        // Controlla se è un numero finito (non NaN, non Infinity)
-        if (Number.isFinite(moneyValue)) {
-            return accumulator + moneyValue;
-        }
-        
-        // Se non è valido (es. null o stringa vuota), aggiungi 0
-        return accumulator;
-        
-    }, 0); // Il valore iniziale dell'accumulatore è 0
-
-    return total;
-};
-
 const totalMoney = useMemo(() => {
     if (!watches || watches.length === 0) return 0;
     
@@ -546,6 +525,7 @@ const totalMoney = useMemo(() => {
     image: '', // Questo campo verrà aggiornato quando viene selezionata un'immagine
     isFavorite: false,
     money: null,
+    features: [],
   });
 
   const handleModifyWatch = async (userid, watchid) => {
@@ -1003,42 +983,61 @@ const dataURLtoBlob = (dataurl) => {
 };
 
 
-  // const uploadImage = async (file) => {
-  //   if (!file) return null;
+const handleFeatureChange = (e) => {
+  const { value, checked } = e.target;
 
-  //   const { data: { user } } = await supabase.auth.getUser();
-  //   if (!user) {
-  //     alert("Devi essere loggato per caricare immagini!");
-  //     return null;
-  //   }
+  // Usiamo il functional update (prevState) perché dipendiamo
+  // dallo stato precedente dell'array 'features'.
+  setNewWatch((prevState) => {
+    let updatedFeatures;
+    if (checked) {
+      // Se la casella è spuntata, aggiungi il valore all'array
+      updatedFeatures = [...prevState.features, value];
+    } else {
+      // Se la casella non è spuntata, rimuovi il valore dall'array
+      updatedFeatures = prevState.features.filter(
+        (feature) => feature !== value
+      );
+    }
+    return { ...prevState, features: updatedFeatures };
+  });
+};
 
-  //   let fileToUpload = file;
+const featuresList = ["Datario", "Cronografo", "Impermeabile", "Automatico", "Subacqueo"];
 
-  //   // Per un file più piccolo e ottimizzato:
-  //   const MAX_WIDTH = 1200; // Larghezza massima desiderata
-  //   const COMPRESSION_QUALITY = 0.8; // Qualità JPEG (0.0 a 1.0)
+function WatchDetails({ newWatch, setNewWatch }) {
+  const handleFeatureChange = (event) => {
+    const { value, checked } = event.target;
 
-  //   const userId = user.id;
-  //   const fileName = `${userId}/${Date.now()}-${file.name}`;
-  //   const bucketName = "fotoWatch";
+    setNewWatch((prev) => {
+      if (checked) {
+        // Aggiungi la feature
+        return { ...prev, features: [...prev.features, value] };
+      } else {
+        // Rimuovi la feature
+        return { ...prev, features: prev.features.filter((f) => f !== value) };
+      }
+    });
+  };
 
-  //   const { data, error } = await supabase
-  //     .storage
-  //     .from(bucketName)
-  //     .upload(fileName, file, {
-  //       cacheControl: "3600",
-  //       upsert: false,
-  //     });
+  return (
+    <div className="details-menu">
+      <h4>Seleziona Caratteristiche</h4>
 
-  //   if (error) {
-  //     console.error("Errore nell'upload:", error);
-  //     alert(`Errore durante il caricamento: ${error.message}`);
-  //     return null;
-  //   }
-
-  //   // Costruisci l'URL pubblico
-  //   return `https://htopqijsvgaqjrvvgpjh.supabase.co/storage/v1/object/public/${bucketName}/${fileName}`;
-  // };
+      {featuresList.map((feature) => (
+        <label key={feature} className="checkbox-label">
+          <input
+            type="checkbox"
+            value={feature}
+            checked={newWatch.features.includes(feature)}
+            onChange={handleFeatureChange}
+          />
+          {feature}
+        </label>
+      ))}
+    </div>
+  );
+}
 
 
   
@@ -1302,7 +1301,6 @@ const dataURLtoBlob = (dataurl) => {
                       onChange={(e) => setNewWatch({ ...newWatch, color: e.target.value })}
                     />
 
-                    {/* USA newWatch */}
                     {newWatch.color && <p className="selected-color">Colore selezionato: {newWatch.color}</p>}
                 </div>
                   </div>
@@ -1332,6 +1330,38 @@ const dataURLtoBlob = (dataurl) => {
                         loading="lazy"
                       />
                   )}
+
+                  {/* Pulsante per mostrare/nascondere il menù */}
+                  <div style={{ margin: "20px 0 10px 0", width: "100%" }}>
+                    <button
+                      type="button"
+                      className="details-toggle-button"
+                      onClick={() => setIsDetailsMenuOpen(!isDetailsMenuOpen)}
+                    >
+                      {isDetailsMenuOpen ? 'Chiudi Dettagli ▴' : 'Caratteristiche Aggiuntive ▾'}
+                    </button>
+                  </div>
+
+                  {/* Il menù delle checkbox (mostrato condizionalmente) */}
+                  {isDetailsMenuOpen && (
+                    <div className="details-menu">
+                      <h4>Seleziona Caratteristiche</h4>
+
+                      {/* Lista dinamica di checkbox */}
+                      {["Datario", "Cronografo", "Impermeabile", "Automatico", "Subacqueo"].map((feature) => (
+                        <label key={feature} className="checkbox-label">
+                          <input
+                            type="checkbox"
+                            value={feature}
+                            checked={newWatch.features.includes(feature)}
+                            onChange={handleFeatureChange}
+                          />
+                          {feature}
+                        </label>
+                      ))}
+                    </div>
+                  )}
+
                   
                   <div style={{ marginBottom: "30px" }}></div>
                   <div className="buttonForm">
