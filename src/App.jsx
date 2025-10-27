@@ -193,7 +193,7 @@ function App() {
     year: "",
     image: "",
     movement: "",
-    color: "rgba(58, 58, 58, 0.8)",
+    color: "",
     isFavorite: false,
     money: null,
   });
@@ -443,7 +443,7 @@ const testConnection = async () => {
       year: "", 
       image: "", 
       movement: "", 
-      color: "#FFFFFF", // <-- SOLUZIONE (resetta a bianco, non a "")
+      color: "", // <-- SOLUZIONE (resetta a bianco, non a "")
     });
 
     setMessage(null);
@@ -1282,13 +1282,12 @@ const dataURLtoBlob = (dataurl) => {
                     <strong>Colore: </strong>
                   </label>
                   <div className="color-picker-container">
-                    {/* 1. Il bottone personalizzato (ora è solo estetico) */}
-                    {/* NON HA PIÙ 'onClick' */}
                     <button
-                      type="button" // Aggiungi type="button" per evitare submit accidentali
+                      type="button" 
                       className="color-picker-button"
-                      style={{ backgroundColor: updatedWatch.color, border: "1px solid green" }}
-                      tabIndex="-1" // Rimuove il bottone dalla navigazione con TAB (l'input la gestirà)
+                      // USA newWatch
+                      style={{ backgroundColor: newWatch.color, border: "1px solid green" }}
+                      tabIndex="-1" 
                     >
                       🎨 Scegli un colore
                     </button>
@@ -1297,13 +1296,15 @@ const dataURLtoBlob = (dataurl) => {
                       type="color"
                       id="color"
                       className="color-input-overlay"
-                      value={updatedWatch.color}
-                      onChange={(e) => setUpdatedWatch({ ...updatedWatch, color: e.target.value })}
+                      // USA newWatch
+                      value={newWatch.color}
+                      // USA setNewWatch
+                      onChange={(e) => setNewWatch({ ...newWatch, color: e.target.value })}
                     />
 
-                    {/* Mostra il colore selezionato */}
-                    {updatedWatch.color && <p className="selected-color">Colore selezionato: {updatedWatch.color}</p>}
-                  </div>
+                    {/* USA newWatch */}
+                    {newWatch.color && <p className="selected-color">Colore selezionato: {newWatch.color}</p>}
+                </div>
                   </div>
 
                   <div style={{ marginBottom: "10px" }}></div>
