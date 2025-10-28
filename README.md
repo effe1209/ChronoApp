@@ -72,10 +72,13 @@ Linee guida rapide:
 
 ## Roadmap
 
-- [ ] Pagine profilo utente avanzate
+- [ ] Selettore delle varie complicazioni
+- [ ] Note aggiuntive per ogni orologio
+- [ ] Condizione dell'orologio (Scala 1-10)
+- [ ] Stato Set: Completo (scatola e garanzia), Solo orologio, ecc.
+- [ ] Storico Manutenzioni: Campi per registrare date e costi delle revisioni.
+- [ ] Garanzia (con immagini anche)
 - [ ] Filtri di ricerca avanzati per marca, prezzo, anno
-- [ ] Supporto multi-valuta
-- [ ] Integrazione con API esterne per valutazioni di mercato
 
 ## Contributors
 
