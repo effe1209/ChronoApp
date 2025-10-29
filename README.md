@@ -25,12 +25,12 @@ ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassi
 - Vista Dinamica: Alternanza tra la visualizzazione a Griglia, con la possibilità di selezionare gli orologi preferiti, e la visualizzazione a Carosello.
 - Organizzazione Avanzata: Ordinamento automatico per Orologi Preferiti e per nome.
 
-## Funzioni Intelligenti e Interattive
+## 🧠 Funzioni Intelligenti e Interattive
 - Valore Totale: Calcolo in tempo reale del valore complessivo della collezione.
 - Orologio del Giorno: Selezione casuale di un orologio dalla collezione per suggerire cosa indossare.
 - Completa l'Outfit (Color Matching): Analisi del colore predominante di un'immagine caricata dall'utente (es. un outfit) e suggerimento degli orologi in collezione con il colore più simile.
 
-## Interfaccia Utente e Performance
+## 🎧 Interfaccia Utente e Performance
 - Modalità Scuro/Chiaro: Toggle dinamico della Dark Mode.
 - Effetti Visivi: Effetto "frosted glass" sulla barra di navigazione.
 - Orologio Analogico Funzionante: Un orologio analogico in CSS e JavaScript puro che mostra l'ora attuale.
@@ -47,7 +47,7 @@ ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassi
 | **Storage** | **Supabase Storage** | Gestione dello storage delle immagini. |
 
 
-## Screenshots
+## 📷 Screenshots
 
 (aggiungi qui immagini o GIF del progetto per mostrare UI, carosello, modalità scura, ecc.)
 
@@ -56,7 +56,7 @@ ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassi
 ![Carosello](./screenshot/carousel.png)
 <!--*(Sostituisci i percorsi con le immagini effettive nella cartella docs/screenshots)*--->
 
-## Contributing
+## 📈 Contributing
 
 Grazie per voler contribuire! Puoi contribuire tramite:
 - Segnalazioni di bug (issue)
@@ -70,7 +70,7 @@ Linee guida rapide:
 4. Apri una pull request verso il branch principale del repo originale.
 
 
-## Roadmap
+## 📍 Roadmap
 
 - [x] Selettore delle varie complicazioni
 - [x] Note aggiuntive per ogni orologio
@@ -80,7 +80,7 @@ Linee guida rapide:
 - [ ] Garanzia (con immagini anche)
 - [ ] Filtri di ricerca avanzati per marca, prezzo, anno
 
-## Contributors
+## 👤 Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section --> 
 <!-- prettier-ignore-start -->
@@ -93,11 +93,11 @@ Linee guida rapide:
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-## Contatti
+## 📧 Contatti
 
 - Maintainer: effe1209 — https://github.com/effe1209
 
-## Ringraziamenti
+## 🫶 Ringraziamenti
 
 - Supabase — per backend e storage
 - Framer Motion — per le animazioni
