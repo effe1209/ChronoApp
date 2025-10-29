@@ -1419,7 +1419,7 @@ input::placeholder {
 
 @media (max-width: 750px) {
   .paragrafi p {
-    font-size: 16px; /* Prova con 14px, o 12px, per vedere quale preferisci */
+    font-size: 18px; /* Prova con 14px, o 12px, per vedere quale preferisci */
   }
 }
 
