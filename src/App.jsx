@@ -1926,30 +1926,37 @@ useEffect(() => {
           />
 
           {isStatisticheVisible && (
-              <div className="modal-overlay"></div>
-            )}
-            {isStatisticheVisible && (
-              <div className="infoView-statistiche"> {/* <-- Stessa classe "cornice" */}
-                <div className="modal-content-statistiche"> {/* <-- Stessa classe "contenuto" */}
+            /* 1. L'overlay è il genitore. 
+              Aggiungiamo l'onClick per chiudere il modale.
+            */
+            <div className="modal-overlay" onClick={() => setIsStatisticheVisible(false)}>
+              
+              {/* 2. Il contenuto (infoView-statistiche) è DENTRO l'overlay.
+                Aggiungiamo e.stopPropagation() per non chiudere il modale
+                se si clicca sul contenuto.
+              */}
+              <div className="infoView-statistiche" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-content-statistiche">
 
                   <div className="TileInfo">
                     <h4>Statistiche Collezione</h4>
                   </div>
                   
-                  {/* Qui "iniettiamo" il componente dei grafici.
-                    Lavora sui dati 'watches' già presenti in memoria.
-                  */}
+                  {/* Il tuo componente dei grafici */}
                   <WatchAnalytics watches={watches} />
 
                   <div className="buttonForm">
                     <button className="funzioniButton" onClick={() => setIsStatisticheVisible(false)}>Chiudi</button>
                   </div>
+                  
                 </div>
               </div>
-            )}
+              
+            </div>
+          )}
 
           {/* Area di INFO */}
-          {isInfoVisible && selectedWatch && (
+          {/* {isInfoVisible && selectedWatch && (
               <div className="modal-overlay">
 
               </div>
@@ -1990,7 +1997,53 @@ useEffect(() => {
                 </div>
               </div>
               </div>
-            )}
+            )} */}
+
+            {isInfoVisible && selectedWatch && (
+  /* 1. L'overlay è il genitore. 
+     Aggiungiamo un onClick per chiudere il modale cliccando lo sfondo.
+  */
+  <div className="modal-overlay" onClick={() => setIsInfoVisible(false)}>
+    
+    {/* 2. Il tuo .infoView ora è DENTRO l'overlay.
+       Aggiungiamo e.stopPropagation() per evitare che un click
+       sul contenuto (bianco) chiuda anche il modale.
+    */}
+    <div className="infoView" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content">
+        <div className="TileInfo">
+          <h3>{selectedWatch.name}</h3>
+        </div>
+        
+        <img src={selectedWatch.image || "orologio_back.svg"} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
+        
+        <div className="paragrafi">
+          <p ><strong>Marca:</strong> <span className="InfoColorInfo">{selectedWatch.brand}</span></p>
+          <p><strong>Movimento:</strong> <span className="InfoColorInfo">{selectedWatch.movement}</span></p>
+          <p><strong>Anno:</strong> <span className="InfoColorInfo">{selectedWatch.year}</span></p>
+          <p><strong>Colore:</strong> <span className="InfoColorInfo">{selectedWatch.color}</span></p>
+          <p><strong>Prezzo di Acquisto:</strong> <span className="InfoColorInfo">{selectedWatch.money} €</span></p>
+          <p>
+            <strong>Caratteristiche Aggiuntive: </strong>
+            <span className="InfoColorInfo">
+              {selectedWatch.caratteristiche && selectedWatch.caratteristiche.length > 0
+                ? selectedWatch.caratteristiche.map(feature => feature.nome_caratteristica).join(", ")
+                : "Nessuna"
+              }
+            </span>
+          </p>
+          {/* Ho rimosso lo stile inline per la coerenza del font */}
+          <p><strong>Note: </strong> <span className="InfoColorInfo" >{selectedWatch.note || "Nessuna nota"}</span></p>
+        </div>
+
+        <div className="buttonForm">
+          <button className="funzioniButton" onClick={() => setIsInfoVisible(false)}>Chiudi</button>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+)}
         </>
         
       )}

@@ -629,7 +629,8 @@ select {
   align-items: center;
   justify-content: center;
   position: sticky;
-  bottom:9%; /* Mantiene l'elemento sempre in basso */
+  bottom:2%; /* Mantiene l'elemento sempre in basso */
+  top: 2%;
   width: 100%;
   z-index: 1001;
 }
@@ -1538,7 +1539,8 @@ input::placeholder {
   align-items: center;
   justify-content: center;
   position: sticky;
-  bottom:8%; /* Mantiene l'elemento sempre in basso */
+  bottom:1%; /* Mantiene l'elemento sempre in basso */
+  top: 9%;
   width: 100%;
   z-index: 1001;
 }
@@ -1780,4 +1782,4 @@ input::placeholder {
 
 .dark-mode .InfoColorInfo {
   color: #ffcc00;
-} 
+}
