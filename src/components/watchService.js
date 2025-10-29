@@ -80,7 +80,7 @@ export const addWatchService = async (options) => {
     // completo di caratteristiche che abbiamo appena creato.
     const { data: completeNewWatch, error: fetchError } = await supabase
       .from('watches')
-      .select('*, caratteristiche(*)') // Seleziona l'orologio e le sue caratteristiche
+      .select('*, Orologi_Caratteristiche(*, caratteristiche(*))') // Seleziona l'orologio e le sue caratteristiche
       .eq('id', newWatchId)
       .single();
 
@@ -98,7 +98,7 @@ export const addWatchService = async (options) => {
       year: '',
       image: '',
       movement: '',
-      color: '#FFFFFF', // O il tuo colore default
+      color: '', // O il tuo colore default
       isFavorite: false,
       money: '',
       features: [] // <-- RESETTA ANCHE QUESTO

@@ -565,52 +565,112 @@ const totalMoney = useMemo(() => {
     features: [],
   });
 
-  const handleModifyWatch = async (userid, watchid) => {
-    const { data, error } = await supabase
-        .from('watches')
-        .select('*')
-        .eq('userid', userid)
-        .eq('id', watchid);
+  // const handleModifyWatch = async (userid, watchid) => {
+  //   const { data, error } = await supabase
+  //       .from('watches')
+  //       .select('*')
+  //       .eq('userid', userid)
+  //       .eq('id', watchid);
 
-    if (error) {
-      console.error("Errore nel recupero dell'orologio:", error);
-      return;
+  //   if (error) {
+  //     console.error("Errore nel recupero dell'orologio:", error);
+  //     return;
+  //   }
+  //   if (data && data.length > 0) {
+  //     const watch = data[0];
+  //     setModifyWatch(watch);
+  //     setUpdatedWatch({
+  //       name: watch.name,
+  //       brand: watch.brand,
+  //       year: watch.year,
+  //       movement: watch.movement,
+  //       color: watch.color,
+  //       image: watch.image || '', // Se l'immagine è vuota, assegna una stringa vuota
+  //       isFavorite: watch.isFavorite,
+  //       money: watch.money || null,
+  //     });
+  //     setIsModifyVisible(true);
+  //   }
+  // }
+
+  const handleModifyWatch = async (userid, watchid) => {
+    try {
+      const { data, error } = await supabase
+        .from('watches')
+        // 1. Usa la query esplicita e corretta (caratteristiche in minuscolo)
+        .select('*, Orologi_Caratteristiche(*, caratteristiche(*))')
+        .eq('userid', userid)
+        .eq('id', watchid)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        
+        // --- QUESTA È LA SOLUZIONE ---
+        // 2. Controlla se 'Orologi_Caratteristiche' esiste.
+        //    Se non esiste (es. 0 caratteristiche), usa un array vuoto [].
+        const featuresArray = data.Orologi_Caratteristiche || [];
+        
+        // 3. Appiattisci i dati (estraiamo solo gli ID)
+        const featureIDs = featuresArray.map(
+          (joinEntry) => joinEntry.caratteristiche.id_caratteristica
+        );
+        // ------------------------------
+        
+        setModifyWatch(data); 
+        
+        setUpdatedWatch({
+          name: data.name,
+          brand: data.brand,
+          year: data.year,
+          movement: data.movement,
+          color: data.color || '#FFFFFF',
+          image: data.image || '', 
+          isFavorite: data.isFavorite,
+          money: data.money || null,
+          features: featureIDs, // Popola le features esistenti
+        });
+        
+        setIsModifyVisible(true);
+      }
+    } catch (error) {
+      console.error("Errore nel recupero dell'orologio per la modifica:", error);
     }
-    if (data && data.length > 0) {
-      const watch = data[0];
-      setModifyWatch(watch);
-      setUpdatedWatch({
-        name: watch.name,
-        brand: watch.brand,
-        year: watch.year,
-        movement: watch.movement,
-        color: watch.color,
-        image: watch.image || '', // Se l'immagine è vuota, assegna una stringa vuota
-        isFavorite: watch.isFavorite,
-        money: watch.money || null,
-      });
-      setIsModifyVisible(true);
-    }
-  }
+  };
   
-  const handleInfoWatch = async (userid, watchid) => {
-  
-    // Recupera i dati dal database
+const handleInfoWatch = async (userid, watchid) => {
+  try { // Aggiungi un try/catch
     const { data, error } = await supabase
       .from('watches')
       .select('*, Orologi_Caratteristiche(*, caratteristiche(*))')
       .eq('userid', userid)
-      .eq('id', watchid);
-  
-    if (error) {
-      console.error("Errore nel recupero dell'orologio:", error);
-      return;
-    }
-    if (data && data.length > 0) {
-      setSelectedWatch(data[0]);
+      .eq('id', watchid)
+      .single(); // Usa .single()
+
+    if (error) throw error;
+
+    if (data) {
+      // --- SOLUZIONE QUI ---
+      // Appiattisci i dati ESATTAMENTE come fai in fetchWatches
+      const features = data.Orologi_Caratteristiche.map(
+        (joinEntry) => joinEntry.caratteristiche
+      );
+
+      const cleanWatchData = {
+        ...data,
+        caratteristiche: features, // Crea l'array pulito
+      };
+
+      setSelectedWatch(cleanWatchData); // Salva i dati puliti
+      // ---------------------
+
       setIsInfoVisible(true);
     }
-  };
+  } catch (error) {
+    console.error("Errore nel recupero dell'orologio:", error);
+  }
+};
 
 const handleShowStats = () => {
     setIsStatisticheVisible(true);
@@ -1021,24 +1081,24 @@ const dataURLtoBlob = (dataurl) => {
 
 
 const handleFeatureChange = (event) => {
-  const { value, checked } = event.target;
-  
-  // SOLUZIONE: Converti il valore (che è una stringa) in un numero.
-  const numericValue = parseInt(value, 10); 
+    const { value, checked } = event.target;
+    
+    const numericValue = parseInt(value, 10); 
+    // ----------------------------------------
 
-  setNewWatch((prev) => {
-    if (checked) {
-      // Aggiungi il numero
-      return { ...prev, features: [...prev.features, numericValue] };
-    } else {
-      // Rimuovi il numero
-      return { 
-        ...prev, 
-        features: prev.features.filter((f) => f !== numericValue) 
-      };
-    }
-  });
-};
+    setNewWatch((prev) => {
+      if (checked) {
+        // Aggiungi il NUMERO all'array
+        return { ...prev, features: [...prev.features, numericValue] };
+      } else {
+        // Rimuovi il NUMERO dall'array
+        return { 
+          ...prev, 
+          features: prev.features.filter((f) => f !== numericValue) 
+        };
+      }
+    });
+  };
   
   const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
@@ -1101,6 +1161,25 @@ useEffect(() => {
 
 }, []); // L'array vuoto [] assicura che venga eseguito solo una volta al caricamento
 
+
+// Questa è la NUOVA funzione da aggiungere
+  const handleUpdatedFeatureChange = (event) => {
+    const { value, checked } = event.target;
+    
+    // Converti il valore (stringa) in un numero (int8)
+    const numericValue = parseInt(value, 10); 
+
+    setUpdatedWatch((prev) => { // <-- Aggiorna UPDATED Watch
+      if (checked) {
+        return { ...prev, features: [...prev.features, numericValue] };
+      } else {
+        return { 
+          ...prev, 
+          features: prev.features.filter((f) => f !== numericValue) 
+        };
+      }
+    });
+  };
 
   // Orologio Funzionante
   var inc = 1000;
@@ -1402,43 +1481,36 @@ useEffect(() => {
                     </button>
                   </div>
 
-{isDetailsMenuOpen && (
-  <div>
-    <strong>Seleziona Caratteristiche</strong>
-    <div className="details-menu">
-      
-      {/* USA 'allFeaturesList' (lo stato caricato) 
-        invece di 'featuresList' (la costante statica) 
-      */}
-      {allFeaturesList.map((feature) => (
-        <label 
-          // KEY: Usa l'ID univoco dal database
-          key={feature.id_caratteristica} 
-          
-          // CHECK: Controlla se l'ID è nell'array 'newWatch.features'
-          className={`checkbox-label ${newWatch.features.includes(feature.id_caratteristica) ? 'selected' : ''}`}
-        >
-          <input
-            type="checkbox"
-            className="checkbox-input"
-            
-            // VALUE: Questo è il cambiamento cruciale.
-            // Il valore che 'handleFeatureChange' riceverà è l'ID.
-            value={feature.id_caratteristica}
-            
-            // CHECKED: Come per la classe, controlla l'ID.
-            checked={newWatch.features.includes(feature.id_caratteristica)}
-            
-            onChange={handleFeatureChange}
-          />
-          
-          {/* TESTO: Mostra all'utente il nome leggibile */}
-          {feature.nome_caratteristica}
-        </label>
-      ))}
-    </div>
-  </div>
-)}
+                  {isDetailsMenuOpen && (
+                    <div>
+                      <strong>Seleziona Caratteristiche</strong>
+                      <div className="details-menu">
+                        
+                        {/* USA 'allFeaturesList' (lo stato caricato) 
+                          invece di 'featuresList' (la costante statica) 
+                        */}
+                        {allFeaturesList.map((feature) => (
+                          <label 
+                            // KEY: Usa l'ID univoco dal database
+                            key={feature.id_caratteristica} 
+                            
+                            // CHECK: Controlla se l'ID è nell'array 'newWatch.features'
+                            className={`checkbox-label ${newWatch.features.includes(feature.id_caratteristica) ? 'selected' : ''}`}
+                          >
+                            <input
+                              type="checkbox"
+                              className="checkbox-input"
+                              value={feature.id_caratteristica}
+                              checked={newWatch.features.includes(feature.id_caratteristica)}
+                              onChange={handleFeatureChange}
+                            />
+                            
+                            {feature.nome_caratteristica}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   
                   <div style={{ marginBottom: "30px" }}></div>
                   <div className="buttonForm">
@@ -1671,29 +1743,37 @@ useEffect(() => {
                   </div>
 
                   {isDetailsMenuOpen && (
-                    <div  >
-                      <strong>Seleziona Caratteristiche</strong>
-                      <div className="details-menu">
-                      
-
-                        {featuresList.map((feature) => (
-                          <label 
-                            key={feature} 
-                            className={`checkbox-label ${newWatch.features.includes(feature) ? 'selected' : ''}`}
-                          >
-                            <input
-                              type="checkbox"
-                              className="checkbox-input" // Questa classe ora serve solo a nascondere
-                              value={feature}
-                              checked={newWatch.features.includes(feature)}
-                              onChange={handleFeatureChange}
-                            />
-                            {feature}
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+  <div>
+    <strong>Seleziona Caratteristiche</strong>
+    <div className="details-menu">
+      
+      {/* 1. USA 'allFeaturesList' (i dati caricati) */}
+      {allFeaturesList.map((feature) => (
+        <label 
+          key={feature.id_caratteristica} 
+          
+          /* 2. LEGGE da 'updatedWatch' */
+          className={`checkbox-label ${updatedWatch.features.includes(feature.id_caratteristica) ? 'selected' : ''}`}
+        >
+          <input
+            type="checkbox"
+            className="checkbox-input"
+            value={feature.id_caratteristica}
+            
+            /* 3. LEGGE da 'updatedWatch' */
+            checked={updatedWatch.features.includes(feature.id_caratteristica)}
+            
+            /* 4. CHIAMA il NUOVO handler */
+            onChange={handleUpdatedFeatureChange}
+          />
+          
+          {/* 5. Mostra il nome corretto */}
+          {feature.nome_caratteristica}
+        </label>
+      ))}
+    </div>
+  </div>
+)}
                   <div style={{ marginBottom: "20px", width: "100%" }}></div>
                 </div>
 
@@ -1759,6 +1839,20 @@ useEffect(() => {
                   <p><strong>Anno:</strong> {selectedWatch.year}</p>
                   <p><strong>Colore:</strong> {selectedWatch.color}</p>
                   <p><strong>Prezzo di Acquisto:</strong> {selectedWatch.money} €</p>
+                  <p>
+  <strong>Caratteristiche Aggiuntive:</strong>
+  
+  {/* 1. Controlla 'selectedWatch.caratteristiche' (non 'features') */}
+  {selectedWatch.caratteristiche && selectedWatch.caratteristiche.length > 0
+    ? 
+      // 2. Prima estrai i nomi con .map()
+      selectedWatch.caratteristiche.map(feature => feature.nome_caratteristica)
+      // 3. Poi uniscili con .join()
+      .join(", ")
+    : 
+      "Nessuna"
+  }
+</p>
                   
                 </div>
 
@@ -1768,7 +1862,6 @@ useEffect(() => {
               </div>
               </div>
             )}
-
         </>
         
       )}
