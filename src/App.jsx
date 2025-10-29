@@ -597,7 +597,6 @@ const totalMoney = useMemo(() => {
     try {
       const { data, error } = await supabase
         .from('watches')
-        // 1. Usa la query esplicita e corretta (caratteristiche in minuscolo)
         .select('*, Orologi_Caratteristiche(*, caratteristiche(*))')
         .eq('userid', userid)
         .eq('id', watchid)
@@ -607,16 +606,16 @@ const totalMoney = useMemo(() => {
 
       if (data) {
         
-        // --- QUESTA È LA SOLUZIONE ---
-        // 2. Controlla se 'Orologi_Caratteristiche' esiste.
+        // --- SOLUZIONE QUI ---
+        // 1. Controlla se 'Orologi_Caratteristiche' esiste.
         //    Se non esiste (es. 0 caratteristiche), usa un array vuoto [].
         const featuresArray = data.Orologi_Caratteristiche || [];
         
-        // 3. Appiattisci i dati (estraiamo solo gli ID)
+        // 2. Ora possiamo mappare in sicurezza su 'featuresArray'
         const featureIDs = featuresArray.map(
           (joinEntry) => joinEntry.caratteristiche.id_caratteristica
         );
-        // ------------------------------
+        // ---------------------
         
         setModifyWatch(data); 
         
@@ -638,7 +637,7 @@ const totalMoney = useMemo(() => {
       console.error("Errore nel recupero dell'orologio per la modifica:", error);
     }
   };
-  
+
 const handleInfoWatch = async (userid, watchid) => {
   try { // Aggiungi un try/catch
     const { data, error } = await supabase
@@ -914,43 +913,117 @@ const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavori
   );
 };
 
+  // const handleSaveChanges = async () => {
+  //   try {
+  //     let updatedData = { ...updatedWatch };
+
+  //     // Ottieni il percorso dell'immagine esistente se presente
+  //     const oldImageUrl = modifyWatch.image; 
+
+  //     // Se c'è una nuova immagine, caricala su Supabase Storage e ottieni l'URL
+  //     if (newWatch.image instanceof File) {
+  //       const imageUrl = await uploadImage(newWatch.image);
+  //       console.log("Immagine caricata con URL:", imageUrl);
+        
+  //       // Aggiorna il campo immagine con il nuovo URL
+  //       updatedData.image = imageUrl;
+
+  //       // Se esiste un'immagine precedente, eliminarla
+  //       if (oldImageUrl) {
+  //         await deleteImage(oldImageUrl);
+  //       }
+  //     }
+
+  //     // Aggiorna il database con i nuovi dati
+  //     const { error } = await supabase
+  //       .from('watches')
+  //       .update(updatedData)
+  //       .eq('id', modifyWatch.id);
+
+  //     if (error) {
+  //       console.error("Errore nell'aggiornamento dell'orologio:", error);
+  //       return;
+  //     }
+
+  //     console.log("Orologio aggiornato con successo!");
+  //     setIsModifyVisible(false);
+      
+  //   } catch (error) {
+  //     console.error("Errore durante il salvataggio delle modifiche:", error);
+  //   }
+  // };
+
   const handleSaveChanges = async () => {
     try {
-      let updatedData = { ...updatedWatch };
-
-      // Ottieni il percorso dell'immagine esistente se presente
+      // 1. Separa i dati: 'features' (l'array di ID) e 'watchData' (il resto)
+      const { features, ...watchData } = updatedWatch;
+      
+      // 'finalWatchData' conterrà solo i dati per la tabella 'watches'
+      let finalWatchData = { ...watchData }; 
+      
       const oldImageUrl = modifyWatch.image; 
 
-      // Se c'è una nuova immagine, caricala su Supabase Storage e ottieni l'URL
-      if (newWatch.image instanceof File) {
-        const imageUrl = await uploadImage(newWatch.image);
-        console.log("Immagine caricata con URL:", imageUrl);
+      // 2. BUG FIX: Gestione Immagine (ora legge da 'updatedWatch.image')
+      if (updatedWatch.image instanceof File) {
+        const imageUrl = await uploadImage(updatedWatch.image);
+        console.log("Immagine di modifica caricata con URL:", imageUrl);
         
-        // Aggiorna il campo immagine con il nuovo URL
-        updatedData.image = imageUrl;
+        finalWatchData.image = imageUrl; // Aggiorna l'URL nei dati da salvare
 
-        // Se esiste un'immagine precedente, eliminarla
         if (oldImageUrl) {
           await deleteImage(oldImageUrl);
         }
       }
 
-      // Aggiorna il database con i nuovi dati
-      const { error } = await supabase
+      // 3. PASSO 1: Aggiorna la tabella 'watches'
+      //    Inviamo 'finalWatchData', che NON contiene l'array 'features'
+      const { error: updateError } = await supabase
         .from('watches')
-        .update(updatedData)
+        .update(finalWatchData) 
         .eq('id', modifyWatch.id);
 
-      if (error) {
-        console.error("Errore nell'aggiornamento dell'orologio:", error);
-        return;
+      if (updateError) throw updateError;
+
+      // 4. PASSO 2: Aggiorna le 'caratteristiche' (Delete-then-Insert)
+      const watchId = modifyWatch.id;
+
+      // a. Elimina TUTTE le associazioni VECCHIE
+      const { error: deleteError } = await supabase
+        .from('Orologi_Caratteristiche')
+        .delete()
+        .eq('id_watch', watchId); // Usa la colonna 'id_watch' corretta
+
+      if (deleteError) throw deleteError;
+
+      // b. Inserisci TUTTE le associazioni NUOVE (basate su 'features')
+      //    Questo risolve il tuo problema dei duplicati.
+      if (features && features.length > 0) {
+        const relationsToInsert = features.map(featureId => ({
+          id_watch: watchId,
+          id_caratteristica: featureId // 'features' contiene già i numeri
+        }));
+
+        const { error: insertError } = await supabase
+          .from('Orologi_Caratteristiche')
+          .insert(relationsToInsert);
+        
+        if (insertError) throw insertError;
       }
 
-      console.log("Orologio aggiornato con successo!");
+      console.log("Orologio e caratteristiche aggiornati con successo!");
+      
+      // 5. FONDAMENTALE: Ricarica la lista per vedere i cambiamenti
+      await fetchWatches(user.id);
+      
       setIsModifyVisible(false);
       
+      // Pulisci l'immagine da entrambi gli stati per sicurezza
+      setNewWatch((prev) => ({ ...prev, image: "" }));
+      setUpdatedWatch((prev) => ({ ...prev, image: "" }));
+
     } catch (error) {
       console.error("Errore durante il salvataggio delle modifiche:", error);
+      setMessage("Errore: " + error.message);
     }
   };
 
@@ -1840,20 +1913,19 @@ useEffect(() => {
                   <p><strong>Colore:</strong> {selectedWatch.color}</p>
                   <p><strong>Prezzo di Acquisto:</strong> {selectedWatch.money} €</p>
                   <p>
-  <strong>Caratteristiche Aggiuntive:</strong>
-  
-  {/* 1. Controlla 'selectedWatch.caratteristiche' (non 'features') */}
-  {selectedWatch.caratteristiche && selectedWatch.caratteristiche.length > 0
-    ? 
-      // 2. Prima estrai i nomi con .map()
-      selectedWatch.caratteristiche.map(feature => feature.nome_caratteristica)
-      // 3. Poi uniscili con .join()
-      .join(", ")
-    : 
-      "Nessuna"
-  }
-</p>
-                  
+                    <strong>Caratteristiche Aggiuntive:</strong>
+                    
+                    {/* 1. Controlla 'selectedWatch.caratteristiche' (non 'features') */}
+                    {selectedWatch.caratteristiche && selectedWatch.caratteristiche.length > 0
+                      ? 
+                        // 2. Prima estrai i nomi con .map()
+                        selectedWatch.caratteristiche.map(feature => feature.nome_caratteristica)
+                        // 3. Poi uniscili con .join()
+                        .join(", ")
+                      : 
+                        "Nessuna"
+                    }
+                  </p>
                 </div>
 
                 <div className="buttonForm">
