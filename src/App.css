@@ -1707,3 +1707,48 @@ input::placeholder {
   transition: 0.8s;
   height: 44px;
 }
+
+
+
+.notes-textarea {
+  width: 50%;
+  min-height: 80px;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  font-family: 'minork';
+  background-color: rgba(255, 255, 255, 0.6);
+  outline: none;
+  box-sizing: border-box; /* Importante */
+  align-content: center;
+}
+
+.dark-mode .notes-textarea {
+  background-color: rgba(58, 58, 58, 0.8);
+  color: #ffffff;
+}
+
+/* Stile specifico per il form di modifica */
+.formModify .notes-textarea {
+  width: 100%; /* Si adatta al contenitore del form di modifica */
+  background-color: rgba(255, 255, 255, 0.6);; /* Sfondo per abbinarlo al form */
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.dark-mode .formModify .notes-textarea {
+  background-color: rgba(58, 58, 58, 0.8);
+  color: #ffffff;
+  border: 1px solid #555;
+}
+
+.InfoColorInfo {
+  color: rgba(37, 98, 126, 1);
+  font-style: italic;
+}
+
+.dark-mode .InfoColorInfo {
+  color: #ffcc00;
+} 

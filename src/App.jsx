@@ -177,6 +177,8 @@ function DarkModeSwitch() {
 
 
 function App() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedWatch, setSelectedWatch] = useState(null);
   const fileInputRef = useRef(null);
   const fileInputRefOutfit = useRef(null);
   const colorInputRef = useRef(null);
@@ -198,10 +200,13 @@ function App() {
     isFavorite: false,
     money: null,
     features: [],
+    note: "",
   });
   const [loading, setLoading] = useState(false);
   const [isStatisticheVisible, setIsStatisticheVisible] = useState(false);
   const [isDetailsMenuOpen, setIsDetailsMenuOpen] = useState(false);
+  const [isDetailsMenuOpenMOD, setIsDetailsMenuOpenMOD] = useState(false);
+  const [isNotesVisible, setIsNotesVisible] = useState(false);
 
   useLayoutEffect(() => {
         // Logica di misurazione del layout (per debug/risoluzione problemi di animazione)
@@ -486,6 +491,7 @@ const testConnection = async () => {
       features: [],
       isFavorite: false,
       money: null,
+      note: "",
     });
 
     setMessage(null);
@@ -493,6 +499,9 @@ const testConnection = async () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+    setIsDetailsMenuOpen(false);
+    setIsDetailsMenuOpenMOD(false);
+    setIsNotesVisible(false);
   };
 
  // Funzione per gestire la selezione del file
@@ -508,8 +517,7 @@ const [isPending, startTransition] = useTransition();
 // isPending: un flag che diventa true mentre l'aggiornamento è in corso.
 // startTransition: la funzione che useremo per avvolgere l'aggiornamento non urgente.
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedWatch, setSelectedWatch] = useState(null);
+
 
   const handleDayWatch = async (userid) => {
     try {
@@ -563,6 +571,7 @@ const totalMoney = useMemo(() => {
     isFavorite: false,
     money: null,
     features: [],
+    note: ""
   });
 
   // const handleModifyWatch = async (userid, watchid) => {
@@ -624,11 +633,12 @@ const totalMoney = useMemo(() => {
           brand: data.brand,
           year: data.year,
           movement: data.movement,
-          color: data.color || '#FFFFFF',
+          color: data.color || '',
           image: data.image || '', 
           isFavorite: data.isFavorite,
           money: data.money || null,
           features: featureIDs, // Popola le features esistenti
+          note: data.note || "",
         });
         
         setIsModifyVisible(true);
@@ -1584,6 +1594,29 @@ useEffect(() => {
                       </div>
                     </div>
                   )}
+
+                  <div style={{ margin: "20px 0 10px 0", width: "100%" }}>
+              <button
+                type="button"
+                className="details-toggle-button"
+                onClick={() => setIsNotesVisible(!isNotesVisible)}
+              >
+                {isNotesVisible ? 'Chiudi Notes ▴' : 'Apri Notes ▾'}
+              </button>
+            </div>
+
+            {isNotesVisible && (
+              <div>
+                <textarea
+                  placeholder="Note aggiuntive (es. data acquisto, storia, difetti...)"
+                  className="notes-textarea" // Aggiungi una classe per lo stile
+                  value={newWatch.note}
+                onChange={(e) =>
+                  setNewWatch({ ...newWatch, note: e.target.value })
+                }
+              />
+            </div>
+            )}
                   
                   <div style={{ marginBottom: "30px" }}></div>
                   <div className="buttonForm">
@@ -1809,44 +1842,53 @@ useEffect(() => {
                     <button
                       type="button"
                       className="details-toggle-button"
-                      onClick={() => setIsDetailsMenuOpen(!isDetailsMenuOpen)}
+                      onClick={() => setIsDetailsMenuOpenMOD(!isDetailsMenuOpenMOD)}
                     >
-                      {isDetailsMenuOpen ? 'Chiudi Dettagli ▴' : 'Caratteristiche Aggiuntive ▾'}
+                      {isDetailsMenuOpenMOD ? 'Chiudi Dettagli ▴' : 'Caratteristiche Aggiuntive ▾'}
                     </button>
                   </div>
 
-                  {isDetailsMenuOpen && (
-  <div>
-    <strong>Seleziona Caratteristiche</strong>
-    <div className="details-menu">
-      
-      {/* 1. USA 'allFeaturesList' (i dati caricati) */}
-      {allFeaturesList.map((feature) => (
-        <label 
-          key={feature.id_caratteristica} 
-          
-          /* 2. LEGGE da 'updatedWatch' */
-          className={`checkbox-label ${updatedWatch.features.includes(feature.id_caratteristica) ? 'selected' : ''}`}
-        >
-          <input
-            type="checkbox"
-            className="checkbox-input"
-            value={feature.id_caratteristica}
-            
-            /* 3. LEGGE da 'updatedWatch' */
-            checked={updatedWatch.features.includes(feature.id_caratteristica)}
-            
-            /* 4. CHIAMA il NUOVO handler */
-            onChange={handleUpdatedFeatureChange}
-          />
-          
-          {/* 5. Mostra il nome corretto */}
-          {feature.nome_caratteristica}
-        </label>
-      ))}
-    </div>
-  </div>
-)}
+                  {isDetailsMenuOpenMOD && (
+                    <div>
+                      <strong>Seleziona Caratteristiche</strong>
+                      <div className="details-menu">
+                        
+                        {/* 1. USA 'allFeaturesList' (i dati caricati) */}
+                        {allFeaturesList.map((feature) => (
+                          <label 
+                            key={feature.id_caratteristica} 
+                            
+                            /* 2. LEGGE da 'updatedWatch' */
+                            className={`checkbox-label ${updatedWatch.features.includes(feature.id_caratteristica) ? 'selected' : ''}`}
+                          >
+                            <input
+                              type="checkbox"
+                              className="checkbox-input"
+                              value={feature.id_caratteristica}
+                              
+                              /* 3. LEGGE da 'updatedWatch' */
+                              checked={updatedWatch.features.includes(feature.id_caratteristica)}
+                              
+                              /* 4. CHIAMA il NUOVO handler */
+                              onChange={handleUpdatedFeatureChange}
+                            />
+                            
+                            {/* 5. Mostra il nome corretto */}
+                            {feature.nome_caratteristica}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div style={{marginTop: "15px"}}>
+                    <label>Note: </label>
+                    <textarea
+                      placeholder="Note aggiuntive..."
+                      className="notes-textarea"
+                      value={updatedWatch.note}
+                      onChange={(e) => setUpdatedWatch({ ...updatedWatch, note: e.target.value })}
+                    />
+                  </div>
                   <div style={{ marginBottom: "20px", width: "100%" }}></div>
                 </div>
 
@@ -1907,25 +1949,27 @@ useEffect(() => {
                 </div>
                 <img src={selectedWatch.image || "orologio_back.svg"} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
                 <div className="paragrafi">
-                  <p><strong>Marca:</strong> {selectedWatch.brand}</p>
-                  <p><strong>Movimento:</strong> {selectedWatch.movement}</p>
-                  <p><strong>Anno:</strong> {selectedWatch.year}</p>
-                  <p><strong>Colore:</strong> {selectedWatch.color}</p>
-                  <p><strong>Prezzo di Acquisto:</strong> {selectedWatch.money} €</p>
+                  <p ><strong>Marca:</strong> <span className="InfoColorInfo">{selectedWatch.brand}</span></p>
+                  <p><strong>Movimento:</strong> <span className="InfoColorInfo">{selectedWatch.movement}</span></p>
+                  <p><strong>Anno:</strong> <span className="InfoColorInfo">{selectedWatch.year}</span></p>
+                  <p><strong>Colore:</strong> <span className="InfoColorInfo">{selectedWatch.color}</span></p>
+                  <p><strong>Prezzo di Acquisto:</strong> <span className="InfoColorInfo">{selectedWatch.money} €</span></p>
                   <p>
-                    <strong>Caratteristiche Aggiuntive:</strong>
-                    
-                    {/* 1. Controlla 'selectedWatch.caratteristiche' (non 'features') */}
-                    {selectedWatch.caratteristiche && selectedWatch.caratteristiche.length > 0
-                      ? 
-                        // 2. Prima estrai i nomi con .map()
-                        selectedWatch.caratteristiche.map(feature => feature.nome_caratteristica)
+                    <strong>Caratteristiche Aggiuntive: </strong>
+
+                    <span className="InfoColorInfo">
+                      {selectedWatch.caratteristiche && selectedWatch.caratteristiche.length > 0
+                        ?
+                          // 2. Prima estrai i nomi con .map()
+                          selectedWatch.caratteristiche.map(feature => feature.nome_caratteristica)
                         // 3. Poi uniscili con .join()
                         .join(", ")
                       : 
                         "Nessuna"
                     }
+                    </span>
                   </p>
+                  <p style={{fontSize: '16px'}}><strong>Note: </strong> <span className="InfoColorInfo" >{selectedWatch.note || "Nessuna nota"}</span></p>
                 </div>
 
                 <div className="buttonForm">
