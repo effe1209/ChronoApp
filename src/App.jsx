@@ -126,9 +126,6 @@ export function ScrollingBrands3() {
 }
 
 
-
-
-
 function DarkModeSwitch() {
   const [isDark, setIsDark] = useState(
     localStorage.getItem("theme") === "dark"
@@ -207,6 +204,26 @@ function App() {
   const [isDetailsMenuOpen, setIsDetailsMenuOpen] = useState(false);
   const [isDetailsMenuOpenMOD, setIsDetailsMenuOpenMOD] = useState(false);
   const [isNotesVisible, setIsNotesVisible] = useState(false);
+  const [isNotesVisibleMOD, setIsNotesVisibleMOD] = useState(false);
+
+
+  const [isInfoVisible, setIsInfoVisible] = useState(false);
+
+  const [isModifyVisible, setIsModifyVisible] = useState(false);
+  const [modifyWatch, setModifyWatch] = useState(null);
+  const [updatedWatch, setUpdatedWatch] = useState({
+    name: '',
+    brand: '',
+    year: '',
+    movement: '',
+    color: '',
+    image: '', // Questo campo verrà aggiornato quando viene selezionata un'immagine
+    isFavorite: false,
+    money: null,
+    features: [],
+    note: ""
+  });
+
 
   useLayoutEffect(() => {
         // Logica di misurazione del layout (per debug/risoluzione problemi di animazione)
@@ -556,23 +573,6 @@ const totalMoney = useMemo(() => {
         return Number.isFinite(moneyValue) ? acc + moneyValue : acc;
     }, 0);
 }, [watches]); // La dipendenza è lo stato 'watches'
-
-  const [isInfoVisible, setIsInfoVisible] = useState(false);
-
-  const [isModifyVisible, setIsModifyVisible] = useState(false);
-  const [modifyWatch, setModifyWatch] = useState(null);
-  const [updatedWatch, setUpdatedWatch] = useState({
-    name: '',
-    brand: '',
-    year: '',
-    movement: '',
-    color: '',
-    image: '', // Questo campo verrà aggiornato quando viene selezionata un'immagine
-    isFavorite: false,
-    money: null,
-    features: [],
-    note: ""
-  });
 
   // const handleModifyWatch = async (userid, watchid) => {
   //   const { data, error } = await supabase
@@ -1596,27 +1596,27 @@ useEffect(() => {
                   )}
 
                   <div style={{ margin: "20px 0 10px 0", width: "100%" }}>
-              <button
-                type="button"
-                className="details-toggle-button"
-                onClick={() => setIsNotesVisible(!isNotesVisible)}
-              >
-                {isNotesVisible ? 'Chiudi Notes ▴' : 'Apri Notes ▾'}
-              </button>
-            </div>
+                    <button
+                      type="button"
+                      className="details-toggle-button"
+                      onClick={() => setIsNotesVisible(!isNotesVisible)}
+                    >
+                      {isNotesVisible ? 'Chiudi Notes ▴' : 'Apri Notes ▾'}
+                    </button>
+                  </div>
 
-            {isNotesVisible && (
-              <div>
-                <textarea
-                  placeholder="Note aggiuntive (es. data acquisto, storia, difetti...)"
-                  className="notes-textarea" // Aggiungi una classe per lo stile
-                  value={newWatch.note}
-                onChange={(e) =>
-                  setNewWatch({ ...newWatch, note: e.target.value })
-                }
-              />
-            </div>
-            )}
+                  {isNotesVisible && (
+                    <div>
+                      <textarea
+                        placeholder="Note aggiuntive (es. data acquisto, storia, difetti...)"
+                        className="notes-textarea" // Aggiungi una classe per lo stile
+                        value={newWatch.note}
+                      onChange={(e) =>
+                        setNewWatch({ ...newWatch, note: e.target.value })
+                      }
+                    />
+                  </div>
+                  )}
                   
                   <div style={{ marginBottom: "30px" }}></div>
                   <div className="buttonForm">
@@ -1880,15 +1880,28 @@ useEffect(() => {
                       </div>
                     </div>
                   )}
-                  <div style={{marginTop: "15px"}}>
-                    <label>Note: </label>
-                    <textarea
-                      placeholder="Note aggiuntive..."
-                      className="notes-textarea"
-                      value={updatedWatch.note}
-                      onChange={(e) => setUpdatedWatch({ ...updatedWatch, note: e.target.value })}
+                  <div style={{ margin: "20px 0 10px 0", width: "100%" }}>
+                    <button
+                      type="button"
+                      className="details-toggle-button"
+                      onClick={() => setIsNotesVisibleMOD(!isNotesVisibleMOD)}
+                    >
+                      {isNotesVisibleMOD ? 'Chiudi Notes ▴' : 'Apri Notes ▾'}
+                    </button>
+                  </div>
+
+                  {isNotesVisibleMOD && (
+                    <div>
+                      <textarea
+                        placeholder="Note aggiuntive..."
+                        className="notes-textarea" // Aggiungi una classe per lo stile
+                        value={updatedWatch.note}
+                        onChange={(e) =>
+                        setUpdatedWatch({ ...updatedWatch, note: e.target.value })
+                      }
                     />
                   </div>
+                  )}
                   <div style={{ marginBottom: "20px", width: "100%" }}></div>
                 </div>
 

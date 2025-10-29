@@ -72,8 +72,8 @@ Linee guida rapide:
 
 ## Roadmap
 
-- [ ] Selettore delle varie complicazioni
-- [ ] Note aggiuntive per ogni orologio
+- [x] Selettore delle varie complicazioni
+- [x] Note aggiuntive per ogni orologio
 - [ ] Condizione dell'orologio (Scala 1-10)
 - [ ] Stato Set: Completo (scatola e garanzia), Solo orologio, ecc.
 - [ ] Storico Manutenzioni: Campi per registrare date e costi delle revisioni.

@@ -637,7 +637,7 @@ select {
 .infoView .modal-content {
   padding: 20px;
   border-radius: 20px;
-  width: 80%;
+  width: auto;
   max-width: 500px;
   text-align: center;
   background-color: rgba(255, 255, 255, .80);
@@ -665,6 +665,10 @@ select {
   height: fit-content;
 }
 
+.modal-content h2 {
+  padding: 10px;
+}
+
 .dark-mode .infoView .modal-content {
   background-color: rgba(95, 83, 97, 0.80);
   height: fit-content;
@@ -681,6 +685,17 @@ select {
   max-height: 300px;
   border-radius: 10px;
   object-fit: cover;
+}
+
+@media screen and (max-width: 750px) {
+  .modal-image {
+    max-width: 250px;
+    max-height: 220px;
+  }
+
+  .TileInfo h3 {
+    font-size: 34px;
+  }
 }
 
 .formModify input {
@@ -1728,6 +1743,14 @@ input::placeholder {
 .dark-mode .notes-textarea {
   background-color: rgba(58, 58, 58, 0.8);
   color: #ffffff;
+}
+
+@media screen and (max-width: 750px) {
+  .notes-textarea {
+    width: 80%;
+    min-height: 50px;
+    align-content: baseline;
+  }
 }
 
 /* Stile specifico per il form di modifica */
