@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useTransition, useLayoutEffect, useMemo} f
 import { createClient } from "@supabase/supabase-js";
 import imageCompression from "browser-image-compression";
 import Avatar from 'react-avatar';
+import Select from "react-select";
 
 import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -412,21 +413,58 @@ const testConnection = async () => {
     }
   };
 
+  // const fetchWatches = async (userid) => {
+  //   try {
+  //     const { data, error } = await supabase
+  //       .from("watches")
+  //       .select("*, caratteristiche(*)")
+  //       .eq("userid", userid);  
+  //     if (error) throw error;
+
+  //     const userWatches = data.map((watch) => ({
+  //       ...watch,
+  //       imageUrl: watch.image
+  //         ? supabase.storage.from("fotoWatch").getPublicUrl(watch.image).data
+  //             .publicUrl
+  //         : null,
+  //     }));
+
+  //     setWatches(userWatches);
+  //   } catch (error) {
+  //     setMessage(
+  //       "Errore durante il recupero degli orologi: " +
+  //         (error.message || "Si è verificato un errore."),
+  //     );
+  //   }
+  // };
+
   const fetchWatches = async (userid) => {
     try {
       const { data, error } = await supabase
         .from("watches")
-        .select("*")
+        // 1. Diciamo a Supabase di guardare la tabella ponte
+        // 2. E da LÌ, prendere i dati di 'caratteristiche'
+        .select("*, Orologi_Caratteristiche(*, caratteristiche(*))") 
         .eq("userid", userid);
+      
       if (error) throw error;
 
-      const userWatches = data.map((watch) => ({
-        ...watch,
-        imageUrl: watch.image
-          ? supabase.storage.from("fotoWatch").getPublicUrl(watch.image).data
-              .publicUrl
-          : null,
-      }));
+      // NOTA: I dati ora sono "annidati"
+      const userWatches = data.map((watch) => {
+        // Estrai le caratteristiche dal nido e appiattiscile
+        const features = watch.Orologi_Caratteristiche.map(
+          (joinEntry) => joinEntry.caratteristiche // usa il nome della tabella minuscolo
+        );
+
+        return {
+          ...watch,
+          caratteristiche: features, // Crea l'array pulito che il tuo UI si aspetta
+          imageUrl: watch.image
+            ? supabase.storage.from("fotoWatch").getPublicUrl(watch.image).data
+                .publicUrl
+            : null,
+        };
+      });
 
       setWatches(userWatches);
     } catch (error) {
@@ -436,7 +474,6 @@ const testConnection = async () => {
       );
     }
   };
-
 
   const handleCancel = () => {
    setNewWatch({ 
@@ -561,7 +598,7 @@ const totalMoney = useMemo(() => {
     // Recupera i dati dal database
     const { data, error } = await supabase
       .from('watches')
-      .select('*')
+      .select('*, Orologi_Caratteristiche(*, caratteristiche(*))')
       .eq('userid', userid)
       .eq('id', watchid);
   
@@ -983,66 +1020,86 @@ const dataURLtoBlob = (dataurl) => {
 };
 
 
-const handleFeatureChange = (e) => {
-  const { value, checked } = e.target;
+const handleFeatureChange = (event) => {
+  const { value, checked } = event.target;
+  
+  // SOLUZIONE: Converti il valore (che è una stringa) in un numero.
+  const numericValue = parseInt(value, 10); 
 
-  // Usiamo il functional update (prevState) perché dipendiamo
-  // dallo stato precedente dell'array 'features'.
-  setNewWatch((prevState) => {
-    let updatedFeatures;
+  setNewWatch((prev) => {
     if (checked) {
-      // Se la casella è spuntata, aggiungi il valore all'array
-      updatedFeatures = [...prevState.features, value];
+      // Aggiungi il numero
+      return { ...prev, features: [...prev.features, numericValue] };
     } else {
-      // Se la casella non è spuntata, rimuovi il valore dall'array
-      updatedFeatures = prevState.features.filter(
-        (feature) => feature !== value
-      );
+      // Rimuovi il numero
+      return { 
+        ...prev, 
+        features: prev.features.filter((f) => f !== numericValue) 
+      };
     }
-    return { ...prevState, features: updatedFeatures };
   });
 };
-
-const featuresList = ["Datario", "Cronografo", "Impermeabile", "Automatico", "Subacqueo"];
-
-function WatchDetails({ newWatch, setNewWatch }) {
-  const handleFeatureChange = (event) => {
-    const { value, checked } = event.target;
-
-    setNewWatch((prev) => {
-      if (checked) {
-        // Aggiungi la feature
-        return { ...prev, features: [...prev.features, value] };
-      } else {
-        // Rimuovi la feature
-        return { ...prev, features: prev.features.filter((f) => f !== value) };
-      }
-    });
-  };
-
-  return (
-    <div className="details-menu">
-      <h4>Seleziona Caratteristiche</h4>
-
-      {featuresList.map((feature) => (
-        <label key={feature} className="checkbox-label">
-          <input
-            type="checkbox"
-            value={feature}
-            checked={newWatch.features.includes(feature)}
-            onChange={handleFeatureChange}
-          />
-          {feature}
-        </label>
-      ))}
-    </div>
-  );
-}
-
-
   
   const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
+
+const options = [
+  { value: "Datario", label: "Datario" },
+  { value: "Cronografo", label: "Cronografo" },
+  { value: "Impermeabile", label: "Impermeabile" },
+  { value: "Automatico", label: "Automatico" },
+  { value: "Subacqueo", label: "Subacqueo" },
+];
+
+function FeaturesDropdown({ newWatch, setNewWatch }) {
+  return (
+    <Select
+      isMulti
+      options={options}
+      value={options.filter(o => newWatch.features.includes(o.value))}
+      onChange={(selected) =>
+        setNewWatch({
+          ...newWatch,
+          features: selected.map((s) => s.value),
+        })
+      }
+      placeholder="Caratteristiche Aggiuntive"
+    />
+  );
+}
+// const featuresList = ["Datario", "Cronografo", "Cronometro","Calendario Completo", "Day-Date", "Calendario Perpetuo" , "Ghiera Girevole", "Corona a Vite", "Contatore 24h", "Fasi Lunari", "Allarme", "Carica Solare", "GMT", "Tourbillon"];
+// Aggiungi questo stato in cima al tuo componente
+// 1. Stato per la lista (dovresti già averlo)
+const [allFeaturesList, setAllFeaturesList] = useState([]);
+
+// 2. useEffect per caricare i dati (LA PARTE FONDAMENTALE)
+useEffect(() => {
+  const loadFeatures = async () => {
+    
+    // NOTA: Usa il nome esatto della tua tabella in Supabase
+    // OCCHIO alle maiuscole/minuscole. 'Caratteristiche' o 'caratteristiche'?
+    const { data, error } = await supabase
+      .from('caratteristiche')
+      .select('*'); 
+    
+    // 3. GESTISCI GLI ERRORI (IL PUNTO CHIAVE)
+    if (error) {
+      // Se vedi questo errore, è colpa della RLS o del nome tabella!
+      console.error("ERRORE NEL CARICARE LE CARATTERISTICHE:", error.message);
+      
+      // Mostra un messaggio all'utente
+      setMessage("Errore: impossibile caricare l'elenco delle caratteristiche. " + error.message);
+    } else {
+      // Dati caricati!
+      console.log("Caratteristiche caricate con successo:", data);
+      setAllFeaturesList(data);
+    }
+  };
+
+  // Esegui la funzione
+  loadFeatures();
+
+}, []); // L'array vuoto [] assicura che venga eseguito solo una volta al caricamento
 
 
   // Orologio Funzionante
@@ -1113,6 +1170,9 @@ function WatchDetails({ newWatch, setNewWatch }) {
 
   clock();
   setInterval(clock, 1000);
+
+
+  console.log('Stato di allFeaturesList:', allFeaturesList);
 
   return (
 
@@ -1285,7 +1345,7 @@ function WatchDetails({ newWatch, setNewWatch }) {
                       type="button" 
                       className="color-picker-button"
                       // USA newWatch
-                      style={{ backgroundColor: newWatch.color, border: "1px solid green" }}
+                      style={{ backgroundColor: newWatch.color}}
                       tabIndex="-1" 
                     >
                       🎨 Scegli un colore
@@ -1342,26 +1402,43 @@ function WatchDetails({ newWatch, setNewWatch }) {
                     </button>
                   </div>
 
-                  {/* Il menù delle checkbox (mostrato condizionalmente) */}
-                  {isDetailsMenuOpen && (
-                    <div className="details-menu">
-                      <h4>Seleziona Caratteristiche</h4>
-
-                      {/* Lista dinamica di checkbox */}
-                      {["Datario", "Cronografo", "Impermeabile", "Automatico", "Subacqueo"].map((feature) => (
-                        <label key={feature} className="checkbox-label">
-                          <input
-                            type="checkbox"
-                            value={feature}
-                            checked={newWatch.features.includes(feature)}
-                            onChange={handleFeatureChange}
-                          />
-                          {feature}
-                        </label>
-                      ))}
-                    </div>
-                  )}
-
+{isDetailsMenuOpen && (
+  <div>
+    <strong>Seleziona Caratteristiche</strong>
+    <div className="details-menu">
+      
+      {/* USA 'allFeaturesList' (lo stato caricato) 
+        invece di 'featuresList' (la costante statica) 
+      */}
+      {allFeaturesList.map((feature) => (
+        <label 
+          // KEY: Usa l'ID univoco dal database
+          key={feature.id_caratteristica} 
+          
+          // CHECK: Controlla se l'ID è nell'array 'newWatch.features'
+          className={`checkbox-label ${newWatch.features.includes(feature.id_caratteristica) ? 'selected' : ''}`}
+        >
+          <input
+            type="checkbox"
+            className="checkbox-input"
+            
+            // VALUE: Questo è il cambiamento cruciale.
+            // Il valore che 'handleFeatureChange' riceverà è l'ID.
+            value={feature.id_caratteristica}
+            
+            // CHECKED: Come per la classe, controlla l'ID.
+            checked={newWatch.features.includes(feature.id_caratteristica)}
+            
+            onChange={handleFeatureChange}
+          />
+          
+          {/* TESTO: Mostra all'utente il nome leggibile */}
+          {feature.nome_caratteristica}
+        </label>
+      ))}
+    </div>
+  </div>
+)}
                   
                   <div style={{ marginBottom: "30px" }}></div>
                   <div className="buttonForm">
@@ -1581,6 +1658,43 @@ function WatchDetails({ newWatch, setNewWatch }) {
                       loading="lazy"
                     />
                   )}
+
+                  {/* Pulsante per mostrare/nascondere il menù */}
+                  <div style={{ marginBottom: "20px", width: "100%" }}>
+                    <button
+                      type="button"
+                      className="details-toggle-button"
+                      onClick={() => setIsDetailsMenuOpen(!isDetailsMenuOpen)}
+                    >
+                      {isDetailsMenuOpen ? 'Chiudi Dettagli ▴' : 'Caratteristiche Aggiuntive ▾'}
+                    </button>
+                  </div>
+
+                  {isDetailsMenuOpen && (
+                    <div  >
+                      <strong>Seleziona Caratteristiche</strong>
+                      <div className="details-menu">
+                      
+
+                        {featuresList.map((feature) => (
+                          <label 
+                            key={feature} 
+                            className={`checkbox-label ${newWatch.features.includes(feature) ? 'selected' : ''}`}
+                          >
+                            <input
+                              type="checkbox"
+                              className="checkbox-input" // Questa classe ora serve solo a nascondere
+                              value={feature}
+                              checked={newWatch.features.includes(feature)}
+                              onChange={handleFeatureChange}
+                            />
+                            {feature}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div style={{ marginBottom: "20px", width: "100%" }}></div>
                 </div>
 
                 <div className="buttonForm">
@@ -1645,6 +1759,7 @@ function WatchDetails({ newWatch, setNewWatch }) {
                   <p><strong>Anno:</strong> {selectedWatch.year}</p>
                   <p><strong>Colore:</strong> {selectedWatch.color}</p>
                   <p><strong>Prezzo di Acquisto:</strong> {selectedWatch.money} €</p>
+                  
                 </div>
 
                 <div className="buttonForm">
