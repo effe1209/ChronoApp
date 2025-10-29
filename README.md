@@ -93,12 +93,6 @@ Linee guida rapide:
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-## Licenza
-
-Aggiungi una licenza per chiarire i termini. Esempio: MIT
-
-MIT License — vedi il file LICENSE.
-
 ## Contatti
 
 - Maintainer: effe1209 — https://github.com/effe1209
