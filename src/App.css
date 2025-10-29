@@ -694,7 +694,7 @@ select {
   }
 
   .TileInfo h3 {
-    font-size: 34px;
+    font-size: 28px;
   }
 }
 
@@ -1415,6 +1415,12 @@ input::placeholder {
   padding-bottom: 20px;
   font-family: 'minork';
   font-size: 22px;
+}
+
+@media (max-width: 750px) {
+  .paragrafi p {
+    font-size: 16px; /* Prova con 14px, o 12px, per vedere quale preferisci */
+  }
 }
 
 .TileInfo {
