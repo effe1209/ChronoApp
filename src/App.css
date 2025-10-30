@@ -629,8 +629,8 @@ select {
   align-items: center;
   justify-content: center;
   position: sticky;
-  bottom:2%; /* Mantiene l'elemento sempre in basso */
-  top: 2%;
+  bottom:1%; /* Mantiene l'elemento sempre in basso */
+  top: 9%;
   width: 100%;
   z-index: 1001;
 }
@@ -1584,7 +1584,7 @@ input::placeholder {
 @media (max-width: 750px) {
 
   .infoView {
-    bottom: 0.2%;
+    bottom: 3%;
   }
 
   .infoview h3{
