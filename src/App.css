@@ -562,6 +562,20 @@ select {
   z-index: 2; /* Assicura che il bottone stia sopra l'orologio */
 }
 
+.watch-card .funzioniButton {
+  margin-top: 20px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 18px;
+  font-family: 'minork';
+  transition: 0.8s;
+  height: 44px;
+} 
+
 .modal-content .functionButton button:hover {
   transform: scale(1.1);
 }
@@ -869,11 +883,13 @@ input[type="checkbox"]:checked + .slider-v3::before {
 .scroll {
   white-space: nowrap; /* Impedisce il testo di andare a capo */
   overflow: hidden; /* Nasconde il testo fuori dal contenitore */
-  width: 99%;
+  width: 98%;
   justify-content: center;
   position:absolute;
   z-index: -1;
   height: auto;
+  top:5.7%;
+  left: 0.8%;
 }
 
 .scroll div {
@@ -893,23 +909,25 @@ input[type="checkbox"]:checked + .slider-v3::before {
   text-transform: uppercase;
   background: #ffffff;
   color: #000000;
-  transition: 0.5s;
+  transition: 0.1s;
   text-align: center;
 }
 
 .scroll2 {
   white-space: nowrap; /* Impedisce il testo di andare a capo */
   overflow: hidden; /* Nasconde il testo fuori dal contenitore */
-  width: 99%;
+  width: 98%;
   position: absolute;
   z-index: -1;
   height: auto;
+  top:8.5%;
+  left: 0.8%;
 }
 
 .scroll2 div {
   display: inline-block;
   min-width: 200%; /* Raddoppia la larghezza per permettere la continuità */
-  animation: animate 6s linear infinite;
+  animation: animate 8s linear infinite;
 }
 
 .scroll2 div span {
@@ -930,11 +948,14 @@ input[type="checkbox"]:checked + .slider-v3::before {
 .scroll3 {
   white-space: nowrap; /* Impedisce il testo di andare a capo */
   overflow: hidden; /* Nasconde il testo fuori dal contenitore */
-  width: 99%;
+  width: 98%;
   justify-content: center;
   position:absolute;
   z-index: -1;
   height: auto;
+  top:5.4%;
+  left: 0.8%;
+  transition: 0.5s;
 }
 
 .scroll3 div {
@@ -953,100 +974,38 @@ input[type="checkbox"]:checked + .slider-v3::before {
   text-transform: uppercase;
   text-align: center;
   background:whitesmoke;
+  transition: 0.5s;
 }
 
+.login-page .scroll {
+  top: 15%; /* <-- NUOVO VALORE (esempio) */
+}
+
+.login-page .scroll2 {
+  top: 20%; /* <-- NUOVO VALORE (esempio) */
+}
+
+.login-page .scroll3 {
+  top: 12.5%; /* <-- NUOVO VALORE (esempio) */
+}
 
 
 /*-----------------------------------------------------------*/
 /* DARK MODE*/
-.dark-mode .scroll {
-  white-space: nowrap; /* Impedisce il testo di andare a capo */
-  overflow: hidden; /* Nasconde il testo fuori dal contenitore */
-  width: 99%;
-  justify-content: center;
-  position:absolute;
-  z-index: -1;
-  height: auto;
-}
-
-.dark-mode .scroll div {
-  display: inline-block;
-  animation: animate 10s linear infinite;
-  margin-bottom: 10%;
-  min-width: 200%;
-}
 
 .dark-mode .scroll div span {
-  display: inline-flex;
-  margin: 10px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
   background: #333;
   color: #fff;
-  transition: 0.5s;
-  text-align: center;
-}
-
-
-
-.dark-mode .scroll2 {
-  white-space: nowrap; /* Impedisce il testo di andare a capo */
-  overflow: hidden; /* Nasconde il testo fuori dal contenitore */
-  width: 99%;
-  justify-content: center;
-  position:absolute;
-  z-index: -1;
-  height: auto;
-}
-
-.dark-mode .scroll2 div {
-  display: inline-block;
-  animation: animate 6s linear infinite;
-  min-width: 200%;
 }
 
 .dark-mode .scroll2 div span {
-  display: inline-flex;
-  margin: 10px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
   background: #333;
   color: #fff;
-  transition: 0.5s;
-  text-align: center;
-}
-
-.dark-mode .scroll3 {
-  white-space: nowrap; /* Impedisce il testo di andare a capo */
-  overflow: hidden; /* Nasconde il testo fuori dal contenitore */
-  width: 99%;
-  justify-content: center;
-  position:absolute;
-  z-index: -1;
-}
-
-.dark-mode .scroll3 div {
-  display: inline-block;
-  animation: animate 8s linear infinite;
-  margin-top: 10%;
-  min-width: 200%;
 }
 
 .dark-mode .scroll3 div span {
-  display: inline-block;
-  margin: 10px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
   background: #333;
   color: #fff;
-  transition: 0.5s;
-  text-align: center;
 }
 
 /* Animazione continua senza scatti */
@@ -1162,6 +1121,22 @@ input[type="checkbox"]:checked + .slider-v3::before {
 }
 
 @media (max-width: 750px) {
+
+  .scroll {
+    top:4%;
+    width: 97%;
+    left: 1%;
+  }
+  .scroll2 {
+    top:5.5%;
+    width: 97%;
+    left: 1%;
+  }
+  .scroll3 {
+    top:3.9%;
+    width: 97%;
+    left: 1%;
+  }
 
   .scroll div{
     margin-bottom: 20%;
@@ -1612,7 +1587,7 @@ input::placeholder {
     dovrai aggiungere lo scroll interno.
   */
   .charts-container {
-    flex-direction: column; /* Impila i grafici */
+    /* flex-direction: column; */
     overflow-y: auto;
     width: 100%;
     max-width: 300px;
@@ -1782,4 +1757,4 @@ input::placeholder {
 
 .dark-mode .InfoColorInfo {
   color: #ffcc00;
-}
+} 

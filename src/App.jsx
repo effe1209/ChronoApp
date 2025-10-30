@@ -1,179 +1,34 @@
-import { useState, useEffect, useRef, useTransition, useLayoutEffect, useMemo} from "react";
-import { createClient } from "@supabase/supabase-js";
-import imageCompression from "browser-image-compression";
-import Avatar from 'react-avatar';
-import Select from "react-select";
+import { useState, useEffect, useRef, useTransition, useLayoutEffect, useMemo } from "react";
+// Import Supabase e servizi (invariati)
+import { supabase } from './components/supabaseClient';
+import { addWatchService } from './components/watchService';
+import AuthForm from './components/AuthForm';
+import WatchAnalytics from './components/WatchAnalytics'; // Già un componente!
 
-import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+// Import dei nuovi componenti creati
+import UserProfile from './components/UserProfile';
+import { ScrollingBrands1, ScrollingBrands2, ScrollingBrands3 } from './components/ScrollingBrands';
+import DarkModeSwitch from './components/DarkModeSwitch';
+import Clock from './components/Clock';
+import WatchList from './components/WatchList';
+import AddWatchForm from './components/AddWatchForm';
+import FunctionsSection from './components/FunctionsSection';
+import DayWatchModal from './components/DayWatchModal';
+import OutfitModal from './components/OutfitModal';
+import ModifyWatchModal from './components/ModifyWatchModal';
+import InfoWatchModal from './components/InfoWatchModal';
+import StatsModal from './components/StatsModal';
+
+// Stili (invariati)
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-import { motion } from 'framer-motion';
-
 import "./App.css";
-import { addWatchService } from './components/watchService';
-import { supabase } from './components/supabaseClient';
-import AuthForm from './components/AuthForm';
-import WatchAnalytics from './components/WatchAnalytics'; 
-
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener("click", function (e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute("href"));
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
-    }
-  });
-});
-
-let timeout;
-window.addEventListener("scroll", () => {
-  const slideWrap = document.querySelector(".slideWrap");
-
-  // Applica il blur solo se la pagina non è in alto
-  if (window.scrollY > 30) {
-    slideWrap.style.backdropFilter = "blur(25px)";
-  } else {
-    slideWrap.style.backdropFilter = "none";
-  }
-
-  clearTimeout(timeout);
-  timeout = setTimeout(() => {
-    // Rimuove il blur solo se lo scroll è fermo E la pagina è in alto
-    if (window.scrollY === 0) {
-      slideWrap.style.backdropFilter = "none";
-    }
-  }, 200); // Dopo 200ms di inattività
-});
-
-export function UserProfile({ email }) {
-  return (
-    <div>
-      <Avatar name={email.split('@')[0]} size="70" round={true} />
-    </div>
-  );
-}
-
-export function ScrollingBrands1() {
-  useEffect(() => {
-    const scrollDiv = document.querySelector(".scroll div");
-    scrollDiv.innerHTML += scrollDiv.innerHTML; // Duplica il contenuto
-  }, []);
-
-  return (
-    <div className="scroll">
-      <div>
-          <span>rolex</span>
-          <span>tissot</span>
-          <span>audemarspiguet</span>
-          <span>citizen</span>
-          <span>casio</span>
-          <span>orient</span>
-          <span>hublot</span>
-          <span>tudor</span>
-          <span>oris</span>
-      </div>
-    </div>
-  );
-}
-
-export function ScrollingBrands2() {
-  useEffect(() => {
-    const scrollDiv = document.querySelector(".scroll2 div");
-    scrollDiv.innerHTML += scrollDiv.innerHTML; // Duplica il contenuto
-  }, []);
-
-  return (
-    <div className="scroll2">
-      <div>
-        <span>alpina</span>
-        <span>bulova</span>
-        <span>patek philippe</span>
-        <span>zenith</span>
-        <span>cartier</span>
-        <span>seiko</span>
-        <span>omega</span>
-        <span>longines</span>
-        <span>mido</span>
-      </div>
-    </div>
-  );
-}
-
-export function ScrollingBrands3() {
-  useEffect(() => {
-    const scrollDiv = document.querySelector(".scroll3 div");
-    scrollDiv.innerHTML += scrollDiv.innerHTML; // Duplica il contenuto
-  }, []);
-
-  return (
-    <div className="scroll3">
-      <div>
-          <span>hamilton</span>
-          <span>iwc</span>
-          <span>swatch</span>
-          <span>maurice lacroix</span>
-          <span>timex</span>
-          <span>breitling</span>
-          <span>panerai</span>
-          <span>jaeger-lecoultre</span>
-          <span>lorenz</span>
-      </div>
-    </div>
-  );
-}
-
-
-function DarkModeSwitch() {
-  const [isDark, setIsDark] = useState(
-    localStorage.getItem("theme") === "dark"
-  );
-  const [menuOpen, setMenuOpen] = useState(false); // Stato per il menu
-
-  useEffect(() => {
-    if (isDark) {
-      document.body.classList.add("dark-mode");
-      document.documentElement.setAttribute("style", "color-scheme:dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.body.classList.remove("dark-mode");
-      document.documentElement.setAttribute("style", "color-scheme:light");
-      localStorage.setItem("theme", "light");
-    }
-  }, [isDark]);
-
-  return (
-    <div className="slideWrap">
-      {/* Pulsante Hamburger per il Mobile */}
-      <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
-        ☰
-      </button>
-
-      {/* Menu di Navigazione */}
-      <div className={`menu ${menuOpen ? "open" : ""}`}>
-        <nav>
-          <a href="#home">Home</a>
-          <a href="#function">Funzioni</a>
-          <a href="#listWatch">Lista Orologi</a>
-        </nav>
-      </div>
-
-      {/* Switch Dark Mode */}
-      <input
-        type="checkbox"
-        id="s5"
-        checked={isDark}
-        onChange={() => setIsDark(!isDark)}
-      />
-      <label className="slider-v3" htmlFor="s5"></label>
-    </div>
-  );
-}
 
 
 function App() {
+  // --- STATO (Resta qui) ---
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedWatch, setSelectedWatch] = useState(null);
   const fileInputRef = useRef(null);
@@ -205,10 +60,7 @@ function App() {
   const [isDetailsMenuOpenMOD, setIsDetailsMenuOpenMOD] = useState(false);
   const [isNotesVisible, setIsNotesVisible] = useState(false);
   const [isNotesVisibleMOD, setIsNotesVisibleMOD] = useState(false);
-
-
   const [isInfoVisible, setIsInfoVisible] = useState(false);
-
   const [isModifyVisible, setIsModifyVisible] = useState(false);
   const [modifyWatch, setModifyWatch] = useState(null);
   const [updatedWatch, setUpdatedWatch] = useState({
@@ -217,69 +69,119 @@ function App() {
     year: '',
     movement: '',
     color: '',
-    image: '', // Questo campo verrà aggiornato quando viene selezionata un'immagine
+    image: '', 
     isFavorite: false,
     money: null,
     features: [],
     note: ""
   });
+  const [allFeaturesList, setAllFeaturesList] = useState([]);
+  const [isPending, startTransition] = useTransition();
+  const [modalTitle, setModalTitle] = useState(""); 
+  const [color, setColor] = useState("");
+  const [isCarouselVisible, setIsCarouselVisible] = useState(false);
 
+  // --- LOGICA EFFETTI COLLATERALI (useEffect, useLayoutEffect) ---
 
-  useLayoutEffect(() => {
-        // Logica di misurazione del layout (per debug/risoluzione problemi di animazione)
-        console.log("Layout watches ricalcolato prima del paint.");
-        // Non è necessario inserire codice qui se lo usi solo come test risolutivo,
-        // la sua sola esecuzione nel ciclo corretto è ciò che può aiutare Framer Motion.
-    }, [watches]); // Si esegue ogni volta che l'array watches cambia
-
-  // Funzione per testare la connessione al database
-const testConnection = async () => {
-  try {
-    const { data, error } = await supabase.rpc("now");
-    if (error) {
-      console.error("Errore di connessione a Supabase:", error);
-    } else {
-      console.log("Connessione a Supabase riuscita!");
-    }
-    } catch (err) {
-      console.error("Errore imprevisto durante la connessione:", err);
-    }
-  };
-
+  // Effetti di scroll e anchor link (ora dentro React)
   useEffect(() => {
-    testConnection();
-    const fetchUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session) {
-        setUser(session.user);
-        fetchWatches(session.user.id); // Passa l'ID utente per il fetch
+    // Gestore per anchor link
+    const anchors = document.querySelectorAll('a[href^="#"]');
+    const handleClick = (e) => {
+      e.preventDefault();
+      const target = document.querySelector(e.currentTarget.getAttribute("href"));
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
       }
     };
+    anchors.forEach(anchor => anchor.addEventListener("click", handleClick));
+
+    // Gestore per scroll blur
+    let timeout;
+    const handleScroll = () => {
+      const slideWrap = document.querySelector(".slideWrap");
+      if (!slideWrap) return;
+
+      if (window.scrollY > 30) {
+        slideWrap.style.backdropFilter = "blur(25px)";
+      } else {
+        slideWrap.style.backdropFilter = "none";
+      }
+
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        if (window.scrollY === 0) {
+          slideWrap.style.backdropFilter = "none";
+        }
+      }, 200);
+    };
+    window.addEventListener("scroll", handleScroll);
+
+    // Cleanup
+    return () => {
+      anchors.forEach(anchor => anchor.removeEventListener("click", handleClick));
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(timeout);
+    };
+  }, []); // Eseguiti solo al mount
+
+  useLayoutEffect(() => {
+    console.log("Layout watches ricalcolato prima del paint.");
+  }, [watches]);
+
+  // Test connessione, fetch utente e caricamento email/nickname
+  useEffect(() => {
+    const testConnection = async () => {
+      try {
+        const { data, error } = await supabase.rpc("now");
+        if (error) console.error("Errore di connessione a Supabase:", error);
+        else console.log("Connessione a Supabase riuscita!");
+      } catch (err) {
+        console.error("Errore imprevisto durante la connessione:", err);
+      }
+    };
+
+    const fetchUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setUser(session.user);
+        fetchWatches(session.user.id); 
+      }
+    };
+    
+    testConnection();
     fetchUser();
-  }, []);
 
-  // Carica l'email dal localStorage quando il componente si monta
-  useEffect(() => {
     const savedEmail = localStorage.getItem('email');
-    if (savedEmail) {
-      setEmail(savedEmail);
-    }
-  }, []);
+    if (savedEmail) setEmail(savedEmail);
 
-  useEffect(() => {
     const savedNickname = localStorage.getItem('nickname');
-    if (savedNickname) {
-      setNickname(savedNickname);
-    }
-  }, []);
+    if (savedNickname) setNickname(savedNickname);
+  }, []); // Nota: fetchWatches è chiamato solo al primo caricamento dell'utente
 
-    // Salva il nickname quando cambia
+  // Salva nickname
   useEffect(() => {
-    localStorage.setItem("nickname", nickname);
+    if(nickname) { // Salva solo se il nickname non è vuoto
+      localStorage.setItem("nickname", nickname);
+    }
   }, [nickname]);
-  
+
+  // Caricamento features
+  useEffect(() => {
+    const loadFeatures = async () => {
+      const { data, error } = await supabase.from('caratteristiche').select('*'); 
+      if (error) {
+        console.error("ERRORE NEL CARICARE LE CARATTERISTICHE:", error.message);
+        setMessage("Errore: impossibile caricare l'elenco delle caratteristiche. " + error.message);
+      } else {
+        console.log("Caratteristiche caricate con successo:", data);
+        setAllFeaturesList(data);
+      }
+    };
+    loadFeatures();
+  }, []); // Carica solo una volta
+
+  // --- LOGICA DATI E AUTH (Funzioni) ---
 
   const handleRegister = async () => {
     setLoading(true);
@@ -288,19 +190,16 @@ const testConnection = async () => {
         setMessage("Email e password sono obbligatori.");
         return;
       }
-
       const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) throw error;
       const userId = data.user.id;
-      const { data1, error1 } = await supabase
+      const { error: profileError } = await supabase
         .from('user_profiles')
-        .upsert([
-      { id: userId, username: nickname }]);
+        .upsert([{ id: userId, username: nickname }]);
+      if (profileError) throw profileError;
 
-      setMessage(
-        "Registrazione avvenuta con successo! Controlla la tua email per confermare l'account.",
-      );
-      setTimeout(() => fetchUser(), 3000); // Ricarica l'utente dopo 3 secondi
+      setMessage("Registrazione avvenuta con successo! Controlla la tua email per confermare l'account.");
+      // Non è necessario ricaricare l'utente qui, aspetterà la conferma
     } catch (error) {
       setMessage("Errore: " + (error.message || "Si è verificato un errore."));
     } finally {
@@ -309,64 +208,45 @@ const testConnection = async () => {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleLogin(); // Chiamata alla funzione di login
-    }
+    if (e.key === 'Enter') handleLogin();
   };
 
   const handleLogin = async () => {
     setLoading(true);
     localStorage.setItem('email', email);
     try {
-      // Effettua la richiesta di login
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-  
-      // Se c'è un errore, lo gestiamo
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        console.error("Errore di login:", error);
-  
-        // Verifica se l'errore riguarda l'email non registrata
         if (error.message.includes('invalid_credentials')) {
-          setMessage('Questa email non è registrata. Per favore, registrati.');
+          setMessage('Credenziali non valide. Controlla email e password.');
         } else {
-          setMessage('Errore nel login. Controlla le tue credenziali.');
+          setMessage('Errore nel login. ' + error.message);
         }
-  
-        throw error; // Rilancia l'errore per gestirlo nel catch
+        throw error;
       }
 
-  
-      // Se il login è andato a buon fine
       if (data.user) {
-        setUser(data.user); // Imposta l'utente
+        setUser(data.user);
         const { data: userProfile, error: profileError } = await supabase
-        .from('user_profiles')
-        .select('username')
-        .eq('id', data.user.id)
-        .single();
-        
-      if (profileError) {
-        console.error("Errore nel recupero del nome utente:", profileError);
-        setMessage("Errore nel recupero del nome utente.");
-      } else {
-        setNickname(userProfile.username);
-      }
+          .from('user_profiles')
+          .select('username')
+          .eq('id', data.user.id)
+          .single();
+          
+        if (profileError) {
+          console.error("Errore nel recupero del nome utente:", profileError);
+          // Non bloccare il login per questo
+        } else if (userProfile) {
+          setNickname(userProfile.username);
+        }
         
         setMessage("Accesso effettuato con successo!");
-        console.log("Dati utente:", data.user);
-        
-  
-        // Carica gli orologi subito dopo il login
-        fetchWatches(data.user.id);
+        fetchWatches(data.user.id); // Carica gli orologi DOPO il login
       } else {
         setMessage("Accesso non riuscito: Nessun utente trovato.");
       }
     } catch (error) {
       console.error("Errore durante il login:", error);
-      setMessage("Errore: " + (error.message || "Si è verificato un errore."));
     } finally {
       setLoading(false);
     }
@@ -378,32 +258,109 @@ const testConnection = async () => {
     setWatches([]);
     setMessage("Disconnessione effettuata.");
     localStorage.removeItem('email');
+    localStorage.removeItem('nickname');
     setEmail('');
+    setNickname('');
   };
 
-  const handleAddWatch = async () => {
-    // 1. Assembla solo gli stati da passare
-    //    (Puoi anche passarli direttamente, se preferisci)
-    const stateOptions = {
-      newWatch,
-      user,
-      setLoading,
-      setWatches,
-      setNewWatch,
-      setMessage,
+  // const handleAddWatch = async () => {
+  //   const stateOptions = {
+  //     newWatch,
+  //     user,
+  //     setLoading,
+  //     setWatches,
+  //     setNewWatch,
+  //     setMessage,
+  //     fetchWatches, // Passa la funzione di fetch per ricaricare
+  //   };
+  //   // Il servizio gestirà la logica e il reset del form
+  //   await addWatchService(stateOptions);
+  //   // Resetta lo stato della UI del form
+  //   handleCancel(); 
+  // };
+  
+  // Funzione helper per upload
+  
+  // Dentro App.jsx
+
+const handleAddWatch = async () => {
+  // 1. Prepara le opzioni per il servizio
+  const stateOptions = {
+    newWatch,
+    user,
+    setLoading,
+    setMessage, 
+    // NON passare setWatches o setNewWatch
+  };
+
+  try {
+    // 2. Chiama il servizio. 
+    //    (Assumiamo che watchService.js sia stato modificato 
+    //     per NON chiamare setWatches e lanciare un errore se fallisce)
+    await addWatchService(stateOptions);
+    
+    // 3. SE il servizio ha successo:
+    setMessage('Orologio aggiunto con successo!');
+    
+    // 4. Resetta il form QUI, in App.jsx
+    handleCancel(); // Usa la tua funzione di reset
+    
+    // 5. FONDAMENTALE: Ricarica l'intera lista.
+    //    Questo fa sì che il nuovo orologio passi attraverso 
+    //    la logica di 'fetchWatches' e ottenga la sua 'imageUrl'.
+    await fetchWatches(user.id);
+
+  } catch (error) {
+    // 6. Il servizio ha fallito
+    console.error("Errore (da addWatchService):", error);
+    setMessage(error.message || "Errore durante l'aggiunta dell'orologio.");
+    setLoading(false); // Assicurati che il loading termini
+  }
+};
+
+  const uploadImage = async (file) => {
+    if (!file) return null;
+
+    console.log(`Original size: ${file.size / 1024 / 1024} MB`);
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
     };
 
-    // 2. Chiama il service con UN SOLO argomento.
-    //    Sarà 'addWatchService' a importare e usare
-    //    supabase, uploadImage, e isValidWatch da solo.
-    await addWatchService(stateOptions);
+    try {
+      const compressedFile = await imageCompression(file, options);
+      console.log(`Compressed size: ${compressedFile.size / 1024 / 1024} MB`);
+
+      const fileName = `${user.id}/${Date.now()}-${compressedFile.name}`;
+      const { data, error } = await supabase.storage
+        .from("fotoWatch")
+        .upload(fileName, compressedFile);
+
+      if (error) throw error;
+      
+      // Restituisce il *percorso* dell'immagine, non l'URL pubblico intero
+      // Questo è più robusto per gli aggiornamenti
+      return data.path; 
+
+    } catch (error) {
+      console.error("Errore durante la compressione o l'upload:", error);
+      setMessage("Errore durante il caricamento dell'immagine: " + error.message);
+      return null;
+    }
   };
 
-  const deleteImage = async (imageUrl) => {
-    if (!imageUrl) return;
+  const deleteImage = async (imagePath) => {
+    // La funzione ora si aspetta un percorso (es. "userid/image.jpg")
+    // e non un URL completo
+    if (!imagePath) return;
 
-    const filePath = imageUrl.split("/storage/v1/object/public/fotoWatch/")[1];
-
+    // Se riceve un URL completo per retrocompatibilità, prova a estrarre il percorso
+    let filePath = imagePath;
+    if (imagePath.includes('/storage/v1/object/public/fotoWatch/')) {
+        filePath = imagePath.split("/storage/v1/object/public/fotoWatch/")[1];
+    }
+    
     const { error } = await supabase.storage
       .from("fotoWatch")
       .remove([filePath]);
@@ -413,657 +370,255 @@ const testConnection = async () => {
     }
   };
 
-  const handleDeleteWatch = async (id, imageUrl) => {
+  const handleDeleteWatch = async (id, imagePath) => {
     const isConfirmed = window.confirm("Sei sicuro di voler eliminare questo orologio?");
-
-    if (!isConfirmed) return; // Se l'utente annulla, interrompi la funzione
+    if (!isConfirmed) return;
     
     try {
-      if (imageUrl) {
-        await deleteImage(imageUrl);
+      // Passa imagePath (es. "userid/image.jpg")
+      if (imagePath) {
+        await deleteImage(imagePath);
       }
 
       const { error } = await supabase.from("watches").delete().eq("id", id);
       if (error) throw error;
-      fetchWatches(user.id); // Ricarica la lista degli orologi
+      
+      // Rimuovi l'orologio dallo stato locale invece di un fetch completo
+      setWatches(prevWatches => prevWatches.filter(watch => watch.id !== id));
       setMessage("Orologio eliminato con successo!");
     } catch (error) {
-      setMessage(
-        "Errore durante l'eliminazione: " +
-          (error.message || "Si è verificato un errore."),
-      );
+      setMessage("Errore durante l'eliminazione: " + error.message);
     }
   };
 
-  // const fetchWatches = async (userid) => {
-  //   try {
-  //     const { data, error } = await supabase
-  //       .from("watches")
-  //       .select("*, caratteristiche(*)")
-  //       .eq("userid", userid);  
-  //     if (error) throw error;
+// Questo codice va in App.jsx
 
-  //     const userWatches = data.map((watch) => ({
-  //       ...watch,
-  //       imageUrl: watch.image
-  //         ? supabase.storage.from("fotoWatch").getPublicUrl(watch.image).data
-  //             .publicUrl
-  //         : null,
-  //     }));
-
-  //     setWatches(userWatches);
-  //   } catch (error) {
-  //     setMessage(
-  //       "Errore durante il recupero degli orologi: " +
-  //         (error.message || "Si è verificato un errore."),
-  //     );
-  //   }
-  // };
-
-  const fetchWatches = async (userid) => {
-    try {
-      const { data, error } = await supabase
-        .from("watches")
-        // 1. Diciamo a Supabase di guardare la tabella ponte
-        // 2. E da LÌ, prendere i dati di 'caratteristiche'
-        .select("*, Orologi_Caratteristiche(*, caratteristiche(*))") 
-        .eq("userid", userid);
+// 1. PRIMA, definisci una funzione helper per generare l'URL
+//    (Assicurati che 'supabase' sia definito e accessibile)
+const getPublicUrl = (path) => {
+  if (!path) {
+    return null; // Se non c'è percorso, restituisci null
+  }
+  try {
+    // Assicurati che 'fotoWatch' sia il nome corretto del tuo bucket
+    const { data } = supabase.storage
+      .from("fotoWatch")
+      .getPublicUrl(path);
       
-      if (error) throw error;
+    return data.publicUrl;
+  } catch (error) {
+    console.error("Errore nel generare l'URL pubblico:", error);
+    return null;
+  }
+};
 
-      // NOTA: I dati ora sono "annidati"
-      const userWatches = data.map((watch) => {
-        // Estrai le caratteristiche dal nido e appiattiscile
-        const features = watch.Orologi_Caratteristiche.map(
-          (joinEntry) => joinEntry.caratteristiche // usa il nome della tabella minuscolo
-        );
+// 2. POI, usa l'helper DENTRO fetchWatches
+const fetchWatches = async (userid) => {
+  try {
+    const { data, error } = await supabase
+      .from("watches")
+      .select("*, Orologi_Caratteristiche(*, caratteristiche(*))") 
+      .eq("userid", userid);
+    
+    if (error) throw error;
 
-        return {
-          ...watch,
-          caratteristiche: features, // Crea l'array pulito che il tuo UI si aspetta
-          imageUrl: watch.image
-            ? supabase.storage.from("fotoWatch").getPublicUrl(watch.image).data
-                .publicUrl
-            : null,
-        };
-      });
-
-      setWatches(userWatches);
-    } catch (error) {
-      setMessage(
-        "Errore durante il recupero degli orologi: " +
-          (error.message || "Si è verificato un errore."),
+    const userWatches = data.map((watch) => {
+      const features = watch.Orologi_Caratteristiche.map(
+        (joinEntry) => joinEntry.caratteristiche
       );
-    }
-  };
+
+      return {
+        ...watch,
+        caratteristiche: features,
+        // NON chiamare getPublicUrl. Usa 'watch.image' direttamente
+        imageUrl: watch.image 
+      };
+    });
+
+    setWatches(userWatches);
+  } catch (error) {
+    setMessage("Errore durante il recupero degli orologi: " + error.message);
+  }
+};
 
   const handleCancel = () => {
    setNewWatch({ 
-      name: "", 
-      brand: "", 
-      year: "", 
-      image: "", 
-      movement: "", 
-      color: "",
-      features: [],
-      isFavorite: false,
-      money: null,
-      note: "",
+      name: "", brand: "", year: "", image: "", movement: "", color: "",
+      features: [], isFavorite: false, money: null, note: "",
     });
-
     setMessage(null);
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
     setIsDetailsMenuOpen(false);
     setIsDetailsMenuOpenMOD(false);
     setIsNotesVisible(false);
+    setShowForm(false); // Nasconde anche il form
   };
 
- // Funzione per gestire la selezione del file
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       setNewWatch((prev) => ({ ...prev, image: file }));
     }
   };
-
-  // ... all'interno del tuo componente funzionale
-const [isPending, startTransition] = useTransition(); 
-// isPending: un flag che diventa true mentre l'aggiornamento è in corso.
-// startTransition: la funzione che useremo per avvolgere l'aggiornamento non urgente.
-
+  
+  // Gestore per l'immagine di *modifica*
+  const handleModifyImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setUpdatedWatch((prev) => ({ ...prev, image: file, imageUrl: URL.createObjectURL(file) }));
+    }
+  };
 
 
   const handleDayWatch = async (userid) => {
     try {
-      // Recupera la lista degli orologi associati all'utente
-      const { data, error } = await supabase
-        .from('watches')
-        .select('*')
-        .eq('userid', userid);
-
-      if (error) {
-        throw error;
-      }
-
-      if (data && data.length > 0) {
-        // Seleziona un orologio casuale
-        const randomIndex = Math.floor(Math.random() * data.length);
-        const randomWatch = data[randomIndex];
+      // Non c'è bisogno di un fetch, usiamo lo stato 'watches'
+      if (watches && watches.length > 0) {
+        const randomIndex = Math.floor(Math.random() * watches.length);
+        const randomWatch = watches[randomIndex];
         
-        // Imposta l'orologio selezionato
-        setSelectedWatch(randomWatch);
-        setModalTitle("Orologio del Giorno")
-        setIsModalVisible(true); // Mostra la modale con i dettagli dell'orologio
+        setSelectedWatch(randomWatch); // Usa lo stesso stato per tutti i modali
+        setModalTitle("Orologio del Giorno");
+        setIsModalVisible(true);
       } else {
-        console.log('Nessun orologio trovato per questo utente.');
+        setMessage('Nessun orologio trovato per selezionarne uno casuale.');
       }
     } catch (error) {
-      console.error('Errore nel recupero dell\'orologio:', error.message);
+      console.error('Errore nel selezionare l\'orologio:', error.message);
     }
   };
 
-const totalMoney = useMemo(() => {
+  const totalMoney = useMemo(() => {
     if (!watches || watches.length === 0) return 0;
-    
     return watches.reduce((acc, watch) => {
         const moneyValue = Number(watch.money);
         return Number.isFinite(moneyValue) ? acc + moneyValue : acc;
     }, 0);
-}, [watches]); // La dipendenza è lo stato 'watches'
+  }, [watches]);
 
-  // const handleModifyWatch = async (userid, watchid) => {
-  //   const { data, error } = await supabase
-  //       .from('watches')
-  //       .select('*')
-  //       .eq('userid', userid)
-  //       .eq('id', watchid);
-
-  //   if (error) {
-  //     console.error("Errore nel recupero dell'orologio:", error);
-  //     return;
-  //   }
-  //   if (data && data.length > 0) {
-  //     const watch = data[0];
-  //     setModifyWatch(watch);
-  //     setUpdatedWatch({
-  //       name: watch.name,
-  //       brand: watch.brand,
-  //       year: watch.year,
-  //       movement: watch.movement,
-  //       color: watch.color,
-  //       image: watch.image || '', // Se l'immagine è vuota, assegna una stringa vuota
-  //       isFavorite: watch.isFavorite,
-  //       money: watch.money || null,
-  //     });
-  //     setIsModifyVisible(true);
-  //   }
-  // }
-
-  const handleModifyWatch = async (userid, watchid) => {
-    try {
-      const { data, error } = await supabase
-        .from('watches')
-        .select('*, Orologi_Caratteristiche(*, caratteristiche(*))')
-        .eq('userid', userid)
-        .eq('id', watchid)
-        .single();
-
-      if (error) throw error;
-
-      if (data) {
-        
-        // --- SOLUZIONE QUI ---
-        // 1. Controlla se 'Orologi_Caratteristiche' esiste.
-        //    Se non esiste (es. 0 caratteristiche), usa un array vuoto [].
-        const featuresArray = data.Orologi_Caratteristiche || [];
-        
-        // 2. Ora possiamo mappare in sicurezza su 'featuresArray'
-        const featureIDs = featuresArray.map(
-          (joinEntry) => joinEntry.caratteristiche.id_caratteristica
-        );
-        // ---------------------
-        
-        setModifyWatch(data); 
-        
-        setUpdatedWatch({
-          name: data.name,
-          brand: data.brand,
-          year: data.year,
-          movement: data.movement,
-          color: data.color || '',
-          image: data.image || '', 
-          isFavorite: data.isFavorite,
-          money: data.money || null,
-          features: featureIDs, // Popola le features esistenti
-          note: data.note || "",
-        });
-        
-        setIsModifyVisible(true);
-      }
-    } catch (error) {
-      console.error("Errore nel recupero dell'orologio per la modifica:", error);
-    }
+  const handleModifyWatch = (watchToModify) => {
+    // Non serve fetch, riceve l'oggetto 'watch' completo dalla lista
+    const featureIDs = watchToModify.caratteristiche.map(
+      (feature) => feature.id_caratteristica
+    );
+    
+    setModifyWatch(watchToModify); 
+    
+    setUpdatedWatch({
+      name: watchToModify.name,
+      brand: watchToModify.brand,
+      year: watchToModify.year,
+      movement: watchToModify.movement,
+      color: watchToModify.color || '',
+      image: watchToModify.image || '', // Percorso file esistente
+      imageUrl: watchToModify.imageUrl || '', // URL per display
+      isFavorite: watchToModify.isFavorite,
+      money: watchToModify.money || null,
+      features: featureIDs,
+      note: watchToModify.note || "",
+    });
+    
+    setIsModifyVisible(true);
   };
 
-const handleInfoWatch = async (userid, watchid) => {
-  try { // Aggiungi un try/catch
-    const { data, error } = await supabase
-      .from('watches')
-      .select('*, Orologi_Caratteristiche(*, caratteristiche(*))')
-      .eq('userid', userid)
-      .eq('id', watchid)
-      .single(); // Usa .single()
+  const handleInfoWatch = (watchToShow) => {
+    // Non serve fetch, riceve l'oggetto 'watch'
+    setSelectedWatch(watchToShow);
+    setIsInfoVisible(true);
+  };
 
-    if (error) throw error;
-
-    if (data) {
-      // --- SOLUZIONE QUI ---
-      // Appiattisci i dati ESATTAMENTE come fai in fetchWatches
-      const features = data.Orologi_Caratteristiche.map(
-        (joinEntry) => joinEntry.caratteristiche
-      );
-
-      const cleanWatchData = {
-        ...data,
-        caratteristiche: features, // Crea l'array pulito
-      };
-
-      setSelectedWatch(cleanWatchData); // Salva i dati puliti
-      // ---------------------
-
-      setIsInfoVisible(true);
-    }
-  } catch (error) {
-    console.error("Errore nel recupero dell'orologio:", error);
-  }
-};
-
-const handleShowStats = () => {
+  const handleShowStats = () => {
     setIsStatisticheVisible(true);
   };
   
-const FavoriteButton = ({ isFavorite, onToggle }) => {
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  const handleClick = () => {
-    // 1. Attiva l'animazione (solo se non era già preferita, per un effetto più marcato)
-    if (!isFavorite) {
-      setIsAnimating(true);
-    }
-    // 2. Esegui la logica del toggle
-    onToggle();
-  };
-
-  // 3. Disattiva l'animazione dopo il tempo della transizione (es. 0.5s)
-  useEffect(() => {
-    if (isAnimating) {
-      const timer = setTimeout(() => setIsAnimating(false), 500);
-      return () => clearTimeout(timer);
-    }
-  }, [isAnimating]);
-
-  // Applica la classe 'is-animating' solo durante l'animazione
-  const animationClass = isAnimating ? 'is-animating' : '';
-
-  return (
-    <button
-      onClick={handleClick}
-      className={`favoriteButton__button ${animationClass}`}
-      // ... altre props
-    >
-      {/* Icona della stella piena o vuota */}
-      {isFavorite ? '⭐️' : '☆'}
-    </button>
-  );
-};
-  
-const WatchList = ({ watches, handleModifyWatch, handleDeleteWatch, handleFavoriteToggle, user }) => {
-  // Inizializza lo stato da localStorage o imposta il valore di default
-  const [isCarouselView, setIsCarouselView] = useState(() => {
-    const savedView = localStorage.getItem('viewMode');
-    return savedView ? JSON.parse(savedView) : false; // false per la vista lista, true per il carosello
-  });
-
-  // Salva lo stato della vista in localStorage ogni volta che cambia
-  useEffect(() => {
-    localStorage.setItem('viewMode', JSON.stringify(isCarouselView));
-  }, [isCarouselView]);
-
-  const toggleView = () => {
-    setIsCarouselView(prevState => !prevState); // Alterna la vista
-  };
-
-  // Funzione di confronto riutilizzabile per ordinare per nome
-  const sortByName = (a, b) => {
-    // Ordina alfabeticamente per il campo 'name'
-    return a.name.localeCompare(b.name);
-  };
-
-  // 1. FILTRAZIONE
-  const favoriteWatches = watches.filter(w => w.isFavorite);
-  const nonFavoriteWatches = watches.filter(w => !w.isFavorite);
-
-  // 2. ORDINAMENTO: Applica .sort() a ciascun array
-  // Nota: Dobbiamo creare una copia dell'array prima di chiamare .sort()
-  // per non modificare l'array originale (favoriteWatches/nonFavoriteWatches), 
-  // che è una buona pratica in React.
-  const sortedFavoriteWatches = [...favoriteWatches].sort(sortByName);
-  const sortedNonFavoriteWatches = [...nonFavoriteWatches].sort(sortByName);
-
-  // 3. UNIONE: Unisci i due array ordinati
-  const sortedWatches = [...sortedFavoriteWatches, ...sortedNonFavoriteWatches];
-  return (
-    <div>
-      {/* Bottone per alternare tra lista e carosello */}
-      <div className="buttonView" id="listWatch">
-        <button
-          onClick={handleShowStats} // Usa il nuovo handler
-          style={{ width: "200px", padding: "10px"}}
-        >
-          📊 Mostra Statistiche
-        </button>
-        <button onClick={toggleView} >
-          {isCarouselView ? 'Mostra Lista' : 'Mostra Carosello'}
-        </button>
-      </div>
-
-      {/* Se è la vista lista */}
-      {!isCarouselView && (
-        <div className="watch-list">
-          {sortedWatches.map((watch) => (
-            // Sostituzione di <div> con <motion.div>
-            <motion.div 
-              key={watch.id} 
-              className="watch-card"
-              // Abilita la logica FLIP per animare i cambi di posizione.
-              layout="position"
-              // Opzionale: definisce lo stile dell'animazione (più naturale di un semplice "linear").
-              layoutScroll
-              transition={{ 
-                type: "linear",
-                // RIGIDITà e smorzamento per un effetto più "elastico"
-                stiffness: 150, 
-                damping: 100 
-              }}
-            >
-              <div className="GRID">
-                  <FavoriteButton
-                    isFavorite={watch.isFavorite}
-                    onToggle={() => handleFavoriteToggle(watch.id)}
-                  />
-                {watch.image ? (
-                  <img
-                    src={watch.image}
-                    alt={watch.name}
-                    className="watch-image"
-                    loading="lazy"
-                    onError={(e) => {
-                      e.target.src = "/fallback-image.jpg";
-                    }}
-                  />
-                ) : (
-                  <img src="orologio_back.svg" alt="Default" className="watch-image"/>
-                )}
-                <div className="CaratteristicheCard">
-                  <h3 className="textCard" style={{padding:"20px"}}>{watch.name}</h3>
-
-                </div>
-                
-                <div className="cardBottoni">
-                  
-                  <div className="modifyButton">
-                    <button
-                      className="modify-btn"
-                      onClick={() => handleModifyWatch(user.id, watch.id)}
-                    >
-                      Modifica
-                    </button>
-                  </div>
-                  <div className="delete-button">
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDeleteWatch(watch.id, watch.image)}
-                    >
-                      Elimina
-                    </button>
-                  </div>
-                  <div className="InfoButton">
-                  <button
-                    className="modify-btn"
-                    onClick={() => handleInfoWatch(user.id, watch.id)}
-                    >
-                    Info
-                  </button>
-                </div>
-                </div>
-              </div>
-            </motion.div>
-            ))}
-        </div>
-      )}
-
-      {/* Se è la vista carosello */}
-      {isCarouselView && (
-        <Swiper
-          modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
-          spaceBetween={20}
-          slidesPerView={1}  // Mostra una sola card per slide
-          navigation
-          pagination={{ clickable: true }}
-          scrollbar={{ draggable: true }}
-          style={{borderRadius:"20px"}}
-/*           onSwiper={(swiper) => console.log(swiper)}
-          onSlideChange={() => console.log('slide change')} */
-          autoplay={{
-            delay: 5000, // Tempo in millisecondi tra ogni slide (3 secondi)
-            disableOnInteraction: false, // Mantiene l'autoplay anche se l'utente interagisce
-          }}
-        >
-        {watches.map((watch) => (
-          <SwiperSlide key={watch.id}>
-            <div className="watch-card carousel-card">
-              <FavoriteButton
-                    isFavorite={watch.isFavorite}
-                    onToggle={() => handleFavoriteToggle(watch.id)}
-                  />
-              {watch.image ? (
-                <img
-                  src={watch.image}
-                  alt={watch.name}
-                  className="watch-imageCarosel"
-                  loading="lazy"
-                  onError={(e) => {
-                    e.target.src = "/fallback-image.jpg";
-                  }}
-                />
-              ) : (
-                <img src="orologio_back.svg" alt="Default" className="watch-imageCarosel"/>
-              )}
-              <div className="watchName_Button">
-              <h3 className="textCard" style={{fontSize:"42px", padding:"2%"}}>{watch.name}</h3>
-              <div className="cardBottoni">
-                <div className="InfoButton">
-                  <button
-                    className="modify-btn"
-                      onClick={() => handleInfoWatch(user.id, watch.id)}
-                    >
-                    Info
-                  </button>
-                </div>
-                  <div className="modifyButton">
-                    <button
-                      className="modify-btn"
-                      onClick={() => handleModifyWatch(user.id, watch.id)}
-                    >
-                      Modifica
-                    </button>
-                  </div>
-                  <div className="delete-button">
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDeleteWatch(watch.id, watch.image)}
-                    >
-                      Elimina
-                    </button>
-                  </div>
-
-                </div>
-                 
-                </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-      
-      )}
-    </div>
-  );
-};
-
-  // const handleSaveChanges = async () => {
-  //   try {
-  //     let updatedData = { ...updatedWatch };
-
-  //     // Ottieni il percorso dell'immagine esistente se presente
-  //     const oldImageUrl = modifyWatch.image; 
-
-  //     // Se c'è una nuova immagine, caricala su Supabase Storage e ottieni l'URL
-  //     if (newWatch.image instanceof File) {
-  //       const imageUrl = await uploadImage(newWatch.image);
-  //       console.log("Immagine caricata con URL:", imageUrl);
-        
-  //       // Aggiorna il campo immagine con il nuovo URL
-  //       updatedData.image = imageUrl;
-
-  //       // Se esiste un'immagine precedente, eliminarla
-  //       if (oldImageUrl) {
-  //         await deleteImage(oldImageUrl);
-  //       }
-  //     }
-
-  //     // Aggiorna il database con i nuovi dati
-  //     const { error } = await supabase
-  //       .from('watches')
-  //       .update(updatedData)
-  //       .eq('id', modifyWatch.id);
-
-  //     if (error) {
-  //       console.error("Errore nell'aggiornamento dell'orologio:", error);
-  //       return;
-  //     }
-
-  //     console.log("Orologio aggiornato con successo!");
-  //     setIsModifyVisible(false);
-      
-  //   } catch (error) {
-  //     console.error("Errore durante il salvataggio delle modifiche:", error);
-  //   }
-  // };
-
   const handleSaveChanges = async () => {
+    setLoading(true);
     try {
-      // 1. Separa i dati: 'features' (l'array di ID) e 'watchData' (il resto)
-      const { features, ...watchData } = updatedWatch;
+      const { features, image, imageUrl, ...watchData } = updatedWatch;
       
-      // 'finalWatchData' conterrà solo i dati per la tabella 'watches'
       let finalWatchData = { ...watchData }; 
-      
-      const oldImageUrl = modifyWatch.image; 
+      const oldImagePath = modifyWatch.image; 
 
-      // 2. BUG FIX: Gestione Immagine (ora legge da 'updatedWatch.image')
-      if (updatedWatch.image instanceof File) {
-        const imageUrl = await uploadImage(updatedWatch.image);
-        console.log("Immagine di modifica caricata con URL:", imageUrl);
-        
-        finalWatchData.image = imageUrl; // Aggiorna l'URL nei dati da salvare
-
-        if (oldImageUrl) {
-          await deleteImage(oldImageUrl);
+      // Controlla se 'image' è un nuovo File (non una stringa/percorso)
+      if (image instanceof File) {
+        const newImagePath = await uploadImage(image);
+        if (newImagePath) {
+            finalWatchData.image = newImagePath; // Salva il *percorso*
+            if (oldImagePath) {
+              await deleteImage(oldImagePath); // Elimina la vecchia
+            }
         }
+      } else {
+        // Altrimenti, mantieni il vecchio percorso
+        finalWatchData.image = oldImagePath;
       }
 
-      // 3. PASSO 1: Aggiorna la tabella 'watches'
-      //    Inviamo 'finalWatchData', che NON contiene l'array 'features'
-      const { error: updateError } = await supabase
+      // PASSO 1: Aggiorna 'watches'
+      const { data: updatedData, error: updateError } = await supabase
         .from('watches')
         .update(finalWatchData) 
-        .eq('id', modifyWatch.id);
+        .eq('id', modifyWatch.id)
+        .select() // Chiedi i dati aggiornati
+        .single(); // Ci aspettiamo un solo record
 
       if (updateError) throw updateError;
 
-      // 4. PASSO 2: Aggiorna le 'caratteristiche' (Delete-then-Insert)
+      // PASSO 2: Aggiorna 'caratteristiche'
       const watchId = modifyWatch.id;
 
-      // a. Elimina TUTTE le associazioni VECCHIE
       const { error: deleteError } = await supabase
         .from('Orologi_Caratteristiche')
         .delete()
-        .eq('id_watch', watchId); // Usa la colonna 'id_watch' corretta
-
+        .eq('id_watch', watchId);
       if (deleteError) throw deleteError;
 
-      // b. Inserisci TUTTE le associazioni NUOVE (basate su 'features')
-      //    Questo risolve il tuo problema dei duplicati.
       if (features && features.length > 0) {
         const relationsToInsert = features.map(featureId => ({
           id_watch: watchId,
-          id_caratteristica: featureId // 'features' contiene già i numeri
+          id_caratteristica: featureId
         }));
-
         const { error: insertError } = await supabase
           .from('Orologi_Caratteristiche')
           .insert(relationsToInsert);
-        
         if (insertError) throw insertError;
       }
+      
+      // PASSO 3: Aggiorna lo stato locale
+      // Per evitare un fetch, aggiorniamo manualmente lo stato 'watches'
+      // Ricostruisci le caratteristiche per l'oggetto locale
+      const updatedFeatures = allFeaturesList.filter(f => features.includes(f.id_caratteristica));
+      
+      const locallyUpdatedWatch = {
+          ...modifyWatch, // Inizia con i vecchi dati (es. Orologi_Caratteristiche)
+          ...updatedData, // Sovrascrivi con i dati aggiornati da 'watches'
+          caratteristiche: updatedFeatures, // Inserisci le caratteristiche aggiornate
+          imageUrl: getPublicUrl(updatedData.image) // Rigenera l'URL
+      };
 
-      console.log("Orologio e caratteristiche aggiornati con successo!");
-      
-      // 5. FONDAMENTALE: Ricarica la lista per vedere i cambiamenti
-      await fetchWatches(user.id);
-      
+      setWatches(prevWatches => 
+        prevWatches.map(w => w.id === modifyWatch.id ? locallyUpdatedWatch : w)
+      );
+
+      setMessage("Orologio aggiornato con successo!");
       setIsModifyVisible(false);
       
-      // Pulisci l'immagine da entrambi gli stati per sicurezza
-      setNewWatch((prev) => ({ ...prev, image: "" }));
-      setUpdatedWatch((prev) => ({ ...prev, image: "" }));
-
     } catch (error) {
       console.error("Errore durante il salvataggio delle modifiche:", error);
       setMessage("Errore: " + error.message);
+    } finally {
+        setLoading(false);
     }
   };
 
 
-const handleFavoriteToggle = async (watchId) => {
-    // 1. Trova lo stato attuale dell'orologio prima di aggiornare
+  const handleFavoriteToggle = async (watchId) => {
     const currentWatch = watches.find(w => w.id === watchId);
+    if (!currentWatch) return;
     
-    if (!currentWatch) {
-        console.error("Orologio non trovato.");
-        return;
-    }
-    
-    // Calcola il nuovo stato (inverte il valore booleano)
     const newFavoriteState = !currentWatch.isFavorite;
 
-    // 2. Aggiornamento su SUPABASE (Persistenza)
-    const { error } = await supabase
-        .from('watches')
-        .update({ isFavorite: newFavoriteState })
-        .eq('id', watchId); 
-
-    if (error) {
-        console.error("Errore di Supabase durante l'aggiornamento dei preferiti:", error);
-        return; 
-    }
-
-    // 3. AGGIORNAMENTO CRUCIALE: Avvolgi setWatches in startTransition
-    // Questo dice a React di eseguire l'aggiornamento di stato (che causa il riordinamento)
-    // come una transizione, concedendo a Framer Motion il tempo di animare.
+    // Aggiornamento Optimistic (UI prima, poi DB)
+    // Avvolgi in startTransition per animazione fluida
     startTransition(() => {
         setWatches(prevWatches =>
             prevWatches.map(watch =>
@@ -1073,12 +628,30 @@ const handleFavoriteToggle = async (watchId) => {
             )
         );
     });
-};
 
-  const [modalTitle, setModalTitle] = useState(""); // Nuovo stato per il titolo
-  const [color, setColor] = useState(""); // Colore HEX
-  const [modalConsigli, setModalConsigli] = useState(false);
-  const [isCarouselVisible, setIsCarouselVisible] = useState(false); // Carosello visibile
+    // Aggiornamento DB in background
+    const { error } = await supabase
+        .from('watches')
+        .update({ isFavorite: newFavoriteState })
+        .eq('id', watchId); 
+
+    if (error) {
+        console.error("Errore Supabase (ripristino UI):", error);
+        // Rollback in caso di errore
+        startTransition(() => {
+          setWatches(prevWatches =>
+              prevWatches.map(watch =>
+                  watch.id === watchId
+                      ? { ...watch, isFavorite: !newFavoriteState } // Ripristina
+                      : watch
+              )
+          );
+        });
+        setMessage("Errore nell'aggiornamento dei preferiti.");
+    }
+  };
+
+  // --- LOGICA OUTFIT (Funzioni) ---
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -1091,320 +664,99 @@ const handleFavoriteToggle = async (watchId) => {
       img.onload = () => {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
-
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0, img.width, img.height);
-
-        // Prendiamo il colore al centro dell'immagine
-        const pixelData = ctx.getImageData(
-          img.width / 2,
-          img.height / 2,
-          1,
-          1
-        ).data;
+        const pixelData = ctx.getImageData(img.width / 2, img.height / 2, 1, 1).data;
         const hexColor = rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
-
-        setColor(hexColor); // Salviamo il colore in stato
-        searchWatchesByColor(hexColor); // Cerchiamo gli orologi simili
+        setColor(hexColor);
+        searchWatchesByColor(hexColor);
       };
     };
     reader.readAsDataURL(file);
   };
 
   const rgbToHex = (r, g, b) => {
-    return (
-      "#" +
-      [r, g, b]
-        .map((x) => x.toString(16).padStart(2, "0"))
-        .join("")
-        .toUpperCase()
-    );
+    return ("#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("").toUpperCase());
   };
 
-    const searchWatchesByColor = async (hexColor) => {
-      // Convertiamo il colore HEX in R, G, B
-      const r = parseInt(hexColor.substring(1, 3), 16);
-      const g = parseInt(hexColor.substring(3, 5), 16);
-      const b = parseInt(hexColor.substring(5, 7), 16);
-    
-      // Convertiamo HEX in RGB e calcoliamo la distanza
-      const calculateDistance = (colorHex) => {
-        const r2 = parseInt(colorHex.substring(1, 3), 16);
-        const g2 = parseInt(colorHex.substring(3, 5), 16);
-        const b2 = parseInt(colorHex.substring(5, 7), 16);
-        return Math.sqrt((r - r2) ** 2 + (g - g2) ** 2 + (b - b2) ** 2);
-      };
-    
-      // Ordiniamo gli orologi per distanza di colore
-      const sortedWatches = watches
-        .map((watch) => ({
-          ...watch,
-          distanza: calculateDistance(watch.color),
-        }))
-        .sort((a, b) => a.distanza - b.distanza)
-        .slice(0, 3); // Prendiamo solo i 3 più simili
-    
-      setWatchConsigliati(sortedWatches);
-      setIsCarouselVisible(true); // Mostriamo il carosello
+  const searchWatchesByColor = (hexColor) => {
+    const r = parseInt(hexColor.substring(1, 3), 16);
+    const g = parseInt(hexColor.substring(3, 5), 16);
+    const b = parseInt(hexColor.substring(5, 7), 16);
+  
+    const calculateDistance = (colorHex) => {
+      if (!colorHex) return Infinity; // Gestisce colori non definiti
+      const r2 = parseInt(colorHex.substring(1, 3), 16);
+      const g2 = parseInt(colorHex.substring(3, 5), 16);
+      const b2 = parseInt(colorHex.substring(5, 7), 16);
+      return Math.sqrt((r - r2) ** 2 + (g - g2) ** 2 + (b - b2) ** 2);
     };
+  
+    const sortedWatches = watches
+      .map((watch) => ({
+        ...watch,
+        distanza: calculateDistance(watch.color),
+      }))
+      .sort((a, b) => a.distanza - b.distanza)
+      .slice(0, 3);
+  
+    setWatchConsigliati(sortedWatches);
+    setIsCarouselVisible(true);
+  };
 
-
-// Funzione helper per convertire Data URL in Blob (necessaria per la compressione)
-const dataURLtoBlob = (dataurl) => {
-    const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new Blob([u8arr], {type:mime});
-};
-
-
-const handleFeatureChange = (event) => {
+  // --- LOGICA FEATURES (Funzioni) ---
+  const handleFeatureChange = (event) => {
     const { value, checked } = event.target;
-    
     const numericValue = parseInt(value, 10); 
-    // ----------------------------------------
-
     setNewWatch((prev) => {
       if (checked) {
-        // Aggiungi il NUMERO all'array
         return { ...prev, features: [...prev.features, numericValue] };
       } else {
-        // Rimuovi il NUMERO dall'array
-        return { 
-          ...prev, 
-          features: prev.features.filter((f) => f !== numericValue) 
-        };
+        return { ...prev, features: prev.features.filter((f) => f !== numericValue) };
       }
     });
   };
   
-  const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-
-const options = [
-  { value: "Datario", label: "Datario" },
-  { value: "Cronografo", label: "Cronografo" },
-  { value: "Impermeabile", label: "Impermeabile" },
-  { value: "Automatico", label: "Automatico" },
-  { value: "Subacqueo", label: "Subacqueo" },
-];
-
-function FeaturesDropdown({ newWatch, setNewWatch }) {
-  return (
-    <Select
-      isMulti
-      options={options}
-      value={options.filter(o => newWatch.features.includes(o.value))}
-      onChange={(selected) =>
-        setNewWatch({
-          ...newWatch,
-          features: selected.map((s) => s.value),
-        })
-      }
-      placeholder="Caratteristiche Aggiuntive"
-    />
-  );
-}
-// const featuresList = ["Datario", "Cronografo", "Cronometro","Calendario Completo", "Day-Date", "Calendario Perpetuo" , "Ghiera Girevole", "Corona a Vite", "Contatore 24h", "Fasi Lunari", "Allarme", "Carica Solare", "GMT", "Tourbillon"];
-// Aggiungi questo stato in cima al tuo componente
-// 1. Stato per la lista (dovresti già averlo)
-const [allFeaturesList, setAllFeaturesList] = useState([]);
-
-// 2. useEffect per caricare i dati (LA PARTE FONDAMENTALE)
-useEffect(() => {
-  const loadFeatures = async () => {
-    
-    // NOTA: Usa il nome esatto della tua tabella in Supabase
-    // OCCHIO alle maiuscole/minuscole. 'Caratteristiche' o 'caratteristiche'?
-    const { data, error } = await supabase
-      .from('caratteristiche')
-      .select('*'); 
-    
-    // 3. GESTISCI GLI ERRORI (IL PUNTO CHIAVE)
-    if (error) {
-      // Se vedi questo errore, è colpa della RLS o del nome tabella!
-      console.error("ERRORE NEL CARICARE LE CARATTERISTICHE:", error.message);
-      
-      // Mostra un messaggio all'utente
-      setMessage("Errore: impossibile caricare l'elenco delle caratteristiche. " + error.message);
-    } else {
-      // Dati caricati!
-      console.log("Caratteristiche caricate con successo:", data);
-      setAllFeaturesList(data);
-    }
-  };
-
-  // Esegui la funzione
-  loadFeatures();
-
-}, []); // L'array vuoto [] assicura che venga eseguito solo una volta al caricamento
-
-
-// Questa è la NUOVA funzione da aggiungere
   const handleUpdatedFeatureChange = (event) => {
     const { value, checked } = event.target;
-    
-    // Converti il valore (stringa) in un numero (int8)
     const numericValue = parseInt(value, 10); 
-
-    setUpdatedWatch((prev) => { // <-- Aggiorna UPDATED Watch
+    setUpdatedWatch((prev) => {
       if (checked) {
         return { ...prev, features: [...prev.features, numericValue] };
       } else {
-        return { 
-          ...prev, 
-          features: prev.features.filter((f) => f !== numericValue) 
-        };
+        return { ...prev, features: prev.features.filter((f) => f !== numericValue) };
       }
     });
   };
 
-  // Orologio Funzionante
-  var inc = 1000;
 
-  async function clock() {
-      const date = new Date();
-
-      const hours = ((date.getHours() + 11) % 12 + 1);
-      const minutes = date.getMinutes();
-      const seconds = date.getSeconds();
-
-      const hour = (hours + minutes / 60) * 30;
-      const minute = (minutes + seconds / 60) * 6;
-      const second = seconds * 6;
-
-      // Controlla se gli elementi esistono prima di modificarli
-      const hourHand = document.querySelector('.hour');
-      const minuteHand = document.querySelector('.minute');
-      const secondHand = document.querySelector('.second');
-
-      if (hourHand) {
-          hourHand.style.transform = `rotate(${hour}deg)`;
-      }
-      if (minuteHand) {
-          minuteHand.style.transform = `rotate(${minute}deg)`;
-      }
-      if (secondHand) {
-          secondHand.style.transform = `rotate(${second}deg)`;
-      }
-  }
-
-  const numbers = document.querySelectorAll(".number");
-  const clockRadius = 145; // Raggio interno per i numeri
-  const clockCenterX = 15; // Centro X del quadrante
-  const clockCenterY = 12; // Centro Y del quadrante
-  
-  numbers.forEach((num, index) => {
-      const angle = (index - 2) * 30; // Ogni numero è 30° più avanti rispetto al precedente
-      const radian = angle * (Math.PI / 180);
-  
-      const x = clockCenterX + clockRadius * Math.cos(radian) - num.clientWidth / 2;
-      const y = clockCenterY + clockRadius * Math.sin(radian) - num.clientHeight / 2;
-  
-      num.style.left = `${x}px`;
-      num.style.top = `${y}px`;
-  
-      // Applica la rotazione opposta all'angolo per mantenere il testo dritto
-      num.style.transform = `rotate(${(angle)+90}deg)`;
-  });
-  
-
-  const dots = document.querySelectorAll(".dot");
-  const clockRadiusDot = 170; // Raggio per i puntini (esterno ai numeri)
-  const clockPointCenterX = 0; // Centro X del quadrante
-  const clockPointCenterY = 0; // Centro Y del quadrante
-
-  dots.forEach((dot, index) => {
-      const angle = index * 30; // Ogni puntino è 30° più avanti rispetto al precedente
-      const radian = angle * (Math.PI / 180);
-  
-      const x = clockPointCenterX + clockRadiusDot * Math.cos(radian) - dot.clientWidth / 2;
-      const y = clockPointCenterY + clockRadiusDot * Math.sin(radian) - dot.clientHeight / 2;
-  
-      dot.style.left = `${x}px`;
-      dot.style.top = `${y}px`;
-  });
-
-  clock();
-  setInterval(clock, 1000);
-
-
-  console.log('Stato di allFeaturesList:', allFeaturesList);
-
+  // --- RENDER ---
   return (
-
-    <div className="container" id="home">
-
+    <div 
+      className={`container ${!user ? 'login-page' : ''}`} 
+      id="home"
+    >
       <DarkModeSwitch />
-
       
-
-
-      <div className="clockContainer">
-      <ScrollingBrands1></ScrollingBrands1>
-      <ScrollingBrands2></ScrollingBrands2>
-      <ScrollingBrands3></ScrollingBrands3>
-
-        <div className="clock">
-          <div className="wrap">
-            <div className="numbers">
-              <div className="dot"></div>
-              <div className="dot"></div>
-              <div className="dot"></div>
-              <div className="dot"></div>
-              <div className="dot"></div>
-              <div className="dot"></div>
-              <div className="dot"></div>
-              <div className="dot"></div>
-              <div className="dot"></div>
-              <div className="dot"></div>
-              <div className="dot"></div>
-              <div className="dot"></div>
-              <div className="number" data-num="1">I</div>
-              <div className="number" data-num="2">II</div>
-              <div className="number" data-num="3">III</div>
-              <div className="number" data-num="4">IV</div>
-              <div className="number" data-num="5">V</div>
-              <div className="number" data-num="6">VI</div>
-              <div className="number" data-num="7">VII</div>
-              <div className="number" data-num="8">VIII</div>
-              <div className="number" data-num="9">IX</div>
-              <div className="number" data-num="10">X</div>
-              <div className="number" data-num="11">XI</div>
-              <div className="number" data-num="12">XII</div>
-              <div className="hour"></div>
-              <div className="minute"></div>
-              <div className="second"></div>
-              <div className="point"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-
+      <Clock /> {/* Componente Orologio */}
+      
+      {/* Componenti Scrolling Brands */}
+      <ScrollingBrands1 />
+      <ScrollingBrands2 />
+      <ScrollingBrands3 />
 
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-       {/*  <div style={{ display: "flex", alignItems: "center", width: "50%", justifyContent: "center" }}>
-          <img src="romanClock.svg" width="150" height="150"/>
-        </div> */}
         <div className="titleList" style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "center" }}>
           <h1>La mia collezione di orologi</h1>
         </div>
       </div>
 
-
-      {message && <p className="message">{message}</p>}
-      {loading && <p>Loading...</p>}
+      {message && <p className="message" onClick={() => setMessage(null)}>{message}</p>}
+      {loading && <div className="loading-spinner"></div>} {/* Spinner CSS */}
       <div style={{ marginBottom: "20px" }}></div>
 
       {!user ? (
-        // QUI: Chiami il nuovo componente e passi tutto come props
         <AuthForm
           nickname={nickname}
           setNickname={setNickname}
@@ -1418,635 +770,121 @@ useEffect(() => {
         />
       ) : (
         <>
-          
           <div className="profile-info">
             <div className="profile-picture">
                 <UserProfile email={email} />
             </div>
             <h4 className="Saluti">Benvenuto, {nickname}</h4>
-          <p style={{ fontSize: "20px", paddingBottom: "20px"}}>Valore: {totalMoney.toLocaleString('it-IT')} €</p>
+            <p style={{ fontSize: "20px", paddingBottom: "20px"}}>Valore: {totalMoney.toLocaleString('it-IT')} €</p>
            </div>
+           
           <div className="profile-log">
-            <div className="buttonForm"
-            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
+            <div className="buttonForm" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
               <button className="logout-btn" onClick={handleLogout}>
                 Logout
               </button>
               <span className="decorative-symbol">✦</span>
-
               <button
                 onClick={() => setShowForm(!showForm)}
                 style={{ width: "200px", padding: "10px", paddingButtom: "10px",}}
               >
                 {showForm ? "Nascondi Form" : "Aggiungi Orologio"}
               </button>
-
             </div> 
           </div>
-            {showForm && (
-              <>
-                <div className="titleList">
-                  <h3>Aggiungi un nuovo orologio</h3>
-                </div>
-                <div className="form">
-                  <input
-                    type="text"
-                    placeholder="Nome"
-                    value={newWatch.name}
-                    onChange={(e) =>
-                      setNewWatch({ ...newWatch, name: e.target.value })
-                    }
-                  />
-                  <input
-                    type="text"
-                    placeholder="Marca"
-                    value={newWatch.brand}
-                    onChange={(e) =>
-                      setNewWatch({ ...newWatch, brand: e.target.value })
-                    }
-                  />
-                  <input
-                    type="number"
-                    placeholder="Anno"
-                    value={newWatch.year}
-                    onChange={(e) =>
-                      setNewWatch({ ...newWatch, year: e.target.value })
-                    }
-                  />
-                  <input
-                    type="number"
-                    placeholder="Prezzo di Acquisto (€)"
-                    value={newWatch.money}
-                    onChange={(e) =>
-                      setNewWatch({ ...newWatch, money: e.target.value })
-                    }
-                  />
-                  <div style={{ marginBottom: "10px" }}></div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", width: "100%"}}>
-                    <div className="selectMenu">
-                      <label>
-                        <strong>Movimento: </strong>
-                      </label>
-                      <div style={{ marginBottom: "10px" }}></div>
-                      <select
-                        value={newWatch.movement}
-                        onChange={(e) => setNewWatch({ ...newWatch, movement: e.target.value })}
-                        style={{textAlign: "center", display: "flex"}}
-                      >
-                        <option className="menuTendina" value="">Seleziona il movimento</option>
-                        <option className="menuTendina" value="Automatico">Automatico</option>
-                        <option className="menuTendina" value="Carica Manuale">Carica Manuale</option>
-                        <option className="menuTendina" value="Quarzo">Quarzo</option>
-                      </select>
-                    </div>
-                    <label>
-                    <strong>Colore: </strong>
-                  </label>
-                  <div className="color-picker-container">
-                    <button
-                      type="button" 
-                      className="color-picker-button"
-                      // USA newWatch
-                      style={{ backgroundColor: newWatch.color}}
-                      tabIndex="-1" 
-                    >
-                      🎨 Scegli un colore
-                    </button>
 
-                    <input
-                      type="color"
-                      id="color"
-                      className="color-input-overlay"
-                      // USA newWatch
-                      value={newWatch.color}
-                      // USA setNewWatch
-                      onChange={(e) => setNewWatch({ ...newWatch, color: e.target.value })}
-                    />
-
-                    {newWatch.color && <p className="selected-color">Colore selezionato: {newWatch.color}</p>}
-                </div>
-                  </div>
-
-                  <div style={{ marginBottom: "10px" }}></div>
-                  <div className="upload-container">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      ref={fileInputRef}
-                      className="hidden-input"
-                      id="file-upload"
-                      multiple
-                    />
-                    {/* Bottone personalizzato */}
-                    <button className="upload-button" onClick={() => fileInputRef.current.click()}>
-                      📸 Seleziona un'immagine
-                    </button>
-                  </div>
-                  {newWatch.image && (
-                      <img
-                        src={URL.createObjectURL(newWatch.image)}
-                        alt="Anteprima"
-                        className="preview-image"
-                        width="100"
-                        loading="lazy"
-                      />
-                  )}
-
-                  {/* Pulsante per mostrare/nascondere il menù */}
-                  <div style={{ margin: "20px 0 10px 0", width: "100%" }}>
-                    <button
-                      type="button"
-                      className="details-toggle-button"
-                      onClick={() => setIsDetailsMenuOpen(!isDetailsMenuOpen)}
-                    >
-                      {isDetailsMenuOpen ? 'Chiudi Dettagli ▴' : 'Caratteristiche Aggiuntive ▾'}
-                    </button>
-                  </div>
-
-                  {isDetailsMenuOpen && (
-                    <div>
-                      <strong>Seleziona Caratteristiche</strong>
-                      <div className="details-menu">
-                        
-                        {/* USA 'allFeaturesList' (lo stato caricato) 
-                          invece di 'featuresList' (la costante statica) 
-                        */}
-                        {allFeaturesList.map((feature) => (
-                          <label 
-                            // KEY: Usa l'ID univoco dal database
-                            key={feature.id_caratteristica} 
-                            
-                            // CHECK: Controlla se l'ID è nell'array 'newWatch.features'
-                            className={`checkbox-label ${newWatch.features.includes(feature.id_caratteristica) ? 'selected' : ''}`}
-                          >
-                            <input
-                              type="checkbox"
-                              className="checkbox-input"
-                              value={feature.id_caratteristica}
-                              checked={newWatch.features.includes(feature.id_caratteristica)}
-                              onChange={handleFeatureChange}
-                            />
-                            
-                            {feature.nome_caratteristica}
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  <div style={{ margin: "20px 0 10px 0", width: "100%" }}>
-                    <button
-                      type="button"
-                      className="details-toggle-button"
-                      onClick={() => setIsNotesVisible(!isNotesVisible)}
-                    >
-                      {isNotesVisible ? 'Chiudi Notes ▴' : 'Apri Notes ▾'}
-                    </button>
-                  </div>
-
-                  {isNotesVisible && (
-                    <div>
-                      <textarea
-                        placeholder="Note aggiuntive (es. data acquisto, storia, difetti...)"
-                        className="notes-textarea" // Aggiungi una classe per lo stile
-                        value={newWatch.note}
-                      onChange={(e) =>
-                        setNewWatch({ ...newWatch, note: e.target.value })
-                      }
-                    />
-                  </div>
-                  )}
-                  
-                  <div style={{ marginBottom: "30px" }}></div>
-                  <div className="buttonForm">
-                    <button onClick={handleAddWatch}>Salva</button>
-                    <button onClick={handleCancel}>Annulla</button>
-                  </div>
-                </div>
-              </>
-            )}
+          {/* Componente Form Aggiungi */}
+          <AddWatchForm
+            showForm={showForm}
+            newWatch={newWatch}
+            setNewWatch={setNewWatch}
+            handleImageChange={handleImageChange}
+            fileInputRef={fileInputRef}
+            isDetailsMenuOpen={isDetailsMenuOpen}
+            setIsDetailsMenuOpen={setIsDetailsMenuOpen}
+            isNotesVisible={isNotesVisible}
+            setIsNotesVisible={setIsNotesVisible}
+            allFeaturesList={allFeaturesList}
+            handleFeatureChange={handleFeatureChange}
+            handleAddWatch={handleAddWatch}
+            handleCancel={handleCancel}
+          />
 
           <div className="separator-container">
             <hr className="custom-separator" />
           </div>
+          
           <h2 style={{paddingBottom:"2%"}} id="function">Funzioni</h2>
           
-          <div className="functionButton">
-          <div>
-            <h4>Orologio del Giorno</h4>
-            <div className="funzioniButton">
-              <div className="buttonBackground"></div>
-              
-              <button onClick={() => handleDayWatch(user.id)}>
-                DailyWatch
-              </button>              
-            </div>
-            </div>
-            <div className="pickWatch">
-              <div>
-                <h4>Completa l'Outfit</h4>
-                <div className="upload-container">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    ref={fileInputRefOutfit}
-                    className="hidden-input"
-                    id="file-upload"
-                  />
-                <button className="select-image-button" onClick={() => fileInputRefOutfit.current.click()}>
-                    {/* La 📸 non ha bisogno di span */}
-                    📸 <span className="button-text-mobile">Seleziona un'immagine</span>
-                </button>
-                </div>
-              </div>
-
-              {/* MODALE SOLO CON IL CAROSELLO */}
-              {isCarouselVisible && watches.length > 0 && (
-                <div className="modal-overlay">
-                  <div className="swiper-wrapper">
-                    
-                    <Swiper
-                      modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
-                      spaceBetween={10}
-                      slidesPerView={1}
-                      navigation
-                      pagination={{ clickable: true }}
-                      scrollbar={{ draggable: true }}
-                    >
-                      {watchConsigliati.map((watch) => (
-                        <SwiperSlide key={watch.id}>
-                          <div className="watch-card" style={{marginRight:"40px", marginBottom:"-20px"}}>
-                          <div style={{margin:"10px"}}></div>
-                          <h3>Orologi Consigliati</h3>
-                          <div style={{margin:"20px"}}></div>
-                            <img src={watch.image || "orologio_back.svg"} alt={watch.name} className="watch-imageCarosel" />
-                            <p style={{fontSize:"32px", margin:"20px", fontWeight:"bold"}}>{watch.name}</p>
-                            {/* <div style={{margin:"10px"}}></div> */}
-                            <button className="funzioniButton" onClick={() => {setIsCarouselVisible(false); fileInputRef.current.value = ""; setWatchConsigliati = ([])}}>Chiudi</button>
-                            <div style={{margin:"40px"}}></div>
-                          </div>
-                        </SwiperSlide>
-                      ))}
-                      
-                    </Swiper>
-                    
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          
-
-
-          {isModalVisible && selectedWatch && (
-            <div className="modal-overlay">
-              <div className="modal-content">
-                <h2>{modalTitle}</h2>
-                <img src={selectedWatch.image || "orologio_back.svg"} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
-                <p><strong>Nome:</strong> {selectedWatch.name}</p>
-                <p><strong>Marca:</strong> {selectedWatch.brand}</p>
-                <p><strong>Anno:</strong> {selectedWatch.year}</p>
-                <p><strong>Movimento:</strong> {selectedWatch.movement}</p>
-                <p><strong>Colore:</strong> {selectedWatch.color}</p>
-                <div className="functionButton">
-                  <button className="funzioniButton" onClick={() => setIsModalVisible(false)}>Chiudi</button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Area di MODIFICA */}
-          {isModifyVisible && modifyWatch && (
-            <div className="modal-overlay">
-              <div className="modal-content">
-                <h2>Modifica Orologio</h2>
-                <img src={updatedWatch.image || "/fallback-image.jpg"} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
-                
-                <div className="formModify" style={{ fontFamily: "minork" }}>
-                  <div>
-                    <label>Nome: </label>
-                    <input
-                      type="text"
-                      value={updatedWatch.name}
-                      onChange={(e) => setUpdatedWatch({ ...updatedWatch, name: e.target.value })}
-                    />
-                  </div>
-
-                  <div>
-                    <label>Marca: </label>
-                    <input
-                      type="text"
-                      value={updatedWatch.brand}
-                      onChange={(e) => setUpdatedWatch({ ...updatedWatch, brand: e.target.value })}
-                    />
-                  </div>
-
-                  <div>
-                    <label>Anno: </label>
-                    <input
-                      type="text"
-                      value={updatedWatch.year}
-                      onChange={(e) => setUpdatedWatch({ ...updatedWatch, year: e.target.value })}
-                    />
-                  </div>
-
-                  <div>
-                    <label>Prezzo: </label>
-                  <input
-                    type="number"
-                    value={updatedWatch.money}
-                    onChange={(e) => setUpdatedWatch({ ...updatedWatch, money: e.target.value })}
-                  />
-                  </div>
-
-                  <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", width: "100%" }}>
-                    <div className="selectMenu">
-                      <label>
-                        <strong>Movimento: </strong>
-                      </label>
-                      <div style={{ marginBottom: "10px" }}></div>
-                      <select
-                        value={updatedWatch.movement}
-                        onChange={(e) => setUpdatedWatch({ ...updatedWatch, movement: e.target.value })}
-                        style={{ textAlign: "center", display: "flex", border: "1px solid green" }}
-                      >
-                        <option className="menuTendina" value="">Seleziona il movimento</option>
-                        <option className="menuTendina" value="Automatico">Automatico</option>
-                        <option className="menuTendina" value="Carica Manuale">Carica Manuale</option>
-                        <option className="menuTendina" value="Quarzo">Quarzo</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div style={{ marginBottom: "10px" }}></div>
-
-                  <label>
-                    <strong>Colore: </strong>
-                  </label>
-                  <div className="color-picker-container">
-                    {/* 1. Il bottone personalizzato (ora è solo estetico) */}
-                    {/* NON HA PIÙ 'onClick' */}
-                    <button
-                      type="button" // Aggiungi type="button" per evitare submit accidentali
-                      className="color-picker-button"
-                      style={{ backgroundColor: updatedWatch.color || "#ffffff", border: "1px solid green" }}
-                      tabIndex="-1" // Rimuove il bottone dalla navigazione con TAB (l'input la gestirà)
-                    >
-                      🎨 Scegli un colore
-                    </button>
-
-                    {/* 2. L'input REALE. Non è più "nascosto". */}
-                    {/* È un "overlay" invisibile posizionato SOPRA il bottone. */}
-                    {/* NON HA PIÙ 'ref'. Usa 'className="color-input-overlay"'. */}
-                    <input
-                      type="color"
-                      id="color"
-                      className="color-input-overlay"
-                      value={updatedWatch.color}
-                      onChange={(e) => setUpdatedWatch({ ...updatedWatch, color: e.target.value })}
-                    />
-
-                    {/* Mostra il colore selezionato */}
-                    {updatedWatch.color && <p className="selected-color">Colore selezionato: {updatedWatch.color}</p>}
-                  </div>
-
-                  {/* Caricamento immagine */}
-                  <div className="upload-container">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      ref={fileInputRef}
-                      className="hidden-input"
-                      id="file-upload"
-                    />
-                    <button className="upload-button" onClick={() => fileInputRef.current.click()}>
-                      📸 Seleziona un'immagine
-                    </button>
-                  </div>
-                  {newWatch.image && (
-                    <img
-                      src={URL.createObjectURL(newWatch.image)}
-                      alt="Anteprima"
-                      className="preview-imageMod"
-                      width="100"
-                      loading="lazy"
-                    />
-                  )}
-
-                  {/* Pulsante per mostrare/nascondere il menù */}
-                  <div style={{ marginBottom: "20px", width: "100%" }}>
-                    <button
-                      type="button"
-                      className="details-toggle-button"
-                      onClick={() => setIsDetailsMenuOpenMOD(!isDetailsMenuOpenMOD)}
-                    >
-                      {isDetailsMenuOpenMOD ? 'Chiudi Dettagli ▴' : 'Caratteristiche Aggiuntive ▾'}
-                    </button>
-                  </div>
-
-                  {isDetailsMenuOpenMOD && (
-                    <div>
-                      <strong>Seleziona Caratteristiche</strong>
-                      <div className="details-menu">
-                        
-                        {/* 1. USA 'allFeaturesList' (i dati caricati) */}
-                        {allFeaturesList.map((feature) => (
-                          <label 
-                            key={feature.id_caratteristica} 
-                            
-                            /* 2. LEGGE da 'updatedWatch' */
-                            className={`checkbox-label ${updatedWatch.features.includes(feature.id_caratteristica) ? 'selected' : ''}`}
-                          >
-                            <input
-                              type="checkbox"
-                              className="checkbox-input"
-                              value={feature.id_caratteristica}
-                              
-                              /* 3. LEGGE da 'updatedWatch' */
-                              checked={updatedWatch.features.includes(feature.id_caratteristica)}
-                              
-                              /* 4. CHIAMA il NUOVO handler */
-                              onChange={handleUpdatedFeatureChange}
-                            />
-                            
-                            {/* 5. Mostra il nome corretto */}
-                            {feature.nome_caratteristica}
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  <div style={{ margin: "20px 0 10px 0", width: "100%" }}>
-                    <button
-                      type="button"
-                      className="details-toggle-button"
-                      onClick={() => setIsNotesVisibleMOD(!isNotesVisibleMOD)}
-                    >
-                      {isNotesVisibleMOD ? 'Chiudi Notes ▴' : 'Apri Notes ▾'}
-                    </button>
-                  </div>
-
-                  {isNotesVisibleMOD && (
-                    <div>
-                      <textarea
-                        placeholder="Note aggiuntive..."
-                        className="notes-textarea" // Aggiungi una classe per lo stile
-                        value={updatedWatch.note}
-                        onChange={(e) =>
-                        setUpdatedWatch({ ...updatedWatch, note: e.target.value })
-                      }
-                    />
-                  </div>
-                  )}
-                  <div style={{ marginBottom: "20px", width: "100%" }}></div>
-                </div>
-
-                <div className="buttonForm">
-                  <button className="funzioniButton" onClick={handleSaveChanges}>Salva</button>
-                  <button className="funzioniButton" onClick={() => setIsModifyVisible(false)}>Chiudi</button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          
-
-
-          <h2>Lista Orologi</h2>
-          <WatchList 
-            watches={watches} 
-            handleModifyWatch={handleModifyWatch} 
-            handleDeleteWatch={handleDeleteWatch}
-            handleFavoriteToggle={handleFavoriteToggle}
-            user={user}
+          {/* Componente Sezione Funzioni */}
+          <FunctionsSection
+            onDayWatchClick={() => handleDayWatch(user.id)}
+            onOutfitImageChange={handleImageUpload}
+            fileInputRefOutfit={fileInputRefOutfit}
           />
 
-          {isStatisticheVisible && (
-            /* 1. L'overlay è il genitore. 
-              Aggiungiamo l'onClick per chiudere il modale.
-            */
-            <div className="modal-overlay" onClick={() => setIsStatisticheVisible(false)}>
-              
-              {/* 2. Il contenuto (infoView-statistiche) è DENTRO l'overlay.
-                Aggiungiamo e.stopPropagation() per non chiudere il modale
-                se si clicca sul contenuto.
-              */}
-              <div className="infoView-statistiche" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-content-statistiche">
+          {/* Componenti Modali */}
+          <OutfitModal
+            isVisible={isCarouselVisible}
+            setIsVisible={setIsCarouselVisible}
+            watchConsigliati={watchConsigliati}
+            onClose={() => {
+              setIsCarouselVisible(false);
+              if(fileInputRefOutfit.current) fileInputRefOutfit.current.value = "";
+              setWatchConsigliati([]);
+            }}
+          />
+          
+          <DayWatchModal
+            isVisible={isModalVisible}
+            setIsVisible={setIsModalVisible}
+            selectedWatch={selectedWatch}
+            modalTitle={modalTitle}
+          />
 
-                  <div className="TileInfo">
-                    <h4>Statistiche Collezione</h4>
-                  </div>
-                  
-                  {/* Il tuo componente dei grafici */}
-                  <WatchAnalytics watches={watches} />
+          <ModifyWatchModal
+            isVisible={isModifyVisible}
+            setIsVisible={setIsModifyVisible}
+            modifyWatch={modifyWatch}
+            updatedWatch={updatedWatch}
+            setUpdatedWatch={setUpdatedWatch}
+            handleModifyImageChange={handleModifyImageChange} // Passa il gestore corretto
+            fileInputRef={fileInputRef} // Riutilizza lo stesso ref
+            isDetailsMenuOpenMOD={isDetailsMenuOpenMOD}
+            setIsDetailsMenuOpenMOD={setIsDetailsMenuOpenMOD}
+            isNotesVisibleMOD={isNotesVisibleMOD}
+            setIsNotesVisibleMOD={setIsNotesVisibleMOD}
+            allFeaturesList={allFeaturesList}
+            handleUpdatedFeatureChange={handleUpdatedFeatureChange}
+            handleSaveChanges={handleSaveChanges}
+          />
 
-                  <div className="buttonForm">
-                    <button className="funzioniButton" onClick={() => setIsStatisticheVisible(false)}>Chiudi</button>
-                  </div>
-                  
-                </div>
-              </div>
-              
-            </div>
-          )}
-
-          {/* Area di INFO */}
-          {/* {isInfoVisible && selectedWatch && (
-              <div className="modal-overlay">
-
-              </div>
-            )}
-            {isInfoVisible && selectedWatch && (
-              <div className="infoView">
-              <div className="modal-content">
-                <div className="TileInfo">
-                  <h3>{selectedWatch.name}</h3>
-                </div>
-                <img src={selectedWatch.image || "orologio_back.svg"} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
-                <div className="paragrafi">
-                  <p ><strong>Marca:</strong> <span className="InfoColorInfo">{selectedWatch.brand}</span></p>
-                  <p><strong>Movimento:</strong> <span className="InfoColorInfo">{selectedWatch.movement}</span></p>
-                  <p><strong>Anno:</strong> <span className="InfoColorInfo">{selectedWatch.year}</span></p>
-                  <p><strong>Colore:</strong> <span className="InfoColorInfo">{selectedWatch.color}</span></p>
-                  <p><strong>Prezzo di Acquisto:</strong> <span className="InfoColorInfo">{selectedWatch.money} €</span></p>
-                  <p>
-                    <strong>Caratteristiche Aggiuntive: </strong>
-
-                    <span className="InfoColorInfo">
-                      {selectedWatch.caratteristiche && selectedWatch.caratteristiche.length > 0
-                        ?
-                          // 2. Prima estrai i nomi con .map()
-                          selectedWatch.caratteristiche.map(feature => feature.nome_caratteristica)
-                        // 3. Poi uniscili con .join()
-                        .join(", ")
-                      : 
-                        "Nessuna"
-                    }
-                    </span>
-                  </p>
-                  <p style={{fontSize: '16px'}}><strong>Note: </strong> <span className="InfoColorInfo" >{selectedWatch.note || "Nessuna nota"}</span></p>
-                </div>
-
-                <div className="buttonForm">
-                  <button className="funzioniButton" onClick={() => setIsInfoVisible(false)}>Chiudi</button>
-                </div>
-              </div>
-              </div>
-            )} */}
-
-            {isInfoVisible && selectedWatch && (
-  /* 1. L'overlay è il genitore. 
-     Aggiungiamo un onClick per chiudere il modale cliccando lo sfondo.
-  */
-  <div className="modal-overlay" onClick={() => setIsInfoVisible(false)}>
-    
-    {/* 2. Il tuo .infoView ora è DENTRO l'overlay.
-       Aggiungiamo e.stopPropagation() per evitare che un click
-       sul contenuto (bianco) chiuda anche il modale.
-    */}
-    <div className="infoView" onClick={(e) => e.stopPropagation()}>
-      <div className="modal-content">
-        <div className="TileInfo">
-          <h3>{selectedWatch.name}</h3>
-        </div>
-        
-        <img src={selectedWatch.image || "orologio_back.svg"} alt=" Nessuna Foto" className="modal-image" loading="lazy"/>
-        
-        <div className="paragrafi">
-          <p ><strong>Marca:</strong> <span className="InfoColorInfo">{selectedWatch.brand}</span></p>
-          <p><strong>Movimento:</strong> <span className="InfoColorInfo">{selectedWatch.movement}</span></p>
-          <p><strong>Anno:</strong> <span className="InfoColorInfo">{selectedWatch.year}</span></p>
-          <p><strong>Colore:</strong> <span className="InfoColorInfo">{selectedWatch.color}</span></p>
-          <p><strong>Prezzo di Acquisto:</strong> <span className="InfoColorInfo">{selectedWatch.money} €</span></p>
-          <p>
-            <strong>Caratteristiche Aggiuntive: </strong>
-            <span className="InfoColorInfo">
-              {selectedWatch.caratteristiche && selectedWatch.caratteristiche.length > 0
-                ? selectedWatch.caratteristiche.map(feature => feature.nome_caratteristica).join(", ")
-                : "Nessuna"
-              }
-            </span>
-          </p>
-          {/* Ho rimosso lo stile inline per la coerenza del font */}
-          <p><strong>Note: </strong> <span className="InfoColorInfo" >{selectedWatch.note || "Nessuna nota"}</span></p>
-        </div>
-
-        <div className="buttonForm">
-          <button className="funzioniButton" onClick={() => setIsInfoVisible(false)}>Chiudi</button>
-        </div>
-      </div>
-    </div>
-    
-  </div>
-)}
+          <h2>Lista Orologi</h2>
+          
+          {/* Componente Lista Orologi */}
+          <WatchList 
+            watches={watches} 
+            handleModifyWatch={handleModifyWatch} // Passa l'oggetto watch
+            handleDeleteWatch={handleDeleteWatch}
+            handleFavoriteToggle={handleFavoriteToggle}
+            handleInfoWatch={handleInfoWatch} // Passa l'oggetto watch
+            handleShowStats={handleShowStats}
+            user={user} // Necessario per i bottoni? No, App gestisce la logica
+          />
         </>
-        
       )}
+      {/* Altri Componenti Modali */}
+          <StatsModal
+            isVisible={isStatisticheVisible}
+            setIsVisible={setIsStatisticheVisible}
+            watches={watches}
+          />
+          
+          <InfoWatchModal
+            isVisible={isInfoVisible}
+            setIsVisible={setIsInfoVisible}
+            selectedWatch={selectedWatch}
+          />
     </div>
   );
 }
