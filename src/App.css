@@ -888,7 +888,6 @@ input[type="checkbox"]:checked + .slider-v3::before {
   position:absolute;
   z-index: -1;
   height: auto;
-  top:5.7%;
   left: 0.8%;
 }
 
@@ -920,7 +919,6 @@ input[type="checkbox"]:checked + .slider-v3::before {
   position: absolute;
   z-index: -1;
   height: auto;
-  top:8.5%;
   left: 0.8%;
 }
 
@@ -953,7 +951,6 @@ input[type="checkbox"]:checked + .slider-v3::before {
   position:absolute;
   z-index: -1;
   height: auto;
-  top:5.4%;
   left: 0.8%;
   transition: 0.5s;
 }
@@ -977,16 +974,26 @@ input[type="checkbox"]:checked + .slider-v3::before {
   transition: 0.5s;
 }
 
+.scroll {
+  top: 8rem; /* Circa 72px se il font base è 16px */
+}
+.scroll2 {
+  top: 11rem;  /* Circa 112px */
+}
+.scroll3 {
+  top: 6.5rem; /* Circa 40px */
+}
+
 .login-page .scroll {
-  top: 15%; /* <-- NUOVO VALORE (esempio) */
+  top: 8rem; /* Circa 72px se il font base è 16px */
 }
 
 .login-page .scroll2 {
-  top: 20%; /* <-- NUOVO VALORE (esempio) */
+  top: 11rem;  /* Circa 112px */
 }
 
 .login-page .scroll3 {
-  top: 12.5%; /* <-- NUOVO VALORE (esempio) */
+  top: 6.5rem; /* Circa 40px */
 }
 
 
@@ -1123,19 +1130,25 @@ input[type="checkbox"]:checked + .slider-v3::before {
 @media (max-width: 750px) {
 
   .scroll {
-    top:4%;
-    width: 97%;
-    left: 1%;
+    top: 8.3rem; /* Circa 72px se il font base è 16px */  
   }
   .scroll2 {
-    top:5.5%;
-    width: 97%;
-    left: 1%;
+    top: 11.5rem;  /* Circa 112px */
   }
   .scroll3 {
-    top:3.9%;
-    width: 97%;
-    left: 1%;
+    top: 8.5rem; /* Circa 40px */
+  }
+
+  .login-page .scroll {
+    top: 8.3rem;
+  }
+
+  .login-page .scroll2 {
+    top: 11rem;  /* Circa 112px */
+  }
+
+  .login-page .scroll3 {
+    top: 8.5rem; /* Circa 40px */
   }
 
   .scroll div{

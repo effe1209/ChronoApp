@@ -108,7 +108,7 @@ const ModifyWatchModal = ({
             <button
               type="button" 
               className="color-picker-button"
-              style={{ backgroundColor: updatedWatch.color || "", border: "1px solid green" }}
+              style={{ backgroundColor: updatedWatch.color || ""}}
               tabIndex="-1" 
             >
               🎨 Scegli un colore
