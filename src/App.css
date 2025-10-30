@@ -574,7 +574,8 @@ select {
   font-family: 'minork';
   transition: 0.8s;
   height: 44px;
-} 
+  margin-bottom: 10px;
+}
 
 .modal-content .functionButton button:hover {
   transform: scale(1.1);
@@ -1469,7 +1470,7 @@ input::placeholder {
   height: fit-content;
   border-radius: 20px;
   backdrop-filter: blur(5px);
-  max-height: 650px;
+  /* max-height: 650px; */
   max-width: unset;
   justify-items: center;
 }
@@ -1480,6 +1481,7 @@ input::placeholder {
 
 .modal-overlay .swiper-wrapper .watch-card p{
   font-size: 29px;
+  overflow-wrap: anywhere;
 }
 
 .swiper-wrapper .watch-card .watch-imageCarosel {

@@ -19,12 +19,12 @@ const OutfitModal = ({ isVisible, watchConsigliati, onClose }) => {
     <div className="modal-overlay">
       <div className="swiper-wrapper">
         <Swiper
-          modules={[Navigation, Pagination, Scrollbar, A11y]} // Rimuovi Autoplay qui?
+          modules={[Navigation, Pagination, A11y]} // Rimuovi Autoplay qui?
           spaceBetween={10}
           slidesPerView={1}
           navigation
-          pagination={{ clickable: true }}
-          scrollbar={{ draggable: true }}
+          // pagination={{ clickable: true }}
+          // scrollbar={{ draggable: true }}
         >
           {watchConsigliati.map((watch) => (
             <SwiperSlide key={watch.id}>
@@ -38,9 +38,8 @@ const OutfitModal = ({ isVisible, watchConsigliati, onClose }) => {
                   className="watch-imageCarosel" 
                   onError={(e) => { e.target.src = "orologio_back.svg"; }}
                 />
-                <p style={{fontSize:"29px", marginBottom:"10px",marginTop:"25px", fontWeight:"bold"}}>{watch.name}</p>
+                <p style={{fontSize:"29px", marginBottom:"20px",marginTop:"35px", fontWeight:"bold"}}>{watch.name}</p>
                 <button className="funzioniButton" onClick={onClose}>Chiudi</button>
-                <div style={{margin:"40px"}}></div>
               </div>
             </SwiperSlide>
           ))}

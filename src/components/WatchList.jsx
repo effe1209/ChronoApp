@@ -89,7 +89,7 @@ const WatchList = ({
                   <img src="orologio_back.svg" alt="Default" className="watch-image"/>
                 )}
                 <div className="CaratteristicheCard">
-                  <h3 className="textCard" style={{padding:"20px"}}>{watch.name}</h3>
+                  <h3 className="textCard" style={{padding:"10px"}}>{watch.name}</h3>
                 </div>
                 
                 <div className="cardBottoni">
