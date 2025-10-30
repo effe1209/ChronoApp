@@ -1152,12 +1152,12 @@ input[type="checkbox"]:checked + .slider-v3::before {
   }
 
   .login-page .scroll2 {
-    top: 11rem;  /* Circa 112px */
+    top: 11.1rem;  /* Circa 112px */
     left: 0.2rem;
   }
 
   .login-page .scroll3 {
-    top: 8rem; /* Circa 40px */
+    top: 7.8rem; /* Circa 40px */
     left: 0.2rem;
   }
 
