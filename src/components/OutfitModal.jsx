@@ -38,7 +38,7 @@ const OutfitModal = ({ isVisible, watchConsigliati, onClose }) => {
                   className="watch-imageCarosel" 
                   onError={(e) => { e.target.src = "orologio_back.svg"; }}
                 />
-                <p style={{fontSize:"32px", margin:"20px", fontWeight:"bold"}}>{watch.name}</p>
+                <p style={{fontSize:"29px", marginBottom:"10px",marginTop:"25px", fontWeight:"bold"}}>{watch.name}</p>
                 <button className="funzioniButton" onClick={onClose}>Chiudi</button>
                 <div style={{margin:"40px"}}></div>
               </div>

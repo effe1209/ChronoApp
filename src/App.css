@@ -1474,6 +1474,14 @@ input::placeholder {
   justify-items: center;
 }
 
+.modal-overlay .swiper-wrapper .watch-card h3{
+  font-size: 29px;
+}
+
+.modal-overlay .swiper-wrapper .watch-card p{
+  font-size: 29px;
+}
+
 .swiper-wrapper .watch-card .watch-imageCarosel {
   max-height: 375px;
 }
