@@ -1600,7 +1600,7 @@ input::placeholder {
   /* Sovrascrive la larghezza per i telefoni */
   .infoView-statistiche .modal-content-statistiche {
     width: 90%; /* Usa il 90% della larghezza dello schermo */
-    max-width: 90%; /* Sovrascrive i 1000px */
+    max-width: 82%; /* Sovrascrive i 1000px */
     max-height: 800px;
   }
 
