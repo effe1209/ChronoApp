@@ -108,7 +108,7 @@ const ModifyWatchModal = ({
             <button
               type="button" 
               className="color-picker-button"
-              style={{ backgroundColor: updatedWatch.color || "#ffffff", border: "1px solid green" }}
+              style={{ backgroundColor: updatedWatch.color || "", border: "1px solid green" }}
               tabIndex="-1" 
             >
               🎨 Scegli un colore
@@ -117,7 +117,7 @@ const ModifyWatchModal = ({
               type="color"
               id="color-modify" // ID univoco
               className="color-input-overlay"
-              value={updatedWatch.color || '#ffffff'}
+              value={updatedWatch.color || ''}
               onChange={(e) => setUpdatedWatch({ ...updatedWatch, color: e.target.value })}
             />
             {updatedWatch.color && <p className="selected-color">Colore selezionato: {updatedWatch.color}</p>}

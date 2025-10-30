@@ -87,7 +87,7 @@ const AddWatchForm = ({
           <button
             type="button" 
             className="color-picker-button"
-            style={{ backgroundColor: newWatch.color || '#ffffff'}}
+            style={{ backgroundColor: newWatch.color || ''}}
             tabIndex="-1" 
           >
             🎨 Scegli un colore
@@ -96,7 +96,7 @@ const AddWatchForm = ({
             type="color"
             id="color"
             className="color-input-overlay"
-            value={newWatch.color || '#ffffff'}
+            value={newWatch.color || ''}
             onChange={(e) => setNewWatch({ ...newWatch, color: e.target.value })}
           />
           {newWatch.color && <p className="selected-color">Colore selezionato: {newWatch.color}</p>}
