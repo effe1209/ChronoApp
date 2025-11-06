@@ -2,13 +2,14 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
+// 1. Leggi le variabili d'ambiente (usiamo VITE_ perché usi Vite)
 const firebaseConfig = {
-  apiKey: "AIzaSyAQgWe34nInChUl8ZbOF9YiVJCjBzvo2cY",
-  authDomain: "chronoapp-53363.firebaseapp.com",
-  projectId: "chronoapp-53363",
-  storageBucket: "chronoapp-53363.firebasestorage.app",
-  messagingSenderId: "902735662769",
-  appId: "1:902735662769:web:1aac26ba94a78b6c455c90"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Inizializza Firebase
