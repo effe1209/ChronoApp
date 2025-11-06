@@ -1,12 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Questo file ha UNA responsabilità: creare ed esportare il client
-const supabaseUrl = "https://htopqijsvgaqjrvvgpjh.supabase.co";
+// 1. Leggi le variabili d'ambiente
+// Usiamo i prefissi di React (REACT_APP_) o Vite (VITE_)
+// Scegli quello che usi. Uso VITE_ come esempio:
 
-// --- ERRORE CORRETTO QUI ---
-// Era "HD256", è stato corretto in "HS256"
-const supabaseAnonKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0b3BxaWpzdmdhcWpydnZncGpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEwMjQyOTcsImV4cCI6MjA1NjYwMDI5N30.pVzMwoPz1VL3EikMUbDaBwA6X47ehZb2Wu-P9-wk2a0";
-// --- FINE CORREZIONE ---
+// const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+// const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// Se usi Create React App (CRA) al posto di Vite, la sintassi è:
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
