@@ -734,53 +734,42 @@ const fetchWatches = async (userid) => {
   const toggleTheme = () => setIsDark(!isDark);
 
   const floatingConfig = isDark 
-    ? {
-        bg: "#000000", // Sfondo nero
-        gradient: [], // Esempio: Rosso/Scuro (o usa i tuoi colori preferiti)
-        blend: "screen" // 'screen' fa brillare i colori su scuro
-      }
-    : {
-        bg: "#476d7ed6", // Sfondo bianco
-        gradient: ["#ff8ce2ff", "#77bebaff"], // Linee scure per vedersi sul bianco
-        blend: "screen" // 'multiply' o 'normal' serve per vedere linee scure su chiaro
-      };
+    ? {bg: "#000000", gradient: [],blend: "screen"}
+    : {bg: "#476d7ed6", gradient: ["#ff8ce2ff", "#77bebaff"], blend: "screen"};
+
+
+    const BackgroundLayer = useMemo(() => {
+      return (
+        <div style={{ 
+            position: 'fixed', 
+            top: 0, 
+            left: 0, 
+            width: '100%', 
+            height: '100%', 
+            zIndex: -1,
+            pointerEvents: 'auto',
+            backgroundColor: floatingConfig.bg, // Usa il colore configurato
+            transition: "background-color 0.3s ease"
+        }}>
+          <FloatingLines 
+            linesGradient={floatingConfig.gradient} // Usa il gradiente configurato
+            mixBlendMode={floatingConfig.blend}     // Usa il blend configurato
+            enabledWaves={['top', 'middle', 'bottom']}
+            lineCount={[5, 5, 5]}
+            lineDistance={[8, 6, 4]}
+            bendRadius={5.0}
+            bendStrength={-0.5}
+            interactive={false} // Se true, attenzione che il mouse potrebbe triggerare render
+            parallax={true}
+          />
+        </div>
+      );
+    }, [isDark, floatingConfig.bg, floatingConfig.blend]);
 
   // --- RENDER ---
   return (
     <>
-    {/* BACKGROUND LAYER:
-        Uso position: fixed per coprire l'intera viewport e zIndex: -1
-        per assicurarmi che stia dietro al contenuto. 
-    */}
-    <div style={{ 
-          position: 'fixed', 
-          top: 0, 
-          left: 0, 
-          width: '100%', 
-          height: '100%', 
-          zIndex: -1,
-          pointerEvents: 'auto',
-          // 1. CAMBIAMO LO SFONDO QUI
-          backgroundColor: floatingConfig.bg, 
-          transition: "background-color 0.3s ease" // Transizione fluida
-      }}>
-        <FloatingLines 
-          // 2. CAMBIAMO IL GRADIENTE DELLE LINEE
-          linesGradient={floatingConfig.gradient}
-
-          // 3. CAMBIAMO IL BLEND MODE (Cruciale per la visibilità)
-          mixBlendMode={floatingConfig.blend}
-
-          // ... altre proprietà invariate ...
-          enabledWaves={['top', 'middle', 'bottom']}
-          lineCount={[5, 5, 5]}
-          lineDistance={[8, 6, 4]}
-          bendRadius={5.0}
-          bendStrength={-0.5}
-          interactive={false}
-          parallax={true}
-        />
-      </div>
+    {BackgroundLayer}
 
     {/* MAIN CONTENT LAYER */}
     <div 
