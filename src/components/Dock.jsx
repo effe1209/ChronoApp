@@ -56,12 +56,12 @@ const Dock = ({
 
   const dockStyles = {
     display: 'flex',
-    backdropFilter: 'blur(10px)',
+    // backdropFilter: 'blur(10px)',
     borderRadius: '20px',
     position: 'sticky', 
     width: 'fit-content',
     zIndex: 1000,
-    boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.3)',
+    // boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.3)',
     listStyle: 'none',
     margin: 0,
     gap: '5px',

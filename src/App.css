@@ -252,13 +252,13 @@ select {
 .hour {
   position: absolute;
   height: 51px;
-  width: 3.07px;
+  width: 4.07px;
   margin: auto;
   top: -27%;
   left: 0;
   bottom: 0;
   right: 0;
-  background: white;
+  background: rgb(0, 0, 0);
   transform-origin: bottom center;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
   border-radius: 40%;
@@ -268,43 +268,61 @@ select {
 .minute {
   position: absolute;
   height: 66.32px;
-  width: 2.14px;
+  width: 3.14px;
   top: -38%;
   left: 0;
+
+
+
   box-shadow: 0 0 10 0 rgba(0, 0, 0, 0.4);
   transform: rotate(90deg);
 }
 
+.dark-mode .minute,
+.dark-mode .hour{
+  background: white;
+}
+
+
 .second {
   position: absolute;
   height: 72px;
-  width: 1.43px;
+  width: 2.43px;
   margin: auto;
   top: -40%;
   left: 0;
   bottom: 0;
   right: 0;
   border-radius: 4px;
-  background: #f56e00;
+  background: rgba(0, 123, 255, 0.8);
   transform-origin: bottom center;
   transform: rotate(180deg);
   z-index: 1;
 }
 
+.dark-mode .second {
+  background: #ffcc00;
+}
+
 .point {
   position: absolute;
-  height: 6.12px;
-  width: 6.12px;
+  height: 6.20px;
+  width: 6.20px;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   border-radius: 100px;
-  background: white;
-  border: 2px solid #1b1b1b;
+  background: rgb(0, 0, 0);
+  border: 2px solid rgba(0, 123, 255, 0.8);
   border-radius: 100px;
   margin: auto;
   z-index: 1;
+}
+
+.dark-mode .point {
+  background: #ffffff;
+  border: 2px solid #ffcc00;
 }
 
 .numbers {
@@ -316,7 +334,8 @@ select {
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: invert;
+  backdrop-filter:invert(1);
+  /* backdrop-filter: blur(20px); */
 }
 
 .number {
@@ -326,7 +345,7 @@ select {
   font-weight:bold;
   /* font-family: 'minork'; */
   font-family: 'ancient';
-  color: whitesmoke;
+  color: rgb(0, 0, 0);
   width: 30px;
   height: 30px;
   text-align: center;
@@ -339,23 +358,37 @@ select {
   justify-content:center;
 }
 
+.dark-mode .number {
+  color: rgb(255, 255, 255);
+}
+
+.dark-mode  .numbers {
+  backdrop-filter: none;
+}
+
 
 .dot {
   position: absolute;
-  width: 3px; /* Dimensione del puntino */
-  height: 3px;
+  width: 3.5px; /* Dimensione del puntino */
+  height: 3.5px;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   display: flex;
   text-align: center;
-  background-color: rgb(255, 255, 255); /* Colore dei puntini */
+  background-color: rgb(0, 0, 0); /* Colore dei puntini */
   border: white;
   margin: auto;
   z-index: 1;
   border-radius: 100%;
 }
+
+.dark-mode .dot {
+  background-color: rgb(255, 255, 255);
+}
+
+
 
 .selectMenu {
   display: "flex";

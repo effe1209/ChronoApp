@@ -778,6 +778,12 @@ const fetchWatches = async (userid) => {
       style={{ position: 'relative', zIndex: 1 }} // Assicuro che il contenuto stia sopra
     >
       <div className="slideWrap_Container">
+        <GlassSurface 
+          width={100} 
+          height={60}
+          borderRadius={20}
+          className="my-custom-class"
+        >
         <DarkModeSwitch 
           isDark={isDark}       // Passiamo il valore
           toggleTheme={toggleTheme} // Passiamo la funzione per cambiarlo
@@ -786,7 +792,14 @@ const fetchWatches = async (userid) => {
           onAddWatchToggle={() => setShowForm(!showForm)}
           isFormVisible={showForm}
         />
+        </GlassSurface>
         {user && (
+          <GlassSurface 
+          width={350} 
+          height={60}
+          borderRadius={20}
+          className="my-custom-class"
+        >
           <Dock 
             items={items}
             activeSection={activeSection} 
@@ -797,6 +810,7 @@ const fetchWatches = async (userid) => {
             baseItemSize={50}
             magnification={70}
           />
+          </GlassSurface>
         )}
         </div>
       <div id="home-section">
