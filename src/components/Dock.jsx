@@ -73,7 +73,7 @@ const Dock = ({
   };
 
   const tooltipStyles = {
-    fontFamily: 'sans-serif', position: 'absolute', top: '-30px', 
+    fontFamily: 'sans-serif', position: 'absolute', top: '-15px', 
     backgroundColor: 'rgba(255, 255, 255, 0.9)', color: 'black',
     padding: '4px 8px', borderRadius: '6px', fontSize: '12px', pointerEvents: 'none',
     whiteSpace: 'nowrap', zIndex: 1010, fontWeight: '600', boxShadow: '0 2px 5px rgba(0,0,0,0.2)', fontFamily: 'minork', fontStyle: 'italic'

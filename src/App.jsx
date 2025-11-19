@@ -5,6 +5,7 @@ import { addWatchService } from './components/watchService';
 import AuthForm from './components/AuthForm';
 import WatchAnalytics from './components/WatchAnalytics'; 
 import GlassSurface from './components/GlassSurface';
+import TiltedCard from './components/TiltedCard';
 
 // Importa i componenti dock e le icone VSC
 import Dock from './components/Dock'; 

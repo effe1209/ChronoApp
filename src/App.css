@@ -134,9 +134,9 @@
 
 .watch-image {
   width: 100%;
-  max-width: 200px;
+  max-width: 294px;
   height: auto;
-  max-height: 200px; /* Limita l'altezza massima a 300px */
+  max-height: 294px; /* Limita l'altezza massima a 294px */
   border-radius: 10px;
   object-fit: cover;
 }
@@ -1767,7 +1767,7 @@ input::placeholder {
   height: 40px;
   display: flex;
   position: sticky;
-  top: 10px;
+  top: 20px;
   z-index: 1000;
   border-radius: 20px;
   padding: 10px;

@@ -52,8 +52,6 @@ body {
   /* background: rgb(250, 214, 214); */
   background-color: rgba(0, 0, 0, 0.6);
   padding: 15px;
-
-  border-radius: 10px;
   text-align: center;
 }
 
@@ -190,14 +188,14 @@ h3{
   background-color: rgba(225, 225, 225, 0.8);
   padding: 15px;
 
-  border-radius: 10px;
+  border-radius: 15px;
   text-align: center;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   /*width: 85%;*/
   display: grid;
   position: relative;
 
-  max-width: 286.06px;
+  max-width: 299px;
 }
 
 .watch-card.carousel-card {
@@ -325,6 +323,7 @@ h4 {
   top: 10px;    /* Distanza dal bordo superiore */
   right: 10px;  /* Distanza dal bordo destro */
   padding: 3.4px;
+  z-index: 100
 }
 
 /* * ----------------------------------------------------
