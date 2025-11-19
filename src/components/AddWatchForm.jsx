@@ -87,7 +87,7 @@ const AddWatchForm = ({
           <button
             type="button" 
             className="color-picker-button"
-            style={{ backgroundColor: newWatch.color || '#ffffff'}}
+            style={{ backgroundColor: newWatch.color}}
             tabIndex="-1" 
           >
             🎨 Scegli un colore
