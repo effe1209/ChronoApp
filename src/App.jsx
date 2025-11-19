@@ -937,12 +937,11 @@ const fetchWatches = async (userid) => {
             setIsVisible={setIsStatisticheVisible}
             watches={watches}
           />
-          
-          <InfoWatchModal
-            isVisible={isInfoVisible}
-            setIsVisible={setIsInfoVisible}
-            selectedWatch={selectedWatch}
-          />
+            <InfoWatchModal
+              isVisible={isInfoVisible}
+              setIsVisible={setIsInfoVisible}
+              selectedWatch={selectedWatch}
+            />
     </div>
     </>
   );

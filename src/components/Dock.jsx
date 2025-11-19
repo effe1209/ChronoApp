@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { BiFontSize } from 'react-icons/bi';
 import { RxFontStyle } from 'react-icons/rx';
 import { VscSignOut, VscAdd } from 'react-icons/vsc';
 
@@ -73,10 +74,7 @@ const Dock = ({
   };
 
   const tooltipStyles = {
-    fontFamily: 'sans-serif', position: 'absolute', top: '-15px', 
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', color: 'black',
-    padding: '4px 8px', borderRadius: '6px', fontSize: '12px', pointerEvents: 'none',
-    whiteSpace: 'nowrap', zIndex: 1010, fontWeight: '600', boxShadow: '0 2px 5px rgba(0,0,0,0.2)', fontFamily: 'minork', fontStyle: 'italic'
+    color: 'white', whiteSpace: 'nowrap', zIndex: 1010, fontWeight: '600', fontFamily: 'minork', fontStyle: 'italic', BiFontSize: '2px', fontSize: '16px', right:'10px'
   };
 
   return (
@@ -103,7 +101,7 @@ const Dock = ({
 
         return (
           <li key={item.label} style={itemWrapperStyles}>
-            {showTooltip && <div style={tooltipStyles}>{item.label}</div>}
+            
             <div style={iconStyles} onClick={item.onClick} aria-label={item.label}>
               {React.cloneElement(item.icon, { size: (isMobile ? baseItemSize * 0.5 : size * 0.5) })}
             </div>
