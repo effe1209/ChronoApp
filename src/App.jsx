@@ -470,7 +470,7 @@ const fetchWatches = async (userid) => {
         ...watch,
         caratteristiche: features,
         // NON chiamare getPublicUrl. Usa 'watch.image' direttamente
-        imageUrl: getPublicUrl(watch.image) // <-- RICORDA: CHIAMIAMO L'HELPER QUI!
+        imageUrl: watch.image 
       };
     });
 
@@ -778,6 +778,13 @@ const fetchWatches = async (userid) => {
       style={{position: 'relative'}} // *** FIX: aggiunto per position absolute del Dock ***
     >
       <div className="slideWrap_Container">
+        {/* DarkModeSwitch rimane come switch in alto a destra */}
+        <DarkModeSwitch 
+          isUserLoggedIn={!!user} // Non usa più queste prop, ma le lascio per stabilità
+          onLogout={handleLogout} 
+          onAddWatchToggle={() => setShowForm(!showForm)}
+          isFormVisible={showForm}
+        />
         {user && (
         <Dock 
             items={items}
@@ -785,18 +792,12 @@ const fetchWatches = async (userid) => {
             baseItemSize={50}
             magnification={70}
             activeSection={activeSection} 
+            onSectionChange={setActiveSection} // <--- IMPORTANTE: La funzione setState
             onLogout={handleLogout}
             onAddWatchToggle={() => setShowForm(!showForm)}
             isFormVisible={showForm}
           />
         )}
-        {/* DarkModeSwitch rimane come switch in alto a destra */}
-        <DarkModeSwitch 
-          isUserLoggedIn={!!user} // Non usa più queste prop, ma le lascio per stabilità
-          onLogout={handleLogout} 
-          onAddWatchToggle={() => setShowForm(!showForm)} 
-          isFormVisible={showForm}
-        />
         </div>
       
       <Clock /> {/* Componente Orologio */}
