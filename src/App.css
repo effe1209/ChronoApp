@@ -534,7 +534,7 @@ select {
 .functionButton button {
   margin-top: 20px;
   padding: 10px 15px;
-  background-color: #007bff;
+  background-color: rgba(0, 123, 255, 0.8);
   color: white;
   border: none;
   border-radius: 20px;

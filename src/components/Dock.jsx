@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { RxFontStyle } from 'react-icons/rx';
 import { VscSignOut, VscAdd } from 'react-icons/vsc';
 
 const Dock = ({ 
@@ -72,10 +73,10 @@ const Dock = ({
   };
 
   const tooltipStyles = {
-    fontFamily: 'sans-serif', position: 'absolute', top: '-35px', 
+    fontFamily: 'sans-serif', position: 'absolute', top: '-30px', 
     backgroundColor: 'rgba(255, 255, 255, 0.9)', color: 'black',
     padding: '4px 8px', borderRadius: '6px', fontSize: '12px', pointerEvents: 'none',
-    whiteSpace: 'nowrap', zIndex: 1010, fontWeight: '600', boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+    whiteSpace: 'nowrap', zIndex: 1010, fontWeight: '600', boxShadow: '0 2px 5px rgba(0,0,0,0.2)', fontFamily: 'minork', fontStyle: 'italic'
   };
 
   return (
@@ -94,7 +95,7 @@ const Dock = ({
           transition: 'width 0.2s, height 0.2s',
           cursor: 'pointer', borderRadius: '15px',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          backgroundColor: isActive ? 'rgba(0, 123, 255, 0.8)' : 'transparent', // Blu più deciso
+          backgroundColor: isActive ? 'rgba(0, 123, 255, 0.6)' : 'transparent', // Blu più deciso
           color: 'white',
         };
 
