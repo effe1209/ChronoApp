@@ -87,31 +87,72 @@ function App() {
   const [modalTitle, setModalTitle] = useState(""); 
   const [color, setColor] = useState("");
   const [isCarouselVisible, setIsCarouselVisible] = useState(false);
-  // NUOVO STATO: per tenere traccia della sezione attiva per il Dock
+
+  // --- NUOVO: Stato per tracciare la sezione attiva nel Dock ---
   const [activeSection, setActiveSection] = useState('Home'); 
 
-
-  // Variabile per Dock: Definiamo le azioni per ogni icona
+  // --- NUOVO: Configurazione Elementi del Dock ---
+  // Definiamo qui gli items per poter passare la funzione di scroll specifica
   const items = [
-    { icon: <VscHome size={18} />, label: 'Home', onClick: () => {
-      document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
-      setActiveSection('Home'); // Aggiorna lo stato
-    } },
-    { icon: <VscArchive size={18} />, label: 'Watches', onClick: () => {
-      document.getElementById('watch-list').scrollIntoView({ behavior: 'smooth' });
-      setActiveSection('Watches'); // Aggiorna lo stato
-    } },
-    { icon: <VscAccount size={18} />, label: 'Profile', onClick: () => {
-      document.getElementById('profile-section').scrollIntoView({ behavior: 'smooth' });
-      setActiveSection('Profile'); // Aggiorna lo stato
-    } },
-    { icon: <VscSettingsGear size={18} />, label: 'Functions', onClick: () => {
-      document.getElementById('function').scrollIntoView({ behavior: 'smooth' });
-      setActiveSection('Functions'); // Aggiorna lo stato
-    } },
+    { icon: <VscHome size={18} />, label: 'Home', onClick: () => scrollToSection('home-section') },
+    { icon: <VscAccount size={18} />, label: 'Profile', onClick: () => scrollToSection('profile-section') },
+    { icon: <VscSettingsGear size={18} />, label: 'Functions', onClick: () => scrollToSection('function-section') },
+    { icon: <VscArchive size={18} />, label: 'Watches', onClick: () => scrollToSection('watch-list-section') },
   ];
 
-  // --- LOGICA EFFETTI COLLATERALI (useEffect, useLayoutEffect) ---
+  // --- NUOVO: Helper per lo Scroll Fluido ---
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Aggiorniamo manualmente lo stato per feedback visivo immediato sul Dock
+      const labelMap = {
+        'home-section': 'Home',
+        'watch-list-section': 'Watches',
+        'profile-section': 'Profile',
+        'function-section': 'Functions'
+      };
+      setActiveSection(labelMap[id]);
+    }
+  };
+
+  useEffect(() => {
+    if (!user) return;
+
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          // Mappiamo l'ID della sezione alla label del Dock
+          if (id === 'home-section') setActiveSection('Home');
+          if (id === 'profile-section') setActiveSection('Profile');
+          if (id === 'function-section') setActiveSection('Functions');
+          if (id === 'watch-list-section') setActiveSection('Watches');
+        }
+      });
+    };
+
+    const observerOptions = {
+      root: null,
+      // rootMargin definisce la "zona attiva". 
+      // '-20% ...' significa che la sezione si attiva quando entra bene nello schermo,
+      // evitando che si attivi appena appare un pixel dal basso.
+      rootMargin: '-20% 0px -60% 0px', 
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    
+    // Diciamo all'observer di guardare i nostri wrapper (definiti nel return)
+    const sections = ['home-section', 'profile-section', 'function-section', 'watch-list-section'];
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [user, watches]); // Ricalcoliamo se cambia l'utente o la lista orologi si allunga
+
 
   // Effetti di scroll e anchor link (ora dentro React)
   useEffect(() => {
@@ -143,13 +184,6 @@ function App() {
             }
         });
     }, { threshold: 0.5 }); // Quando il 50% della sezione è visibile
-    
-    // Osserva le sezioni principali
-    ['home', 'profile-section', 'watch-list', 'function'].forEach(id => {
-        const element = document.getElementById(id);
-        if (element) observer.observe(element);
-    });
-
 
     // Gestore per scroll blur
     let timeout;
@@ -786,30 +820,30 @@ const fetchWatches = async (userid) => {
           isFormVisible={showForm}
         />
         {user && (
-        <Dock 
+          <Dock 
             items={items}
-            panelHeight={68}
-            baseItemSize={50}
-            magnification={70}
-            activeSection={activeSection} 
-            onSectionChange={setActiveSection} // <--- IMPORTANTE: La funzione setState
+            activeSection={activeSection} // Passiamo lo stato attivo calcolato
             onLogout={handleLogout}
             onAddWatchToggle={() => setShowForm(!showForm)}
             isFormVisible={showForm}
+            panelHeight={68}
+            baseItemSize={50}
+            magnification={70}
           />
         )}
         </div>
+      <div id="home-section">
+        <Clock /> {/* Componente Orologio */}
       
-      <Clock /> {/* Componente Orologio */}
-      
-      {/* Componenti Scrolling Brands */}
-      <ScrollingBrands1 />
-      <ScrollingBrands2 />
-      <ScrollingBrands3 />
+        {/* Componenti Scrolling Brands */}
+        <ScrollingBrands1 />
+        <ScrollingBrands2 />
+        <ScrollingBrands3 />
 
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        <div className="titleList" style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "center" }}>
-          <h1>La mia collezione di orologi</h1>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+          <div className="titleList" style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "center" }}>
+            <h1>La mia collezione di orologi</h1>
+          </div>
         </div>
       </div>
 
@@ -838,8 +872,6 @@ const fetchWatches = async (userid) => {
             <h4 className="Saluti">Benvenuto, {nickname}</h4>
             <p style={{ fontSize: "20px", paddingBottom: "20px"}}>Valore: {totalMoney.toLocaleString('it-IT')} €</p>
            </div>
-           
-          {/* Vecchio profile-log (bottoni) rimosso/spostato */}
 
           {/* Componente Form Aggiungi */}
           <AddWatchForm
@@ -862,14 +894,16 @@ const fetchWatches = async (userid) => {
             <hr className="custom-separator" />
           </div>
           
-          <h2 style={{paddingBottom:"2%"}} id="function">Funzioni</h2>
+          <div id="function-section">
+            <h2 style={{paddingBottom:"2%"}} id="function">Funzioni</h2>
           
-          {/* Componente Sezione Funzioni */}
-          <FunctionsSection
-            onDayWatchClick={() => handleDayWatch(user.id)}
-            onOutfitImageChange={handleImageUpload}
-            fileInputRefOutfit={fileInputRefOutfit}
-          />
+            {/* Componente Sezione Funzioni */}
+            <FunctionsSection
+              onDayWatchClick={() => handleDayWatch(user.id)}
+              onOutfitImageChange={handleImageUpload}
+              fileInputRefOutfit={fileInputRefOutfit}
+            />
+          </div>
 
           {/* Componenti Modali */}
           <OutfitModal
@@ -910,15 +944,17 @@ const fetchWatches = async (userid) => {
           <h2 id="watch-list">Lista Orologi</h2> {/* Aggiunto ID per il Dock */}
           
           {/* Componente Lista Orologi */}
-          <WatchList 
-            watches={watches} 
-            handleModifyWatch={handleModifyWatch} // Passa l'oggetto watch
-            handleDeleteWatch={handleDeleteWatch}
-            handleFavoriteToggle={handleFavoriteToggle}
-            handleInfoWatch={handleInfoWatch} // Passa l'oggetto watch
-            handleShowStats={handleShowStats}
-            user={user} // Necessario per i bottoni? No, App gestisce la logica
-          />
+          <div id="watch-list-section">
+            <WatchList 
+              watches={watches} 
+              handleModifyWatch={handleModifyWatch} // Passa l'oggetto watch
+              handleDeleteWatch={handleDeleteWatch}
+              handleFavoriteToggle={handleFavoriteToggle}
+              handleInfoWatch={handleInfoWatch} // Passa l'oggetto watch
+              handleShowStats={handleShowStats}
+              user={user} // Necessario per i bottoni? No, App gestisce la logica
+            />
+          </div>
         </>
       )}
       {/* Altri Componenti Modali */}
