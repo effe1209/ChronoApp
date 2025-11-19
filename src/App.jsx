@@ -7,6 +7,7 @@ import WatchAnalytics from './components/WatchAnalytics';
 import GlassSurface from './components/GlassSurface';
 import TiltedCard from './components/TiltedCard';
 import FloatingLines from './components/FloatingLines';
+import CircularText from './components/CircularText';
 
 // Importa i componenti dock e le icone VSC
 import Dock from './components/Dock'; 
@@ -795,7 +796,7 @@ const fetchWatches = async (userid) => {
         </GlassSurface>
         {user && (
           <GlassSurface 
-          width={350} 
+          width="min(350px, 30vw)"
           height={60}
           borderRadius={20}
           className="my-custom-class"
@@ -845,9 +846,19 @@ const fetchWatches = async (userid) => {
         />
       ) : (
         <>
-          <div className="profile-info" id="profile-section"> 
-            <div className="profile-picture">
-                <UserProfile email={email} />
+          <div className="profile-info" id="profile-section">
+            <div className="circular-text-container">
+              <CircularText
+                text={`${email} • `}
+                onHover="speedUp"
+                spinDuration={20}
+                className="custom-class"
+                position="absolute"
+                fontSize={14}
+              />
+              <div className="profile-picture">
+                  <UserProfile email={email} />
+              </div>
             </div>
             <h4 className="Saluti">Benvenuto, {nickname}</h4>
             <p style={{ fontSize: "20px", paddingBottom: "20px"}}>Valore: {totalMoney.toLocaleString('it-IT')} €</p>

@@ -1293,6 +1293,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   /* justify-self: center;
   margin-bottom: 2%; */
   margin-bottom: 2%; /* Questo lo avevi già */
+  position: absolute;
 }
 
 .profile-info {
@@ -1808,4 +1809,13 @@ input::placeholder {
   padding: 10px;
   align-items: center;
   justify-content: space-between;
+}
+
+.circular-text-container {
+  position: relative;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
 }
