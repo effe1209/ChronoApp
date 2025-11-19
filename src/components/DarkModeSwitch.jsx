@@ -1,45 +1,31 @@
 import React, { useState, useEffect } from 'react';
 
-// Gestisce sia il dark mode che il menu hamburger mobile
+// Rimosse importazioni VscSignOut, VscAdd
+// Il componente ora si occupa SOLO dello switch Dark Mode.
 function DarkModeSwitch() {
   const [isDark, setIsDark] = useState(
-    () => localStorage.getItem("theme") === "dark" // Usa una funzione per leggere solo all'inizio
+    // Legge il tema salvato all'avvio
+    () => localStorage.getItem("theme") === "dark" 
   );
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
+    // Applica o rimuove la classe 'dark-mode' al body
     if (isDark) {
       document.body.classList.add("dark-mode");
-      document.documentElement.setAttribute("style", "color-scheme:dark");
+      // Importante per il comportamento nativo di alcuni browser
+      document.documentElement.setAttribute("style", "color-scheme:dark"); 
       localStorage.setItem("theme", "dark");
     } else {
       document.body.classList.remove("dark-mode");
       document.documentElement.setAttribute("style", "color-scheme:light");
       localStorage.setItem("theme", "light");
     }
-  }, [isDark]); // Esegui solo quando isDark cambia
-
-  // Chiudi il menu quando si fa clic su un link
-  const handleLinkClick = () => {
-    setMenuOpen(false);
-  };
+  }, [isDark]); // Esegue il side effect solo quando isDark cambia
 
   return (
-    <div className="slideWrap">
-      {/* Pulsante Hamburger per il Mobile */}
-      <button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
-        {menuOpen ? '✕' : '☰'}
-      </button>
-
-      {/* Menu di Navigazione */}
-      <div className={`menu ${menuOpen ? "open" : ""}`}>
-        <nav>
-          <a href="#home" onClick={handleLinkClick}>Home</a>
-          <a href="#function" onClick={handleLinkClick}>Funzioni</a>
-          <a href="#listWatch" onClick={handleLinkClick}>Lista Orologi</a>
-        </nav>
-      </div>
-
+    // Ho spostato la classe slideWrap nello style={controlStyle}
+    
+    <div className="slideWrap"  >
       {/* Switch Dark Mode */}
       <input
         type="checkbox"
@@ -53,4 +39,3 @@ function DarkModeSwitch() {
 }
 
 export default DarkModeSwitch;
-

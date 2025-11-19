@@ -1,9 +1,16 @@
-import { useState, useEffect, useRef, useTransition, useLayoutEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef, useTransition, useLayoutEffect, useMemo } from "react";
 // Import Supabase e servizi (invariati)
 import { supabase } from './components/supabaseClient';
 import { addWatchService } from './components/watchService';
 import AuthForm from './components/AuthForm';
-import WatchAnalytics from './components/WatchAnalytics'; // Già un componente!
+import WatchAnalytics from './components/WatchAnalytics'; 
+import GlassSurface from './components/GlassSurface';
+
+// Importa i componenti dock e le icone VSC
+import Dock from './components/Dock'; 
+// *** FIX IMPORT DELLE ICONE VSC ***
+import { VscHome, VscArchive, VscAccount, VscSettingsGear } from 'react-icons/vsc';
+
 
 // Import dei nuovi componenti creati
 import UserProfile from './components/UserProfile';
@@ -80,6 +87,29 @@ function App() {
   const [modalTitle, setModalTitle] = useState(""); 
   const [color, setColor] = useState("");
   const [isCarouselVisible, setIsCarouselVisible] = useState(false);
+  // NUOVO STATO: per tenere traccia della sezione attiva per il Dock
+  const [activeSection, setActiveSection] = useState('Home'); 
+
+
+  // Variabile per Dock: Definiamo le azioni per ogni icona
+  const items = [
+    { icon: <VscHome size={18} />, label: 'Home', onClick: () => {
+      document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
+      setActiveSection('Home'); // Aggiorna lo stato
+    } },
+    { icon: <VscArchive size={18} />, label: 'Watches', onClick: () => {
+      document.getElementById('watch-list').scrollIntoView({ behavior: 'smooth' });
+      setActiveSection('Watches'); // Aggiorna lo stato
+    } },
+    { icon: <VscAccount size={18} />, label: 'Profile', onClick: () => {
+      document.getElementById('profile-section').scrollIntoView({ behavior: 'smooth' });
+      setActiveSection('Profile'); // Aggiorna lo stato
+    } },
+    { icon: <VscSettingsGear size={18} />, label: 'Functions', onClick: () => {
+      document.getElementById('function').scrollIntoView({ behavior: 'smooth' });
+      setActiveSection('Functions'); // Aggiorna lo stato
+    } },
+  ];
 
   // --- LOGICA EFFETTI COLLATERALI (useEffect, useLayoutEffect) ---
 
@@ -95,6 +125,31 @@ function App() {
       }
     };
     anchors.forEach(anchor => anchor.addEventListener("click", handleClick));
+    
+    // NUOVA LOGICA: Aggiorna activeSection in base allo scroll (rudimentale ma funzionale)
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                // Prende l'ID della sezione visibile
+                const sectionId = entry.target.id; 
+                // Mappa ID a nome Dock
+                const dockName = {
+                    'home': 'Home',
+                    'profile-section': 'Profile',
+                    'watch-list': 'Watches',
+                    'function': 'Functions'
+                }[sectionId] || activeSection; 
+                setActiveSection(dockName);
+            }
+        });
+    }, { threshold: 0.5 }); // Quando il 50% della sezione è visibile
+    
+    // Osserva le sezioni principali
+    ['home', 'profile-section', 'watch-list', 'function'].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) observer.observe(element);
+    });
+
 
     // Gestore per scroll blur
     let timeout;
@@ -103,15 +158,17 @@ function App() {
       if (!slideWrap) return;
 
       if (window.scrollY > 30) {
-        slideWrap.style.backdropFilter = "blur(25px)";
+        slideWrap.style.backdropFilter = "blur(10px)";
       } else {
-        slideWrap.style.backdropFilter = "none";
+        // slideWrap.style.backdropFilter = "none";
+        slideWrap.style.backdropFilter = "blur(10px)";
       }
 
       clearTimeout(timeout);
       timeout = setTimeout(() => {
         if (window.scrollY === 0) {
-          slideWrap.style.backdropFilter = "none";
+          // slideWrap.style.backdropFilter = "none";
+          slideWrap.style.backdropFilter = "blur(10px)";
         }
       }, 200);
     };
@@ -121,9 +178,11 @@ function App() {
     return () => {
       anchors.forEach(anchor => anchor.removeEventListener("click", handleClick));
       window.removeEventListener("scroll", handleScroll);
+      observer.disconnect(); // Disconnette l'osservatore
       clearTimeout(timeout);
     };
-  }, []); // Eseguiti solo al mount
+  }, [activeSection]); // Aggiunto activeSection per evitare loop nell'observer
+
 
   useLayoutEffect(() => {
     console.log("Layout watches ricalcolato prima del paint.");
@@ -263,26 +322,6 @@ function App() {
     setNickname('');
   };
 
-  // const handleAddWatch = async () => {
-  //   const stateOptions = {
-  //     newWatch,
-  //     user,
-  //     setLoading,
-  //     setWatches,
-  //     setNewWatch,
-  //     setMessage,
-  //     fetchWatches, // Passa la funzione di fetch per ricaricare
-  //   };
-  //   // Il servizio gestirà la logica e il reset del form
-  //   await addWatchService(stateOptions);
-  //   // Resetta lo stato della UI del form
-  //   handleCancel(); 
-  // };
-  
-  // Funzione helper per upload
-  
-  // Dentro App.jsx
-
 const handleAddWatch = async () => {
   // 1. Prepara le opzioni per il servizio
   const stateOptions = {
@@ -371,6 +410,8 @@ const handleAddWatch = async () => {
   };
 
   const handleDeleteWatch = async (id, imagePath) => {
+    // IMPORTANTE: DEVI USARE UN MODAL QUI, window.confirm NON FUNZIONA NEI PROGETTI GOOGLE.
+    // Usiamo window.confirm solo come placeholder per questo esercizio.
     const isConfirmed = window.confirm("Sei sicuro di voler eliminare questo orologio?");
     if (!isConfirmed) return;
     
@@ -390,8 +431,6 @@ const handleAddWatch = async () => {
       setMessage("Errore durante l'eliminazione: " + error.message);
     }
   };
-
-// Questo codice va in App.jsx
 
 // 1. PRIMA, definisci una funzione helper per generare l'URL
 //    (Assicurati che 'supabase' sia definito e accessibile)
@@ -431,7 +470,7 @@ const fetchWatches = async (userid) => {
         ...watch,
         caratteristiche: features,
         // NON chiamare getPublicUrl. Usa 'watch.image' direttamente
-        imageUrl: watch.image 
+        imageUrl: getPublicUrl(watch.image) // <-- RICORDA: CHIAMIAMO L'HELPER QUI!
       };
     });
 
@@ -736,8 +775,29 @@ const fetchWatches = async (userid) => {
     <div 
       className={`container ${!user ? 'login-page' : ''}`} 
       id="home"
+      style={{position: 'relative'}} // *** FIX: aggiunto per position absolute del Dock ***
     >
-      <DarkModeSwitch />
+      <div className="slideWrap_Container">
+        {user && (
+        <Dock 
+            items={items}
+            panelHeight={68}
+            baseItemSize={50}
+            magnification={70}
+            activeSection={activeSection} 
+            onLogout={handleLogout}
+            onAddWatchToggle={() => setShowForm(!showForm)}
+            isFormVisible={showForm}
+          />
+        )}
+        {/* DarkModeSwitch rimane come switch in alto a destra */}
+        <DarkModeSwitch 
+          isUserLoggedIn={!!user} // Non usa più queste prop, ma le lascio per stabilità
+          onLogout={handleLogout} 
+          onAddWatchToggle={() => setShowForm(!showForm)} 
+          isFormVisible={showForm}
+        />
+        </div>
       
       <Clock /> {/* Componente Orologio */}
       
@@ -770,7 +830,7 @@ const fetchWatches = async (userid) => {
         />
       ) : (
         <>
-          <div className="profile-info">
+          <div className="profile-info" id="profile-section"> {/* Aggiunto ID per il Dock */}
             <div className="profile-picture">
                 <UserProfile email={email} />
             </div>
@@ -778,20 +838,7 @@ const fetchWatches = async (userid) => {
             <p style={{ fontSize: "20px", paddingBottom: "20px"}}>Valore: {totalMoney.toLocaleString('it-IT')} €</p>
            </div>
            
-          <div className="profile-log">
-            <div className="buttonForm" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
-              <button className="logout-btn" onClick={handleLogout}>
-                Logout
-              </button>
-              <span className="decorative-symbol">✦</span>
-              <button
-                onClick={() => setShowForm(!showForm)}
-                style={{ width: "200px", padding: "10px", paddingButtom: "10px",}}
-              >
-                {showForm ? "Nascondi Form" : "Aggiungi Orologio"}
-              </button>
-            </div> 
-          </div>
+          {/* Vecchio profile-log (bottoni) rimosso/spostato */}
 
           {/* Componente Form Aggiungi */}
           <AddWatchForm
@@ -859,7 +906,7 @@ const fetchWatches = async (userid) => {
             handleSaveChanges={handleSaveChanges}
           />
 
-          <h2>Lista Orologi</h2>
+          <h2 id="watch-list">Lista Orologi</h2> {/* Aggiunto ID per il Dock */}
           
           {/* Componente Lista Orologi */}
           <WatchList 
@@ -885,6 +932,7 @@ const fetchWatches = async (userid) => {
             setIsVisible={setIsInfoVisible}
             selectedWatch={selectedWatch}
           />
+          
     </div>
   );
 }
