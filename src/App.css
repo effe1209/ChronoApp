@@ -888,7 +888,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   position:absolute;
   z-index: -1;
   height: auto;
-  top:5.7%;
+  top:133px;
   left: 0.8%;
 }
 
@@ -920,7 +920,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   position: absolute;
   z-index: -1;
   height: auto;
-  top:8.5%;
+  top:179px;
   left: 0.8%;
 }
 
@@ -953,7 +953,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   position:absolute;
   z-index: -1;
   height: auto;
-  top:5.4%;
+  top:103px;
   left: 0.8%;
   transition: 0.5s;
 }
@@ -977,17 +977,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   transition: 0.5s;
 }
 
-.login-page .scroll {
-  top: 15%; /* <-- NUOVO VALORE (esempio) */
-}
 
-.login-page .scroll2 {
-  top: 20%; /* <-- NUOVO VALORE (esempio) */
-}
-
-.login-page .scroll3 {
-  top: 12.5%; /* <-- NUOVO VALORE (esempio) */
-}
 
 
 /*-----------------------------------------------------------*/
@@ -1125,17 +1115,17 @@ input[type="checkbox"]:checked + .slider-v3::before {
 @media (max-width: 750px) {
 
   .scroll {
-    top:4%;
+    top:140px;
     width: 97%;
     left: 1%;
   }
   .scroll2 {
-    top:5.5%;
+    top:183px;
     width: 97%;
     left: 1%;
   }
   .scroll3 {
-    top:3.9%;
+    top:132px;
     width: 97%;
     left: 1%;
   }
@@ -1154,6 +1144,18 @@ input[type="checkbox"]:checked + .slider-v3::before {
 
   .dark-mode .scroll3 div{
     margin-top: 20%;
+  }
+
+  .login-page .scroll {
+    top: 13%; /* <-- NUOVO VALORE (esempio) */
+  }
+
+  .login-page .scroll2 {
+    top: 17%; /* <-- NUOVO VALORE (esempio) */
+  }
+
+  .login-page .scroll3 {
+    top: 12%; /* <-- NUOVO VALORE (esempio) */
   }
 }
 
