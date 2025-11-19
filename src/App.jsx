@@ -969,7 +969,6 @@ const fetchWatches = async (userid) => {
             setIsVisible={setIsInfoVisible}
             selectedWatch={selectedWatch}
           />
-          
     </div>
   );
 }
