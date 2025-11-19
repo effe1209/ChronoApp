@@ -99,13 +99,18 @@ body {
   
   border-radius: 20px;
   /* background-color: rgba(255, 255, 255, 0.45); */
-  background-color: rgba(188, 160, 192, 0.45);
+  background-color: rgba(180, 188, 212, 0.45);
   font-size: 19px;
   
   
   /* background-color: rgba(255, 255, 255, 0.45); */
   box-shadow: 0 0 10px 1px rgba(0 0 0 0.25);
   backdrop-filter: blur(15px);
+}
+
+.dark-mode .container {
+  /* background-color: rgba(58, 58, 58, 0.80); */
+  background-color: #bca0c073;
 }
 
 @font-face {

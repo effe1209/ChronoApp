@@ -713,6 +713,37 @@ const fetchWatches = async (userid) => {
     });
   };
 
+  const [isDark, setIsDark] = useState(
+    () => localStorage.getItem("theme") === "dark" 
+  );
+
+  // 2. PORTA QUI L'EFFETTO (SIDE EFFECT)
+  useEffect(() => {
+    if (isDark) {
+      document.body.classList.add("dark-mode");
+      document.documentElement.setAttribute("style", "color-scheme:dark"); 
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark-mode");
+      document.documentElement.setAttribute("style", "color-scheme:light");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDark]);
+
+  // Funzione helper per cambiare stato (opzionale, ma pulita)
+  const toggleTheme = () => setIsDark(!isDark);
+
+  const floatingConfig = isDark 
+    ? {
+        bg: "#000000", // Sfondo nero
+        gradient: [], // Esempio: Rosso/Scuro (o usa i tuoi colori preferiti)
+        blend: "screen" // 'screen' fa brillare i colori su scuro
+      }
+    : {
+        bg: "#476d7ed6", // Sfondo bianco
+        gradient: ["#ff8ce2ff", "#77bebaff"], // Linee scure per vedersi sul bianco
+        blend: "screen" // 'multiply' o 'normal' serve per vedere linee scure su chiaro
+      };
 
   // --- RENDER ---
   return (
@@ -722,24 +753,34 @@ const fetchWatches = async (userid) => {
         per assicurarmi che stia dietro al contenuto. 
     */}
     <div style={{ 
-        position: 'fixed', 
-        top: 0, 
-        left: 0, 
-        width: '100%', 
-        height: '100%', 
-        zIndex: -1,
-        pointerEvents: 'auto' // Mantiene l'interattività dello sfondo
-    }}>
-      <FloatingLines 
-        enabledWaves={['top', 'middle', 'bottom']}
-        lineCount={[5, 5, 5]}
-        lineDistance={[8, 6, 4]}
-        bendRadius={5.0}
-        bendStrength={-0.5}
-        interactive={false}
-        parallax={true}
-      />
-    </div>
+          position: 'fixed', 
+          top: 0, 
+          left: 0, 
+          width: '100%', 
+          height: '100%', 
+          zIndex: -1,
+          pointerEvents: 'auto',
+          // 1. CAMBIAMO LO SFONDO QUI
+          backgroundColor: floatingConfig.bg, 
+          transition: "background-color 0.3s ease" // Transizione fluida
+      }}>
+        <FloatingLines 
+          // 2. CAMBIAMO IL GRADIENTE DELLE LINEE
+          linesGradient={floatingConfig.gradient}
+
+          // 3. CAMBIAMO IL BLEND MODE (Cruciale per la visibilità)
+          mixBlendMode={floatingConfig.blend}
+
+          // ... altre proprietà invariate ...
+          enabledWaves={['top', 'middle', 'bottom']}
+          lineCount={[5, 5, 5]}
+          lineDistance={[8, 6, 4]}
+          bendRadius={5.0}
+          bendStrength={-0.5}
+          interactive={false}
+          parallax={true}
+        />
+      </div>
 
     {/* MAIN CONTENT LAYER */}
     <div 
@@ -749,6 +790,8 @@ const fetchWatches = async (userid) => {
     >
       <div className="slideWrap_Container">
         <DarkModeSwitch 
+          isDark={isDark}       // Passiamo il valore
+          toggleTheme={toggleTheme} // Passiamo la funzione per cambiarlo
           isUserLoggedIn={!!user} 
           onLogout={handleLogout} 
           onAddWatchToggle={() => setShowForm(!showForm)}
