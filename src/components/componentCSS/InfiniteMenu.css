@@ -1,0 +1,194 @@
+/* --- STILI MENU INFINITO (Il tuo codice) --- */
+#infinite-grid-menu-canvas {
+  cursor: grab;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  outline: none;
+}
+
+#infinite-grid-menu-canvas:active {
+  cursor: grabbing;
+}
+
+.action-button {
+  position: absolute;
+  left: 50%;
+  z-index: 10;
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  background: #5227ff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 5px solid #000;
+}
+
+/* Griglia interna per posizionare gli elementi */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+/* Item singolo (Orologio) */
+.grid-item {
+  position: relative;
+  aspect-ratio: 1 / 1.2;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.grid-item:hover {
+  transform: scale(1.02);
+  z-index: 10;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- GESTIONE TESTI (Adattata al tuo CSS) --- */
+.face-title {
+  position: absolute;
+  bottom: 20px; /* Spostato in basso per leggibilità */
+  left: 20px;
+  font-weight: 900;
+  font-size: 1.5rem; /* Adattato per le card */
+  color: rgb(255, 0, 0);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.3s ease;
+}
+
+.grid-item:hover .face-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- OVERRIDE MODALE (La parte cruciale) --- */
+
+/* Quando infoView ha anche la classe 'grid-mode', diventa grande */
+.infoView.grid-mode {
+  max-width: 95vw !important; /* Forza larghezza schermo */
+  width: 95vw !important;
+  height: 90vh !important;
+  top: 5% !important;
+  bottom: 5% !important;
+}
+
+.infoView.grid-mode .modal-content {
+  max-width: 100% !important; /* Rimuove il limite di 500px */
+  width: 100% !important;
+  height: 100% !important;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pulsante Chiudi specifico per la griglia */
+.close-grid-btn {
+  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 10px 30px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.close-grid-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.face-title {
+  user-select: none;
+  position: absolute;
+  font-weight: 900;
+  font-size: 3rem;
+  left: 1.5em;
+  top: 50%;
+  max-width: 265px;
+}
+
+.action-button-icon {
+  user-select: none;
+  position: relative;
+  color: #fff;
+  top: 2px;
+  font-size: 26px;
+}
+
+.face-title {
+  position: absolute;
+  top: 50%;
+  transform: translate(20%, -50%);
+  font-family: 'minork';
+  font-size: 3rem;
+}
+
+
+.face-title.active {
+  opacity: 1;
+  transform: translate(20%, -50%);
+  pointer-events: auto;
+  transition: 0.5s ease;
+}
+
+.face-title.inactive {
+  pointer-events: none;
+  opacity: 0;
+  transition: 0.1s ease;
+}
+
+.face-description {
+  user-select: none;
+  position: absolute;
+  max-width: 10ch;
+  top: 70%;
+  font-size: 2rem;
+  right: 17%;
+  transform: translate(0, -50%);
+}
+
+
+.face-description.inactive {
+  pointer-events: none;
+  transform: translate(-60%, -50%);
+  opacity: 0;
+  transition: 0.1s ease;
+}
+
+.action-button {
+  position: absolute;
+  left: 50%;
+}
+
+.action-button.active {
+  bottom: 3.8em;
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  transition: 0.5s ease;
+}
+
+.action-button.inactive {
+  bottom: -80px;
+  transform: translateX(-50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.1s ease;
+}
+

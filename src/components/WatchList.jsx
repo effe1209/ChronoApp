@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { motion } from 'framer-motion';
 import FavoriteButton from './FavoriteButton';
 import TiltedCard from './TiltedCard';
+import InfiniteMenu from './InfiniteMenu';
 
 // Importa gli stili di Swiper necessari
 import 'swiper/css';
@@ -20,7 +21,7 @@ const WatchList = ({
   handleFavoriteToggle, 
   handleInfoWatch,
   handleShowStats,
-
+  handleInfiniteGrid,
 }) => {
   
   const [isCarouselView, setIsCarouselView] = useState(() => {
@@ -53,6 +54,12 @@ const WatchList = ({
           style={{ width: "200px", padding: "10px"}}
         >
           📊 Mostra Statistiche
+        </button>
+        <button 
+          onClick={handleInfiniteGrid}
+          style={{ width: "200px", padding: "10px"}} // Stesso stile per coerenza
+        >
+          🖼️ Galleria
         </button>
         <button onClick={toggleView} >
           {isCarouselView ? 'Mostra Lista' : 'Mostra Carosello'}

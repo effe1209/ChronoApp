@@ -107,9 +107,9 @@ const AddWatchForm = ({
               style={{textAlign: "center", display: "flex"}}
             >
               <option className="menuTendina" value="">Seleziona il movimento</option>
-              <option className="menuTendina" value="Automatico">Automatico</option>
-              <option className="menuTendina" value="Carica Manuale">Carica Manuale</option>
-              <option className="menuTendina" value="Quarzo">Quarzo</option>
+              <option className="menuTendina" value="Automatico">🌀 Automatico</option>
+              <option className="menuTendina" value="Carica Manuale">🤏 Carica Manuale</option>
+              <option className="menuTendina" value="Quarzo">🔋 Quarzo</option>
             </select>
           </div>
           <label>

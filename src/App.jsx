@@ -9,6 +9,8 @@ import TiltedCard from './components/TiltedCard';
 import FloatingLines from './components/FloatingLines';
 import CircularText from './components/CircularText';
 import MetaBalls from './components/MetaBalls';
+import InfiniteMenu from './components/InfiniteMenu'
+import InfiniteGridModal from './components/InfiniteGridModal';
 
 // Importa i componenti dock e le icone VSC
 import Dock from './components/Dock'; 
@@ -91,6 +93,7 @@ function App() {
   const [modalTitle, setModalTitle] = useState(""); 
   const [color, setColor] = useState("");
   const [isCarouselVisible, setIsCarouselVisible] = useState(false);
+  const [isInfiniteGridVisible, setIsInfiniteGridVisible] = useState(false);
 
   // --- NUOVO: Stato per tracciare la sezione attiva nel Dock ---
   const [activeSection, setActiveSection] = useState('Home'); 
@@ -532,6 +535,10 @@ const fetchWatches = async (userid) => {
   const handleShowStats = () => {
     setIsStatisticheVisible(true);
   };
+
+  const handleInfiniteGrid = () => {
+    setIsInfiniteGridVisible(true);
+  };
   
   const handleSaveChanges = async () => {
     setLoading(true);
@@ -858,8 +865,14 @@ const fetchWatches = async (userid) => {
                 fontSize={14}
               /> */}
               <MetaBalls
-                color={isDark ? "#00000033" : "#ffffff33"}
-                cursorBallColor={isDark ? "#000000ff" : "#ffffffff"}
+                // color={isDark ? "#ffcc00" : "#25627e"}
+                // cursorBallColor={isDark ? "#c8a102ff" : "#1f4d63ff"}
+                // color={isDark ? "#ffffffff" : "#000000ff"}
+                // cursorBallColor={isDark ? "#28434fff" : "#ffcc00"}
+                color={isDark ? "#000000ff" : "#ffffffff"}
+                cursorBallColor={isDark ? "#ffcc00" : "#28434fff"}
+                // color={isDark ? "#ffffffff" : "#000000ff"}
+                // cursorBallColor={isDark ? "#959595ff" : "#494949ff"}
                 cursorBallSize={2}
                 ballCount={16}
                 animationSize={21}
@@ -952,6 +965,7 @@ const fetchWatches = async (userid) => {
               handleInfoWatch={handleInfoWatch} 
               handleShowStats={handleShowStats}
               user={user} 
+              handleInfiniteGrid={handleInfiniteGrid}
             />
           </div>
         </>
@@ -961,11 +975,17 @@ const fetchWatches = async (userid) => {
             setIsVisible={setIsStatisticheVisible}
             watches={watches}
           />
-            <InfoWatchModal
-              isVisible={isInfoVisible}
-              setIsVisible={setIsInfoVisible}
-              selectedWatch={selectedWatch}
-            />
+          <InfoWatchModal
+            isVisible={isInfoVisible}
+            setIsVisible={setIsInfoVisible}
+            selectedWatch={selectedWatch}
+          />
+          <InfiniteGridModal 
+            isVisible={isInfiniteGridVisible} 
+            setIsVisible={setIsInfiniteGridVisible} 
+            handleInfoWatch={handleInfoWatch}
+            watches={watches} // Passa la lista completa degli orologi
+          />
     </div>
     </>
   );
