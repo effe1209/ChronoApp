@@ -122,7 +122,7 @@ export default function Stepper({
     <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
       
       {/* TASTO ANNULLA - Visibile solo se è l'ultimo step E se onCancel esiste */}
-      {isLastStep && onCancel && (
+      {onCancel && (
         <button
           onClick={onCancel}
           className="back-button" // Usiamo lo stile del tasto secondario
