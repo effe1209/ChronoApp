@@ -8,6 +8,8 @@ export default function Stepper({
   initialStep = 1,
   onStepChange = () => {},
   onFinalStepCompleted = () => {},
+  onCancel,
+  cancelButtonText = "Annulla",
   stepCircleContainerClassName = '',
   stepContainerClassName = '',
   contentClassName = '',
@@ -101,21 +103,47 @@ export default function Stepper({
 
         {!isCompleted && (
           <div className={`footer-container ${footerClassName}`}>
-            <div className={`footer-nav ${currentStep !== 1 ? 'spread' : 'end'}`}>
-              {currentStep !== 1 && (
-                <button
-                  onClick={handleBack}
-                  className={`back-button ${currentStep === 1 ? 'inactive' : ''}`}
-                  {...backButtonProps}
-                >
-                  {backButtonText}
-                </button>
-              )}
-              <button onClick={isLastStep ? handleComplete : handleNext} className="next-button" {...nextButtonProps}>
-                {isLastStep ? 'Salva' : nextButtonText}
-              </button>
-            </div>
-          </div>
+  <div className={`footer-nav ${currentStep !== 1 ? 'spread' : 'end'}`}>
+    
+    {/* TASTO INDIETRO (Sinistra) */}
+    <div> {/* Avvolgiamo in un div per sicurezza layout */}
+      {currentStep !== 1 && (
+        <button
+          onClick={handleBack}
+          className={`back-button ${currentStep === 1 ? 'inactive' : ''}`}
+          {...backButtonProps}
+        >
+          {backButtonText}
+        </button>
+      )}
+    </div>
+
+    {/* GRUPPO TASTI DESTRO (Annulla + Salva/Avanti) */}
+    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+      
+      {/* TASTO ANNULLA - Visibile solo se è l'ultimo step E se onCancel esiste */}
+      {isLastStep && onCancel && (
+        <button
+          onClick={onCancel}
+          className="back-button" // Usiamo lo stile del tasto secondario
+          style={{border:"1.5px solid #ff0000"}} // Override rosso per "Annulla"
+        >
+          {cancelButtonText}
+        </button>
+      )}
+
+      {/* TASTO AVANTI / SALVA */}
+      <button 
+        onClick={isLastStep ? handleComplete : handleNext} 
+        className="next-button" 
+        {...nextButtonProps}
+      >
+        {isLastStep ? 'Salva' : nextButtonText}
+      </button>
+    </div>
+
+  </div>
+</div>
         )}
       </div>
     </div>

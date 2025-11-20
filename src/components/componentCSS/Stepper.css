@@ -42,30 +42,6 @@
 }
 
 /* 2. Adattamento Mobile (Media Query) */
-@media (max-width: 640px) {
-  .step-indicator-row {
-    padding: 1rem 0.5rem;   /* Riduci drasticamente il padding esterno */
-  }
-
-  /* Ridimensiona i cerchi degli step per schermi piccoli */
-  .step-indicator-inner {
-    width: 1.5rem;          /* Da 2rem a 1.5rem */
-    height: 1.5rem;
-    font-size: 0.75rem;     /* Testo più piccolo */
-  }
-
-  /* Gestisci i connettori (le linee tra gli step) */
-  .step-connector {
-    margin-left: 0.25rem;   /* Margini ridotti */
-    margin-right: 0.25rem;
-  }
-  
-  /* Opzionale: Se hai del testo sotto gli step, nascondilo su mobile
-     o riducilo, altrimenti rompe il layout */
-  .step-label {
-    display: none; 
-  }
-}
 
 
 .step-content-default {
@@ -119,8 +95,9 @@
   transition: transform 0.5s ease-in-out, background-color 0.5s ease-in-out;
   height: 44px;
   display: flex;
-  align-items: center;
   text-align: center;
+  align-items: center;      /* Centra VERTICALMENTE */
+  justify-content: center;
 }
 
 .back-button:hover {
@@ -163,6 +140,7 @@
   height: 44px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .next-button:hover {
@@ -226,4 +204,71 @@
   height: 1rem;
   width: 1rem;
   color: #fff;
+}
+
+/* --- AGGIUNGI/SOSTITUISCI NEL FILE Stepper.css --- */
+
+/* 1. Base Desktop (pulita) */
+.step-indicator-row {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+/* 2. Base Cerchio */
+.step-indicator-inner {
+  display: flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* Usa 50% invece di 9999px per cerchi perfetti */
+  font-weight: 600;
+  z-index: 2; /* Assicura che stia SOPRA la linea */
+  background-color: #fff; /* Importante per coprire la linea sotto se serve */
+  
+  /* CRUCIALE: Impedisce al cerchio di diventare ovale quando c'è poco spazio */
+  flex-shrink: 0; 
+}
+
+/* 3. Base Connettore */
+.step-connector {
+  position: relative;
+  flex: 1 1 auto; /* Si può restringere e allargare */
+  height: 2px;
+  background-color: #e5e7eb; /* Colore grigio chiaro di base */
+  margin: 0 0.5rem; /* Margine desktop */
+}
+
+
+/* --- MEDIA QUERY MOBILE (max-width: 640px) --- */
+@media (max-width: 640px) {
+  
+  .step-indicator-row {
+    /* Riduciamo drasticamente lo spazio laterale */
+    padding: 1rem 0.25rem; 
+    width: 100%;
+  }
+
+  .step-indicator-inner {
+    /* Riduciamo i cerchi */
+    width: 1.75rem; 
+    height: 1.75rem;
+    font-size: 0.75rem; /* Testo più piccolo */
+    border: 1px solid #eee; /* Opzionale: aiuta visivamente */
+  }
+
+  .step-connector {
+    /* Riduciamo i margini al minimo assoluto */
+    margin: 0 2px; 
+    /* Garantiamo che la linea non sparisca mai del tutto */
+    min-width: 1px; 
+  }
+  
+  /* (Opzionale) Se hai PIÙ di 5 step, su mobile i numeri diventano illeggibili.
+     Considera di nascondere i cerchi intermedi non attivi o usare un layout diverso.
+     Per ora, proviamo a farli entrare tutti. */
 }

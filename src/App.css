@@ -1744,6 +1744,11 @@ input::placeholder {
   height: 44px;
 }
 
+@media screen and (max-width: 750px) {
+  .details-toggle-button {
+    height: 65px;
+  }
+}
 
 
 .notes-textarea {
