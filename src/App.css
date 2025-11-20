@@ -1288,7 +1288,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   height: 70px;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 0 20px #4ECDC4, 0 0 40px #349090;
+  /* box-shadow: 0 0 20px #4ECDC4, 0 0 40px #349090; */
   animation: glow-border 1.5s infinite alternate;
   /* justify-self: center;
   margin-bottom: 2%; */
@@ -1303,14 +1303,14 @@ input[type="checkbox"]:checked + .slider-v3::before {
   align-items: center;  /* Centra tutto orizzontalmente */  
 }
 
-@keyframes glow-border {
+/* @keyframes glow-border {
   0% {
     box-shadow: 0 0 20px #4ECDC4, 0 0 40px #349090;
   }
   100% {
     box-shadow: 0 0 50px #4ECDC4, 0 0 70px #349090;
   }
-}
+} */
 
 .dark-mode .upload-button {
   color: #ffffff;

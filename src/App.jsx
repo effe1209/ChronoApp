@@ -8,6 +8,7 @@ import GlassSurface from './components/GlassSurface';
 import TiltedCard from './components/TiltedCard';
 import FloatingLines from './components/FloatingLines';
 import CircularText from './components/CircularText';
+import MetaBalls from './components/MetaBalls';
 
 // Importa i componenti dock e le icone VSC
 import Dock from './components/Dock'; 
@@ -848,13 +849,25 @@ const fetchWatches = async (userid) => {
         <>
           <div className="profile-info" id="profile-section">
             <div className="circular-text-container">
-              <CircularText
+              {/* <CircularText
                 text={`${email} • `}
                 onHover="speedUp"
                 spinDuration={20}
                 className="custom-class"
                 position="absolute"
                 fontSize={14}
+              /> */}
+              <MetaBalls
+                color={isDark ? "#00000033" : "#ffffff33"}
+                cursorBallColor={isDark ? "#000000ff" : "#ffffffff"}
+                cursorBallSize={2}
+                ballCount={16}
+                animationSize={21}
+                enableMouseInteraction={true}
+                enableTransparency={true}
+                hoverSmoothness={0.05}
+                clumpFactor={1}
+                speed={0.3}
               />
               <div className="profile-picture">
                   <UserProfile email={email} />
