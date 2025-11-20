@@ -147,7 +147,20 @@ function SlideTransition({ children, direction, onHeightReady }) {
   const containerRef = useRef(null);
 
   useLayoutEffect(() => {
-    if (containerRef.current) onHeightReady(containerRef.current.offsetHeight);
+    const element = containerRef.current;
+    if (!element) return;
+
+    // 1. Crea un Observer che ascolta i cambiamenti di dimensione del contenuto
+    const resizeObserver = new ResizeObserver(() => {
+      // Ogni volta che il contenuto cambia dimensione (es. immagine caricata), aggiorna l'altezza
+      onHeightReady(element.offsetHeight);
+    });
+
+    // 2. Inizia ad osservare il div
+    resizeObserver.observe(element);
+
+    // 3. Pulizia quando il componente viene smontato
+    return () => resizeObserver.disconnect();
   }, [children, onHeightReady]);
 
   return (
