@@ -59,7 +59,7 @@ export default function Stepper({
 
   return (
     <div className="outer-container" {...rest}>
-      <div className={`step-circle-container ${stepCircleContainerClassName}`} style={{ border: '1px solid #222' }}>
+      <div className={`step-circle-container ${stepCircleContainerClassName}`}>
         <div className={`step-indicator-row ${stepContainerClassName}`}>
           {stepsArray.map((_, index) => {
             const stepNumber = index + 1;
@@ -126,7 +126,7 @@ export default function Stepper({
         <button
           onClick={onCancel}
           className="back-button" // Usiamo lo stile del tasto secondario
-          style={{border:"1.5px solid #ff0000"}} // Override rosso per "Annulla"
+          style={{border:"3px solid #c74343d0"}} // Override rosso per "Annulla"
         >
           {cancelButtonText}
         </button>
