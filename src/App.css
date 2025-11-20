@@ -1818,9 +1818,10 @@ input::placeholder {
 
 .circular-text-container {
   position: relative;
-  height: 150px;
+  height: 165px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
+  width: 500px;
 }

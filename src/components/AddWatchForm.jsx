@@ -2,6 +2,7 @@ import React from 'react';
 import FeatureCheckboxList from './FeatureCheckboxList'; // Importa il nuovo componente
 import Stepper, { Step } from './Stepper';
 
+
 // Questo è solo il Form per aggiungere un orologio
 // Riceve tutto lo stato e i gestori da App.jsx
 const AddWatchForm = ({
