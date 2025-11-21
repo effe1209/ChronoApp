@@ -103,8 +103,9 @@ export default function Stepper({
 
         {!isCompleted && (
           <div className={`footer-container ${footerClassName}`}>
-  <div className={`footer-nav ${currentStep !== 1 ? 'spread' : 'end'}`}>
+  <div className={`footer-nav ${(currentStep !== 1) ? 'spread' : 'end'}`}>
     
+
     {/* TASTO INDIETRO (Sinistra) */}
     <div> {/* Avvolgiamo in un div per sicurezza layout */}
       {currentStep !== 1 && (
@@ -117,12 +118,8 @@ export default function Stepper({
         </button>
       )}
     </div>
-
-    {/* GRUPPO TASTI DESTRO (Annulla + Salva/Avanti) */}
-    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-      
       {/* TASTO ANNULLA - Visibile solo se è l'ultimo step E se onCancel esiste */}
-      {onCancel && (
+      {(currentStep == 1 || isLastStep) && onCancel && (
         <button
           onClick={onCancel}
           className="back-button" // Usiamo lo stile del tasto secondario
@@ -136,13 +133,13 @@ export default function Stepper({
       <button 
         onClick={isLastStep ? handleComplete : handleNext} 
         className="next-button" 
+        style={isLastStep ? {border: "3px solid green"} : {}}
         {...nextButtonProps}
       >
         {isLastStep ? 'Salva' : nextButtonText}
       </button>
     </div>
 
-  </div>
 </div>
         )}
       </div>

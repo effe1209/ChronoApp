@@ -62,7 +62,7 @@ const WatchList = ({
           🖼️ Galleria
         </button>
         <button onClick={toggleView} >
-          {isCarouselView ? 'Mostra Lista' : 'Mostra Carosello'}
+          {isCarouselView ? '🍱 Mostra Lista' : '🎞️ Mostra Carosello'}
         </button>
       </div>
 

@@ -75,10 +75,24 @@
 .footer-nav.spread {
   justify-content: space-between;
   text-align: center;
-}
+} 
 
 .footer-nav.end {
   justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .footer-nav.spread {
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .footer-nav.end {
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
 }
 
 .back-button {
