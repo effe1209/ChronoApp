@@ -851,6 +851,7 @@ const fetchWatches = async (userid) => {
           handleRegister={handleRegister}
           handleLogin={handleLogin}
           handleKeyDown={handleKeyDown}
+          isDark={isDark} 
         />
       ) : (
         <>
