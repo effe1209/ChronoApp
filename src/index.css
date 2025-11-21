@@ -71,7 +71,7 @@ body {
 
 .dark-mode .selectMenu > select{
   color: #ffffff;
-  background-color: rgba(58, 58, 58, 0.8);
+  background-color: #333;
   border: 0px;
   border-radius: 20px;
 }
@@ -156,6 +156,9 @@ h2{
   font-style: normal;
   font-weight: normal;
   padding: 60px;
+}
+.auth-form-container h2 {
+  padding: 30px;
 }
 
 h3{
