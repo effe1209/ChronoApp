@@ -158,7 +158,8 @@ h2{
   padding: 60px;
 }
 .auth-form-container h2 {
-  padding: 30px;
+  padding: 10px;
+  color : black;
 }
 
 h3{
