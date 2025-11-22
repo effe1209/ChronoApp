@@ -11,6 +11,7 @@ import CircularText from './components/CircularText';
 import MetaBalls from './components/MetaBalls';
 import InfiniteMenu from './components/InfiniteMenu'
 import InfiniteGridModal from './components/InfiniteGridModal';
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Importa i componenti dock e le icone VSC
 import Dock from './components/Dock'; 
@@ -778,6 +779,7 @@ const fetchWatches = async (userid) => {
   // --- RENDER ---
   return (
     <>
+    
     {BackgroundLayer}
 
     {/* MAIN CONTENT LAYER */}
@@ -786,6 +788,7 @@ const fetchWatches = async (userid) => {
       id="home"
       style={{ position: 'relative', zIndex: 1 }} // Assicuro che il contenuto stia sopra
     >
+      <SpeedInsights/>
       <div className="slideWrap_Container">
         <GlassSurface 
           width={100} 
