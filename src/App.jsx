@@ -867,36 +867,41 @@ const techLogos = [
     : {bg: "#476d7ed6", gradient: ["#ff8ce2ff", "#77bebaff"], blend: "screen"};
 
 
-    const BackgroundLayer = useMemo(() => {
+const BackgroundLayer = useMemo(() => {
       return (
         <div style={{ 
             position: 'fixed', 
-            top: 0, 
-            left: 0, 
-            width: '100vw',
-            // height: '100vh', 
-            height: '100dvh',
+            // TRUCCO: Allarghiamo lo sfondo oltre i bordi fisici
+            // Invece di 0, lo tiriamo su e a sinistra
+            top: '-10vh', 
+            left: '-10vw', 
+            
+            // Lo rendiamo più grande dello schermo (120% altezza e larghezza)
+            // Così se la barra degli indirizzi scompare, c'è ancora "sfondo" sotto.
+            width: '120vw', 
+            height: '120vh', 
+            
             zIndex: -1,
             pointerEvents: 'none',
-            backgroundColor: floatingConfig.bg, // Usa il colore configurato
+            backgroundColor: floatingConfig.bg, // Colore di fallback fondamentale
             transition: "background-color 0.3s ease",
-            touchAction: 'none'
+            touchAction: 'none',
+            transform: 'translateZ(0)', // Forza l'accelerazione hardware GPU
         }}>
           <FloatingLines 
-            linesGradient={floatingConfig.gradient} // Usa il gradiente configurato
-            mixBlendMode={floatingConfig.blend}     // Usa il blend configurato
+            linesGradient={floatingConfig.gradient}
+            mixBlendMode={floatingConfig.blend}
             enabledWaves={['top', 'middle', 'bottom']}
             lineCount={[5, 5, 5]}
             lineDistance={[8, 6, 4]}
             bendRadius={5.0}
             bendStrength={-0.5}
-            interactive={false} // Se true, attenzione che il mouse potrebbe triggerare render
+            interactive={false} 
             parallax={true}
           />
         </div>
       );
     }, [isDark, floatingConfig.bg, floatingConfig.blend]);
-
   // --- RENDER ---
   return (
     <>
