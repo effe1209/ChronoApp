@@ -12,6 +12,7 @@ import MetaBalls from './components/MetaBalls';
 import InfiniteMenu from './components/InfiniteMenu'
 import InfiniteGridModal from './components/InfiniteGridModal';
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import ColorThief from 'colorthief';
 
 // Importa i componenti dock e le icone VSC
 import Dock from './components/Dock'; 
@@ -646,31 +647,111 @@ const fetchWatches = async (userid) => {
   };
 
   // --- LOGICA OUTFIT (Funzioni) ---
-  const handleImageUpload = (event) => {
+  // const handleImageUpload = (event) => {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   const reader = new FileReader();
+  //   reader.onload = async (e) => {
+  //     const img = new Image();
+  //     img.src = e.target.result;
+  //     img.onload = () => {
+  //       const canvas = document.createElement("canvas");
+  //       const ctx = canvas.getContext("2d");
+  //       canvas.width = img.width;
+  //       canvas.height = img.height;
+  //       ctx.drawImage(img, 0, 0, img.width, img.height);
+  //       const pixelData = ctx.getImageData(img.width / 2, img.height / 2, 1, 1).data;
+  //       const hexColor = rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
+  //       setColor(hexColor);
+  //       searchWatchesByColor(hexColor);
+  //     };
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
+
+const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
+    
     reader.onload = async (e) => {
+      // Dobbiamo creare un elemento Image standard per ColorThief
       const img = new Image();
+      // Importante per evitare problemi di sicurezza cross-origin se le immagini non sono locali
+      img.crossOrigin = 'Anonymous'; 
       img.src = e.target.result;
+
       img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0, img.width, img.height);
-        const pixelData = ctx.getImageData(img.width / 2, img.height / 2, 1, 1).data;
-        const hexColor = rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
-        setColor(hexColor);
-        searchWatchesByColor(hexColor);
+        const colorThief = new ColorThief();
+        
+        // Estraiamo i 5 colori dominanti (Clusters)
+        // Restituisce un array di array: [[r,g,b], [r,g,b], ...]
+        const palette = colorThief.getPalette(img, 5); 
+
+        if (palette && palette.length > 0) {
+          // Impostiamo lo stato col colore principale per la UI
+          const dominantColor = palette[0];
+          const hexColor = rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]);
+          setColor(hexColor);
+
+          // Lanciamo la ricerca usando TUTTA la palette
+          searchWatchesByPalette(palette);
+        }
       };
     };
+    
     reader.readAsDataURL(file);
   };
 
-  const rgbToHex = (r, g, b) => {
-    return ("#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("").toUpperCase());
+ const rgbToHex = (r, g, b) => {
+    return "#" + [r, g, b]
+      .map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+      })
+      .join("");
+  };
+
+  const calculateDistance = (rgb1, rgb2) => {
+    return Math.sqrt(
+      Math.pow(rgb1[0] - rgb2[0], 2) +
+      Math.pow(rgb1[1] - rgb2[1], 2) +
+      Math.pow(rgb1[2] - rgb2[2], 2)
+    );
+  };
+
+  const searchWatchesByPalette = (palette) => {
+    // palette è un array tipo: [[255,0,0], [0,255,0], ...]
+
+    const sortedWatches = watches.map((watch) => {
+        // Convertiamo il colore dell'orologio da Hex a RGB Array
+        const hex = watch.color.replace('#', '');
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        const watchRgb = [r, g, b];
+
+        // QUI C'È L'INTELLIGENZA:
+        // Invece di confrontare con un solo colore, troviamo la "distanza minima"
+        // tra questo orologio e QUALSIASI colore presente nella palette dell'outfit.
+        // Se l'outfit ha 5 colori, vediamo con quale di questi l'orologio sta meglio.
+        const minDistance = palette.reduce((min, outfitColor) => {
+          const dist = calculateDistance(watchRgb, outfitColor);
+          return dist < min ? dist : min;
+        }, Infinity);
+
+        return {
+          ...watch,
+          distanza: minDistance, // Usiamo la distanza migliore trovata
+        };
+      })
+      .sort((a, b) => a.distanza - b.distanza) // Ordiniamo dal più simile al meno simile
+      .slice(0, 3); // Prendiamo i top 3
+
+    setWatchConsigliati(sortedWatches);
+    setIsCarouselVisible(true);
   };
 
   const searchWatchesByColor = (hexColor) => {
