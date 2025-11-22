@@ -234,7 +234,7 @@ function StepIndicator({ step, currentStep, onClickStep, disableStepIndicators }
     <motion.div onClick={handleClick} className="step-indicator" animate={status} initial={false}>
       <motion.div
         variants={{
-          inactive: { scale: 1, backgroundColor: '#222', color: '#a3a3a3' },
+          inactive: { scale: 1, backgroundColor: '#333', color: '#b4b4b4ff' },
           active: { scale: 1, backgroundColor: '#5227FF', color: '#5227FF' },
           complete: { scale: 1, backgroundColor: '#5227FF', color: '#3b82f6' }
         }}
