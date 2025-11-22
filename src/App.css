@@ -940,7 +940,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   position:absolute;
   z-index: 0;
   height: auto;
-  top:133px;
+  top:125px;
   left: 0.8%;
 }
 
@@ -972,7 +972,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   position: absolute;
   z-index: 0;
   height: auto;
-  top:179px;
+  top:168px;
   left: 0.8%;
 }
 
@@ -1005,7 +1005,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   position:absolute;
   z-index: 0;
   height: auto;
-  top:103px;
+  top:111px;
   left: 0.8%;
   transition: 0.5s;
 }
@@ -1207,18 +1207,6 @@ input[type="checkbox"]:checked + .slider-v3::before {
 
   .dark-mode .scroll3 div{
     margin-top: 20%;
-  }
-
-  .login-page .scroll {
-    top: 13%; /* <-- NUOVO VALORE (esempio) */
-  }
-
-  .login-page .scroll2 {
-    top: 17%; /* <-- NUOVO VALORE (esempio) */
-  }
-
-  .login-page .scroll3 {
-    top: 12%; /* <-- NUOVO VALORE (esempio) */
   }
 }
 

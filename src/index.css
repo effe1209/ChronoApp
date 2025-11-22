@@ -4,6 +4,11 @@
   /* box-sizing: border-box; */
 }
 
+html {
+  /* Metti qui il colore esatto che passi in floatingConfig.bg */
+  /* Opzionale: impedisce il rimbalzo se non vuoi scroll */
+  overscroll-behavior-y: none; 
+}
 
 
 html.dark-mode {

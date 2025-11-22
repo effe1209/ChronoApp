@@ -83,7 +83,7 @@ const AuthForm = ({
                 onChange={(e) => setNickname(e.target.value)}
                 onKeyDown={handleKeyDown}
                 // Stile condizionale rapido per leggibilità (meglio spostare in CSS)
-                style={{ color: '#000' }} 
+                style={isDark ? { color: '#ffffffff' } : { color: '#000000ff' }}
               />
             </div>
           )}
@@ -97,7 +97,7 @@ const AuthForm = ({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onKeyDown={handleKeyDown}
-              style={{ color: '#000' }}
+              style={{ color: '#ffffffff' }}
             />
           </div>
 
