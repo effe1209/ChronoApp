@@ -866,12 +866,10 @@ const fetchWatches = async (userid) => {
                 fontSize={14}
               /> */}
               <MetaBalls
-                // color={isDark ? "#ffcc00" : "#25627e"}
-                // cursorBallColor={isDark ? "#c8a102ff" : "#1f4d63ff"}
-                // color={isDark ? "#ffffffff" : "#000000ff"}
-                // cursorBallColor={isDark ? "#28434fff" : "#ffcc00"}
-                color={isDark ? "#000000ff" : "#ffffffff"}
-                cursorBallColor={isDark ? "#ffcc00" : "#28434fff"}
+                color={isDark ? "#ffcc00" : "#25627e"}
+                cursorBallColor={isDark ? "#c8a102ff" : "#1f4d63ff"}
+                // color={isDark ? "#000000ff" : "#ffffffff"}
+                // cursorBallColor={isDark ? "#ffcc00" : "#28434fff"}
                 // color={isDark ? "#ffffffff" : "#000000ff"}
                 // cursorBallColor={isDark ? "#959595ff" : "#494949ff"}
                 cursorBallSize={2}
@@ -882,9 +880,10 @@ const fetchWatches = async (userid) => {
                 hoverSmoothness={0.05}
                 clumpFactor={1}
                 speed={0.3}
+                zIndex={10}
               />
               <div className="profile-picture">
-                  <UserProfile email={email} />
+                  <UserProfile email={email} isDark={isDark} />
               </div>
             </div>
             <h4 className="Saluti">Benvenuto, {nickname}</h4>

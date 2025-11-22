@@ -41,7 +41,7 @@ const InfiniteGridModal = ({ isVisible, setIsVisible,handleInfoWatch, watches })
 
           <div className="buttonForm">
             <button className="funzioniButton close-grid-btn" onClick={() => setIsVisible(false)}>
-              Chiudi Galleria
+              Chiudi
             </button>
           </div>
 

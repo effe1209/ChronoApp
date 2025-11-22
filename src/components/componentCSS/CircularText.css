@@ -27,3 +27,23 @@
   font-size: 20px;
   transition: all 0.5s cubic-bezier(0, 0, 0, 1);
 }
+
+.circular-text-container {
+  position: relative;
+  width: 200px; /* O la dimensione che vuoi per l'area totale */
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto; /* Centra il container stesso nella pagina */
+}
+
+.circular-text-container > canvas, 
+.circular-text-container > div:first-child {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* Livello sfondo */
+}

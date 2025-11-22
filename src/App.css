@@ -180,6 +180,7 @@
 }
 
 .delete-button button {
+  font-family: 'minork';
   padding: 10px 15px;
   font-size: 18px;
   border: none;
@@ -514,6 +515,7 @@ select {
   margin-bottom: 10px;
   margin-top: 20px;
   height: 44px;
+  font-family: 'minork';
 }
 
 
@@ -571,14 +573,21 @@ select {
 .functionButton button {
   margin-top: 20px;
   padding: 10px 15px;
-  background-color: rgba(0, 123, 255, 0.8);
-  color: white;
-  border: none;
+  background-color: rgba(225, 225, 225, 0.8);
+  border: 3px solid rgba(37, 98, 126, 1);
+  color: rgba(37, 98, 126, 1);
+  /* backdrop-filter: blur(5px); */
   border-radius: 20px;
   cursor: pointer;
   font-size: 18px;
   font-family: 'minork';
   transition: 0.8s;
+}
+
+.dark-mode .functionButton button {
+  background-color: rgba(0, 0, 0, 0.6);
+  border:3px solid #ffcc00;
+  color: #ffcc00;
 }
 
 .functionButton button:hover {
@@ -1288,18 +1297,16 @@ input[type="checkbox"]:checked + .slider-v3::before {
 }
 
 .profile-picture {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  overflow: hidden;
-  /* box-shadow: 0 0 20px #4ECDC4, 0 0 40px #349090; */
-  animation: glow-border 1.5s infinite alternate;
-  /* justify-self: center;
-  margin-bottom: 2%; */
-  margin-bottom: 2%; /* Questo lo avevi già */
-  position: absolute;
+  position: relative; /* Relative per stare sopra l'absolute */
+  z-index: 10;        /* Livello superiore */
+  width: 80px;        /* Aumento leggermente per visibilità */
+  height: 80px;
+  /* Rimuovi margini o posizionamenti assoluti vecchi che creano conflitti */
+  margin: 0;
+  top: auto;
+  left: auto;
+  transform: none;
 }
-
 .profile-info {
   margin-bottom: 2%;
   display: flex;
@@ -1456,6 +1463,7 @@ input::placeholder {
   background-color: transparent;
   border:3px solid rgba(37, 98, 126, 0.8);
   color: rgba(37, 98, 126, 1);
+  font-family: 'minork';
   /* backdrop-filter: blur(5px); */
 }
 

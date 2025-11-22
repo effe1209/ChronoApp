@@ -103,3 +103,14 @@
   outline: 2px solid light-dark(#007aff, #0a84ff);
   outline-offset: 2px;
 }
+
+.glass-avatar-fix .glass-surface__content {
+  padding: 0 !important;
+  width: 100%;      /* Forza il contenuto a riempire lo spazio */
+  height: 100%;     /* Forza il contenuto a riempire lo spazio */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px; /* Deve coincidere con la prop passata a GlassSurface */
+  backdrop-filter: inherit;
+}
