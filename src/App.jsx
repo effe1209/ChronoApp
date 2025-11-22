@@ -902,6 +902,7 @@ const BackgroundLayer = useMemo(() => {
         </div>
       );
     }, [isDark, floatingConfig.bg, floatingConfig.blend]);
+    
   // --- RENDER ---
   return (
     <>
