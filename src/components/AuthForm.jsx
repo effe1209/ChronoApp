@@ -97,7 +97,7 @@ const AuthForm = ({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               onKeyDown={handleKeyDown}
-              style={{ color: '#ffffffff' }}
+              style={isDark ? { color: '#ffffffff' } : { color: '#000000ff' }}
             />
           </div>
 
