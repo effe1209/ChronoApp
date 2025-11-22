@@ -1869,5 +1869,6 @@ input::placeholder {
 
   .circular-text-container {
     max-width: 300px;
+    margin: unset;
   }
 }
