@@ -754,12 +754,14 @@ const fetchWatches = async (userid) => {
             position: 'fixed', 
             top: 0, 
             left: 0, 
-            width: '100%', 
-            height: '100%', 
+            width: '100vw',
+            height: '100vh', 
+            height: '100lvh',
             zIndex: -1,
-            pointerEvents: 'auto',
+            pointerEvents: 'none',
             backgroundColor: floatingConfig.bg, // Usa il colore configurato
-            transition: "background-color 0.3s ease"
+            transition: "background-color 0.3s ease",
+            touchAction: 'none'
         }}>
           <FloatingLines 
             linesGradient={floatingConfig.gradient} // Usa il gradiente configurato
