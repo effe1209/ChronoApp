@@ -1,0 +1,123 @@
+.auth-form-container {
+    position: relative;
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  font-family: 'minork';
+    font-size: 22px;
+    /* backdrop-filter: blur(10px); */
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+}
+
+.auth-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* Livello base */
+  pointer-events: none; /* Importante: lascia passare i click al form se l'animazione è sopra */
+}
+
+.auth-content {
+  position: relative;
+  z-index: 1; /* Deve essere superiore allo sfondo */
+  padding: 2rem;
+}
+
+.input-wrapper {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-wrapper label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.input-wrapper input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-family: 'minork';
+  transition: all 0.3s ease-out;
+}
+
+.input-wrapper input:focus {
+  outline: none;
+  border-color: rgba(37, 98, 126, 1);
+  box-shadow: 0 0 5px rgba(37, 98, 126, 0.5);
+  color: transparent;
+    transition: all 0.3s ease-out;
+}
+
+.input-wrapper input:focus::placeholder {
+    color: rgba(37, 98, 126, 0.6);
+}
+
+.dark-mode input:focus::placeholder {
+    color: #ffcc0085;
+}
+
+.dark-mode .input-wrapper input {
+  background-color: #333;
+  color: white;
+  border: 1px solid #555;
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 0.75rem;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  border: 3px solid rgba(37, 98, 126, 1);
+  background-color: rgba(37, 98, 126, 1);
+  transition: transform 0.5s ease-in-out, background-color 0.5s ease-in-out;
+  font-weight: bold;
+  font-family: 'minork';
+}
+
+.primary-btn:hover {
+    background-color: transparent;
+  transform: scale(1.05);
+  color: rgba(37, 98, 126, 1);
+}
+
+.dark-mode .primary-btn {
+  background-color: #ffcc00;
+  border: 3px solid #ffcc00;
+  color: black;
+}
+
+.dark-mode .primary-btn:hover {
+    background-color: transparent;
+    transform: scale(1.05);
+    color: #ffcc00;
+}
+
+.toggle-text {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.toggle-link {
+  color: rgba(37, 98, 126, 1);
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.dark-mode .toggle-link {
+  color: #ffcc00;
+}

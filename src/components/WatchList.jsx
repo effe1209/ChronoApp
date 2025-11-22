@@ -3,6 +3,8 @@ import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper/module
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { motion } from 'framer-motion';
 import FavoriteButton from './FavoriteButton';
+import TiltedCard from './TiltedCard';
+import InfiniteMenu from './InfiniteMenu';
 
 // Importa gli stili di Swiper necessari
 import 'swiper/css';
@@ -18,7 +20,8 @@ const WatchList = ({
   handleDeleteWatch, 
   handleFavoriteToggle, 
   handleInfoWatch,
-  handleShowStats 
+  handleShowStats,
+  handleInfiniteGrid,
 }) => {
   
   const [isCarouselView, setIsCarouselView] = useState(() => {
@@ -52,8 +55,14 @@ const WatchList = ({
         >
           📊 Mostra Statistiche
         </button>
+        <button 
+          onClick={handleInfiniteGrid}
+          style={{ width: "200px", padding: "10px"}} // Stesso stile per coerenza
+        >
+          🖼️ Galleria
+        </button>
         <button onClick={toggleView} >
-          {isCarouselView ? 'Mostra Lista' : 'Mostra Carosello'}
+          {isCarouselView ? '🍱 Mostra Lista' : '🎞️ Mostra Carosello'}
         </button>
       </div>
 
@@ -78,12 +87,17 @@ const WatchList = ({
                     onToggle={() => handleFavoriteToggle(watch.id)}
                   />
                 {watch.imageUrl ? (
-                  <img
-                    src={watch.imageUrl} // Usa imageUrl
+                  <TiltedCard
+                    imageSrc={watch.imageUrl} // Usa imageUrl
                     alt={watch.name}
                     className="watch-image"
                     loading="lazy"
                     onError={(e) => { e.target.src = "orologio_back.svg"; }}
+                    rotateAmplitude={12}
+                    scaleOnHover={1.2}
+                    showMobileWarning={false}
+                    showTooltip={false}
+                    displayOverlayContent={true}
                   />
                 ) : (
                   <img src="orologio_back.svg" alt="Default" className="watch-image"/>
@@ -120,6 +134,7 @@ const WatchList = ({
                 </div>
               </div>
             </motion.div>
+            
             ))}
         </div>
       )}

@@ -46,6 +46,10 @@
   padding: 20px;
 }
 
+.form {
+  margin-bottom: 20px;
+}
+
 .form input {
   width: 70%; /* Rende gli input larghi */
   padding: 10px;
@@ -73,7 +77,7 @@
   font-family: 'minork';
   border: none;
   align-items: center;
-  background-color: rgba(58, 58, 58, 0.8);
+  background-color: #333;
 }
 
 .inputImmagine {
@@ -134,9 +138,9 @@
 
 .watch-image {
   width: 100%;
-  max-width: 200px;
+  max-width: 294px;
   height: auto;
-  max-height: 200px; /* Limita l'altezza massima a 300px */
+  max-height: 294px; /* Limita l'altezza massima a 294px */
   border-radius: 10px;
   object-fit: cover;
 }
@@ -176,6 +180,7 @@
 }
 
 .delete-button button {
+  font-family: 'minork';
   padding: 10px 15px;
   font-size: 18px;
   border: none;
@@ -252,13 +257,13 @@ select {
 .hour {
   position: absolute;
   height: 51px;
-  width: 3.07px;
+  width: 4.07px;
   margin: auto;
   top: -27%;
   left: 0;
   bottom: 0;
   right: 0;
-  background: white;
+  background: rgb(0, 0, 0);
   transform-origin: bottom center;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
   border-radius: 40%;
@@ -268,43 +273,61 @@ select {
 .minute {
   position: absolute;
   height: 66.32px;
-  width: 2.14px;
+  width: 3.14px;
   top: -38%;
   left: 0;
+
+
+
   box-shadow: 0 0 10 0 rgba(0, 0, 0, 0.4);
   transform: rotate(90deg);
 }
 
+.dark-mode .minute,
+.dark-mode .hour{
+  background: white;
+}
+
+
 .second {
   position: absolute;
   height: 72px;
-  width: 1.43px;
+  width: 2.43px;
   margin: auto;
   top: -40%;
   left: 0;
   bottom: 0;
   right: 0;
   border-radius: 4px;
-  background: #f56e00;
+  background: rgba(0, 123, 255, 0.8);
   transform-origin: bottom center;
   transform: rotate(180deg);
   z-index: 1;
 }
 
+.dark-mode .second {
+  background: #ffcc00;
+}
+
 .point {
   position: absolute;
-  height: 6.12px;
-  width: 6.12px;
+  height: 6.20px;
+  width: 6.20px;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   border-radius: 100px;
-  background: white;
-  border: 2px solid #1b1b1b;
+  background: rgb(0, 0, 0);
+  border: 2px solid rgba(0, 123, 255, 0.8);
   border-radius: 100px;
   margin: auto;
   z-index: 1;
+}
+
+.dark-mode .point {
+  background: #ffffff;
+  border: 2px solid #ffcc00;
 }
 
 .numbers {
@@ -316,7 +339,8 @@ select {
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: invert;
+  backdrop-filter:invert(1);
+  /* backdrop-filter: blur(20px); */
 }
 
 .number {
@@ -326,7 +350,7 @@ select {
   font-weight:bold;
   /* font-family: 'minork'; */
   font-family: 'ancient';
-  color: whitesmoke;
+  color: rgb(0, 0, 0);
   width: 30px;
   height: 30px;
   text-align: center;
@@ -339,23 +363,37 @@ select {
   justify-content:center;
 }
 
+.dark-mode .number {
+  color: rgb(255, 255, 255);
+}
+
+.dark-mode  .numbers {
+  backdrop-filter: none;
+}
+
 
 .dot {
   position: absolute;
-  width: 3px; /* Dimensione del puntino */
-  height: 3px;
+  width: 3.5px; /* Dimensione del puntino */
+  height: 3.5px;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   display: flex;
   text-align: center;
-  background-color: rgb(255, 255, 255); /* Colore dei puntini */
+  background-color: rgb(0, 0, 0); /* Colore dei puntini */
   border: white;
   margin: auto;
   z-index: 1;
   border-radius: 100%;
 }
+
+.dark-mode .dot {
+  background-color: rgb(255, 255, 255);
+}
+
+
 
 .selectMenu {
   display: "flex";
@@ -456,7 +494,7 @@ select {
   border-radius: 20px;
   color: #ffffff;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-  background-color: rgba(58, 58, 58, 0.8);
+  background-color: #333;
 }
 
 .selected-color {
@@ -477,6 +515,7 @@ select {
   margin-bottom: 10px;
   margin-top: 20px;
   height: 44px;
+  font-family: 'minork';
 }
 
 
@@ -534,14 +573,21 @@ select {
 .functionButton button {
   margin-top: 20px;
   padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
-  border: none;
+  background-color: rgba(225, 225, 225, 0.8);
+  border: 3px solid rgba(37, 98, 126, 1);
+  color: rgba(37, 98, 126, 1);
+  /* backdrop-filter: blur(5px); */
   border-radius: 20px;
   cursor: pointer;
   font-size: 18px;
   font-family: 'minork';
   transition: 0.8s;
+}
+
+.dark-mode .functionButton button {
+  background-color: rgba(0, 0, 0, 0.6);
+  border:3px solid #ffcc00;
+  color: #ffcc00;
 }
 
 .functionButton button:hover {
@@ -889,8 +935,8 @@ input[type="checkbox"]:checked + .slider-v3::before {
   position:absolute;
   z-index: -1;
   height: auto;
-  left: 0.74rem;
-  /* left: 0.8%; */
+  top:133px;
+  left: 0.8%;
 }
 
 .scroll div {
@@ -921,9 +967,8 @@ input[type="checkbox"]:checked + .slider-v3::before {
   position: absolute;
   z-index: -1;
   height: auto;
-  /* left: 0.8%; */
-  left: 0.74rem;
-
+  top:179px;
+  left: 0.8%;
 }
 
 .scroll2 div {
@@ -955,8 +1000,8 @@ input[type="checkbox"]:checked + .slider-v3::before {
   position:absolute;
   z-index: -1;
   height: auto;
-  /* left: 0.8%; */
-  left: 0.74rem;
+  top:103px;
+  left: 0.8%;
   transition: 0.5s;
 }
 
@@ -979,27 +1024,6 @@ input[type="checkbox"]:checked + .slider-v3::before {
   transition: 0.5s;
 }
 
-.scroll {
-  top: 8rem; /* Circa 72px se il font base è 16px */
-}
-.scroll2 {
-  top: 11rem;  /* Circa 112px */
-}
-.scroll3 {
-  top: 6.5rem; /* Circa 40px */
-}
-
-.login-page .scroll {
-  top: 8rem; /* Circa 72px se il font base è 16px */
-}
-
-.login-page .scroll2 {
-  top: 11rem;  /* Circa 112px */
-}
-
-.login-page .scroll3 {
-  top: 6.5rem; /* Circa 40px */
-}
 
 
 /*-----------------------------------------------------------*/
@@ -1046,9 +1070,11 @@ input[type="checkbox"]:checked + .slider-v3::before {
   position: sticky;
   top: 10px;
   z-index: 1000;
-  backdrop-filter: blur(25px);
+  backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 10px;
+  padding: 13px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  width: fit-content;
 }
 
 /* Menu classico */
@@ -1135,31 +1161,19 @@ input[type="checkbox"]:checked + .slider-v3::before {
 @media (max-width: 750px) {
 
   .scroll {
-    top: 8.3rem; /* Circa 72px se il font base è 16px */
-    left: 0.2rem;
+    top:140px;
+    width: 97%;
+    left: 1%;
   }
   .scroll2 {
-    top: 11.1rem;  /* Circa 112px */
-    left: 0.2rem;
+    top:183px;
+    width: 97%;
+    left: 1%;
   }
   .scroll3 {
-    top: 7.8rem; /* Circa 40px */
-    left: 0.2rem;
-  }
-
-  .login-page .scroll {
-    top: 8.3rem;
-    left: 0.2rem;
-  }
-
-  .login-page .scroll2 {
-    top: 11.1rem;  /* Circa 112px */
-    left: 0.2rem;
-  }
-
-  .login-page .scroll3 {
-    top: 7.8rem; /* Circa 40px */
-    left: 0.2rem;
+    top:132px;
+    width: 97%;
+    left: 1%;
   }
 
   .scroll div{
@@ -1176,6 +1190,18 @@ input[type="checkbox"]:checked + .slider-v3::before {
 
   .dark-mode .scroll3 div{
     margin-top: 20%;
+  }
+
+  .login-page .scroll {
+    top: 13%; /* <-- NUOVO VALORE (esempio) */
+  }
+
+  .login-page .scroll2 {
+    top: 17%; /* <-- NUOVO VALORE (esempio) */
+  }
+
+  .login-page .scroll3 {
+    top: 12%; /* <-- NUOVO VALORE (esempio) */
   }
 }
 
@@ -1271,17 +1297,16 @@ input[type="checkbox"]:checked + .slider-v3::before {
 }
 
 .profile-picture {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 0 20px #4ECDC4, 0 0 40px #349090;
-  animation: glow-border 1.5s infinite alternate;
-  /* justify-self: center;
-  margin-bottom: 2%; */
-  margin-bottom: 2%; /* Questo lo avevi già */
+  position: relative; /* Relative per stare sopra l'absolute */
+  z-index: 10;        /* Livello superiore */
+  width: 80px;        /* Aumento leggermente per visibilità */
+  height: 80px;
+  /* Rimuovi margini o posizionamenti assoluti vecchi che creano conflitti */
+  margin: 0;
+  top: auto;
+  left: auto;
+  transform: none;
 }
-
 .profile-info {
   margin-bottom: 2%;
   display: flex;
@@ -1289,18 +1314,18 @@ input[type="checkbox"]:checked + .slider-v3::before {
   align-items: center;  /* Centra tutto orizzontalmente */  
 }
 
-@keyframes glow-border {
+/* @keyframes glow-border {
   0% {
     box-shadow: 0 0 20px #4ECDC4, 0 0 40px #349090;
   }
   100% {
     box-shadow: 0 0 50px #4ECDC4, 0 0 70px #349090;
   }
-}
+} */
 
 .dark-mode .upload-button {
   color: #ffffff;
-  background-color:rgba(58, 58, 58, 0.8);
+  background-color:#333;
 }
 
 .CardImage {
@@ -1438,6 +1463,7 @@ input::placeholder {
   background-color: transparent;
   border:3px solid rgba(37, 98, 126, 0.8);
   color: rgba(37, 98, 126, 1);
+  font-family: 'minork';
   /* backdrop-filter: blur(5px); */
 }
 
@@ -1739,10 +1765,15 @@ input::placeholder {
   height: 44px;
 }
 
+@media screen and (max-width: 750px) {
+  .details-toggle-button {
+    height: 65px;
+  }
+}
 
 
 .notes-textarea {
-  width: 50%;
+  width: 80%;
   min-height: 80px;
   padding: 10px;
   margin: 10px 0;
@@ -1790,4 +1821,28 @@ input::placeholder {
 
 .dark-mode .InfoColorInfo {
   color: #ffcc00;
-} 
+}
+
+
+/* Wrapper principale */
+.slideWrap_Container {
+  height: 40px;
+  display: flex;
+  position: sticky;
+  top: 20px;
+  z-index: 1000;
+  border-radius: 20px;
+  padding: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.circular-text-container {
+  position: relative;
+  height: 165px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  width: 500px;
+}

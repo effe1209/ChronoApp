@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import GlassSurface from './GlassSurface';
 
 // Componente auto-contenuto per l'orologio analogico
 function Clock() {
@@ -72,6 +73,12 @@ function Clock() {
 
   return (
     <div className="clockContainer">
+      <GlassSurface 
+          width={180} 
+          height={180}
+          borderRadius={100}
+          className="my-custom-class"
+        >
       <div className="clock">
         <div className="wrap">
           <div className="numbers">
@@ -106,6 +113,7 @@ function Clock() {
           </div>
         </div>
       </div>
+      </GlassSurface>
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import React from 'react';
 import FeatureCheckboxList from './FeatureCheckboxList'; // Importa il nuovo componente
+import Stepper, { Step } from './Stepper';
+
 
 // Questo è solo il Form per aggiungere un orologio
 // Riceve tutto lo stato e i gestori da App.jsx
@@ -26,10 +28,29 @@ const AddWatchForm = ({
 
   return (
     <>
+    
       <div className="titleList">
         <h3>Aggiungi un nuovo orologio</h3>
       </div>
       <div className="form">
+        <Stepper
+          initialStep={1}
+          onStepChange={(step) => console.log("Step changed to:", step)}
+          
+          // 1. COLLEGA IL SALVATAGGIO QUI
+          // Quando l'utente preme "Finito" o "Salva" sull'ultimo step, scatta questa funzione
+          onFinalStepCompleted={handleAddWatch}
+          
+          // 2. PASSA LA FUNZIONE DI ANNULLAMENTO (Dovrai gestirla dentro Stepper.jsx)
+          onCancel={handleCancel} 
+
+          // Personalizzazione testi bottoni
+          backButtonText="Indietro"
+          nextButtonText="Avanti"
+          finishButtonText="Salva" // Testo per l'ultimo step (se il tuo Stepper lo supporta)
+        >
+        <Step>
+        <h3>Nome</h3>
         <input
           type="text"
           placeholder="Nome"
@@ -38,6 +59,9 @@ const AddWatchForm = ({
             setNewWatch({ ...newWatch, name: e.target.value })
           }
         />
+        </Step>
+        <Step>
+        <h3>Marca</h3>
         <input
           type="text"
           placeholder="Marca"
@@ -46,6 +70,9 @@ const AddWatchForm = ({
             setNewWatch({ ...newWatch, brand: e.target.value })
           }
         />
+        </Step>
+        <Step>
+        <h3>Anno</h3>
         <input
           type="number"
           placeholder="Anno"
@@ -54,15 +81,20 @@ const AddWatchForm = ({
             setNewWatch({ ...newWatch, year: e.target.value })
           }
         />
+        </Step>
+        <Step>
+        <h3 style={{marginBottom:"10px !important"}}>Prezzo di Acquisto</h3>
         <input
           type="number"
-          placeholder="Prezzo di Acquisto (€)"
+          placeholder="Prezzo (€)"
           value={newWatch.money || ''} // Usa '' per input controllato
           onChange={(e) =>
             setNewWatch({ ...newWatch, money: e.target.value ? Number(e.target.value) : null })
           }
         />
-        <div style={{ marginBottom: "10px" }}></div>
+        </Step>
+        <Step>
+        <h3>Dettagli</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", width: "100%"}}>
           <div className="selectMenu">
             <label>
@@ -75,9 +107,9 @@ const AddWatchForm = ({
               style={{textAlign: "center", display: "flex"}}
             >
               <option className="menuTendina" value="">Seleziona il movimento</option>
-              <option className="menuTendina" value="Automatico">Automatico</option>
-              <option className="menuTendina" value="Carica Manuale">Carica Manuale</option>
-              <option className="menuTendina" value="Quarzo">Quarzo</option>
+              <option className="menuTendina" value="Automatico">🌀 Automatico</option>
+              <option className="menuTendina" value="Carica Manuale">🤏 Carica Manuale</option>
+              <option className="menuTendina" value="Quarzo">🔋 Quarzo</option>
             </select>
           </div>
           <label>
@@ -87,7 +119,7 @@ const AddWatchForm = ({
           <button
             type="button" 
             className="color-picker-button"
-            style={{ backgroundColor: newWatch.color || ''}}
+            style={{ backgroundColor: newWatch.color}}
             tabIndex="-1" 
           >
             🎨 Scegli un colore
@@ -102,8 +134,12 @@ const AddWatchForm = ({
           {newWatch.color && <p className="selected-color">Colore selezionato: {newWatch.color}</p>}
       </div>
         </div>
+        </Step>
+        
+      
 
-        <div style={{ marginBottom: "10px" }}></div>
+        <Step>
+          <h3>Immagine</h3>
         <div className="upload-container">
           <input
             type="file"
@@ -118,7 +154,6 @@ const AddWatchForm = ({
             📸 Seleziona un'immagine
           </button>
         </div>
-        
         {/* Anteprima immagine (se 'image' è un oggetto File) */}
         {newWatch.image && typeof newWatch.image === 'object' && (
             <img
@@ -126,11 +161,12 @@ const AddWatchForm = ({
               alt="Anteprima"
               className="preview-image"
               width="100"
-              loading="lazy"
               onLoad={() => URL.revokeObjectURL(newWatch.image)} // Pulisci memoria
             />
         )}
-
+        </Step>
+        <Step>
+          <h3>Dettagli Orologi</h3>
         {/* Pulsante Dettagli */}
         <div style={{ margin: "20px 0 10px 0", width: "100%" }}>
           <button
@@ -150,7 +186,10 @@ const AddWatchForm = ({
             onChange={handleFeatureChange}
           />
         )}
+        </Step>
 
+        <Step>
+          <h3>Caratteristiche Aggiuntive</h3>
         {/* Pulsante Note */}
         <div style={{ margin: "20px 0 10px 0", width: "100%" }}>
           <button
@@ -161,7 +200,6 @@ const AddWatchForm = ({
             {isNotesVisible ? 'Chiudi Note ▴' : 'Apri Note ▾'}
           </button>
         </div>
-
         {/* Textarea Note */}
         {isNotesVisible && (
           <div>
@@ -176,11 +214,13 @@ const AddWatchForm = ({
         </div>
         )}
         
-        <div style={{ marginBottom: "30px" }}></div>
+        {/* <div style={{ marginBottom: "30px" }}></div>
         <div className="buttonForm">
           <button onClick={handleAddWatch}>Salva</button>
           <button onClick={handleCancel}>Annulla</button>
-        </div>
+        </div> */}
+        </Step>
+        </Stepper>
       </div>
     </>
   );

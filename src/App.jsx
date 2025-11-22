@@ -1,9 +1,22 @@
-import { useState, useEffect, useRef, useTransition, useLayoutEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef, useTransition, useLayoutEffect, useMemo } from "react";
 // Import Supabase e servizi (invariati)
 import { supabase } from './components/supabaseClient';
 import { addWatchService } from './components/watchService';
 import AuthForm from './components/AuthForm';
-import WatchAnalytics from './components/WatchAnalytics'; // Già un componente!
+import WatchAnalytics from './components/WatchAnalytics'; 
+import GlassSurface from './components/GlassSurface';
+import TiltedCard from './components/TiltedCard';
+import FloatingLines from './components/FloatingLines';
+import CircularText from './components/CircularText';
+import MetaBalls from './components/MetaBalls';
+import InfiniteMenu from './components/InfiniteMenu'
+import InfiniteGridModal from './components/InfiniteGridModal';
+
+// Importa i componenti dock e le icone VSC
+import Dock from './components/Dock'; 
+// *** FIX IMPORT DELLE ICONE VSC ***
+import { VscHome, VscArchive, VscAccount, VscSettingsGear } from 'react-icons/vsc';
+
 
 // Import dei nuovi componenti creati
 import UserProfile from './components/UserProfile';
@@ -80,12 +93,70 @@ function App() {
   const [modalTitle, setModalTitle] = useState(""); 
   const [color, setColor] = useState("");
   const [isCarouselVisible, setIsCarouselVisible] = useState(false);
+  const [isInfiniteGridVisible, setIsInfiniteGridVisible] = useState(false);
 
-  // --- LOGICA EFFETTI COLLATERALI (useEffect, useLayoutEffect) ---
+  // --- NUOVO: Stato per tracciare la sezione attiva nel Dock ---
+  const [activeSection, setActiveSection] = useState('Home'); 
 
-  // Effetti di scroll e anchor link (ora dentro React)
+  // --- NUOVO: Configurazione Elementi del Dock ---
+  // Definiamo qui gli items per poter passare la funzione di scroll specifica
+  const items = [
+    { icon: <VscHome size={18} />, label: 'Home', onClick: () => scrollToSection('home-section') },
+    { icon: <VscAccount size={18} />, label: 'Profile', onClick: () => scrollToSection('profile-section') },
+    { icon: <VscSettingsGear size={18} />, label: 'Functions', onClick: () => scrollToSection('function-section') },
+    { icon: <VscArchive size={18} />, label: 'Watches', onClick: () => scrollToSection('watch-list-section') },
+  ];
+
+  // --- NUOVO: Helper per lo Scroll Fluido ---
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const labelMap = {
+        'home-section': 'Home',
+        'watch-list-section': 'Watches',
+        'profile-section': 'Profile',
+        'function-section': 'Functions'
+      };
+      setActiveSection(labelMap[id]);
+    }
+  };
+
   useEffect(() => {
-    // Gestore per anchor link
+    if (!user) return;
+
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          if (id === 'home-section') setActiveSection('Home');
+          if (id === 'profile-section') setActiveSection('Profile');
+          if (id === 'function-section') setActiveSection('Functions');
+          if (id === 'watch-list-section') setActiveSection('Watches');
+        }
+      });
+    };
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -60% 0px', 
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    
+    const sections = ['home-section', 'profile-section', 'function-section', 'watch-list-section'];
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [user, watches]);
+
+
+  // Effetti di scroll e anchor link
+  useEffect(() => {
     const anchors = document.querySelectorAll('a[href^="#"]');
     const handleClick = (e) => {
       e.preventDefault();
@@ -95,6 +166,21 @@ function App() {
       }
     };
     anchors.forEach(anchor => anchor.addEventListener("click", handleClick));
+    
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                const sectionId = entry.target.id; 
+                const dockName = {
+                    'home': 'Home',
+                    'profile-section': 'Profile',
+                    'watch-list': 'Watches',
+                    'function': 'Functions'
+                }[sectionId] || activeSection; 
+                setActiveSection(dockName);
+            }
+        });
+    }, { threshold: 0.5 });
 
     // Gestore per scroll blur
     let timeout;
@@ -103,27 +189,28 @@ function App() {
       if (!slideWrap) return;
 
       if (window.scrollY > 30) {
-        slideWrap.style.backdropFilter = "blur(25px)";
+        slideWrap.style.backdropFilter = "blur(10px)";
       } else {
-        slideWrap.style.backdropFilter = "none";
+        slideWrap.style.backdropFilter = "blur(10px)";
       }
 
       clearTimeout(timeout);
       timeout = setTimeout(() => {
         if (window.scrollY === 0) {
-          slideWrap.style.backdropFilter = "none";
+          slideWrap.style.backdropFilter = "blur(10px)";
         }
       }, 200);
     };
     window.addEventListener("scroll", handleScroll);
 
-    // Cleanup
     return () => {
       anchors.forEach(anchor => anchor.removeEventListener("click", handleClick));
       window.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
       clearTimeout(timeout);
     };
-  }, []); // Eseguiti solo al mount
+  }, [activeSection]);
+
 
   useLayoutEffect(() => {
     console.log("Layout watches ricalcolato prima del paint.");
@@ -157,11 +244,11 @@ function App() {
 
     const savedNickname = localStorage.getItem('nickname');
     if (savedNickname) setNickname(savedNickname);
-  }, []); // Nota: fetchWatches è chiamato solo al primo caricamento dell'utente
+  }, []);
 
   // Salva nickname
   useEffect(() => {
-    if(nickname) { // Salva solo se il nickname non è vuoto
+    if(nickname) {
       localStorage.setItem("nickname", nickname);
     }
   }, [nickname]);
@@ -179,9 +266,9 @@ function App() {
       }
     };
     loadFeatures();
-  }, []); // Carica solo una volta
+  }, []);
 
-  // --- LOGICA DATI E AUTH (Funzioni) ---
+  // --- LOGICA DATI E AUTH (Invariata) ---
 
   const handleRegister = async () => {
     setLoading(true);
@@ -199,7 +286,6 @@ function App() {
       if (profileError) throw profileError;
 
       setMessage("Registrazione avvenuta con successo! Controlla la tua email per confermare l'account.");
-      // Non è necessario ricaricare l'utente qui, aspetterà la conferma
     } catch (error) {
       setMessage("Errore: " + (error.message || "Si è verificato un errore."));
     } finally {
@@ -235,13 +321,12 @@ function App() {
           
         if (profileError) {
           console.error("Errore nel recupero del nome utente:", profileError);
-          // Non bloccare il login per questo
         } else if (userProfile) {
           setNickname(userProfile.username);
         }
         
         setMessage("Accesso effettuato con successo!");
-        fetchWatches(data.user.id); // Carica gli orologi DOPO il login
+        fetchWatches(data.user.id);
       } else {
         setMessage("Accesso non riuscito: Nessun utente trovato.");
       }
@@ -263,58 +348,23 @@ function App() {
     setNickname('');
   };
 
-  // const handleAddWatch = async () => {
-  //   const stateOptions = {
-  //     newWatch,
-  //     user,
-  //     setLoading,
-  //     setWatches,
-  //     setNewWatch,
-  //     setMessage,
-  //     fetchWatches, // Passa la funzione di fetch per ricaricare
-  //   };
-  //   // Il servizio gestirà la logica e il reset del form
-  //   await addWatchService(stateOptions);
-  //   // Resetta lo stato della UI del form
-  //   handleCancel(); 
-  // };
-  
-  // Funzione helper per upload
-  
-  // Dentro App.jsx
-
 const handleAddWatch = async () => {
-  // 1. Prepara le opzioni per il servizio
   const stateOptions = {
     newWatch,
     user,
     setLoading,
     setMessage, 
-    // NON passare setWatches o setNewWatch
   };
 
   try {
-    // 2. Chiama il servizio. 
-    //    (Assumiamo che watchService.js sia stato modificato 
-    //     per NON chiamare setWatches e lanciare un errore se fallisce)
     await addWatchService(stateOptions);
-    
-    // 3. SE il servizio ha successo:
     setMessage('Orologio aggiunto con successo!');
-    
-    // 4. Resetta il form QUI, in App.jsx
-    handleCancel(); // Usa la tua funzione di reset
-    
-    // 5. FONDAMENTALE: Ricarica l'intera lista.
-    //    Questo fa sì che il nuovo orologio passi attraverso 
-    //    la logica di 'fetchWatches' e ottenga la sua 'imageUrl'.
+    handleCancel();
     await fetchWatches(user.id);
-
   } catch (error) {
-    // 6. Il servizio ha fallito
     console.error("Errore (da addWatchService):", error);
     setMessage(error.message || "Errore durante l'aggiunta dell'orologio.");
-    setLoading(false); // Assicurati che il loading termini
+    setLoading(false);
   }
 };
 
@@ -338,9 +388,6 @@ const handleAddWatch = async () => {
         .upload(fileName, compressedFile);
 
       if (error) throw error;
-      
-      // Restituisce il *percorso* dell'immagine, non l'URL pubblico intero
-      // Questo è più robusto per gli aggiornamenti
       return data.path; 
 
     } catch (error) {
@@ -351,20 +398,14 @@ const handleAddWatch = async () => {
   };
 
   const deleteImage = async (imagePath) => {
-    // La funzione ora si aspetta un percorso (es. "userid/image.jpg")
-    // e non un URL completo
     if (!imagePath) return;
-
-    // Se riceve un URL completo per retrocompatibilità, prova a estrarre il percorso
     let filePath = imagePath;
     if (imagePath.includes('/storage/v1/object/public/fotoWatch/')) {
         filePath = imagePath.split("/storage/v1/object/public/fotoWatch/")[1];
     }
-    
     const { error } = await supabase.storage
       .from("fotoWatch")
       .remove([filePath]);
-
     if (error) {
       console.error("Errore nell'eliminazione dell'immagine:", error.message);
     }
@@ -373,17 +414,10 @@ const handleAddWatch = async () => {
   const handleDeleteWatch = async (id, imagePath) => {
     const isConfirmed = window.confirm("Sei sicuro di voler eliminare questo orologio?");
     if (!isConfirmed) return;
-    
     try {
-      // Passa imagePath (es. "userid/image.jpg")
-      if (imagePath) {
-        await deleteImage(imagePath);
-      }
-
+      if (imagePath) await deleteImage(imagePath);
       const { error } = await supabase.from("watches").delete().eq("id", id);
       if (error) throw error;
-      
-      // Rimuovi l'orologio dallo stato locale invece di un fetch completo
       setWatches(prevWatches => prevWatches.filter(watch => watch.id !== id));
       setMessage("Orologio eliminato con successo!");
     } catch (error) {
@@ -391,20 +425,10 @@ const handleAddWatch = async () => {
     }
   };
 
-// Questo codice va in App.jsx
-
-// 1. PRIMA, definisci una funzione helper per generare l'URL
-//    (Assicurati che 'supabase' sia definito e accessibile)
 const getPublicUrl = (path) => {
-  if (!path) {
-    return null; // Se non c'è percorso, restituisci null
-  }
+  if (!path) return null;
   try {
-    // Assicurati che 'fotoWatch' sia il nome corretto del tuo bucket
-    const { data } = supabase.storage
-      .from("fotoWatch")
-      .getPublicUrl(path);
-      
+    const { data } = supabase.storage.from("fotoWatch").getPublicUrl(path);
     return data.publicUrl;
   } catch (error) {
     console.error("Errore nel generare l'URL pubblico:", error);
@@ -412,29 +436,19 @@ const getPublicUrl = (path) => {
   }
 };
 
-// 2. POI, usa l'helper DENTRO fetchWatches
 const fetchWatches = async (userid) => {
   try {
     const { data, error } = await supabase
       .from("watches")
       .select("*, Orologi_Caratteristiche(*, caratteristiche(*))") 
       .eq("userid", userid);
-    
     if (error) throw error;
-
     const userWatches = data.map((watch) => {
       const features = watch.Orologi_Caratteristiche.map(
         (joinEntry) => joinEntry.caratteristiche
       );
-
-      return {
-        ...watch,
-        caratteristiche: features,
-        // NON chiamare getPublicUrl. Usa 'watch.image' direttamente
-        imageUrl: watch.image 
-      };
+      return { ...watch, caratteristiche: features, imageUrl: watch.image };
     });
-
     setWatches(userWatches);
   } catch (error) {
     setMessage("Errore durante il recupero degli orologi: " + error.message);
@@ -451,7 +465,7 @@ const fetchWatches = async (userid) => {
     setIsDetailsMenuOpen(false);
     setIsDetailsMenuOpenMOD(false);
     setIsNotesVisible(false);
-    setShowForm(false); // Nasconde anche il form
+    setShowForm(false);
   };
 
   const handleImageChange = (event) => {
@@ -461,7 +475,6 @@ const fetchWatches = async (userid) => {
     }
   };
   
-  // Gestore per l'immagine di *modifica*
   const handleModifyImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -469,15 +482,12 @@ const fetchWatches = async (userid) => {
     }
   };
 
-
   const handleDayWatch = async (userid) => {
     try {
-      // Non c'è bisogno di un fetch, usiamo lo stato 'watches'
       if (watches && watches.length > 0) {
         const randomIndex = Math.floor(Math.random() * watches.length);
         const randomWatch = watches[randomIndex];
-        
-        setSelectedWatch(randomWatch); // Usa lo stesso stato per tutti i modali
+        setSelectedWatch(randomWatch);
         setModalTitle("Orologio del Giorno");
         setIsModalVisible(true);
       } else {
@@ -497,32 +507,27 @@ const fetchWatches = async (userid) => {
   }, [watches]);
 
   const handleModifyWatch = (watchToModify) => {
-    // Non serve fetch, riceve l'oggetto 'watch' completo dalla lista
     const featureIDs = watchToModify.caratteristiche.map(
       (feature) => feature.id_caratteristica
     );
-    
     setModifyWatch(watchToModify); 
-    
     setUpdatedWatch({
       name: watchToModify.name,
       brand: watchToModify.brand,
       year: watchToModify.year,
       movement: watchToModify.movement,
       color: watchToModify.color || '',
-      image: watchToModify.image || '', // Percorso file esistente
-      imageUrl: watchToModify.imageUrl || '', // URL per display
+      image: watchToModify.image || '', 
+      imageUrl: watchToModify.imageUrl || '', 
       isFavorite: watchToModify.isFavorite,
       money: watchToModify.money || null,
       features: featureIDs,
       note: watchToModify.note || "",
     });
-    
     setIsModifyVisible(true);
   };
 
   const handleInfoWatch = (watchToShow) => {
-    // Non serve fetch, riceve l'oggetto 'watch'
     setSelectedWatch(watchToShow);
     setIsInfoVisible(true);
   };
@@ -530,42 +535,40 @@ const fetchWatches = async (userid) => {
   const handleShowStats = () => {
     setIsStatisticheVisible(true);
   };
+
+  const handleInfiniteGrid = () => {
+    setIsInfiniteGridVisible(true);
+  };
   
   const handleSaveChanges = async () => {
     setLoading(true);
     try {
       const { features, image, imageUrl, ...watchData } = updatedWatch;
-      
       let finalWatchData = { ...watchData }; 
       const oldImagePath = modifyWatch.image; 
 
-      // Controlla se 'image' è un nuovo File (non una stringa/percorso)
       if (image instanceof File) {
         const newImagePath = await uploadImage(image);
         if (newImagePath) {
-            finalWatchData.image = newImagePath; // Salva il *percorso*
+            finalWatchData.image = newImagePath; 
             if (oldImagePath) {
-              await deleteImage(oldImagePath); // Elimina la vecchia
+              await deleteImage(oldImagePath); 
             }
         }
       } else {
-        // Altrimenti, mantieni il vecchio percorso
         finalWatchData.image = oldImagePath;
       }
 
-      // PASSO 1: Aggiorna 'watches'
       const { data: updatedData, error: updateError } = await supabase
         .from('watches')
         .update(finalWatchData) 
         .eq('id', modifyWatch.id)
-        .select() // Chiedi i dati aggiornati
-        .single(); // Ci aspettiamo un solo record
+        .select()
+        .single();
 
       if (updateError) throw updateError;
 
-      // PASSO 2: Aggiorna 'caratteristiche'
       const watchId = modifyWatch.id;
-
       const { error: deleteError } = await supabase
         .from('Orologi_Caratteristiche')
         .delete()
@@ -583,16 +586,12 @@ const fetchWatches = async (userid) => {
         if (insertError) throw insertError;
       }
       
-      // PASSO 3: Aggiorna lo stato locale
-      // Per evitare un fetch, aggiorniamo manualmente lo stato 'watches'
-      // Ricostruisci le caratteristiche per l'oggetto locale
       const updatedFeatures = allFeaturesList.filter(f => features.includes(f.id_caratteristica));
-      
       const locallyUpdatedWatch = {
-          ...modifyWatch, // Inizia con i vecchi dati (es. Orologi_Caratteristiche)
-          ...updatedData, // Sovrascrivi con i dati aggiornati da 'watches'
-          caratteristiche: updatedFeatures, // Inserisci le caratteristiche aggiornate
-          imageUrl: getPublicUrl(updatedData.image) // Rigenera l'URL
+          ...modifyWatch,
+          ...updatedData,
+          caratteristiche: updatedFeatures,
+          imageUrl: getPublicUrl(updatedData.image)
       };
 
       setWatches(prevWatches => 
@@ -601,7 +600,6 @@ const fetchWatches = async (userid) => {
 
       setMessage("Orologio aggiornato con successo!");
       setIsModifyVisible(false);
-      
     } catch (error) {
       console.error("Errore durante il salvataggio delle modifiche:", error);
       setMessage("Errore: " + error.message);
@@ -610,15 +608,12 @@ const fetchWatches = async (userid) => {
     }
   };
 
-
   const handleFavoriteToggle = async (watchId) => {
     const currentWatch = watches.find(w => w.id === watchId);
     if (!currentWatch) return;
     
     const newFavoriteState = !currentWatch.isFavorite;
 
-    // Aggiornamento Optimistic (UI prima, poi DB)
-    // Avvolgi in startTransition per animazione fluida
     startTransition(() => {
         setWatches(prevWatches =>
             prevWatches.map(watch =>
@@ -629,7 +624,6 @@ const fetchWatches = async (userid) => {
         );
     });
 
-    // Aggiornamento DB in background
     const { error } = await supabase
         .from('watches')
         .update({ isFavorite: newFavoriteState })
@@ -637,12 +631,11 @@ const fetchWatches = async (userid) => {
 
     if (error) {
         console.error("Errore Supabase (ripristino UI):", error);
-        // Rollback in caso di errore
         startTransition(() => {
           setWatches(prevWatches =>
               prevWatches.map(watch =>
                   watch.id === watchId
-                      ? { ...watch, isFavorite: !newFavoriteState } // Ripristina
+                      ? { ...watch, isFavorite: !newFavoriteState } 
                       : watch
               )
           );
@@ -652,7 +645,6 @@ const fetchWatches = async (userid) => {
   };
 
   // --- LOGICA OUTFIT (Funzioni) ---
-
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -686,7 +678,7 @@ const fetchWatches = async (userid) => {
     const b = parseInt(hexColor.substring(5, 7), 16);
   
     const calculateDistance = (colorHex) => {
-      if (!colorHex) return Infinity; // Gestisce colori non definiti
+      if (!colorHex) return Infinity; 
       const r2 = parseInt(colorHex.substring(1, 3), 16);
       const g2 = parseInt(colorHex.substring(3, 5), 16);
       const b2 = parseInt(colorHex.substring(5, 7), 16);
@@ -730,30 +722,122 @@ const fetchWatches = async (userid) => {
     });
   };
 
+  const [isDark, setIsDark] = useState(
+    () => localStorage.getItem("theme") === "dark" 
+  );
+
+  // 2. PORTA QUI L'EFFETTO (SIDE EFFECT)
+  useEffect(() => {
+    if (isDark) {
+      document.body.classList.add("dark-mode");
+      document.documentElement.setAttribute("style", "color-scheme:dark"); 
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark-mode");
+      document.documentElement.setAttribute("style", "color-scheme:light");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDark]);
+
+  // Funzione helper per cambiare stato (opzionale, ma pulita)
+  const toggleTheme = () => setIsDark(!isDark);
+
+  const floatingConfig = isDark 
+    ? {bg: "#000000", gradient: [],blend: "screen"}
+    : {bg: "#476d7ed6", gradient: ["#ff8ce2ff", "#77bebaff"], blend: "screen"};
+
+
+    const BackgroundLayer = useMemo(() => {
+      return (
+        <div style={{ 
+            position: 'fixed', 
+            top: 0, 
+            left: 0, 
+            width: '100%', 
+            height: '100%', 
+            zIndex: -1,
+            pointerEvents: 'auto',
+            backgroundColor: floatingConfig.bg, // Usa il colore configurato
+            transition: "background-color 0.3s ease"
+        }}>
+          <FloatingLines 
+            linesGradient={floatingConfig.gradient} // Usa il gradiente configurato
+            mixBlendMode={floatingConfig.blend}     // Usa il blend configurato
+            enabledWaves={['top', 'middle', 'bottom']}
+            lineCount={[5, 5, 5]}
+            lineDistance={[8, 6, 4]}
+            bendRadius={5.0}
+            bendStrength={-0.5}
+            interactive={false} // Se true, attenzione che il mouse potrebbe triggerare render
+            parallax={true}
+          />
+        </div>
+      );
+    }, [isDark, floatingConfig.bg, floatingConfig.blend]);
 
   // --- RENDER ---
   return (
+    <>
+    {BackgroundLayer}
+
+    {/* MAIN CONTENT LAYER */}
     <div 
       className={`container ${!user ? 'login-page' : ''}`} 
       id="home"
+      style={{ position: 'relative', zIndex: 1 }} // Assicuro che il contenuto stia sopra
     >
-      <DarkModeSwitch />
+      <div className="slideWrap_Container">
+        <GlassSurface 
+          width={100} 
+          height={60}
+          borderRadius={20}
+          className="my-custom-class"
+        >
+        <DarkModeSwitch 
+          isDark={isDark}       // Passiamo il valore
+          toggleTheme={toggleTheme} // Passiamo la funzione per cambiarlo
+          isUserLoggedIn={!!user} 
+          onLogout={handleLogout} 
+          onAddWatchToggle={() => setShowForm(!showForm)}
+          isFormVisible={showForm}
+        />
+        </GlassSurface>
+        {user && (
+          <GlassSurface 
+          width="min(350px, 30vw)"
+          height={60}
+          borderRadius={20}
+          className="my-custom-class"
+        >
+          <Dock 
+            items={items}
+            activeSection={activeSection} 
+            onLogout={handleLogout}
+            onAddWatchToggle={() => setShowForm(!showForm)}
+            isFormVisible={showForm}
+            panelHeight={68}
+            baseItemSize={50}
+            magnification={70}
+          />
+          </GlassSurface>
+        )}
+        </div>
+      <div id="home-section">
+        <Clock /> 
       
-      <Clock /> {/* Componente Orologio */}
-      
-      {/* Componenti Scrolling Brands */}
-      <ScrollingBrands1 />
-      <ScrollingBrands2 />
-      <ScrollingBrands3 />
+        <ScrollingBrands1 />
+        <ScrollingBrands2 />
+        <ScrollingBrands3 />
 
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        <div className="titleList" style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "center" }}>
-          <h1>La mia collezione di orologi</h1>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+          <div className="titleList" style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "center" }}>
+            <h1>La mia collezione di orologi</h1>
+          </div>
         </div>
       </div>
 
       {message && <p className="message" onClick={() => setMessage(null)}>{message}</p>}
-      {loading && <div className="loading-spinner"></div>} {/* Spinner CSS */}
+      {loading && <div className="loading-spinner"></div>} 
       <div style={{ marginBottom: "20px" }}></div>
 
       {!user ? (
@@ -767,33 +851,45 @@ const fetchWatches = async (userid) => {
           handleRegister={handleRegister}
           handleLogin={handleLogin}
           handleKeyDown={handleKeyDown}
+          isDark={isDark} 
         />
       ) : (
         <>
-          <div className="profile-info">
-            <div className="profile-picture">
-                <UserProfile email={email} />
+          <div className="profile-info" id="profile-section">
+            <div className="circular-text-container">
+              {/* <CircularText
+                text={`${email} • `}
+                onHover="speedUp"
+                spinDuration={20}
+                className="custom-class"
+                position="absolute"
+                fontSize={14}
+              /> */}
+              <MetaBalls
+                color={isDark ? "#ffcc00" : "#25627e"}
+                cursorBallColor={isDark ? "#c8a102ff" : "#1f4d63ff"}
+                // color={isDark ? "#000000ff" : "#ffffffff"}
+                // cursorBallColor={isDark ? "#ffcc00" : "#28434fff"}
+                // color={isDark ? "#ffffffff" : "#000000ff"}
+                // cursorBallColor={isDark ? "#959595ff" : "#494949ff"}
+                cursorBallSize={2}
+                ballCount={16}
+                animationSize={21}
+                enableMouseInteraction={true}
+                enableTransparency={true}
+                hoverSmoothness={0.05}
+                clumpFactor={1}
+                speed={0.3}
+                zIndex={10}
+              />
+              <div className="profile-picture">
+                  <UserProfile email={email} isDark={isDark} />
+              </div>
             </div>
             <h4 className="Saluti">Benvenuto, {nickname}</h4>
             <p style={{ fontSize: "20px", paddingBottom: "20px"}}>Valore: {totalMoney.toLocaleString('it-IT')} €</p>
            </div>
-           
-          <div className="profile-log">
-            <div className="buttonForm" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
-              <button className="logout-btn" onClick={handleLogout}>
-                Logout
-              </button>
-              <span className="decorative-symbol">✦</span>
-              <button
-                onClick={() => setShowForm(!showForm)}
-                style={{ width: "200px", padding: "10px", paddingButtom: "10px",}}
-              >
-                {showForm ? "Nascondi Form" : "Aggiungi Orologio"}
-              </button>
-            </div> 
-          </div>
 
-          {/* Componente Form Aggiungi */}
           <AddWatchForm
             showForm={showForm}
             newWatch={newWatch}
@@ -814,16 +910,15 @@ const fetchWatches = async (userid) => {
             <hr className="custom-separator" />
           </div>
           
-          <h2 style={{paddingBottom:"2%"}} id="function">Funzioni</h2>
-          
-          {/* Componente Sezione Funzioni */}
-          <FunctionsSection
-            onDayWatchClick={() => handleDayWatch(user.id)}
-            onOutfitImageChange={handleImageUpload}
-            fileInputRefOutfit={fileInputRefOutfit}
-          />
+          <div id="function-section">
+            <h2 style={{paddingBottom:"2%"}} id="function">Funzioni</h2>
+            <FunctionsSection
+              onDayWatchClick={() => handleDayWatch(user.id)}
+              onOutfitImageChange={handleImageUpload}
+              fileInputRefOutfit={fileInputRefOutfit}
+            />
+          </div>
 
-          {/* Componenti Modali */}
           <OutfitModal
             isVisible={isCarouselVisible}
             setIsVisible={setIsCarouselVisible}
@@ -848,8 +943,8 @@ const fetchWatches = async (userid) => {
             modifyWatch={modifyWatch}
             updatedWatch={updatedWatch}
             setUpdatedWatch={setUpdatedWatch}
-            handleModifyImageChange={handleModifyImageChange} // Passa il gestore corretto
-            fileInputRef={fileInputRef} // Riutilizza lo stesso ref
+            handleModifyImageChange={handleModifyImageChange} 
+            fileInputRef={fileInputRef} 
             isDetailsMenuOpenMOD={isDetailsMenuOpenMOD}
             setIsDetailsMenuOpenMOD={setIsDetailsMenuOpenMOD}
             isNotesVisibleMOD={isNotesVisibleMOD}
@@ -859,33 +954,40 @@ const fetchWatches = async (userid) => {
             handleSaveChanges={handleSaveChanges}
           />
 
-          <h2>Lista Orologi</h2>
+          <h2 id="watch-list">Lista Orologi</h2> 
           
-          {/* Componente Lista Orologi */}
-          <WatchList 
-            watches={watches} 
-            handleModifyWatch={handleModifyWatch} // Passa l'oggetto watch
-            handleDeleteWatch={handleDeleteWatch}
-            handleFavoriteToggle={handleFavoriteToggle}
-            handleInfoWatch={handleInfoWatch} // Passa l'oggetto watch
-            handleShowStats={handleShowStats}
-            user={user} // Necessario per i bottoni? No, App gestisce la logica
-          />
+          <div id="watch-list-section">
+            <WatchList 
+              watches={watches} 
+              handleModifyWatch={handleModifyWatch} 
+              handleDeleteWatch={handleDeleteWatch}
+              handleFavoriteToggle={handleFavoriteToggle}
+              handleInfoWatch={handleInfoWatch} 
+              handleShowStats={handleShowStats}
+              user={user} 
+              handleInfiniteGrid={handleInfiniteGrid}
+            />
+          </div>
         </>
       )}
-      {/* Altri Componenti Modali */}
           <StatsModal
             isVisible={isStatisticheVisible}
             setIsVisible={setIsStatisticheVisible}
             watches={watches}
           />
-          
           <InfoWatchModal
             isVisible={isInfoVisible}
             setIsVisible={setIsInfoVisible}
             selectedWatch={selectedWatch}
           />
+          <InfiniteGridModal 
+            isVisible={isInfiniteGridVisible} 
+            setIsVisible={setIsInfiniteGridVisible} 
+            handleInfoWatch={handleInfoWatch}
+            watches={watches} // Passa la lista completa degli orologi
+          />
     </div>
+    </>
   );
 }
 
