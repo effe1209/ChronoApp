@@ -58,10 +58,11 @@ const WatchList = ({
         <button 
           onClick={handleInfiniteGrid}
           style={{ width: "200px", padding: "10px"}} // Stesso stile per coerenza
+          className='galleriaInfinita'
         >
           🖼️ Galleria
         </button>
-        <button onClick={toggleView} >
+        <button onClick={toggleView}>
           {isCarouselView ? '🍱 Mostra Lista' : '🎞️ Mostra Carosello'}
         </button>
       </div>

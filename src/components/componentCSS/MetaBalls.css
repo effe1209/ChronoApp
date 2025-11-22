@@ -3,3 +3,10 @@
   width: 100%;
   height: 100%;
 }
+
+@media (max-width: 650px) {
+  .metaballs-container {
+    max-width: 300px;
+    pointer-events: none;
+  }
+}

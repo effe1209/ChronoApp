@@ -1849,3 +1849,13 @@ input::placeholder {
   margin-bottom: 20px;
   width: 500px;
 }
+
+@media (max-width: 650px) {
+  .galleriaInfinita {
+    display: none;
+  }
+
+  .circular-text-container {
+    max-width: 300px;
+  }
+}
