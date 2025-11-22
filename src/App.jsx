@@ -821,6 +821,7 @@ const fetchWatches = async (userid) => {
             panelHeight={68}
             baseItemSize={50}
             magnification={70}
+            isDark={isDark}
           />
           </GlassSurface>
         )}

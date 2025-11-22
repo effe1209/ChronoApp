@@ -11,7 +11,8 @@ const Dock = ({
   isFormVisible, 
   panelHeight = 68, 
   baseItemSize = 50, 
-  magnification = 70 
+  magnification = 70,
+  isDark
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 600); 
@@ -93,7 +94,7 @@ const Dock = ({
           transition: 'width 0.2s, height 0.2s',
           cursor: 'pointer', borderRadius: '15px',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          backgroundColor: isActive ? 'rgba(0, 123, 255, 0.6)' : 'transparent', // Blu più deciso
+          backgroundColor: isActive ? (isDark ? '#ffcc00e0' : 'rgba(37, 98, 126, 0.69)') : 'transparent', // Blu più deciso
           color: 'white',
         };
 

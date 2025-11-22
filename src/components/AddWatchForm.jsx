@@ -94,7 +94,7 @@ const AddWatchForm = ({
         />
         </Step>
         <Step>
-        <h3>Dettagli</h3>
+        <h3>Caratteristiche</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", width: "100%"}}>
           <div className="selectMenu">
             <label>
