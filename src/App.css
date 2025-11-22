@@ -582,6 +582,19 @@ select {
   font-size: 18px;
   font-family: 'minork';
   transition: 0.8s;
+  text-box: auto;
+}
+
+@media (max-width: 650px) {
+  .functionButton button:hover{
+    transition: none !important;
+    transform:none !important;
+  }
+  .funzioniButton:hover .buttonBackground {
+    transition: none !important;
+    transform:none !important;
+    display: none !important;
+  }
 }
 
 .dark-mode .functionButton button {
@@ -908,7 +921,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   font-family: 'minork';
   transition: 1.2s;
   height: 44px;
-
+  text-box: auto;
 }
 
 .buttonView button:hover {

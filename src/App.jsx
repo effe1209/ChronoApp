@@ -13,6 +13,8 @@ import InfiniteMenu from './components/InfiniteMenu'
 import InfiniteGridModal from './components/InfiniteGridModal';
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import ColorThief from 'colorthief';
+import LogoLoop from './components/LogoLoop';
+import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss } from 'react-icons/si';
 
 // Importa i componenti dock e le icone VSC
 import Dock from './components/Dock'; 
@@ -808,6 +810,42 @@ const handleImageUpload = (event) => {
     () => localStorage.getItem("theme") === "dark" 
   );
 
+//   const techLogos = [
+//   { title: "React"},
+//   { node: <SiNextdotjs />, title: "Next.js", href: "https://nextjs.org" },
+//   { node: <SiTypescript />, title: "TypeScript", href: "https://www.typescriptlang.org" },
+//   { node: <SiTailwindcss />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
+// ];
+const techLogos = [
+  {node: <span>rolex</span>},
+  {node:<span>tissot</span>},
+  {node:<span>audemarspiguet</span>},
+  {node: <span>citizen</span>},
+  {node:<span>casio</span>},
+  {node:<span>orient</span>},
+  {node:<span>hublot</span>},
+  {node:<span>tudor</span>},
+  {node:<span>oris</span>},
+  {node:<span>alpina</span>},
+  {node:<span>bulova</span>},
+  {node:<span>patek philippe</span>},
+  {node:<span>zenith</span>},
+  {node: <span>cartier</span>},
+  {node:<span>seiko</span>},
+  {node: <span>omega</span>},
+  {node:<span>longines</span>},
+  {node:<span>mido</span>},
+  {node: <span>hamilton</span>},
+  {node:<span>iwc</span>},
+  {node: <span>swatch</span>},
+  {node: <span>maurice lacroix</span>},
+  {node: <span>timex</span>},
+  {node: <span>breitling</span>},
+  {node: <span>panerai</span>},
+  {node:  <span>jaeger-lecoultre</span>},
+  {node: <span>lorenz</span>},
+];
+
   // 2. PORTA QUI L'EFFETTO (SIDE EFFECT)
   useEffect(() => {
     if (isDark) {
@@ -912,9 +950,54 @@ const handleImageUpload = (event) => {
       <div id="home-section">
         <Clock /> 
       
-        <ScrollingBrands1 />
+        {/* <ScrollingBrands1 />
         <ScrollingBrands2 />
-        <ScrollingBrands3 />
+        <ScrollingBrands3 /> */}
+        <div style={{ height: '200px',width: '97%',position: 'absolute', overflow: 'hidden', top: '160px', zIndex: 0 }}>
+        <div style={{position: 'relative'}}>
+      <LogoLoop
+        logos={techLogos}
+        speed={100}
+        direction="left"
+        logoHeight={30}
+        gap={40}
+        hoverSpeed={50}
+        scaleOnHover
+        ariaLabel="Technology partners"
+      />
+      
+    </div>
+    </div>
+    <div style={{ height: '200px',width: '97%',position: 'absolute', overflow: 'hidden', top: '190px', zIndex: 0 }}>
+        <div style={{position: 'relative'}}>
+      <LogoLoop
+        logos={techLogos}
+        speed={140}
+        direction="left"
+        logoHeight={30}
+        gap={40}
+        hoverSpeed={50}
+        scaleOnHover
+        ariaLabel="Technology partners"
+      />
+      
+    </div>
+    </div>
+    <div style={{ height: '200px',width: '97%',position: 'absolute', overflow: 'hidden', top: '220px', zIndex: 0 }}>
+        <div style={{position: 'relative'}}>
+      <LogoLoop
+        logos={techLogos}
+        speed={120}
+        direction="left"
+        logoHeight={30}
+        gap={40}
+        hoverSpeed={50}
+        scaleOnHover
+        ariaLabel="Technology partners"
+      />
+      
+    </div>
+    </div>
 
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
           <div className="titleList" style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "center" }}>
