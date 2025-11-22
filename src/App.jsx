@@ -953,7 +953,7 @@ const techLogos = [
         {/* <ScrollingBrands1 />
         <ScrollingBrands2 />
         <ScrollingBrands3 /> */}
-        <div style={{ height: '200px',width: '97%',position: 'absolute', overflow: 'hidden', top: '160px', zIndex: 0 }}>
+        <div className={"logo_container1"}>
         <div style={{position: 'relative'}}>
       <LogoLoop
         logos={techLogos}
@@ -968,7 +968,7 @@ const techLogos = [
       
     </div>
     </div>
-    <div style={{ height: '200px',width: '97%',position: 'absolute', overflow: 'hidden', top: '190px', zIndex: 0 }}>
+    <div className={"logo_container2"}>
         <div style={{position: 'relative'}}>
       <LogoLoop
         logos={techLogos}
@@ -983,7 +983,7 @@ const techLogos = [
       
     </div>
     </div>
-    <div style={{ height: '200px',width: '97%',position: 'absolute', overflow: 'hidden', top: '220px', zIndex: 0 }}>
+    <div className={"logo_container3"}>
         <div style={{position: 'relative'}}>
       <LogoLoop
         logos={techLogos}

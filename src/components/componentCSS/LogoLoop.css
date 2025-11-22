@@ -194,3 +194,29 @@
     transition: none !important;
   }
 }
+
+.logo_container1,
+.logo_container2,
+.logo_container3 {
+    /* 1. Larghezza sicura */
+    width: 95%; /* Meglio 95% di 97% per evitare tocchi i bordi sui vecchi telefoni */
+    max-width: 100vw; /* Sicurezza extra */
+    
+    /* 2. Posizionamento e CENTRATURA PERFETTA */
+    position: absolute;
+    left: 50%; 
+    transform: translateX(-50%); /* La magia che lo centra */
+    
+    /* 3. Altezze dinamiche (come detto prima) */
+    height: clamp(100px, 20vh, 250px);
+    z-index: 0;
+    overflow: hidden;
+}
+
+/* Applica i top diversi singolarmente */
+/* .logo_container1 { top: 160px; } 
+.logo_container2 { top: 200px; } 
+.logo_container3 { top: 240px; }  */
+.logo_container1 { top: 18vh; } /* O meglio usare i vh: top: 18vh; */
+.logo_container2 { top: 22vh; } /* top: 22vh; */
+.logo_container3 { top: 26vh; } /* top: 26vh; */
