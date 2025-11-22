@@ -33,6 +33,9 @@
     height: 100% !important;
     width: 100% !important;
   }
+  .tilted-card-figure {
+    pointer-events: none;
+  }
 }
 
 .tilted-card-inner {

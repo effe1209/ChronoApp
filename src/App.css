@@ -938,7 +938,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   width: 98%;
   justify-content: center;
   position:absolute;
-  z-index: -1;
+  z-index: 0;
   height: auto;
   top:133px;
   left: 0.8%;
@@ -970,7 +970,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   overflow: hidden; /* Nasconde il testo fuori dal contenitore */
   width: 98%;
   position: absolute;
-  z-index: -1;
+  z-index: 0;
   height: auto;
   top:179px;
   left: 0.8%;
@@ -1003,7 +1003,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   width: 98%;
   justify-content: center;
   position:absolute;
-  z-index: -1;
+  z-index: 0;
   height: auto;
   top:103px;
   left: 0.8%;
@@ -1029,6 +1029,18 @@ input[type="checkbox"]:checked + .slider-v3::before {
   transition: 0.5s;
 }
 
+.scroll div, .scroll2 div, .scroll3 div {
+  
+  /* Forza la GPU a gestire questo layer */
+  transform: translate3d(0, 0, 0); 
+  
+  /* Previene il flickering su iOS */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  
+  /* Suggerisce al browser di ottimizzare per il movimento */
+  will-change: transform; 
+}
 
 
 /*-----------------------------------------------------------*/
