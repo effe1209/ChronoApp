@@ -902,7 +902,7 @@ const BackgroundLayer = useMemo(() => {
         </div>
       );
     }, [isDark, floatingConfig.bg, floatingConfig.blend]);
-    
+
   // --- RENDER ---
   return (
     <>
@@ -935,7 +935,7 @@ const BackgroundLayer = useMemo(() => {
         {user && (
           <GlassSurface 
           width="min(350px, 32vw)"
-          height={68}
+          height={64}
           borderRadius={20}
           className="my-custom-class"
         >
