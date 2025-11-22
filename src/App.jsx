@@ -794,7 +794,7 @@ const fetchWatches = async (userid) => {
       <div className="slideWrap_Container">
         <GlassSurface 
           width={100} 
-          height={60}
+          height={64}
           borderRadius={20}
           className="my-custom-class"
         >
@@ -809,8 +809,8 @@ const fetchWatches = async (userid) => {
         </GlassSurface>
         {user && (
           <GlassSurface 
-          width="min(350px, 30vw)"
-          height={60}
+          width="min(350px, 32vw)"
+          height={68}
           borderRadius={20}
           className="my-custom-class"
         >
@@ -820,7 +820,7 @@ const fetchWatches = async (userid) => {
             onLogout={handleLogout}
             onAddWatchToggle={() => setShowForm(!showForm)}
             isFormVisible={showForm}
-            panelHeight={68}
+            panelHeight={64}
             baseItemSize={50}
             magnification={70}
             isDark={isDark}

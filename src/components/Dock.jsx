@@ -70,8 +70,26 @@ const Dock = ({
     padding: '0 5px',
   };
 
-  const itemWrapperStyles = {
-    display: 'flex', alignItems: 'center', height: panelHeight, position: 'relative', justifyContent: 'center'
+const itemWrapperStyles = {
+    display: 'flex',
+    flexDirection: 'column', // <--- Fondamentale per mettere il testo sotto
+    alignItems: 'center',
+    justifyContent: 'center', // Centra verticalmente nel pannello
+    height: panelHeight + 30, // Aumenta l'altezza per farci stare il testo
+    position: 'relative',
+    minWidth: baseItemSize, // Assicura che ci sia spazio orizzontale minimo
+  };
+
+  const labelStyles = {
+    fontSize: '10px',
+    marginTop: '-3px',
+    fontFamily: 'minork', // O il tuo font 'minork'
+    fontWeight: 'bold',
+    color: '#fff',
+    opacity: 1, // 1 = Sempre visibile, 0 = Nascosto
+    transition: 'opacity 0.2s',
+    whiteSpace: 'nowrap', // Evita che il testo vada a capo
+    pointerEvents: 'none' // Evita interferenze col mouse
   };
 
   const tooltipStyles = {
@@ -89,13 +107,18 @@ const Dock = ({
         if (item.label === 'Logout') isActive = false;
 
         const iconStyles = {
-          width: `${(isMobile ? baseItemSize : size)-10}px`,
-          height: `${(isMobile ? baseItemSize : size)-10}px`,
-          transition: 'width 0.2s, height 0.2s',
-          cursor: 'pointer', borderRadius: '15px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          backgroundColor: isActive ? (isDark ? '#ffcc00e0' : 'rgba(37, 98, 126, 0.69)') : 'transparent', // Blu più deciso
-          color: 'white',
+          // Ho ridotto leggermente il size (-15) per dare spazio al testo senza esplodere
+          width: `${(isMobile ? baseItemSize : size) - 15}px`, 
+          height: `${(isMobile ? baseItemSize : size) - 15}px`,
+          transition: 'all 0.1s ease-out', // Fluidità
+          cursor: 'pointer',
+          borderRadius: '12px',
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          backgroundColor: isActive ? (isDark ? '#ffcc00e0' : 'rgba(37, 98, 126, 1)') : 'transparent',
+          color: 'white', // Gestione colore icona
+          zIndex: 10, // L'icona deve stare sopra
         };
 
         const showTooltip = hoveredIndex === index && !isMobile;
@@ -106,6 +129,9 @@ const Dock = ({
             <div style={iconStyles} onClick={item.onClick} aria-label={item.label}>
               {React.cloneElement(item.icon, { size: (isMobile ? baseItemSize * 0.5 : size * 0.5) })}
             </div>
+            <span style={labelStyles}>
+              {item.label}
+            </span>
           </li>
         );
       })}
