@@ -1,4 +1,5 @@
-  import React from 'react';
+  import { Weight } from 'lucide-react';
+import React from 'react';
 
   // Modale per mostrare le informazioni dettagliate di un orologio
   const InfoWatchModal = ({ isVisible, setIsVisible, selectedWatch }) => {

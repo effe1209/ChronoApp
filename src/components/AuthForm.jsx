@@ -67,7 +67,7 @@ const AuthForm = ({
 
       {/* Layer del Contenuto */}
       <div className="auth-content" style={{ position: 'relative', zIndex: 1 }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', color: isDark ? '#fff' : '#000' }}>
+        <h2 style={{ textAlign: 'center', margin: 'auto', color: isDark ? '#fff' : '#000' }}>
           {isLogin ? 'Accedi' : 'Registrati'}
         </h2>
         

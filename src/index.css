@@ -7,7 +7,7 @@
 html {
   /* Metti qui il colore esatto che passi in floatingConfig.bg */
   /* Opzionale: impedisce il rimbalzo se non vuoi scroll */
-  overscroll-behavior-y: none; 
+  /* overscroll-behavior-y: none;  */
 }
 
 
@@ -132,30 +132,63 @@ body {
   font-style: normal;
 }
 
+/* 1. Light (Corretto) */
 @font-face {
   font-family: 'minork';
-  src: url('../font/minorksans-light.otf') format('truetype');
-  font-weight: normal;
+  src: url('../font/minorksans-light.otf') format('opentype'); /* Nota: .otf è solitamente opentype */
+  font-weight: 300; /* Light corrisponde a 300, NON a normal/400 */
+  font-style: normal;
+}
+
+/* 2. Bold */
+@font-face {
+  font-family: 'minork';
+  src: url('../font/minorksans-bold.otf') format('opentype'); /* Sostituisci con il nome esatto del tuo file */
+  font-weight: 700; /* O "bold" */
+  font-style: normal;
+}
+
+/* 3. Extra Bold */
+@font-face {
+  font-family: 'minork';
+  src: url('../font/minorksans-extrabold.otf') format('opentype'); /* Sostituisci con il nome esatto del tuo file */
+  font-weight: 800; 
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'nosfo';
-  src: url('../font/Nosfo.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'Playfair Display';
+  /* Nota: i browser moderni capiscono che è variabile, ma per sicurezza usiamo il formato standard ttf */
+  src: url('../font/PlayfairDisplay-VariableFont_wght.ttf') format('truetype');
+  /* Qui la magia: definiamo un RANGE di pesi disponibili nel file, non un numero singolo */
+  font-weight: 400 900; 
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'kugile';
+  /* Nota: i browser moderni capiscono che è variabile, ma per sicurezza usiamo il formato standard ttf */
+  src: url('../font/Kugile.ttf') format('truetype');
+  /* Qui la magia: definiamo un RANGE di pesi disponibili nel file, non un numero singolo */
+  font-weight: 400 900; 
   font-style: normal;
 }
 
 h1{
   color: #0c0c0c;
-  font-family: 'Amoresa', sans-serif;
-  font-size: 3em;
+  /* font-family: 'Amoresa', sans-serif; */
+  /* font-family: 'Playfair Display', serif; */
+  font-family: 'kugile';
+  font-size: 2.5em;
   margin: auto;
+  font-weight: bold;
 }
 
 h2{
   color: #0c0c0c;
-  font-family: 'Amoresa', sans-serif;
+  /* font-family: 'Amoresa', sans-serif; */
+  /* font-family: 'minork'; */
+  font-family: 'kugile';
   font-size: 2em;
   margin: auto;
   font-style: normal;
@@ -169,7 +202,7 @@ h2{
 
 h3{
   color: #0c0c0c;
-  font-size: 2em;
+  font-size: 1.7em;
   margin: auto;
   font-style: normal;
   font-weight: normal;
@@ -238,7 +271,7 @@ h3{
 .titleList h3 {
   padding: 20px;
   margin-top: 10px;
-  font-family: 'Amoresa';
+  font-family: 'kugile';
 }
 
 @media (max-width: 750px) {
@@ -291,6 +324,13 @@ h3{
 
   .TileInfo h3 {
     font-size: 1.5em;
+  }
+  
+  .modal-content-statistiche h4 {
+    font-family: 'kugile';
+  }
+  .chart-wrapper h4 {
+    font-family: 'minork';
   }
 
 }

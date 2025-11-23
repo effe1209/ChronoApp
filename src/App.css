@@ -1469,9 +1469,18 @@ input::placeholder {
 .TileInfo {
   padding:5px 0 10px 0;
   font-family: 'minork';
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); */
   font-size: 20px;
 }
+
+  .TileInfo h4 {
+    font-family: 'kugile';
+    font-style: normal;
+  }
+    .TileInfo h3 {
+    font-family: 'kugile';
+    font-style: normal;
+  }
 
 .InfoButton {
   margin-bottom: 20px;
