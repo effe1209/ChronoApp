@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 // Importiamo Pie (grafico a torta) e gli elementi necessari
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
@@ -24,27 +24,18 @@ const generateColors = (count) => {
 
 /**
  * Funzione helper (pura) per processare l'array di orologi.
- * Questa è la logica di aggregazione (la parte da "informatico").
- * @param {Array} watches - L'array di orologi dallo stato di App.jsx
- * @param {String} key - La chiave per cui aggregare (es. 'brand' or 'movement')
  */
 const processData = (watches, key) => {
-  // 1. Contiamo le occorrenze usando .reduce()
   const counts = watches.reduce((acc, watch) => {
-    // Usiamo 'Non specificato' se il campo è vuoto
     const value = watch[key] || 'Non specificato';
-    
-    // Incrementiamo il contatore per quel valore
     acc[value] = (acc[value] || 0) + 1;
     return acc;
-  }, {}); // Iniziamo con un oggetto vuoto {}
+  }, {}); 
 
-  // 2. Trasformiamo l'oggetto { Rolex: 2, Seiko: 1 } in array
   const labels = Object.keys(counts);
   const dataValues = Object.values(counts);
   const { backgroundColors, borderColors } = generateColors(labels.length);
 
-  // 3. Restituiamo il formato richiesto da Chart.js
   return {
     labels: labels,
     datasets: [
@@ -63,8 +54,23 @@ const processData = (watches, key) => {
 
 const WatchAnalytics = ({ watches }) => {
   
+  // --- GESTIONE SCROLL BODY ---
+  useEffect(() => {
+    // 1. Salviamo lo stile originale per sicurezza (opzionale, ma buona prassi)
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    
+    // 2. Blocchiamo lo scroll
+    document.body.style.overflow = 'hidden';
+
+    // 3. Cleanup function: viene eseguita quando il componente viene smontato
+    return () => {
+      document.body.style.overflow = originalStyle;
+    };
+  }, []); // Array vuoto = esegui solo al mount e unmount
+
+  // --- FINE GESTIONE SCROLL ---
+
   // 1. Calcoliamo i dati per le MARCHE
-  // useMemo ottimizza: ricalcola solo se [watches] cambia
   const brandChartData = useMemo(() => {
     return processData(watches, 'brand');
   }, [watches]);
@@ -77,17 +83,13 @@ const WatchAnalytics = ({ watches }) => {
   // Opzioni comuni per i grafici
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // Per gestire l'altezza
+    maintainAspectRatio: false, 
     plugins: {
       legend: {
         position: 'top',
-        labels: {
-            // Aggiungi questo se hai il dark mode
-            // color: document.body.classList.contains('dark-mode') ? '#FFF' : '#333'
-        }
       },
       title: {
-        display: false, // Nascondiamo il titolo di default
+        display: false, 
       },
     },
   };
@@ -96,7 +98,7 @@ const WatchAnalytics = ({ watches }) => {
     <div className="charts-container">
       <div className="chart-wrapper">
         <h4>Distribuzione Marche</h4>
-        <div className="canvas_container">
+        <div className="canvas_container" style={{ position: 'relative', height: '300px', width: '100%' }}>
         {watches && watches.length > 0 ? (
           <Pie data={brandChartData} options={options} />
         ) : (
@@ -107,7 +109,7 @@ const WatchAnalytics = ({ watches }) => {
 
       <div className="chart-wrapper">
         <h4>Distribuzione Movimenti</h4>
-        <div className="canvas_container">
+        <div className="canvas_container" style={{ position: 'relative', height: '300px', width: '100%' }}>
         {watches && watches.length > 0 ? (
           <Pie data={movementChartData} options={options} />
         ) : (
