@@ -74,10 +74,10 @@
   font-size: 18px;
   outline: none; /* Rimuove il bordo blu quando clicchi */
   transition: 0.3s;
-  font-family: 'minork';
+  font-family: var(--font-all-text);
   border: none;
   align-items: center;
-  background-color: #333;
+  background-color: var(--bg-card_DARK);
 }
 
 .inputImmagine {
@@ -305,7 +305,7 @@ select {
 }
 
 .dark-mode .second {
-  background: #ffcc00;
+  background: var(--accent-primary_DARK);
 }
 
 .point {
@@ -326,7 +326,7 @@ select {
 
 .dark-mode .point {
   background: #ffffff;
-  border: 2px solid #ffcc00;
+  border: 2px solid var(--accent-primary_DARK);
 }
 
 .numbers {
@@ -431,7 +431,7 @@ select {
   background-color: #bebebe;
 }
 .dark-mode .upload-button:hover {
-  background-color: #222;
+  background-color: var(--bg-card_DARK);
 }
 
 .file-name {
@@ -493,12 +493,12 @@ select {
   border-radius: 20px;
   color: #ffffff;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-  background-color: #333;
+  background-color: var(--bg-card_DARK);
 }
 
 .selected-color {
   font-size: 14px;
-  color: #333;
+  color: var(--text-secondary_DARK);
 }
 
 .modify-btn {
@@ -519,7 +519,7 @@ select {
 
 
 .dark-mode .modify-btn {
-  background-color: #ffcc00;
+  background-color: var(--accent-primary_DARK);
   color: black;
   padding: 10px 15px;
   border: none;
@@ -599,8 +599,8 @@ select {
 
 .dark-mode .functionButton button {
   background-color: rgba(0, 0, 0, 0.6);
-  border:3px solid #ffcc00;
-  color: #ffcc00;
+  border:3px solid var(--accent-primary_DARK);
+  color: var(--accent-primary_DARK);
 }
 
 .functionButton button:hover {
@@ -660,7 +660,7 @@ select {
 }
 
 .dark-mode .functionButton h4 {
-  color: #ffffff;
+  color: var(--text---accent-primary_DARK);
 }
 
 /* Effetto Hover */
@@ -750,7 +750,7 @@ select {
 }
 
 .dark-mode .infoView .modal-content {
-  background-color: rgba(95, 83, 97, 0.80);
+  background-color: var(--bg-card_DARK);
   height: fit-content;
   backdrop-filter: blur(10px);
   min-width: 500px;
@@ -820,7 +820,7 @@ select {
 /*-------------DARK MODE------------------*/
 .dark-mode .menu {
   margin-right: 20px; /* Distanza tra il menu e lo switch */
-  background: rgba(58, 58, 58, 0.8);
+  background: var(--bg-card_DARK);
   border-radius: 20px;
   display: flex;
   align-items: center;  /* Allinea gli elementi verticalmente */
@@ -844,7 +844,7 @@ select {
   flex-direction: column;
   gap: 10px;
   text-decoration: none;
-  color: #ffcc00;
+  color: var(--accent-primary_DARK);
   font-weight: bold;
   justify-items: center;
   border-radius: 20px;
@@ -894,13 +894,13 @@ input[type="checkbox"] {
 
 /* Stato attivo (dark mode) */
 input[type="checkbox"]:checked + .slider-v3 {
-  background: #333;
+  background: var(--bg-card_DARK);
 }
 
 /* Sposta il cerchio a destra quando è attivo */
 input[type="checkbox"]:checked + .slider-v3::before {
   transform: translateX(40px);
-  background-color: #ffcc00; /* Cambia colore per effetto sole */
+  background-color: var(--accent-primary_DARK); /* Cambia colore per effetto sole */
 }
 
 .buttonView {
@@ -919,7 +919,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   border-radius: 20px;
   cursor: pointer;
   font-size: 18px;
-  font-family: 'minork';
+  font-family: var(--font-all-text);
   transition: 1.2s;
   height: 44px;
   text-box: auto;
@@ -932,13 +932,13 @@ input[type="checkbox"]:checked + .slider-v3::before {
 .dark-mode .buttonView button {
   margin-top: 20px;
   padding: 10px 15px;
-  background-color: #ffcc00;
+  background-color: var(--accent-primary_DARK);
   color: black;
   border: none;
   border-radius: 20px;
   cursor: pointer;
   font-size: 18px;
-  font-family: 'minork';
+  font-family: var(--font-all-text);
   transition: 1.2s;
   height: 44px;
 
@@ -1061,17 +1061,17 @@ input[type="checkbox"]:checked + .slider-v3::before {
 /* DARK MODE*/
 
 .dark-mode .scroll div span {
-  background: #333;
+  background: var(--bg-card_DARK);
   color: #fff;
 }
 
 .dark-mode .scroll2 div span {
-  background: #333;
+  background: var(--bg-card_DARK);
   color: #fff;
 }
 
 .dark-mode .scroll3 div span {
-  background: #333;
+  background: var(--bg-card_DARK);
   color: #fff;
 }
 
@@ -1344,7 +1344,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
 
 .dark-mode .upload-button {
   color: #ffffff;
-  background-color:#333;
+  background-color:var(--bg-card_DARK);
 }
 
 .CardImage {
@@ -1373,11 +1373,11 @@ input::placeholder {
   border: none;
   cursor: pointer;
   transition: 2s;
-  font-family: 'minork';
+  font-family: var(--font-all-text);
   border-radius: 20px;
-  border: 3px solid #ffcc00;
-  background-color: #ffcc00;
-  color: black;
+  border: 3px solid var(--accent-primary_DARK);
+  background-color: var(--accent-primary_DARK);
+  color: var(--bg-container_DARK);
   width: 100px;
   transition: transform 0.5s ease-in-out, background-color 0.5s ease-in-out;
   height: 44px;
@@ -1386,7 +1386,7 @@ input::placeholder {
 }
 
 .dark-mode .buttonForm button:hover {
-  color: #ffcc00;
+  color: var(--bg-container_DARK);
 }
 
 .CaratteristicheCard {
@@ -1402,11 +1402,11 @@ input::placeholder {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: flex-end;
+  /* align-items: flex-end; */
   /* margin-bottom: 3%; */
   gap: 10%;
   margin-top: 7%;
-  flex-wrap: wrap-reverse;
+  /* flex-wrap: wrap-reverse; */
 }
 
 .watch-card .cardBottoni .delete-button{
@@ -1430,7 +1430,6 @@ input::placeholder {
   width: 100%;
   height: 100%;
   display: grid;
-  justify-content: center;
   justify-items: center;
   align-content: space-between;
 }
@@ -1488,15 +1487,15 @@ input::placeholder {
   background-color: transparent;
   border:3px solid rgba(37, 98, 126, 0.8);
   color: rgba(37, 98, 126, 1);
-  font-family: 'minork';
+  font-family:var(--font-all-text);
   /* backdrop-filter: blur(5px); */
 }
 
 .dark-mode .InfoButton button {
   width: 100px;
   background-color: transparent;
-  border:3px solid #ffcc00;
-  color: #ffcc00;
+  border:3px solid var(--accent-primary_DARK);
+  color: var(--accent-primary_DARK);
 }
 
 .modal-overlay .swiper-slide {
@@ -1605,7 +1604,7 @@ input::placeholder {
 }
 
 .dark-mode .infoView-statistiche .modal-content {
-  background-color: rgba(95, 83, 97, 0.80);
+  background-color: var(bg-card_DARK);
   height: fit-content;
 }
 
@@ -1635,7 +1634,7 @@ input::placeholder {
 
 
 .dark-mode .infoView-statistiche .modal-content-statistiche {
-  background-color: rgba(95, 83, 97, 0.80);
+  background-color: var(--bg-card_DARK);
   height: fit-content;
   backdrop-filter: blur(10px);
 }
@@ -1731,12 +1730,12 @@ input::placeholder {
 }
 
 .dark-mode .checkbox-label {
-  background-color: rgba(58, 58, 58, 0.8);
+  background-color: var(--bg-card_DARK);
   color: #ffffff;
 }
 
 .dark-mode .checkbox-label:hover {
-  background-color: rgba(104, 104, 104, 0.9);
+  background-color: var(--accent-primary_DARK);
 }
 
 .checkbox-label .checkbox-input {
@@ -1751,13 +1750,12 @@ input::placeholder {
 .checkbox-label.selected {
   background-color: #186599; /* Il tuo colore blu */
   color: white;
-  font-weight: bold;
 }
 
 .dark-mode .checkbox-label.selected {
-  background-color: #ffcc00; /* Colore giallo per la dark mode */
+  background-color: var(--accent-primary_DARK); /* Colore giallo per la dark mode */
   /* Aggiunge un bordo per un feedback extra */
-  border: 2px solid #ffcc00;
+  border: 2px solid var(--accent-primary_DARK);
   color: black;
 }
 
@@ -1788,6 +1786,10 @@ input::placeholder {
   height: 44px;
 }
 
+.dark-mode .details-toggle-button {
+  background-color: var(--bg-card_DARK);
+}
+
 @media screen and (max-width: 750px) {
   .details-toggle-button {
     height: 65px;
@@ -1811,7 +1813,7 @@ input::placeholder {
 }
 
 .dark-mode .notes-textarea {
-  background-color: rgba(58, 58, 58, 0.8);
+  background-color: var(--bg-card_DARK);
   color: #ffffff;
 }
 
@@ -1826,15 +1828,15 @@ input::placeholder {
 /* Stile specifico per il form di modifica */
 .formModify .notes-textarea {
   width: 100%; /* Si adatta al contenitore del form di modifica */
-  background-color: rgba(255, 255, 255, 0.6);; /* Sfondo per abbinarlo al form */
+  background-color: rgba(255, 255, 255, 0.6); /* Sfondo per abbinarlo al form */
   border: 1px solid #ccc;
   font-size: 16px;
 }
 
 .dark-mode .formModify .notes-textarea {
-  background-color: rgba(58, 58, 58, 0.8);
   color: #ffffff;
-  border: 1px solid #555;
+  border: 1px solid var(--bg-card_DARK);
+   background-color: var(--bg-card_DARK);
 }
 
 .InfoColorInfo {
@@ -1843,7 +1845,7 @@ input::placeholder {
 }
 
 .dark-mode .InfoColorInfo {
-  color: #ffcc00;
+  color: var(--accent-primary_DARK);
 }
 
 

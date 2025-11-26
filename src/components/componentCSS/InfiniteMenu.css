@@ -135,7 +135,7 @@
   position: absolute;
   top: 50%;
   transform: translate(20%, -50%);
-  font-family: 'minork';
+  font-family: var(--font-all-text);
   font-size: 3rem;
 }
 
@@ -145,7 +145,7 @@
   transform: translate(20%, -50%);
   pointer-events: auto;
   transition: 0.5s ease;
-  color: white;
+  color: var(--text-primary_DARK);
 }
 
 .face-title.inactive {
@@ -162,7 +162,7 @@
   font-size: 2rem;
   right: 17%;
   transform: translate(0, -50%);
-  color: white;
+  color: var(--text-primary_DARK);
 }
 
 
@@ -184,6 +184,13 @@
   opacity: 1;
   pointer-events: auto;
   transition: 0.5s ease;
+  color: white;
+  background-color: var(--accent-primary);
+}
+
+.dark-mode .action-button.active {
+  color: var(--text-primary_DARK);
+  background-color: var(--accent-primary_DARK);
 }
 
 .action-button.inactive {

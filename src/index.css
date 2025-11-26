@@ -4,6 +4,37 @@
   /* box-sizing: border-box; */
 }
 
+/* index.css o App.css */
+
+:root {
+  /* --- PALETTE COLORI (Cambia questi valori per rivoluzionare il sito) --- */
+  
+  /* Modalità Chiara */
+  --accent-primary: rgba(37, 98, 126, 0.8);   
+
+  /* Modalità Scura */
+  /* Sfondi */
+  /* --bg-container_DARK: #0F172A;  Sfondo opaco contenitore */
+  --bg-container_DARK: #0f172af0;
+   --bg-container_opaco_DARK: #0f172af2;
+  --bg-card_DARK: #1E293B;                      /* Sfondo card */
+  
+  /* Testi */
+  --text-primary_DARK: #F1F5F9;                 /* Titoli e testo principale */
+  --text-secondary_DARK: #A1A1AA;               /* Etichette (es. "Marca:", "Anno:") */
+  --text-inverse_DARK: #1C1C1E;                 /* Testo scuro su bottoni chiari */
+
+  /* Accenti (I tuoi "Colori Principali") */
+  --accent-primary_DARK: #F59E0B;               /* Oro: Tasti azione, Stelle, Bordi focus */
+  --accent-primary-hover_DARK: #C0A062;         /* Oro leggermente più scuro per l'hover */
+  
+  /* Stati (Danger, Success, ecc.) */
+  --color-danger: #CF6679;                 /* Rosso desaturato per errori/elimina */
+  --color-danger-bg_DARK: rgba(207, 102, 121, 0.15); /* Sfondo rosso leggero per hover cestino */
+
+  --font-all-text: 'minork';  /* Font principale per tutto il testo */
+}
+
 html {
   /* Metti qui il colore esatto che passi in floatingConfig.bg */
   /* Opzionale: impedisce il rimbalzo se non vuoi scroll */
@@ -19,7 +50,6 @@ html.dark-mode {
 }
 
 body {
-  font-family:'Times New Roman', Times, serif;
   /* background-color: #5c3b3b; */
   margin: 0;
   padding: 0;
@@ -38,24 +68,23 @@ body {
 
 /* Modalità scura */
 .dark-mode {
-  background-color: #12121200; /* Colore di sfondo scuro */
-  color: white; /* Colore testo chiaro per modalità scura */
+  background-color: var(--bg-container_DARK); /* Colore di sfondo scuro */
+  color: var(--text-primary_DARK); /* Colore testo chiaro per modalità scura */
   background: url(https://htopqijsvgaqjrvvgpjh.supabase.co/storage/v1/object/public/fotoWatch//SfondoScuro.jpg) center / cover no-repeat fixed;
 }
 
 .dark-mode body {
   color: white; /* Cambia il colore del testo in bianco quando in modalità scura */
   transition: background 0.4s ease-in-out, color 0.4s ease-in-out;
-  background-color: aqua;
 }
 
 .dark-mode h3 {
-  color: #ffffff;
+  color: var(--text-primary_DARK);
 }
 
 .dark-mode .watch-card {
   /* background: rgb(250, 214, 214); */
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--bg-card_DARK);
   padding: 15px;
   text-align: center;
 }
@@ -67,16 +96,16 @@ body {
   max-width: 500px;
   text-align: center;
   height: fit-content;
-  border: 1px solid rgba(95, 83, 97, 0.80);
+  border: 1px solid var(--bg-container_opaco_DARK);
   border-radius: 20px;
   /* background-color: rgba(255, 255, 255, 0.45); */
-  background-color: rgba(95, 83, 97, 0.80);
+  background-color: var(--bg-container_opaco_DARK);
   backdrop-filter: blur(25px);
 }
 
 .dark-mode .selectMenu > select{
   color: #ffffff;
-  background-color: #333;
+  background-color: var(--bg-card_DARK);
   border: 0px;
   border-radius: 20px;
 }
@@ -89,11 +118,11 @@ body {
 }
 
 .dark-mode h1 {
-  color: #ffffff;
+  color: var(--text-primary_DARK);
 }
 
 .dark-mode h2 {
-  color: #ffffff;
+  color:  var(--text-primary_DARK);
 }
 
 .container {
@@ -115,7 +144,7 @@ body {
 
 .dark-mode .container {
   /* background-color: rgba(58, 58, 58, 0.80); */
-  background-color: #bca0c073;
+  background-color: var(--bg-container_DARK);
 }
 
 @font-face {
@@ -440,7 +469,7 @@ h4 {
 
 .dark-mode .decorative-symbol {
   font-size: 30px;
-  color: rgb(255, 255, 255);
+  color: var(--text-primary_DARK);
   /* Altri stili se necessari, ad esempio margini o display */
   display: inline-block; /* Utile per controlli di spacing */
 }
@@ -467,7 +496,7 @@ h4 {
 }
 
 .dark-mode .custom-separator {
-  border-top: 2px solid #ffffff; /* Definisce la linea bianca sottile per modalità scura */
+  border-top: 2px solid var(--text-primary_DARK); /* Definisce la linea bianca sottile per modalità scura */
 }
 
 .watchName_Button {

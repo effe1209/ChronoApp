@@ -20,6 +20,7 @@ export default function Stepper({
   nextButtonText = 'Continue',
   disableStepIndicators = false,
   renderStepIndicator,
+  isDark,
   ...rest
 }) {
   const [currentStep, setCurrentStep] = useState(initialStep);
@@ -84,9 +85,10 @@ export default function Stepper({
                       setDirection(clicked > currentStep ? 1 : -1);
                       updateStep(clicked);
                     }}
+                    isDark={isDark}
                   />
                 )}
-                {isNotLastStep && <StepConnector isComplete={currentStep > stepNumber} />}
+                {isNotLastStep && <StepConnector isComplete={currentStep > stepNumber} isDark={isDark} />}
               </React.Fragment>
             );
           })}
@@ -97,6 +99,7 @@ export default function Stepper({
           currentStep={currentStep}
           direction={direction}
           className={`step-content-default ${contentClassName}`}
+          isDark={isDark}
         >
           {stepsArray[currentStep - 1]}
         </StepContentWrapper>
@@ -147,7 +150,7 @@ export default function Stepper({
   );
 }
 
-function StepContentWrapper({ isCompleted, currentStep, direction, children, className }) {
+function StepContentWrapper({ isCompleted, currentStep, direction, children, className, isDark }) {
   const [parentHeight, setParentHeight] = useState(0);
 
   return (
@@ -223,7 +226,7 @@ export function Step({ children }) {
   return <div className="step-default">{children}</div>;
 }
 
-function StepIndicator({ step, currentStep, onClickStep, disableStepIndicators }) {
+function StepIndicator({ step, currentStep, onClickStep, disableStepIndicators, isDark }) {
   const status = currentStep === step ? 'active' : currentStep < step ? 'inactive' : 'complete';
 
   const handleClick = () => {
@@ -233,10 +236,14 @@ function StepIndicator({ step, currentStep, onClickStep, disableStepIndicators }
   return (
     <motion.div onClick={handleClick} className="step-indicator" animate={status} initial={false}>
       <motion.div
+      key={isDark ? "dark" : "light"}
         variants={{
-          inactive: { scale: 1, backgroundColor: '#333', color: '#b4b4b4ff' },
-          active: { scale: 1, backgroundColor: '#5227FF', color: '#5227FF' },
-          complete: { scale: 1, backgroundColor: '#5227FF', color: '#3b82f6' }
+          inactive: { scale: 1, backgroundColor: isDark ? 'var(--bg-card_DARK)' : '#FFFFFF', 
+      color: isDark ? 'var(--text-primary_DARK)' : '#000000' },
+          active: { scale: 1, backgroundColor: isDark ? 'var(--accent-primary_DARK)' : 'var(--accent-primary)', 
+      color: isDark ? 'var(--text-primary_DARK)' : '#000' },
+          complete: { scale: 1, backgroundColor: isDark ? 'var(--accent-primary_DARK)' : 'var(--accent-primary) ', 
+      color: isDark ? 'var(--text-primary_DARK)' : '#000000' }
         }}
         transition={{ duration: 0.3 }}
         className="step-indicator-inner"
@@ -253,10 +260,10 @@ function StepIndicator({ step, currentStep, onClickStep, disableStepIndicators }
   );
 }
 
-function StepConnector({ isComplete }) {
+function StepConnector({ isComplete, isDark }) {
   const lineVariants = {
     incomplete: { width: 0, backgroundColor: 'transparent' },
-    complete: { width: '100%', backgroundColor: '#5227FF' }
+    complete: { width: '100%', backgroundColor: isDark ? 'var(--accent-primary_DARK)' : 'var(--accent-primary)' }
   };
 
   return (

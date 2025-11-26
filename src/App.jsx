@@ -863,7 +863,7 @@ const techLogos = [
   const toggleTheme = () => setIsDark(!isDark);
 
   const floatingConfig = isDark 
-    ? {bg: "#000000", gradient: [],blend: "screen"}
+    ? {bg: "#001036ff", gradient: ["#F59E0B"],blend: "screen"}
     : {bg: "#476d7ed6", gradient: ["#ff8ce2ff", "#77bebaff"], blend: "screen"};
 
 
@@ -1042,12 +1042,10 @@ const BackgroundLayer = useMemo(() => {
                 fontSize={14}
               /> */}
               <MetaBalls
-                color={isDark ? "#ffcc00" : "#25627e"}
-                cursorBallColor={isDark ? "#c8a102ff" : "#1f4d63ff"}
-                // color={isDark ? "#000000ff" : "#ffffffff"}
-                // cursorBallColor={isDark ? "#ffcc00" : "#28434fff"}
-                // color={isDark ? "#ffffffff" : "#000000ff"}
-                // cursorBallColor={isDark ? "#959595ff" : "#494949ff"}
+                // color={isDark ? "#ffcc00" : "#25627e"}
+                // cursorBallColor={isDark ? "#c8a102ff" : "#1f4d63ff"}
+                color={isDark ? "#F59E0B" : "#25627e"}
+                cursorBallColor={isDark ? "#C0A062" : "#1f4d63ff"}
                 cursorBallSize={2}
                 ballCount={16}
                 animationSize={21}
@@ -1080,6 +1078,7 @@ const BackgroundLayer = useMemo(() => {
             handleFeatureChange={handleFeatureChange}
             handleAddWatch={handleAddWatch}
             handleCancel={handleCancel}
+            isDark={isDark} 
           />
 
           <div className="separator-container">

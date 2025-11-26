@@ -18,7 +18,8 @@ const AddWatchForm = ({
   allFeaturesList,
   handleFeatureChange,
   handleAddWatch,
-  handleCancel
+  handleCancel,
+  isDark
 }) => {
 
   // Se non dobbiamo mostrarlo, non renderizziamo nulla
@@ -48,6 +49,7 @@ const AddWatchForm = ({
           backButtonText="Indietro"
           nextButtonText="Avanti"
           finishButtonText="Salva" // Testo per l'ultimo step (se il tuo Stepper lo supporta)
+          isDark={isDark}
         >
         <Step>
         <h3>Nome</h3>

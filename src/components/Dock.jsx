@@ -116,7 +116,7 @@ const itemWrapperStyles = {
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
-          backgroundColor: isActive ? (isDark ? '#ffcc00e0' : 'rgba(37, 98, 126, 1)') : 'transparent',
+          backgroundColor: isActive ? (isDark ? 'var(--accent-primary_DARK)' : 'var(--accent-primary)') : 'transparent',
           color: 'white', // Gestione colore icona
           zIndex: 10, // L'icona deve stare sopra
         };
