@@ -1,5 +1,5 @@
 import React, { useState, Children, useRef, useLayoutEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, color } from 'motion/react';
 
 import './componentCSS/Stepper.css';
 
@@ -125,8 +125,7 @@ export default function Stepper({
       {(currentStep == 1 || isLastStep) && onCancel && (
         <button
           onClick={onCancel}
-          className="back-button" // Usiamo lo stile del tasto secondario
-          style={{border:"3px solid #c74343d0"}} // Override rosso per "Annulla"
+          className="back-button danger-button"
         >
           {cancelButtonText}
         </button>
@@ -134,9 +133,9 @@ export default function Stepper({
 
       {/* TASTO AVANTI / SALVA */}
       <button 
-        onClick={isLastStep ? handleComplete : handleNext} 
-        className="next-button" 
-        style={isLastStep ? {border: "3px solid green"} : {}}
+        
+        className={`${nextButtonProps.className || ''} next-button ${isLastStep ? 'success-button' : ''}`}
+        onClick={isLastStep ? handleComplete : handleNext}
         {...nextButtonProps}
       >
         {isLastStep ? 'Salva' : nextButtonText}

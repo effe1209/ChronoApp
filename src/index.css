@@ -29,7 +29,8 @@
   --accent-primary-hover_DARK: #C0A062;         /* Oro leggermente più scuro per l'hover */
   
   /* Stati (Danger, Success, ecc.) */
-  --color-danger: #CF6679;                 /* Rosso desaturato per errori/elimina */
+  --color-danger: #CF6679;                
+  --color-success: #10B981;
   --color-danger-bg_DARK: rgba(207, 102, 121, 0.15); /* Sfondo rosso leggero per hover cestino */
 
   --font-all-text: 'minork';  /* Font principale per tutto il testo */

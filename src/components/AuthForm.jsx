@@ -22,7 +22,7 @@ const AuthForm = ({
   // Usiamo useMemo anche qui per evitare di ricreare l'oggetto a ogni render
   const floatingConfig = useMemo(() => {
     return isDark 
-      ? { bg: "#000000", gradient: [], blend: "screen" } // Config Dark
+      ? {bg: "#001036ff", gradient: ["#F59E0B"],blend: "screen"}// Config Dark
       : { bg: "#476d7ed6", gradient: ["#ff8ce2ff", "#77bebaff"], blend: "screen" }; // Config Light
   }, [isDark]);
 

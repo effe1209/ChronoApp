@@ -731,6 +731,12 @@ select {
   padding-bottom: 20px;
 }
 
+@media screen and (max-width: 750px) {
+  .dark-mode .infoView .modal-content {
+    min-width: unset !important;
+  }
+}
+
 .modal-content {
   width: 80%;
   max-width: 500px;
@@ -1696,9 +1702,10 @@ input::placeholder {
   }
 
   .buttonView {
-  justify-content: center;
-  flex-wrap: wrap;
-  justify-content: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
   }
 }
 
@@ -1900,10 +1907,25 @@ input::placeholder {
     justify-content: center;
 }
 
-.modal-delete-btn svg {
+@media (max-width: 750px) {
+  .modal-delete-btn {
+    top: 300px;      /* Distanza dall'alto */
+    right: 10px;    /* Distanza da destra */
+    padding: 8px;
+  }
+  .modal-delete-btn svg {
     width: 24px;
     height: 24px;
+    stroke: var(--color-danger);
+  }
+}
+
+
+.modal-delete-btn svg {
+    width: 28px;
+    height: 28px;
     stroke: #9ca3af; /* Colore grigio neutro di default */
+    stroke: var(--color-danger);
 }
 
 /* Effetto Hover */

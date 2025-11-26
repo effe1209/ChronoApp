@@ -41,7 +41,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   
   // --- 2. COLORE PALLINO DEFAULT (GIORNO) ---
   '& .MuiSwitch-thumb': {
-    backgroundColor: '#ffcc00', // <--- CAMBIA QUI (es. Giallo per il sole)
+    backgroundColor: 'var(--accent-primary_DARK)', // <--- CAMBIA QUI (es. Giallo per il sole)
     
     width: 32,
     height: 32,

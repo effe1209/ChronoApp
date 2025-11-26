@@ -108,8 +108,8 @@
   transition: 2s;
   font-family: 'minork';
   border-radius: 20px;
-  border: 3px solid  var(--accent-primary);
-  background-color: var(--accent-primary);
+  border: 3px solid  var(--accent-primary_DARK);
+  background-color: var(--accent-primary_DARK);
   color: black;
   width: 100px;
   transition: transform 0.5s ease-in-out, background-color 0.5s ease-in-out;
@@ -121,18 +121,18 @@
 }
 
 .dark-mode .back-button {
-  border: 3px solid var(--accent-primary_DARK);
-  background-color: var(--accent-primary_DARK);
+  border: 3px solid  var(--accent-primary_DARK);
+  background-color:  var(--accent-primary_DARK);
 }
 
 .back-button:hover {
   background-color: transparent;
   transform: scale(1.05);
-  color: var(--accent-primary);
+  color: rgba(37, 98, 126, 0.8);
 }
 
 .dark-mode .back-button:hover {
-  color: var(--accent-primary_DARK);
+  color:  var(--accent-primary_DARK);
 }
 
 .back-button.inactive {
@@ -141,8 +141,32 @@
   color: #a3a3a3;
 }
 
+/* Stile base (quello che avevi nell'inline) */
+.danger-button {
+    border: 3px solid var(--color-danger) !important;
+    background-color: var(--color-danger) !important;
+}
+
+/* Stile HOVER (Quando ci passi sopra) */
+.danger-button:hover {
+    background-color: transparent !important; /* Diventa trasparente */
+    color: var(--color-danger) !important;    /* Il testo diventa rosso */
+    /* Il bordo rimane rosso perché definito sopra */
+}
+
+/* Aumenta specificità concatenando le classi */
+button.next-button.success-button {
+    border: 3px solid var(--color-success);
+  background-color: var(--color-success);
+}
+
+button.success-button:hover {
+  background-color: transparent; /* Svuota il bottone */
+  color: var(--color-success) !important;   /* Il testo diventa verde */
+}
+
 .next-button {
-    padding: 10px 15px;
+  padding: 10px 15px;
   font-size: 18px;
   border: none;
   cursor: pointer;
