@@ -552,6 +552,7 @@ select {
 }
 
 .modal-content {
+  position: relative; 
   background: rgba(255, 255, 255, .80);
   padding: 20px;
   border-radius: 8px;
@@ -1881,4 +1882,37 @@ input::placeholder {
     max-width: 300px;
     margin: unset;
   }
+}
+
+
+.modal-delete-btn {
+    position: absolute;
+    top: 15px;      /* Distanza dall'alto */
+    right: 15px;    /* Distanza da destra */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 20px; /* Rotondo */
+    z-index: 100;   /* Assicura che sia sopra a tutto */
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-delete-btn svg {
+    width: 24px;
+    height: 24px;
+    stroke: #9ca3af; /* Colore grigio neutro di default */
+}
+
+/* Effetto Hover */
+.modal-delete-btn:hover {
+    background-color: rgba(239, 68, 68, 0.1); /* Sfondo rosso leggerissimo */
+}
+
+.modal-delete-btn:hover svg {
+    stroke: #ef4444; /* L'icona diventa rossa */
+    transform: scale(1.1);
 }

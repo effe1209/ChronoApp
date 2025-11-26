@@ -1,23 +1,19 @@
-import { Weight } from 'lucide-react';
-import React, { useEffect } from 'react'; // 1. Aggiunto import useEffect
+import React, { useEffect } from 'react';
 
-const InfoWatchModal = ({ isVisible, setIsVisible, selectedWatch }) => {
+// 1. Aggiungiamo 'onDelete' alle props
+const InfoWatchModal = ({ isVisible, setIsVisible, selectedWatch, onDelete, handleDeleteWatch }) => {
 
-  // 2. L'hook deve stare QUI, prima di qualsiasi return condizionale
   useEffect(() => {
     if (isVisible) {
-      document.body.style.overflow = 'hidden'; // Blocca
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'unset'; // Sblocca se isVisible diventa false ma il comp è montato
+      document.body.style.overflow = 'unset';
     }
-
-    // Cleanup: sblocca sempre quando il componente viene distrutto
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, [isVisible]);
 
-  // 3. Ora puoi fare il controllo per uscire se non c'è nulla da mostrare
   if (!isVisible || !selectedWatch) {
     return null;
   }
@@ -27,13 +23,33 @@ const InfoWatchModal = ({ isVisible, setIsVisible, selectedWatch }) => {
     : "Nessuna";
 
   return (
-      <div className="modal-overlay">
-      <div className="infoView">
-        <div className="modal-content">
+    <div className="modal-overlay" onClick={() => setIsVisible(false)}>
+      {/* onClick sull'overlay per chiudere cliccando fuori (opzionale ma UX standard) */}
+      
+      <div className="infoView" onClick={(e) => e.stopPropagation()}> 
+        {/* stopPropagation evita che il click sulla modale la chiuda */}
+        
+        <div className="modal-content" style={{ position: 'relative' }}>
+          
+          {/* --- TASTO CESTINO (Posizionato in alto a destra) --- */}
+          <button 
+            className="modal-delete-btn"
+            onClick={() => {
+                handleDeleteWatch(selectedWatch.id, selectedWatch.imageUrl); // Passiamo ID e Img al genitore
+                setIsVisible(false); // Chiudiamo la modale
+            }}
+            aria-label="Elimina orologio"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+            </svg>
+          </button>
+          {/* ---------------------------------------------------- */}
+
           <div className="TileInfo">
-            {/* Qui userai il font Playfair Display che abbiamo impostato prima */}
             <h3>{selectedWatch.name}</h3>
           </div>
+
           <img 
             src={selectedWatch.imageUrl || "orologio_back.svg"} 
             alt={selectedWatch.name} 
@@ -41,7 +57,7 @@ const InfoWatchModal = ({ isVisible, setIsVisible, selectedWatch }) => {
             loading="lazy"
             onError={(e) => { e.target.src = "orologio_back.svg"; }}
           />
-          {/* Qui dentro userai il Minork Sans Light per i p e span */}
+
           <div className="paragrafi">
             <p><strong>Marca:</strong> <span className="InfoColorInfo">{selectedWatch.brand}</span></p>
             <p><strong>Movimento:</strong> <span className="InfoColorInfo">{selectedWatch.movement}</span></p>
@@ -51,9 +67,11 @@ const InfoWatchModal = ({ isVisible, setIsVisible, selectedWatch }) => {
             <p><strong>Caratteristiche Aggiuntive: </strong> <span className="InfoColorInfo">{featuresString}</span></p>
             <p style={{fontSize: '16px'}}><strong>Note: </strong> <span className="InfoColorInfo">{selectedWatch.note || "Nessuna nota"}</span></p>
           </div>
+
           <div className="buttonForm">
             <button className="funzioniButton" onClick={() => setIsVisible(false)}>Chiudi</button>
           </div>
+          
         </div>
       </div>
     </div>

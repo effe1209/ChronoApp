@@ -1155,6 +1155,7 @@ const BackgroundLayer = useMemo(() => {
             isVisible={isInfoVisible}
             setIsVisible={setIsInfoVisible}
             selectedWatch={selectedWatch}
+            handleDeleteWatch={handleDeleteWatch}
           />
           <InfiniteGridModal 
             isVisible={isInfiniteGridVisible} 

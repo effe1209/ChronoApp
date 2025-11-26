@@ -116,14 +116,7 @@ const WatchList = ({
                       Modifica
                     </button>
                   </div>
-                  <div className="delete-button">
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDeleteWatch(watch.id, watch.image)} // Passa 'image' (path)
-                    >
-                      Elimina
-                    </button>
-                  </div>
+                  
                   <div className="InfoButton">
                   <button
                     className="modify-btn"
