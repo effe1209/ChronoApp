@@ -208,7 +208,7 @@ function SlideTransition({ children, direction, onHeightReady }) {
 
 const stepVariants = {
   enter: dir => ({
-    x: dir >= 0 ? '-100%' : '100%',
+    x: dir >= 0 ? '100%' : '-100%',
     opacity: 0
   }),
   center: {
@@ -216,7 +216,7 @@ const stepVariants = {
     opacity: 1
   },
   exit: dir => ({
-    x: dir >= 0 ? '50%' : '-50%',
+    x: dir >= 0 ? '-50%' : '50%',
     opacity: 0
   })
 };
