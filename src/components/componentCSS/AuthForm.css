@@ -119,5 +119,5 @@
 }
 
 .dark-mode .toggle-link {
-  color: #ffcc00;
+  color: var(--accent-primary_DARK);
 }

@@ -225,6 +225,13 @@ h2{
   font-weight: normal;
   padding: 60px;
 }
+
+@media (max-width: 600px) {  
+  h2{
+    font-size: 1.5em !important; /* Puoi provare anche con 1rem o 0.9rem se vuoi più piccolo */
+    padding: 23px;
+  }
+}
 .auth-form-container h2 {
   padding: 10px;
   color: white
@@ -318,7 +325,7 @@ h3{
 
   /* Riduci la dimensione del titolo su dispositivi mobili */
   .titleList h1{
-    font-size: 1.8em !important; /* Puoi provare anche con 1rem o 0.9rem se vuoi più piccolo */
+    font-size: 1.6em !important; /* Puoi provare anche con 1rem o 0.9rem se vuoi più piccolo */
   }
 
   /* Riduci la dimensione del titolo su dispositivi mobili */

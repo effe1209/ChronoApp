@@ -84,7 +84,6 @@ const itemWrapperStyles = {
     fontSize: '10px',
     marginTop: '-3px',
     fontFamily: 'minork', // O il tuo font 'minork'
-    fontWeight: 'bold',
     color: '#fff',
     opacity: 1, // 1 = Sempre visibile, 0 = Nascosto
     transition: 'opacity 0.2s',

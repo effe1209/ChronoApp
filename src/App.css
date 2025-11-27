@@ -1909,10 +1909,18 @@ input::placeholder {
 
 @media (max-width: 750px) {
   .modal-delete-btn {
-    top: 300px;      /* Distanza dall'alto */
-    right: 10px;    /* Distanza da destra */
+    /* 1. Sgancia il bottone dall'alto e da destra */
+    top: auto;
+    right: auto;
+
+    /* 2. Aggancia il bottone in basso a sinistra */
+    bottom: 20px;  /* Regola la distanza dal fondo */
+    left: 20px;    /* Regola la distanza da sinistra */
+
+    /* Stili estetici per mobile */
     padding: 8px;
   }
+
   .modal-delete-btn svg {
     width: 24px;
     height: 24px;
@@ -1936,4 +1944,31 @@ input::placeholder {
 .modal-delete-btn:hover svg {
     stroke: #ef4444; /* L'icona diventa rossa */
     transform: scale(1.1);
+}
+
+
+
+/* Posizionamento assoluto per la stella (in alto a sinistra) */
+.modal-favorite-pos .favoriteButton__button{
+    position: absolute;
+    top: 15px;      /* Stessa distanza dall'alto del cestino */
+    left: 15px;     /* Distanza da SINISTRA */
+    right: unset;
+    z-index: 100;   /* Sopra l'immagine */
+    
+    /* Assicura che l'icona interna sia centrata se il div ha dimensioni */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive: Se su mobile vuoi spostarlo o lasciarlo lì */
+@media (max-width: 750px) {
+  .modal-favorite-pos .favoriteButton__button{
+    top: auto;
+    right: 20px;
+    bottom: 20px;
+    left: auto;
+    padding: 8px;
+  }
 }

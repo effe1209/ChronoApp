@@ -612,13 +612,17 @@ const fetchWatches = async (userid) => {
     }
   };
 
-  const handleFavoriteToggle = async (watchId) => {
+const handleFavoriteToggle = async (watchId) => {
+    // 1. Troviamo l'orologio attuale
     const currentWatch = watches.find(w => w.id === watchId);
     if (!currentWatch) return;
     
+    // 2. Calcoliamo il nuovo stato
     const newFavoriteState = !currentWatch.isFavorite;
 
+    // 3. AGGIORNAMENTO OTTIMISTICO (UI Immediata)
     startTransition(() => {
+        // A. Aggiorna la lista principale
         setWatches(prevWatches =>
             prevWatches.map(watch =>
                 watch.id === watchId
@@ -626,16 +630,30 @@ const fetchWatches = async (userid) => {
                     : watch
             )
         );
+
+        // B. Aggiorna la MODALE se è aperta e corrisponde all'orologio cliccato
+        // (Spostato qui per essere istantaneo)
+        if (selectedWatch && selectedWatch.id === watchId) {
+            setSelectedWatch((prevWatch) => ({
+                ...prevWatch,
+                isFavorite: newFavoriteState
+            }));
+        }
     });
 
+    // 4. Chiamata al Database
     const { error } = await supabase
         .from('watches')
         .update({ isFavorite: newFavoriteState })
         .eq('id', watchId); 
 
+    // 5. Gestione Errori (Rollback)
     if (error) {
         console.error("Errore Supabase (ripristino UI):", error);
+        
+        // Se il DB fallisce, torniamo indietro allo stato precedente
         startTransition(() => {
+          // A. Ripristina lista
           setWatches(prevWatches =>
               prevWatches.map(watch =>
                   watch.id === watchId
@@ -643,7 +661,16 @@ const fetchWatches = async (userid) => {
                       : watch
               )
           );
+
+          // B. Ripristina modale
+          if (selectedWatch && selectedWatch.id === watchId) {
+              setSelectedWatch((prevWatch) => ({
+                  ...prevWatch,
+                  isFavorite: !newFavoriteState
+              }));
+          }
         });
+        
         setMessage("Errore nell'aggiornamento dei preferiti.");
     }
   };
@@ -1155,12 +1182,14 @@ const BackgroundLayer = useMemo(() => {
             setIsVisible={setIsInfoVisible}
             selectedWatch={selectedWatch}
             handleDeleteWatch={handleDeleteWatch}
+            handleFavoriteToggle={handleFavoriteToggle}
           />
           <InfiniteGridModal 
             isVisible={isInfiniteGridVisible} 
             setIsVisible={setIsInfiniteGridVisible} 
             handleInfoWatch={handleInfoWatch}
             watches={watches} // Passa la lista completa degli orologi
+            handleFavoriteToggle={handleFavoriteToggle}
           />
     </div>
     </>
