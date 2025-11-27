@@ -3,7 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  font-family:'minork';
+  font-family: var(--font-all-text);
 }
 
 .logo {
@@ -50,33 +50,24 @@
   margin-bottom: 20px;
 }
 
-.form input {
-  width: 70%; /* Rende gli input larghi */
-  padding: 10px;
-  margin: 10px 0;
-  border: 2px solid #186599b4; /* Bordo blu */
-  border-radius: 20px; /* Angoli stondati */
-  font-size: 18px;
-  outline: none; /* Rimuove il bordo blu quando clicchi */
-  transition: 0.3s;
-  font-family: 'minork';
-  border: none;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.6);
-}
+  .form input {
+    width: 70%; /* Rende gli input larghi */
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 20px; /* Angoli stondati */
+    font-size: 18px;
+    outline: none; /* Rimuove il bordo blu quando clicchi */
+    transition: 0.3s;
+    font-family: var(--font-all-text);
+    /* border: none; */
+    border: 1px solid var(--accent-primary); /* Bordo blu */
+    align-items: center;
+    background-color: var(--color-input-background);
+  }
 
 .dark-mode .form input {
-  width: 70%; /* Rende gli input larghi */
-  padding: 10px;
-  margin: 10px 0;
-  border: 2px solid #186599b4; /* Bordo blu */
-  border-radius: 20px; /* Angoli stondati */
-  font-size: 18px;
-  outline: none; /* Rimuove il bordo blu quando clicchi */
-  transition: 0.3s;
+  border: 1px solid var(--accent-primary-hover_DARK);
   font-family: var(--font-all-text);
-  border: none;
-  align-items: center;
   background-color: var(--bg-card_DARK);
 }
 
@@ -106,10 +97,10 @@
   border: none;
   cursor: pointer;
   transition: 2s;
-  font-family: 'minork';
+  font-family: var(--font-all-text);
   border-radius: 20px;
-  border: 3px solid rgba(37, 98, 126, 1);
-  background-color: rgba(37, 98, 126, 1);
+  border: 3px solid var(--accent-primary);
+  background-color: var(--accent-primary);
   color: white;
   width: 100px;
   transition: transform 0.5s ease-in-out, background-color 0.5s ease-in-out;
@@ -168,41 +159,6 @@
   justify-content: center;
 }
 
-.delete-button button:hover {
-  font-size: 18px;
-  border: none;
-  border-radius: 10px; /* Bottoni stondati */
-  cursor: pointer;
-  transition: 0.3s;
-  color: white;
-  transform: scale(1.3);
-}
-
-.delete-button button {
-  font-family: 'minork';
-  padding: 10px 15px;
-  font-size: 18px;
-  border: none;
-  border-radius: 20px; /* Bottoni stondati */
-  cursor: pointer;
-  transition: 0.3s;
-  background-color: rgb(105, 25, 25);
-  color: white;
-  height: 44px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-select {
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 18px;
-  display: none;
-  background-color: rgba(255, 255, 255, 1);
-}
-
 .menuTendina {
   padding: 10px;
   cursor: pointer;
@@ -210,7 +166,7 @@ select {
   background-color: rgba(255, 255, 255, 0.3); /* Colore di sfondo semitrasparente */
   box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.1); /* Correzione del box-shadow con la sintassi corretta */
   backdrop-filter: blur(5px); /* Sfocatura del background dietro il menù */
-  font-family: 'Minork', sans-serif; /* Assicurati che il font sia correttamente caricato */
+  font-family: var(--font-all-text);
   border-radius: 5px; /* Aggiungi bordi arrotondati */
   transition: all 0.3s ease; /* Aggiungi transizione per effetti smooth */
   font-size: 18px;
@@ -218,7 +174,7 @@ select {
 
 /* Effetto hover per il menù */
 .menuTendina:hover {
-  background-color: rgba(255, 255, 255, 0.5); /* Colore di sfondo più opaco al passaggio del mouse */
+  background-color: var(--color-input-background); /* Colore di sfondo più opaco al passaggio del mouse */
   box-shadow: 0 0 15px 3px rgba(0, 0, 0, 0.2); /* Ombra più pronunciata al passaggio del mouse */
 }
 
@@ -234,8 +190,6 @@ select {
 
 .clock {
   border-radius: 100%;
-  /* background: rgba(126, 120, 120, 0.8); */
-  font-family: "Montserrat";
   border: 3px solid rgba(0, 0, 0, 0.65);
   box-shadow: inset 0px 0px 50px 0 rgba(0, 0, 0, 0.7);
   width: 180px;
@@ -284,7 +238,7 @@ select {
 
 .dark-mode .minute,
 .dark-mode .hour{
-  background: white;
+  background: var(--text-primary_DARK);
 }
 
 
@@ -298,7 +252,7 @@ select {
   bottom: 0;
   right: 0;
   border-radius: 4px;
-  background: rgba(0, 123, 255, 0.8);
+  background: var(--accent-primary);
   transform-origin: bottom center;
   transform: rotate(180deg);
   z-index: 1;
@@ -318,7 +272,7 @@ select {
   right: 0;
   border-radius: 100px;
   background: rgb(0, 0, 0);
-  border: 2px solid rgba(0, 123, 255, 0.8);
+  border: 2px solid var(--accent-primary_DARK);
   border-radius: 100px;
   margin: auto;
   z-index: 1;
@@ -348,7 +302,7 @@ select {
   /* font-size: 24px; */
   font-weight:bold;
   /* font-family: 'minork'; */
-  font-family: 'ancient';
+  font-family: var(--font-clock);
   color: rgb(0, 0, 0);
   width: 30px;
   height: 30px;
@@ -363,7 +317,7 @@ select {
 }
 
 .dark-mode .number {
-  color: rgb(255, 255, 255);
+  color: var(--color-white);
 }
 
 .dark-mode  .numbers {
@@ -382,14 +336,14 @@ select {
   display: flex;
   text-align: center;
   background-color: rgb(0, 0, 0); /* Colore dei puntini */
-  border: white;
+  border: var(--color-white);
   margin: auto;
   z-index: 1;
   border-radius: 100%;
 }
 
 .dark-mode .dot {
-  background-color: rgb(255, 255, 255);
+  background-color: var(--color-white);
 }
 
 
@@ -415,7 +369,7 @@ select {
 }
 
 .upload-button {
-  background-color: rgba(255, 255, 255, .60);
+  background-color: var(--color-input-background);
   color: black;
   padding: 10px 20px;
   font-size: 16px;
@@ -425,11 +379,20 @@ select {
   transition: background 0.3s;
   margin: 20px;
   margin-top: 25px;
+  font-family: var(--font-all-text);
+  border: 1px solid var(--accent-primary);
 }
 
 .upload-button:hover {
-  background-color: #bebebe;
+  background-color: var(--color-input-hover);
 }
+
+.dark-mode .upload-button {
+  color: #ffffff;
+  background-color:var(--bg-card_DARK);
+  border: 1px solid var(--accent-primary_DARK);
+}
+
 .dark-mode .upload-button:hover {
   background-color: var(--bg-card_DARK);
 }
@@ -475,34 +438,36 @@ select {
 }
 
 .color-picker-button {
-  border: none;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
   border-radius: 20px;
   color: #000000;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-  background-color: rgba(255, 255, 255, .60);
+  background-color: var(--color-input-background);
+  border: 1px solid var(--accent-primary);
+  font-family: var(--font-all-text);
 }
 
 .dark-mode .color-picker-button {
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 20px;
   color: #ffffff;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   background-color: var(--bg-card_DARK);
+  border: 1px solid var(--accent-primary_DARK);
 }
 
 .selected-color {
   font-size: 14px;
-  color: var(--text-secondary_DARK);
+  color: var(--text-primary-hover);
+}
+
+.dark-mode {
+  .selected-color {
+    color: var(--text---accent-primary_DARK);
+  }
 }
 
 .modify-btn {
-  background-color: rgba(37, 98, 126, 0.8);
+  background-color: var(--accent-primary);
   color: white;
   padding: 10px 15px;
   border: none;
@@ -514,7 +479,7 @@ select {
   margin-bottom: 10px;
   margin-top: 20px;
   height: 44px;
-  font-family: 'minork';
+  font-family: var(--font-all-text);
 }
 
 
@@ -552,7 +517,7 @@ select {
 
 .modal-content {
   position: relative; 
-  background: rgba(255, 255, 255, .80);
+  background: var(--bg-card);
   padding: 20px;
   border-radius: 8px;
   width: 400px;
@@ -560,11 +525,9 @@ select {
 
 .functionButton {
   padding: 10px;
-  color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  
   display: flex;
   justify-content: space-around;
   gap: 20px;
@@ -573,14 +536,14 @@ select {
 .functionButton button {
   margin-top: 20px;
   padding: 10px 15px;
-  background-color: rgba(225, 225, 225, 0.8);
-  border: 3px solid rgba(37, 98, 126, 1);
-  color: rgba(37, 98, 126, 1);
+  background-color: var(--bg-card);
+  border: 3px solid var(--accent-primary);
+  color: var(--accent-primary);
   /* backdrop-filter: blur(5px); */
   border-radius: 20px;
   cursor: pointer;
   font-size: 18px;
-  font-family: 'minork';
+  font-family: var(--font-all-text);
   transition: 0.8s;
   text-box: auto;
 }
@@ -610,15 +573,13 @@ select {
 }
 
 .dark-mode .functionButton button:hover {
-  color: #ffcc00;
-    transform: scale(1.4);
+  transform: scale(1.4);
   transform: translateX(30px);
 }
 
 .funzioniButton {
   background: transparent;
   border: none;
-  color: white;
   font-size: 16px;
   cursor: pointer;
   /* padding: 10px 20px; */
@@ -626,16 +587,42 @@ select {
   z-index: 2; /* Assicura che il bottone stia sopra l'orologio */
 }
 
+.delete-button button:hover {
+  font-size: 18px;
+  border: none;
+  border-radius: 10px; /* Bottoni stondati */
+  cursor: pointer;
+  transition: 0.3s;
+  color: white;
+  transform: scale(1.3);
+}
+
+.delete-button button {
+  font-family: 'minork';
+  padding: 10px 15px;
+  font-size: 18px;
+  border: none;
+  border-radius: 20px; /* Bottoni stondati */
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: var(--accent-primary);
+  color: white;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .watch-card .funzioniButton {
   margin-top: 20px;
   padding: 10px 15px;
-  background-color: #007bff;
+  background-color: #6a00ff;
   color: white;
   border: none;
   border-radius: 20px;
   cursor: pointer;
   font-size: 18px;
-  font-family: 'minork';
+  font-family: var(--font-all-text);
   transition: 0.8s;
   height: 44px;
   margin-bottom: 10px;
@@ -729,10 +716,11 @@ select {
   align-items: center;
   justify-content: center;
   padding-bottom: 20px;
+  min-width: 450px;
 }
 
 @media screen and (max-width: 750px) {
-  .dark-mode .infoView .modal-content {
+  .infoView .modal-content {
     min-width: unset !important;
   }
 }
@@ -759,7 +747,6 @@ select {
   background-color: var(--bg-card_DARK);
   height: fit-content;
   backdrop-filter: blur(10px);
-  min-width: 500px;
 }
 
 
@@ -1291,7 +1278,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   flex-direction: row;
   justify-content: center;
   /* margin-bottom: 3%; */
-  gap: 4.5%;
+  gap: 7.5%;
   /* margin-top: 2%; */
   align-content: center;
 }
@@ -1347,11 +1334,6 @@ input[type="checkbox"]:checked + .slider-v3::before {
     box-shadow: 0 0 50px #4ECDC4, 0 0 70px #349090;
   }
 } */
-
-.dark-mode .upload-button {
-  color: #ffffff;
-  background-color:var(--bg-card_DARK);
-}
 
 .CardImage {
   width: 100%;
@@ -1724,9 +1706,9 @@ input::placeholder {
   padding: 10px;
   margin: 10px auto;
   border-radius: 20px;
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: var(--color-input-background);
   font-size: 18px;
-  font-family: 'minork';
+  font-family: var(--font-all-text);
   cursor: pointer;
   transition: all 0.3s ease; /* Transizione per tutti gli stati */
   border: 2px solid transparent; /* Bordo trasparente per evitare scatti */
@@ -1738,7 +1720,7 @@ input::placeholder {
 
 .dark-mode .checkbox-label {
   background-color: var(--bg-card_DARK);
-  color: #ffffff;
+  color: var(--color-white);
 }
 
 .dark-mode .checkbox-label:hover {
@@ -1755,8 +1737,8 @@ input::placeholder {
 
 /* 3. STILE QUANDO SELEZIONATO (LA SOLUZIONE) */
 .checkbox-label.selected {
-  background-color: #186599; /* Il tuo colore blu */
-  color: white;
+  background-color: var(--accent-primary); /* Il tuo colore blu */
+  color: var(--color-white);
 }
 
 .dark-mode .checkbox-label.selected {
@@ -1771,7 +1753,7 @@ input::placeholder {
   height: auto;
   margin-right: 15px;
   transform: scale(1.4);
-  accent-color: #186599;
+  accent-color: var(--accent-primary);
   /* Resetta gli stili ereditati */
   padding: 0;
   border: none;
@@ -1780,21 +1762,27 @@ input::placeholder {
 }
 
 .details-toggle-button {
+  display: flex;             /* 1. Attiva Flexbox */
+  align-items: center;       /* 2. Centra Verticalmente */
+  justify-content: center;   /* 3. Centra Orizzontalmente */
+  margin: auto;
   padding: 10px 15px;
   /* background-color: rgba(37, 98, 126, 0.8); */
-  background-color: #333;
-  color: white;
+  background-color: var(--color-input-background);
+  color: var(--text-color);
   border: none;
   border-radius: 20px;
   cursor: pointer;
   font-size: 18px;
-  font-family: 'minork';
+  font-family: var(--font-all-text);
   transition: 0.8s;
   height: 44px;
+  border: 1px solid var(--accent-primary);
 }
 
 .dark-mode .details-toggle-button {
   background-color: var(--bg-card_DARK);
+  border: 1px solid var(--accent-primary_DARK);
 }
 
 @media screen and (max-width: 750px) {

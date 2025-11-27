@@ -168,7 +168,7 @@ const WatchList = ({
                 <img src="orologio_back.svg" alt="Default" className="watch-imageCarosel"/>
               )}
               <div className="watchName_Button">
-              <h3 className="textCard" style={{fontSize:"42px", padding:"2%"}}>{watch.name}</h3>
+              <h3 className="textCard" style={{padding:"2%"}}>{watch.name}</h3>
               <div className="cardBottoni">
                 <div className="InfoButton">
                   <button
@@ -184,14 +184,6 @@ const WatchList = ({
                       onClick={() => handleModifyWatch(watch)} // Passa l'oggetto
                     >
                       Modifica
-                    </button>
-                  </div>
-                  <div className="delete-button">
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDeleteWatch(watch.id, watch.image)} // Passa 'image' (path)
-                    >
-                      Elimina
                     </button>
                   </div>
                 </div>

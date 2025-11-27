@@ -11,11 +11,11 @@
   
   /* Modalità Chiara ☀️*/
   --bg-container: rgba(180, 188, 212, 0.45); 
-  --bg-card: ;
-  --accent-primary: rgba(37, 98, 126, 0.8);
+  --bg-card: rgba(225, 225, 225, 0.8);
+  --accent-primary: rgba(37, 98, 126, 1);
   --text-color-main: black;
   --color-input-background: rgba(255, 255, 255, 0.6);
-  --font-Title: 'kugile';
+  --color-input-hover: #bebebe;
   --accent-primary-hover: rgba(37, 98, 126, 1);
 
   /* Modalità Scura */
@@ -37,9 +37,12 @@
   /* Stati (Danger, Success, ecc.) */
   --color-danger: #CF6679;                
   --color-success: #10B981;
-  --color-danger-bg_DARK: rgba(207, 102, 121, 0.15); /* Sfondo rosso leggero per hover cestino */
+  --color-white: #FFFFFF;
 
-  --font-all-text: 'minork';  /* Font principale per tutto il testo */
+  /* Font */
+  --font-Title: 'kugile';  /* Font per i titoli */
+  --font-all-text: 'minork';
+  --font-clock: 'ancient';
 }
 
 html {
@@ -113,15 +116,22 @@ body {
 .dark-mode .selectMenu > select{
   color: #ffffff;
   background-color: var(--bg-card_DARK);
-  border: 0px;
+  border: 1px solid var(--accent-primary_DARK);
   border-radius: 20px;
 }
 
 .selectMenu > select{
+  display: flex;             /* 1. Attiva Flexbox */
+  align-items: center;       /* 2. Centra Verticalmente */
+  justify-content: center;   /* 3. Centra Orizzontalmente */
+  
   color: #000000;
-  border: 0px;
   border-radius: 20px;
-  background-color: var(--color-input-background)
+  padding: 8px;
+  font-size: 18px;
+  background-color: var(--color-input-background);
+  border: 1px solid var(--accent-primary);
+  font-family: var(--font-all-text);
 }
 
 .dark-mode h1 {
@@ -252,7 +262,6 @@ h3{
 }
 
 .add-button {
-  background-color: #eb1043be;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -275,7 +284,7 @@ h3{
 
 .watch-card {
   /* background: rgb(250, 214, 214); */
-  background-color: rgba(225, 225, 225, 0.8);
+  background-color: var(--bg-card);
   padding: 15px;
 
   border-radius: 15px;
@@ -314,7 +323,7 @@ h3{
 .titleList h3 {
   padding: 20px;
   margin-top: 10px;
-  font-family: 'kugile';
+  font-family: var(--font-Title);
 }
 
 @media (max-width: 750px) {
@@ -370,10 +379,10 @@ h3{
   }
   
   .modal-content-statistiche h4 {
-    font-family: 'kugile';
+    font-family: var(--font-Title);
   }
   .chart-wrapper h4 {
-    font-family: 'minork';
+    font-family: var(--font-all-text);
   }
 
 }
@@ -384,6 +393,7 @@ h3{
   padding-top: 2%;
   overflow-wrap: anywhere;
   font-family: var(--font-all-text);
+  font-size: 39px;
 }
 
 .textCard:hover {
@@ -480,7 +490,7 @@ h4 {
 
 .decorative-symbol {
   font-size: 30px;
-  color: rgb(0, 0, 0);
+  color: var(--text-color-main);
   /* Altri stili se necessari, ad esempio margini o display */
   display: inline-block; /* Utile per controlli di spacing */
 }
@@ -504,7 +514,7 @@ h4 {
 .custom-separator {
   /* Resetta lo stile predefinito del browser per HR */
   border: none;
-  border-top: 2px solid #000000; /* Definisce la linea nera sottile */
+  border-top: 2px solid var(--text-color-main); /* Definisce la linea nera sottile */
   
   /* Imposta la larghezza fissa */
   width: 700px; 
