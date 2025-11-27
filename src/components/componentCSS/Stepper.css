@@ -108,8 +108,8 @@
   transition: 2s;
   font-family: 'minork';
   border-radius: 20px;
-  border: 3px solid  var(--accent-primary_DARK);
-  background-color: var(--accent-primary_DARK);
+  border: 3px solid  var(--accent-primary);
+  background-color: var(--accent-primary);
   color: black;
   width: 100px;
   transition: transform 0.5s ease-in-out, background-color 0.5s ease-in-out;
