@@ -675,64 +675,189 @@ const handleFavoriteToggle = async (watchId) => {
     }
   };
 
-  // --- LOGICA OUTFIT (Funzioni) ---
-  // const handleImageUpload = (event) => {
-  //   const file = event.target.files[0];
-  //   if (!file) return;
+// Modifica questa funzione in App.jsx
+async function getOutfitEmbedding(fileOrBlob) {
+  const formData = new FormData();
+  
+  // TRUCCO: Se è un Blob (e non un File da input), aggiungiamo manualmente un nome file.
+  // Senza questo, il server Python riceve un file senza nome e può rifiutarlo.
+  if (fileOrBlob instanceof Blob && !fileOrBlob.name) {
+      formData.append('file', fileOrBlob, 'image_from_db.jpg');
+  } else {
+      formData.append('file', fileOrBlob);
+  }
 
-  //   const reader = new FileReader();
-  //   reader.onload = async (e) => {
-  //     const img = new Image();
-  //     img.src = e.target.result;
-  //     img.onload = () => {
-  //       const canvas = document.createElement("canvas");
-  //       const ctx = canvas.getContext("2d");
-  //       canvas.width = img.width;
-  //       canvas.height = img.height;
-  //       ctx.drawImage(img, 0, 0, img.width, img.height);
-  //       const pixelData = ctx.getImageData(img.width / 2, img.height / 2, 1, 1).data;
-  //       const hexColor = rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
-  //       setColor(hexColor);
-  //       searchWatchesByColor(hexColor);
-  //     };
-  //   };
-  //   reader.readAsDataURL(file);
-  // };
+  try {
+    const response = await fetch('https://watch-ai-api.onrender.com/embed-image', {
+      method: 'POST',
+      body: formData,
+    });
 
-const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
+    if (!response.ok) {
+        // Logghiamo l'errore del server per capire meglio
+        const errText = await response.text();
+        throw new Error(`Errore Server AI (${response.status}): ${errText}`);
+    }
     
-    reader.onload = async (e) => {
-      // Dobbiamo creare un elemento Image standard per ColorThief
-      const img = new Image();
-      // Importante per evitare problemi di sicurezza cross-origin se le immagini non sono locali
-      img.crossOrigin = 'Anonymous'; 
-      img.src = e.target.result;
+    const data = await response.json();
+    return data.vector; 
+  } catch (error) {
+    console.error("Dettaglio errore AI:", error);
+    return null;
+  }
+}
 
-      img.onload = () => {
-        const colorThief = new ColorThief();
-        
-        // Estraiamo i 5 colori dominanti (Clusters)
-        // Restituisce un array di array: [[r,g,b], [r,g,b], ...]
-        const palette = colorThief.getPalette(img, 5); 
+const handleImageUpload = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
 
-        if (palette && palette.length > 0) {
-          // Impostiamo lo stato col colore principale per la UI
-          const dominantColor = palette[0];
-          const hexColor = rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]);
-          setColor(hexColor);
+  setLoading(true);
+  setMessage("L'AI sta analizzando il tuo stile...");
+  
+  try {
+    const vector = await getOutfitEmbedding(file);
 
-          // Lanciamo la ricerca usando TUTTA la palette
-          searchWatchesByPalette(palette);
+    if (!vector) {
+      throw new Error("Impossibile analizzare l'immagine. Riprova.");
+    }
+
+    const { data: matchedWatches, error } = await supabase.rpc('match_watches', {
+      query_embedding: vector, 
+      match_threshold: 0.1, 
+      match_count: 5        
+    });
+
+    if (error) throw error;
+
+    if (matchedWatches && matchedWatches.length > 0) {
+      
+      // --- MODIFICA QUI ---
+      const formattedWatches = matchedWatches.map(w => {
+        let finalImageUrl = w.image;
+
+        // CONTROLLO INTELLIGENTE:
+        // Se inizia con 'http', è già un link valido, non toccarlo.
+        if (w.image && w.image.startsWith('http')) {
+           finalImageUrl = w.image;
+        } 
+        // Altrimenti usa la funzione helper per calcolarlo
+        else {
+           finalImageUrl = getPublicUrl(w.image);
         }
-      };
-    };
-    
-    reader.readAsDataURL(file);
-  };
+
+        return {
+          ...w,
+          imageUrl: finalImageUrl 
+        };
+      });
+      // --------------------
+
+      setWatchConsigliati(formattedWatches);
+      setIsCarouselVisible(true);
+      setMessage("Ecco gli orologi che l'AI ha selezionato per te.");
+    } else {
+      setMessage("Nessun orologio sembra abbinarsi bene a questo outfit secondo l'AI.");
+    }
+
+  } catch (err) {
+    console.error(err);
+    setMessage("Errore: " + err.message);
+  } finally {
+    setLoading(false);
+    if (fileInputRefOutfit.current) fileInputRefOutfit.current.value = "";
+  }
+};
+
+// Aggiungilo in cima ad App.jsx o in un file separato
+const LoadingModal = ({ message }) => {
+  return (
+    <div className="loading-overlay">
+      <div className="spinner"></div>
+      <div className="loading-text">{message || "Caricamento in corso..."}</div>
+      {/* Opzionale: piccolo testo per i tempi di attesa dell'AI */}
+      <small style={{marginTop: "10px", opacity: 0.7, fontSize: "0.8rem"}}>
+        L'AI sta analizzando il tuo stile...
+      </small>
+    </div>
+  );
+};
+
+// Modifica questa funzione in App.jsx
+const updateAllWatchEmbeddings = async () => {
+  setLoading(true);
+  setMessage("Sto calcolando i vettori AI... Apri la console (F12).");
+  
+  const { data: allWatches } = await supabase
+    .from('watches')
+    .select('id, name, image')
+    .not('image', 'is', null);
+
+  if (!allWatches) {
+      setLoading(false);
+      return;
+  }
+
+  let successCount = 0;
+  let failCount = 0;
+
+  for (const watch of allWatches) {
+    try {
+       let publicUrl = watch.image;
+
+       // --- FIX CRUCIALE ---
+       // Controllo intelligente: Se inizia già con http/https, è un URL completo.
+       // Non dobbiamo usare getPublicUrl, altrimenti lo raddoppia.
+       if (watch.image.startsWith('http')) {
+           publicUrl = watch.image;
+       } else {
+           // Se è un percorso relativo, puliamo e generiamo l'URL
+           let cleanPath = watch.image;
+           if (cleanPath.startsWith('fotoWatch/')) {
+               cleanPath = cleanPath.replace('fotoWatch/', '');
+           }
+           const { data } = supabase.storage.from("fotoWatch").getPublicUrl(cleanPath);
+           publicUrl = data.publicUrl;
+       }
+
+       console.log(`Processing ${watch.name}: ${publicUrl}`);
+
+       const imgRes = await fetch(publicUrl);
+       if (!imgRes.ok) {
+           console.error(`Errore download ${watch.name} (Status: ${imgRes.status}) - URL: ${publicUrl}`);
+           failCount++;
+           continue; 
+       }
+
+       const blob = await imgRes.blob();
+       
+       if (blob.size < 100 || !blob.type.startsWith('image/')) {
+            console.error(`File non valido per ${watch.name}: ${blob.type}`);
+            failCount++;
+            continue;
+       }
+
+       const vector = await getOutfitEmbedding(blob);
+       
+       if (vector) {
+         await supabase
+           .from('watches')
+           .update({ embedding: vector })
+           .eq('id', watch.id);
+         successCount++;
+         console.log(`✅ Vettorizzato: ${watch.name}`);
+       } else {
+           failCount++;
+       }
+
+    } catch (e) {
+       console.error(`Errore su ${watch.name}`, e);
+       failCount++;
+    }
+  }
+  
+  setLoading(false);
+  setMessage(`Finito! Successi: ${successCount}, Errori: ${failCount}.`);
+};
 
  const rgbToHex = (r, g, b) => {
     return "#" + [r, g, b]
@@ -933,7 +1058,7 @@ const BackgroundLayer = useMemo(() => {
   // --- RENDER ---
   return (
     <>
-    
+    {loading && <LoadingModal message={message} />}
     {BackgroundLayer}
 
     {/* MAIN CONTENT LAYER */}
@@ -1191,6 +1316,7 @@ const BackgroundLayer = useMemo(() => {
             watches={watches} // Passa la lista completa degli orologi
             handleFavoriteToggle={handleFavoriteToggle}
           />
+          {/* <button onClick={updateAllWatchEmbeddings}>AGGIORNA AI DB</button> */}
     </div>
     </>
   );

@@ -48,7 +48,8 @@
 html {
   /* Metti qui il colore esatto che passi in floatingConfig.bg */
   /* Opzionale: impedisce il rimbalzo se non vuoi scroll */
-  overscroll-behavior-y: none; 
+  overscroll-behavior-y: none;
+  scrollbar-gutter: stable;
 }
 
 
@@ -279,7 +280,7 @@ h3{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  justify-items: center;
+  /* justify-items: center; */
 }
 
 .watch-card {

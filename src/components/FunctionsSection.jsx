@@ -13,7 +13,7 @@ const FunctionsSection = ({ onDayWatchClick, onOutfitImageChange, fileInputRefOu
           </button>              
         </div>
       </div>
-      
+       
       <div className="pickWatch">
         <div>
           <h4>Completa l'Outfit</h4>

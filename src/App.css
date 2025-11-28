@@ -567,7 +567,6 @@
 }
 
 .functionButton button:hover {
-  color: rgba(37, 98, 126, 1);
   transform: scale(1.4);
   transform: translateX(30px);
 }
@@ -616,8 +615,8 @@
 .watch-card .funzioniButton {
   margin-top: 20px;
   padding: 10px 15px;
-  background-color: #6a00ff;
-  color: white;
+  background-color: var(--accent-primary);
+  color: var(--text-color);
   border: none;
   border-radius: 20px;
   cursor: pointer;
@@ -626,6 +625,16 @@
   transition: 0.8s;
   height: 44px;
   margin-bottom: 10px;
+  transition: 1.2s;
+}
+
+.dark-mode .watch-card .funzioniButton {
+  color: var(--text-color-main);
+  background-color: var(--accent-primary_DARK);
+}
+
+.watch-card .funzioniButton button:hover{
+  transform: scale(1.1);
 }
 
 .modal-content .functionButton button:hover {
@@ -1959,4 +1968,53 @@ input::placeholder {
     left: auto;
     padding: 8px;
   }
+}
+
+/* App.css */
+
+/* Sfondo scuro a tutto schermo */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); /* Sfondo nero semi-trasparente */
+  backdrop-filter: blur(8px); /* Sfocatura dello sfondo sottostante */
+  z-index: 9999; /* Assicura che sia sopra a TUTTO, anche al Dock */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+/* Spinner animato */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255, 255, 255, 0.3);
+  border-top: 5px solid #ffffff; /* Colore della parte che gira */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+/* Testo che pulsa leggermente */
+.loading-text {
+  font-size: 1.2rem;
+  font-weight: 500;
+  animation: pulse 1.5s infinite ease-in-out;
+  text-align: center;
+  max-width: 80%;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
