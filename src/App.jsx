@@ -688,7 +688,7 @@ async function getOutfitEmbedding(fileOrBlob) {
   }
 
   try {
-    const response = await fetch('https://watch-ai-api.onrender.com/embed-image', {
+    const response = await fetch('https://effe02-chroneapp-server.hf.space/embed-image', {
       method: 'POST',
       body: formData,
     });
@@ -776,7 +776,7 @@ const LoadingModal = ({ message }) => {
       <div className="loading-text">{message || "Caricamento in corso..."}</div>
       {/* Opzionale: piccolo testo per i tempi di attesa dell'AI */}
       <small style={{marginTop: "10px", opacity: 0.7, fontSize: "0.8rem"}}>
-        L'AI sta analizzando il tuo stile...
+        Caricamento in corso...
       </small>
     </div>
   );
