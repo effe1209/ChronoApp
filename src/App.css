@@ -521,13 +521,6 @@
   padding: 20px;
   border-radius: 8px;
   width: 400px;
-  border-radius: 20px; /* Aumentato per coerenza stilistica */
-  width: 100%; /* Reso responsivo */
-  max-width: 500px; /* Impostata una larghezza massima */
-
-  /* CHIAVE: Aggiunto per permettere lo scroll interno se il contenuto è troppo alto */
-  max-height: 90vh;
-  overflow-y: auto;
 }
 
 .functionButton {
@@ -704,9 +697,6 @@
   align-items: center;
   z-index: 1000;
   border-radius: 20px;
-  /* Rimosso il border-radius e aggiunto padding per un layout migliore su mobile */
-  padding: var(--spacing-md); 
-  backdrop-filter: blur(4px); /* Aggiunto un leggero blur per l'effetto vetro */
 }
 
 .infoView {
@@ -716,30 +706,19 @@
   position: sticky;
   bottom:1%; /* Mantiene l'elemento sempre in basso */
   top: 9%;
-  /* Modificato da 'sticky' a 'fixed' per un comportamento da modale standard */
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
   width: 100%;
   z-index: 1001;
-  /* Aggiunto padding per evitare che la modale tocchi i bordi su mobile */
-  padding: var(--spacing-md);
-  /* Spostato lo sfondo e il blur qui per un effetto più pulito */
-  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .infoView .modal-content {
   padding: 20px;
   border-radius: 20px;
   width: auto;
-  width: 100%; /* Occupa lo spazio del contenitore .infoView con padding */
   max-width: 500px;
   text-align: center;
   background-color: rgba(255, 255, 255, .80);
   backdrop-filter: blur(5px);
   height: fit-content;
-  background-color: var(--bg-card);
   z-index: 1001;
   display: flex;
   flex-direction: column;
@@ -747,9 +726,6 @@
   justify-content: center;
   padding-bottom: 20px;
   min-width: 450px;
-  justify-content: flex-start; /* Allinea il contenuto in alto, meglio per lo scroll */
-  max-height: 90vh; /* CHIAVE: Limita l'altezza e abilita lo scroll */
-  overflow-y: auto;
 }
 
 @media screen and (max-width: 750px) {
@@ -780,7 +756,6 @@
   background-color: var(--bg-card_DARK);
   height: fit-content;
   backdrop-filter: blur(10px);
-  /* backdrop-filter e height sono ora gestiti dalle regole principali */
 }
 
 
