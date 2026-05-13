@@ -519,6 +519,8 @@
   position: relative; 
   background: var(--bg-card);
   padding: var(--spacing-lg);
+  border-radius: 8px;
+  width: 400px;
   border-radius: 20px; /* Aumentato per coerenza stilistica */
   width: 100%; /* Reso responsivo */
   max-width: 500px; /* Impostata una larghezza massima */
@@ -701,6 +703,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  border-radius: 20px;
   /* Rimosso il border-radius e aggiunto padding per un layout migliore su mobile */
   padding: var(--spacing-md); 
   backdrop-filter: blur(4px); /* Aggiunto un leggero blur per l'effetto vetro */
@@ -710,6 +713,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: sticky;
+  bottom:1%; /* Mantiene l'elemento sempre in basso */
+  top: 9%;
   /* Modificato da 'sticky' a 'fixed' per un comportamento da modale standard */
   position: fixed;
   top: 0;
@@ -726,17 +732,44 @@
 .infoView .modal-content {
   padding: var(--spacing-lg);
   border-radius: 20px;
+  width: auto;
   width: 100%; /* Occupa lo spazio del contenitore .infoView con padding */
   max-width: 500px;
   text-align: center;
+  background-color: rgba(255, 255, 255, .80);
+  backdrop-filter: blur(5px);
+  height: fit-content;
   background-color: var(--bg-card);
   z-index: 1001;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  padding-bottom: var(--spacing-lg);
+  min-width: 450px;
   justify-content: flex-start; /* Allinea il contenuto in alto, meglio per lo scroll */
   max-height: 90vh; /* CHIAVE: Limita l'altezza e abilita lo scroll */
   overflow-y: auto;
+}
+
+@media screen and (max-width: 750px) {
+  .infoView .modal-content {
+    min-width: unset !important;
+  }
+}
+
+.modal-content {
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+  backdrop-filter: blur(5px);
+  padding: var(--spacing-lg);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.8);
+  border-image: initial;
+  border-radius: 20px;
+  height: fit-content;
 }
 
 .modal-content h2 {
@@ -745,6 +778,8 @@
 
 .dark-mode .infoView .modal-content {
   background-color: var(--bg-card_DARK);
+  height: fit-content;
+  backdrop-filter: blur(10px);
   /* backdrop-filter e height sono ora gestiti dalle regole principali */
 }
 
