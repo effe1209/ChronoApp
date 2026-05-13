@@ -53,6 +53,7 @@ ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassi
 
 ![Home](./screenshot/profile_white.png)
 ![Watch](./screenshot/main.png)
+![Carosello](./screenshot/carousel.png)
 <!--*(Sostituisci i percorsi con le immagini effettive nella cartella docs/screenshots)*--->
 
 ## 📈 Contributing
