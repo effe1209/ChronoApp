@@ -1,7 +1,7 @@
 * {
   margin: 0;
   padding: 0;
-  /* box-sizing: border-box; */
+  box-sizing: border-box;
 }
 
 /* index.css o App.css */
@@ -43,6 +43,14 @@
   --font-Title: 'kugile';  /* Font per i titoli */
   --font-all-text: 'minork';
   --font-clock: 'ancient';
+
+  /* --- SCALA DI SPAZIATURA --- */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 64px;
 }
 
 html {

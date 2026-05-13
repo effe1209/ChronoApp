@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useTransition, useLayoutEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef, useTransition, useLayoutEffect, useMemo, Suspense, lazy } from "react";
 // Import Supabase e servizi (invariati)
 import { supabase } from './components/supabaseClient';
 import { addWatchService } from './components/watchService';
@@ -30,11 +30,11 @@ import Clock from './components/Clock';
 import WatchList from './components/WatchList';
 import AddWatchForm from './components/AddWatchForm';
 import FunctionsSection from './components/FunctionsSection';
-import DayWatchModal from './components/DayWatchModal';
-import OutfitModal from './components/OutfitModal';
-import ModifyWatchModal from './components/ModifyWatchModal';
-import InfoWatchModal from './components/InfoWatchModal';
-import StatsModal from './components/StatsModal';
+const DayWatchModal = lazy(() => import('./components/DayWatchModal'));
+const OutfitModal = lazy(() => import('./components/OutfitModal'));
+const ModifyWatchModal = lazy(() => import('./components/ModifyWatchModal'));
+const InfoWatchModal = lazy(() => import('./components/InfoWatchModal'));
+const StatsModal = lazy(() => import('./components/StatsModal'));
 
 // Stili (invariati)
 import 'swiper/css';
@@ -1165,8 +1165,7 @@ const BackgroundLayer = useMemo(() => {
       </div>
 
       {message && <p className="message" onClick={() => setMessage(null)}>{message}</p>}
-      {loading && <div className="loading-spinner"></div>} 
-      <div style={{ marginBottom: "20px" }}></div>
+      {loading && <div className="loading-spinner"></div>}
 
       {!user ? (
         <AuthForm
@@ -1246,41 +1245,6 @@ const BackgroundLayer = useMemo(() => {
             />
           </div>
 
-          <OutfitModal
-            isVisible={isCarouselVisible}
-            setIsVisible={setIsCarouselVisible}
-            watchConsigliati={watchConsigliati}
-            onClose={() => {
-              setIsCarouselVisible(false);
-              if(fileInputRefOutfit.current) fileInputRefOutfit.current.value = "";
-              setWatchConsigliati([]);
-            }}
-          />
-          
-          <DayWatchModal
-            isVisible={isModalVisible}
-            setIsVisible={setIsModalVisible}
-            selectedWatch={selectedWatch}
-            modalTitle={modalTitle}
-          />
-
-          <ModifyWatchModal
-            isVisible={isModifyVisible}
-            setIsVisible={setIsModifyVisible}
-            modifyWatch={modifyWatch}
-            updatedWatch={updatedWatch}
-            setUpdatedWatch={setUpdatedWatch}
-            handleModifyImageChange={handleModifyImageChange} 
-            fileInputRef={fileInputRef} 
-            isDetailsMenuOpenMOD={isDetailsMenuOpenMOD}
-            setIsDetailsMenuOpenMOD={setIsDetailsMenuOpenMOD}
-            isNotesVisibleMOD={isNotesVisibleMOD}
-            setIsNotesVisibleMOD={setIsNotesVisibleMOD}
-            allFeaturesList={allFeaturesList}
-            handleUpdatedFeatureChange={handleUpdatedFeatureChange}
-            handleSaveChanges={handleSaveChanges}
-          />
-
           <h2 id="watch-list">Lista Orologi</h2> 
           
           <div id="watch-list-section">
@@ -1295,27 +1259,63 @@ const BackgroundLayer = useMemo(() => {
               handleInfiniteGrid={handleInfiniteGrid}
             />
           </div>
+          <Suspense fallback={<LoadingModal message="Caricamento..." />}>
+            <OutfitModal
+              isVisible={isCarouselVisible}
+              setIsVisible={setIsCarouselVisible}
+              watchConsigliati={watchConsigliati}
+              onClose={() => {
+                setIsCarouselVisible(false);
+                if(fileInputRefOutfit.current) fileInputRefOutfit.current.value = "";
+                setWatchConsigliati([]);
+              }}
+            />
+            
+            <DayWatchModal
+              isVisible={isModalVisible}
+              setIsVisible={setIsModalVisible}
+              selectedWatch={selectedWatch}
+              modalTitle={modalTitle}
+            />
+
+            <ModifyWatchModal
+              isVisible={isModifyVisible}
+              setIsVisible={setIsModifyVisible}
+              modifyWatch={modifyWatch}
+              updatedWatch={updatedWatch}
+              setUpdatedWatch={setUpdatedWatch}
+              handleModifyImageChange={handleModifyImageChange} 
+              fileInputRef={fileInputRef} 
+              isDetailsMenuOpenMOD={isDetailsMenuOpenMOD}
+              setIsDetailsMenuOpenMOD={setIsDetailsMenuOpenMOD}
+              isNotesVisibleMOD={isNotesVisibleMOD}
+              setIsNotesVisibleMOD={setIsNotesVisibleMOD}
+              allFeaturesList={allFeaturesList}
+              handleUpdatedFeatureChange={handleUpdatedFeatureChange}
+              handleSaveChanges={handleSaveChanges}
+            />
+            <StatsModal
+              isVisible={isStatisticheVisible}
+              setIsVisible={setIsStatisticheVisible}
+              watches={watches}
+            />
+            <InfoWatchModal
+              isVisible={isInfoVisible}
+              setIsVisible={setIsInfoVisible}
+              selectedWatch={selectedWatch}
+              handleDeleteWatch={handleDeleteWatch}
+              handleFavoriteToggle={handleFavoriteToggle}
+            />
+            <InfiniteGridModal 
+              isVisible={isInfiniteGridVisible} 
+              setIsVisible={setIsInfiniteGridVisible} 
+              handleInfoWatch={handleInfoWatch}
+              watches={watches} // Passa la lista completa degli orologi
+              handleFavoriteToggle={handleFavoriteToggle}
+            />
+          </Suspense>
         </>
       )}
-          <StatsModal
-            isVisible={isStatisticheVisible}
-            setIsVisible={setIsStatisticheVisible}
-            watches={watches}
-          />
-          <InfoWatchModal
-            isVisible={isInfoVisible}
-            setIsVisible={setIsInfoVisible}
-            selectedWatch={selectedWatch}
-            handleDeleteWatch={handleDeleteWatch}
-            handleFavoriteToggle={handleFavoriteToggle}
-          />
-          <InfiniteGridModal 
-            isVisible={isInfiniteGridVisible} 
-            setIsVisible={setIsInfiniteGridVisible} 
-            handleInfoWatch={handleInfoWatch}
-            watches={watches} // Passa la lista completa degli orologi
-            handleFavoriteToggle={handleFavoriteToggle}
-          />
           {/* <button onClick={updateAllWatchEmbeddings}>AGGIORNA AI DB</button> */}
     </div>
     </>

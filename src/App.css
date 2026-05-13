@@ -1,7 +1,7 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: var(--spacing-xl);
   text-align: center;
   font-family: var(--font-all-text);
 }
@@ -43,17 +43,17 @@
 }
 
 .banner {
-  padding: 20px;
+  padding: var(--spacing-lg);
 }
 
 .form {
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-lg);
 }
 
   .form input {
     width: 70%; /* Rende gli input larghi */
-    padding: 10px;
-    margin: 10px 0;
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
     border-radius: 20px; /* Angoli stondati */
     font-size: 18px;
     outline: none; /* Rimuove il bordo blu quando clicchi */
@@ -74,14 +74,14 @@
 .inputImmagine {
   width: 100%;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: var(--spacing-lg);
 }
 
 .buttonForm {
   justify-content: center;
   flex-direction:row;
   align-items: center;
-  gap: 20px; /* Distanza tra gli elementi */
+  gap: var(--spacing-lg); /* Distanza tra gli elementi */
   display:flex;
 }
 
@@ -92,7 +92,7 @@
 }
 
 .buttonForm button {
-  padding: 10px 15px;
+  padding: var(--spacing-sm) var(--spacing-md);
   font-size: 18px;
   border: none;
   cursor: pointer;
@@ -147,20 +147,20 @@
 .delete-button {
   color: rgb(255, 0, 0);
   border: none;
-  padding: 7px 10px;
-  margin-top: 5px;
+  padding: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
   cursor: pointer;
   border-radius: 5px;
   align-items: center;
   margin-left: 20%;
   margin-right: 20%;
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-lg);
   display: flex;
   justify-content: center;
 }
 
 .menuTendina {
-  padding: 10px;
+  padding: var(--spacing-md);
   cursor: pointer;
   text-align: center;
   background-color: rgba(255, 255, 255, 0.3); /* Colore di sfondo semitrasparente */
@@ -377,8 +377,8 @@
   border-radius: 20px;
   cursor: pointer;
   transition: background 0.3s;
-  margin: 20px;
-  margin-top: 25px;
+  margin: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
   font-family: var(--font-all-text);
   border: 1px solid var(--accent-primary);
 }
@@ -403,7 +403,7 @@
 }
 
 .preview-imageMod {
-  margin-top: 10px;
+  margin-top: var(--spacing-md);
   width: 200px;
   height: auto;
   border-radius: 10px;
@@ -438,7 +438,7 @@
 }
 
 .color-picker-button {
-  padding: 10px 20px;
+  padding: var(--spacing-sm) var(--spacing-lg);
   font-size: 16px;
   cursor: pointer;
   border-radius: 20px;
@@ -469,15 +469,15 @@
 .modify-btn {
   background-color: var(--accent-primary);
   color: white;
-  padding: 10px 15px;
+  padding: var(--spacing-sm) var(--spacing-md);
   border: none;
   border-radius: 20px;
   font-size: 16px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.3s;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
-  margin-bottom: 10px;
-  margin-top: 20px;
+  margin-bottom: var(--spacing-md);
+  margin-top: var(--spacing-lg);
   height: 44px;
   font-family: var(--font-all-text);
 }
@@ -486,13 +486,13 @@
 .dark-mode .modify-btn {
   background-color: var(--accent-primary_DARK);
   color: black;
-  padding: 10px 15px;
+  padding: var(--spacing-sm) var(--spacing-md);
   border: none;
   border-radius: 20px;
   font-size: 16px;
   cursor: pointer;
-  margin-bottom: 10px;
-  margin-top: 20px;
+  margin-bottom: var(--spacing-md);
+  margin-top: var(--spacing-lg);
   height: 44px;
 }
 
@@ -518,7 +518,7 @@
 .modal-content {
   position: relative; 
   background: var(--bg-card);
-  padding: 20px;
+  padding: var(--spacing-lg);
   border-radius: 8px;
   width: 400px;
 }
@@ -530,12 +530,12 @@
   cursor: pointer;
   display: flex;
   justify-content: space-around;
-  gap: 20px;
+  gap: var(--spacing-lg);
 }
 
 .functionButton button {
-  margin-top: 20px;
-  padding: 10px 15px;
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
   background-color: var(--bg-card);
   border: 3px solid var(--accent-primary);
   color: var(--accent-primary);
@@ -598,7 +598,7 @@
 
 .delete-button button {
   font-family: 'minork';
-  padding: 10px 15px;
+  padding: var(--spacing-sm) var(--spacing-md);
   font-size: 18px;
   border: none;
   border-radius: 20px; /* Bottoni stondati */
@@ -613,8 +613,8 @@
 }
 
 .watch-card .funzioniButton {
-  margin-top: 20px;
-  padding: 10px 15px;
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
   background-color: var(--accent-primary);
   color: var(--text-color);
   border: none;
@@ -624,7 +624,7 @@
   font-family: var(--font-all-text);
   transition: 0.8s;
   height: 44px;
-  margin-bottom: 10px;
+  margin-bottom: var(--spacing-md);
   transition: 1.2s;
 }
 
@@ -711,7 +711,7 @@
 }
 
 .infoView .modal-content {
-  padding: 20px;
+  padding: var(--spacing-lg);
   border-radius: 20px;
   width: auto;
   max-width: 500px;
@@ -724,7 +724,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-bottom: 20px;
+  padding-bottom: var(--spacing-lg);
   min-width: 450px;
 }
 
@@ -739,7 +739,7 @@
   max-width: 500px;
   text-align: center;
   backdrop-filter: blur(5px);
-  padding: 20px;
+  padding: var(--spacing-lg);
   border-width: 1px;
   border-style: solid;
   border-color: rgba(255, 255, 255, 0.8);
@@ -749,7 +749,7 @@
 }
 
 .modal-content h2 {
-  padding: 10px;
+  padding: var(--spacing-md);
 }
 
 .dark-mode .infoView .modal-content {
@@ -760,7 +760,7 @@
 
 
 .modal-image {
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-lg);
   border-radius: 10px;
   width: 100%;
   max-width: 300px;
@@ -783,8 +783,8 @@
 
 .formModify input {
   width: 55%; /* Rende gli input larghi */
-  padding: 10px;
-  margin: 10px 0;
+  padding: var(--spacing-md);
+  margin: var(--spacing-md) 0;
   border: 2px solid #186599b4; /* Bordo blu */
   border-radius: 10px; /* Angoli stondati */
   font-size: 18px;
@@ -804,8 +804,8 @@
   align-items: center;  /* Allinea gli elementi verticalmente */
   justify-content:center; /* Puoi usare flex-start per mantenerli a sinistra o center per centrarli orizzontalmente */
   height:40px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
   font-size: 18px;
   position: relative;
 }
@@ -828,8 +828,8 @@
   align-items: center;  /* Allinea gli elementi verticalmente */
   justify-content:center; /* Puoi usare flex-start per mantenerli a sinistra o center per centrarli orizzontalmente */
   height:40px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
   font-size: 18px;
   position: relative;
 }
@@ -841,7 +841,7 @@
 }
 
 .dark-mode .menu nav a {
-  padding: 5px 10px;
+  padding: var(--spacing-xs) var(--spacing-md);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -907,14 +907,14 @@ input[type="checkbox"]:checked + .slider-v3::before {
 
 .buttonView {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-lg);
   justify-content: space-between;
   flex-wrap: wrap;
 }
 
 .buttonView button {
-  margin-top: 20px;
-  padding: 10px 15px;
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
   background-color: rgba(37, 98, 126, 0.8);
   color: white;
   border: none;
@@ -932,8 +932,8 @@ input[type="checkbox"]:checked + .slider-v3::before {
 }
 
 .dark-mode .buttonView button {
-  margin-top: 20px;
-  padding: 10px 15px;
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
   background-color: var(--accent-primary_DARK);
   color: black;
   border: none;
@@ -970,8 +970,8 @@ input[type="checkbox"]:checked + .slider-v3::before {
 
 .scroll div span {
   display: inline-block;
-  margin: 10px;
-  padding: 5px 10px;
+  margin: var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-md);
   border-radius: 5px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -1000,8 +1000,8 @@ input[type="checkbox"]:checked + .slider-v3::before {
 
 .scroll2 div span {
   display: inline-block;
-  margin: 10px;
-  padding: 5px 10px;
+  margin: var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-md);
   border-radius: 5px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -1035,8 +1035,8 @@ input[type="checkbox"]:checked + .slider-v3::before {
 
 .scroll3 div span {
   display: inline-flex;
-  margin: 10px;
-  padding: 5px 10px;
+  margin: var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-md);
   border-radius: 5px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -1105,7 +1105,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
   z-index: 1000;
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 13px;
+  padding: var(--spacing-md);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
   width: fit-content;
 }
@@ -1133,7 +1133,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
 }
 
 .menu nav a {
-  padding: 5px 10px;
+  padding: var(--spacing-xs) var(--spacing-md);
   text-decoration: none;
   color: rgba(37, 98, 126, 1);;
   border-radius: 20px;
@@ -1157,7 +1157,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
     background: rgba(255, 255, 255, 0.6);
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    padding: 10px;
+    padding: var(--spacing-md);
     flex-direction: column;
   }
 
@@ -1169,7 +1169,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
     background: rgba(58, 58, 58, 0.8);
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    padding: 10px;
+    padding: var(--spacing-md);
     flex-direction: column;
   }
   
@@ -1300,7 +1300,7 @@ input[type="checkbox"]:checked + .slider-v3::before {
 .swiper-slide .watch-card .cardBottoni .modify-btn{
   margin: 0%;
   font-size: 18px;
-  padding: 5px 15px;
+  padding: var(--spacing-xs) var(--spacing-md);
 }
 
 .swiper-slide .watch-card .cardBottoni .modifyButton {
@@ -1414,7 +1414,7 @@ input::placeholder {
 .watch-card .cardBottoni .modify-btn{
   margin: 0%;
   font-size: 18px;
-  padding: 5px 15px;
+  padding: var(--spacing-xs) var(--spacing-md);
 }
 
 .watch-card .cardBottoni .modifyButton {
@@ -1439,7 +1439,7 @@ input::placeholder {
   animation: typing 2s steps(20);
   display: flex;
   justify-content: center;
-  padding-bottom: 7px;
+  padding-bottom: var(--spacing-sm);
 }
 
 @keyframes typing {
@@ -1449,7 +1449,7 @@ input::placeholder {
 }
 
 .paragrafi {
-  padding-bottom: 20px;
+  padding-bottom: var(--spacing-lg);
   font-family: 'minork';
   font-size: 18px;
 }
@@ -1461,7 +1461,7 @@ input::placeholder {
 }
 
 .TileInfo {
-  padding:5px 0 10px 0;
+  padding:var(--spacing-xs) 0 var(--spacing-md) 0;
   font-family: 'minork';
   /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); */
   font-size: 20px;
@@ -1477,7 +1477,7 @@ input::placeholder {
   }
 
 .InfoButton {
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-lg);
 }
 .InfoButton button{
   width: 100px;
@@ -1508,7 +1508,7 @@ input::placeholder {
 .modal-overlay .swiper-wrapper {
   width: 80vw; /* Adatta alla larghezza della finestra */
   height: auto;
-  padding: 20px;
+  padding: var(--spacing-lg);
   border-radius: 20px;
   max-width: 1000px;
 }
@@ -1540,7 +1540,7 @@ input::placeholder {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  /* gap: 20px; */
+  /* gap: var(--spacing-lg); */
   width: 100%;
   max-width: 1200px; /* Limita la larghezza massima */
   margin: 5px auto; /* Centra il contenitore */
@@ -1554,7 +1554,7 @@ input::placeholder {
   min-width: 300px; /* Larghezza minima prima di andare a capo */
   max-width: 430px; /* Larghezza massima per un singolo grafico */
   height: 43%; /* Altezza fissa per il canvas del grafico */
-  padding: 20px;
+  padding: var(--spacing-lg);
   border-radius: 20px;
   background-color: var(--bg-color); /* Sfondo interno per il grafico */
   box-shadow: inset 0px 0px 240px rgba(95, 83, 97, 1);
@@ -1586,7 +1586,7 @@ input::placeholder {
   position: relative;
   width: 100%;
   height: 100%;
-  margin-top: 10px;
+  margin-top: var(--spacing-md);
 }
 
 .infoView-statistiche {
@@ -1607,13 +1607,13 @@ input::placeholder {
 
 .modal-content-statistiche {
   background: rgba(255, 255, 255, .80);
-  padding: 20px;
+  padding: var(--spacing-lg);
   border-radius: 8px;
   width: 80%;
 }
 
 .infoView-statistiche .modal-content-statistiche {
-  padding: 20px;
+  padding: var(--spacing-lg);
   border-radius: 20px;
   width: 80%;
   max-width: 80%;
@@ -1626,7 +1626,7 @@ input::placeholder {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-bottom: 20px;
+  padding-bottom: var(--spacing-lg);
 }
 
 
@@ -1712,8 +1712,8 @@ input::placeholder {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center; /* Centra il testo */
-  padding: 10px;
-  margin: 10px auto;
+  padding: var(--spacing-md);
+  margin: var(--spacing-md) auto;
   border-radius: 20px;
   background-color: var(--color-input-background);
   font-size: 18px;
@@ -1775,7 +1775,7 @@ input::placeholder {
   align-items: center;       /* 2. Centra Verticalmente */
   justify-content: center;   /* 3. Centra Orizzontalmente */
   margin: auto;
-  padding: 10px 15px;
+  padding: var(--spacing-sm) var(--spacing-md);
   /* background-color: rgba(37, 98, 126, 0.8); */
   background-color: var(--color-input-background);
   color: var(--text-color);
@@ -1804,8 +1804,8 @@ input::placeholder {
 .notes-textarea {
   width: 80%;
   min-height: 80px;
-  padding: 10px;
-  margin: 10px 0;
+  padding: var(--spacing-md);
+  margin: var(--spacing-md) 0;
   border: none;
   border-radius: 20px;
   font-size: 16px;
@@ -1861,7 +1861,7 @@ input::placeholder {
   top: 20px;
   z-index: 1000;
   border-radius: 20px;
-  padding: 10px;
+  padding: var(--spacing-md);
   align-items: center;
   justify-content: space-between;
 }
@@ -1872,7 +1872,7 @@ input::placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-lg);
   width: 500px;
 }
 
@@ -1895,7 +1895,7 @@ input::placeholder {
     background: transparent;
     border: none;
     cursor: pointer;
-    padding: 10px;
+    padding: var(--spacing-md);
     border-radius: 20px; /* Rotondo */
     z-index: 100;   /* Assicura che sia sopra a tutto */
     transition: all 0.2s ease;
@@ -1915,7 +1915,7 @@ input::placeholder {
     left: 20px;    /* Regola la distanza da sinistra */
 
     /* Stili estetici per mobile */
-    padding: 8px;
+    padding: var(--spacing-sm);
   }
 
   .modal-delete-btn svg {
@@ -1966,7 +1966,7 @@ input::placeholder {
     right: 20px;
     bottom: 20px;
     left: auto;
-    padding: 8px;
+    padding: var(--spacing-sm);
   }
 }
 
@@ -1997,7 +1997,7 @@ input::placeholder {
   border-top: 5px solid #ffffff; /* Colore della parte che gira */
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-lg);
 }
 
 /* Testo che pulsa leggermente */
