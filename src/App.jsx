@@ -23,7 +23,6 @@ import { VscHome, VscArchive, VscAccount, VscSettingsGear } from 'react-icons/vs
 // Import dei nuovi componenti creati
 import UserProfile from './components/UserProfile';
 import DarkModeSwitch from './components/DarkModeSwitch';
-import Clock from './components/Clock';
 import WatchList from './components/WatchList';
 import AddWatchForm from './components/AddWatchForm';
 import FunctionsSection from './components/FunctionsSection';
@@ -1115,10 +1114,9 @@ const BackgroundLayer = useMemo(() => {
             <h1>La mia collezione<br />di orologi</h1>
           </div>
           <p className="hero-description">Ogni segnatempo custodisce un momento. Qui, la tua collezione prende forma.</p>
-        </div>
-
-        <div className="hero-clock">
-          <Clock />
+          <a className="hero-cta" href="#watch-list-section">
+            Esplora la collezione <span aria-hidden="true">→</span>
+          </a>
         </div>
       </div>
 
