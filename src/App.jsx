@@ -1059,13 +1059,6 @@ const BackgroundLayer = useMemo(() => {
       );
     }, [isDark, floatingConfig.bg, floatingConfig.blend]);
 
-  const today = new Date();
-  const calendarWeekday = new Intl.DateTimeFormat('it-IT', { weekday: 'short' })
-    .format(today)
-    .replace(/\.$/, '')
-    .toUpperCase();
-  const calendarDay = new Intl.DateTimeFormat('it-IT', { day: '2-digit' }).format(today);
-
   // --- RENDER ---
   return (
     <>
@@ -1128,17 +1121,14 @@ const BackgroundLayer = useMemo(() => {
         <figure className="hero-watch">
           <img
             className="hero-watch-image"
-            src="/orologio-hero.webp"
-            alt="Dettaglio del quadrante argentato di un orologio classico"
+            src="/orologio-hero.png"
+            alt="Orologio classico argentato scontornato su sfondo trasparente"
           />
-          <figcaption className="hero-complication" aria-label={`Calendario: ${calendarWeekday} ${calendarDay}`}>
-            <span className="hero-complication-window" aria-hidden="true">
-              <span>{calendarWeekday}</span>
-              <strong>{calendarDay}</strong>
-            </span>
-            <span className="hero-complication-copy">
-              <small>COMPLICAZIONE</small>
-              <strong>Calendario</strong>
+          <figcaption className="hero-complication" aria-label="Complicazione dei secondi con movimento a scatti">
+            <span className="hero-subdial" aria-hidden="true">
+              <span className="hero-subdial-hand" />
+              <span className="hero-subdial-pivot" />
+              <span className="hero-subdial-label">SEC</span>
             </span>
           </figcaption>
         </figure>
