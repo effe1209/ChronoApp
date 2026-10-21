@@ -4433,7 +4433,7 @@ a:focus-visible,
   }
 }
 
-/* Hero: il quadrante invade il margine destro; il dettaglio mostra il movimento. */
+/* Hero: il quadrante invade la scena; il dettaglio mostra il movimento meccanico. */
 .hero-section {
   position: relative;
   left: 50%;
@@ -4442,11 +4442,12 @@ a:focus-visible,
   grid-template-rows: 1fr;
   align-items: center;
   width: 100vw;
-  min-height: clamp(540px, 47vw, 710px);
+  min-height: clamp(600px, 36vw, 680px);
   margin: 0;
   padding: clamp(112px, 11vw, 154px) max(clamp(24px, 8vw, 150px), calc((100vw - 1600px) / 2))
     clamp(72px, 7vw, 100px);
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   border-bottom: 0;
   background: transparent;
   transform: translateX(-50%);
@@ -4467,12 +4468,13 @@ a:focus-visible,
 .hero-watch {
   position: absolute;
   z-index: 1;
-  top: 50%;
-  right: clamp(-380px, -18vw, -140px);
-  width: min(max(120vw, 210vh), 2500px);
+  top: calc(50% - 18px);
+  right: 1vw;
+  width: 77vw;
   margin: 0;
-  transform: translateY(-50%);
-  animation: hero-arrive 850ms 100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  transform: translateY(-50%) scaleY(0.81);
+  transform-origin: center;
+  animation: hero-watch-arrive 850ms 100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 .hero-watch-image {
@@ -4480,30 +4482,33 @@ a:focus-visible,
   width: 100%;
   max-width: none;
   height: auto;
-  filter: drop-shadow(0 24px 24px rgba(24, 38, 48, 0.2));
-  -webkit-mask-image:
-    linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.35) 14%, #000 52%, #000 100%),
-    linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.35) 14%, #000 52%, #000 100%),
-    linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
-  mask-composite: intersect;
+  filter: drop-shadow(0 28px 34px rgba(24, 38, 48, 0.2));
 }
 
 .hero-complication {
   position: absolute;
   z-index: 2;
-  top: 57%;
-  left: 65%;
-  width: clamp(210px, 18vw, 360px);
+  top: 68%;
+  left: 73%;
+  width: clamp(148px, 12vw, 220px);
   aspect-ratio: 1;
-  padding: 6px;
+  padding: 5px;
   border: 1px solid rgba(82, 92, 95, 0.74);
   border-radius: 50%;
   background: linear-gradient(145deg, #f8f6ef, #929da0 55%, #e6e2d7);
   box-shadow: 0 18px 42px rgba(10, 17, 20, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.95);
-  transform: translate(-50%, -50%) rotate(-8deg);
+  transform: translate(-50%, -50%) rotate(-5deg);
+}
+
+@keyframes hero-watch-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-50% + 16px)) scaleY(0.81);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scaleY(0.81);
+  }
 }
 
 .movement-complication {
@@ -4626,6 +4631,7 @@ a:focus-visible,
 .brand-strip {
   position: relative;
   left: 50%;
+  z-index: 2;
   width: 100vw;
   max-width: none;
   margin: 18px 0 38px;
@@ -4669,7 +4675,7 @@ a:focus-visible,
   text-shadow: 0 2px 12px var(--ui-accent-soft);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .hero-section {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto;
@@ -4699,24 +4705,16 @@ a:focus-visible,
     top: auto;
     right: auto;
     justify-self: end;
-    width: min(150vw, 1100px);
-    margin: -24px -25vw 0 0;
+    width: min(145vw, 1120px);
+    margin: -28px -24vw -45px 0;
     transform: none;
-  }
-
-  .hero-watch-image {
-    -webkit-mask-image:
-      linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.35) 12%, #000 32%, #000 100%),
-      linear-gradient(180deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
-    mask-image:
-      linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.35) 12%, #000 32%, #000 100%),
-      linear-gradient(180deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+    animation: hero-arrive 850ms 100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
 
   .hero-complication {
-    top: 58%;
-    left: 65%;
-    width: clamp(160px, 28vw, 270px);
+    top: 68%;
+    left: 73%;
+    width: clamp(142px, 18vw, 210px);
   }
 
   .brand-strip {
@@ -4741,8 +4739,8 @@ a:focus-visible,
   }
 
   .hero-watch {
-    width: min(150vw, 760px);
-    margin-right: -25vw;
+    width: min(145vw, 760px);
+    margin-right: -24vw;
   }
 
   .hero-complication {

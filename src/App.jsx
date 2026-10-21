@@ -1122,8 +1122,8 @@ const BackgroundLayer = useMemo(() => {
         <figure className="hero-watch">
           <img
             className="hero-watch-image"
-            src="/orologio-hero.png"
-            alt="Orologio classico argentato scontornato su sfondo trasparente"
+            src="/orologio_fin.png"
+            alt="Orologio classico argentato inclinato, con quadrante romano"
           />
           <figcaption className="hero-complication">
             <WatchMovementComplication />
