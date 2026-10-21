@@ -1,10 +1,28 @@
 import React from 'react';
 
 // Un componente riutilizzabile per renderizzare la lista di checkbox
-const FeatureCheckboxList = ({ featuresList, selectedFeatures, onChange }) => {
+const FeatureCheckboxList = ({
+  featuresList,
+  selectedFeatures = [],
+  onChange,
+  isLoading = false,
+  error = '',
+}) => {
   
+  if (isLoading) {
+    return <p className="features-status" role="status">Caricamento caratteristiche...</p>;
+  }
+
+  if (error) {
+    return (
+      <p className="features-status features-status--error" role="alert">
+        Impossibile caricare le caratteristiche. {error}
+      </p>
+    );
+  }
+
   if (!featuresList || featuresList.length === 0) {
-    return <p>Caricamento caratteristiche...</p>;
+    return <p className="features-status">Nessuna caratteristica aggiuntiva disponibile.</p>;
   }
 
   return (

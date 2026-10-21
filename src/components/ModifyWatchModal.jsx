@@ -14,6 +14,8 @@ const ModifyWatchModal = ({
   isNotesVisibleMOD,
   setIsNotesVisibleMOD,
   allFeaturesList,
+  featuresLoading,
+  featuresError,
   handleUpdatedFeatureChange,
   handleSaveChanges
 }) => {
@@ -147,6 +149,8 @@ const ModifyWatchModal = ({
                 featuresList={allFeaturesList}
                 selectedFeatures={updatedWatch.features}
                 onChange={handleUpdatedFeatureChange}
+                isLoading={featuresLoading}
+                error={featuresError}
               />
             </div>
           )}

@@ -16,6 +16,8 @@ const AddWatchForm = ({
   isNotesVisible,
   setIsNotesVisible,
   allFeaturesList,
+  featuresLoading,
+  featuresError,
   handleFeatureChange,
   handleAddWatch,
   handleCancel,
@@ -186,6 +188,8 @@ const AddWatchForm = ({
             featuresList={allFeaturesList}
             selectedFeatures={newWatch.features}
             onChange={handleFeatureChange}
+            isLoading={featuresLoading}
+            error={featuresError}
           />
         )}
         </Step>

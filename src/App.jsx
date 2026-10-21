@@ -7,7 +7,6 @@ import WatchAnalytics from './components/WatchAnalytics';
 import GlassSurface from './components/GlassSurface';
 import TiltedCard from './components/TiltedCard';
 import FloatingLines from './components/FloatingLines';
-import MetaBalls from './components/MetaBalls';
 import InfiniteMenu from './components/InfiniteMenu'
 import InfiniteGridModal from './components/InfiniteGridModal';
 import { SpeedInsights } from "@vercel/speed-insights/react";
@@ -55,6 +54,8 @@ function App() {
   const [message, setMessage] = useState(null);
   const [watches, setWatches] = useState([]);
   const [watchConsigliati, setWatchConsigliati] = useState([]);
+  const [featuresLoading, setFeaturesLoading] = useState(false);
+  const [featuresError, setFeaturesError] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [newWatch, setNewWatch] = useState({
     name: "",
@@ -254,20 +255,40 @@ function App() {
     }
   }, [nickname]);
 
-  // Caricamento features
+  // Le policy del database possono richiedere una sessione: carica le
+  // caratteristiche quando l'utente è autenticato e aggiorna gli stati in modo esplicito.
   useEffect(() => {
+    let isCurrentRequest = true;
+
+    if (!user?.id) {
+      setAllFeaturesList([]);
+      setFeaturesError('');
+      setFeaturesLoading(false);
+      return () => { isCurrentRequest = false; };
+    }
+
     const loadFeatures = async () => {
-      const { data, error } = await supabase.from('caratteristiche').select('*'); 
-      if (error) {
+      setFeaturesLoading(true);
+      setFeaturesError('');
+
+      try {
+        const { data, error } = await supabase.from('caratteristiche').select('*');
+        if (error) throw error;
+        if (isCurrentRequest) setAllFeaturesList(data ?? []);
+      } catch (error) {
         console.error("ERRORE NEL CARICARE LE CARATTERISTICHE:", error.message);
-        setMessage("Errore: impossibile caricare l'elenco delle caratteristiche. " + error.message);
-      } else {
-        console.log("Caratteristiche caricate con successo:", data);
-        setAllFeaturesList(data);
+        if (isCurrentRequest) {
+          setAllFeaturesList([]);
+          setFeaturesError(error.message || "Errore nel recupero delle caratteristiche.");
+        }
+      } finally {
+        if (isCurrentRequest) setFeaturesLoading(false);
       }
     };
+
     loadFeatures();
-  }, []);
+    return () => { isCurrentRequest = false; };
+  }, [user?.id]);
 
   // --- LOGICA DATI E AUTH (Invariata) ---
 
@@ -1137,19 +1158,6 @@ const BackgroundLayer = useMemo(() => {
       ) : (
         <>
           <div className="profile-info" id="profile-section">
-            <MetaBalls
-              className="profile-info-ambient"
-              color={isDark ? "#F59E0B" : "#25627e"}
-              cursorBallColor={isDark ? "#C0A062" : "#1f4d63ff"}
-              cursorBallSize={2}
-              ballCount={10}
-              animationSize={15}
-              enableMouseInteraction={true}
-              enableTransparency={true}
-              hoverSmoothness={0.09}
-              clumpFactor={1}
-              speed={0.2}
-            />
             <div className="profile-info-content">
               <div className="circular-text-container">
                 <div className="profile-picture">
@@ -1157,7 +1165,10 @@ const BackgroundLayer = useMemo(() => {
                 </div>
               </div>
               <h4 className="Saluti">Benvenuto, {nickname}</h4>
-              <p style={{ fontSize: "20px", paddingBottom: "20px"}}>Valore: {totalMoney.toLocaleString('it-IT')} €</p>
+              <p className="profile-collection-value">
+                <span>Valore della collezione</span>
+                <strong>{totalMoney.toLocaleString('it-IT')} €</strong>
+              </p>
             </div>
           </div>
 
@@ -1172,6 +1183,8 @@ const BackgroundLayer = useMemo(() => {
             isNotesVisible={isNotesVisible}
             setIsNotesVisible={setIsNotesVisible}
             allFeaturesList={allFeaturesList}
+            featuresLoading={featuresLoading}
+            featuresError={featuresError}
             handleFeatureChange={handleFeatureChange}
             handleAddWatch={handleAddWatch}
             handleCancel={handleCancel}
@@ -1222,6 +1235,8 @@ const BackgroundLayer = useMemo(() => {
             isNotesVisibleMOD={isNotesVisibleMOD}
             setIsNotesVisibleMOD={setIsNotesVisibleMOD}
             allFeaturesList={allFeaturesList}
+            featuresLoading={featuresLoading}
+            featuresError={featuresError}
             handleUpdatedFeatureChange={handleUpdatedFeatureChange}
             handleSaveChanges={handleSaveChanges}
           />
