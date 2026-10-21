@@ -31,6 +31,7 @@ import OutfitModal from './components/OutfitModal';
 import ModifyWatchModal from './components/ModifyWatchModal';
 import InfoWatchModal from './components/InfoWatchModal';
 import StatsModal from './components/StatsModal';
+import WatchMovementComplication from './components/WatchMovementComplication';
 
 // Stili (invariati)
 import 'swiper/css';
@@ -1124,12 +1125,8 @@ const BackgroundLayer = useMemo(() => {
             src="/orologio-hero.png"
             alt="Orologio classico argentato scontornato su sfondo trasparente"
           />
-          <figcaption className="hero-complication" aria-label="Complicazione dei secondi con movimento a scatti">
-            <span className="hero-subdial" aria-hidden="true">
-              <span className="hero-subdial-hand" />
-              <span className="hero-subdial-pivot" />
-              <span className="hero-subdial-label">SEC</span>
-            </span>
+          <figcaption className="hero-complication">
+            <WatchMovementComplication />
           </figcaption>
         </figure>
       </div>

@@ -4433,15 +4433,14 @@ a:focus-visible,
   }
 }
 
-/* Hero: orologio scontornato e sottquadrante dei secondi in movimento. */
+/* Hero: il quadrante invade il margine destro; il dettaglio mostra il movimento. */
 .hero-section {
   position: relative;
   left: 50%;
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(340px, 1.08fr);
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: 1fr;
   align-items: center;
-  column-gap: clamp(28px, 5vw, 76px);
   width: 100vw;
   min-height: clamp(540px, 47vw, 710px);
   margin: 0;
@@ -4459,110 +4458,96 @@ a:focus-visible,
 
 .hero-copy {
   position: relative;
-  z-index: 1;
-  max-width: 760px;
+  z-index: 2;
+  width: min(100%, 620px);
+  max-width: 620px;
   animation: hero-arrive 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 .hero-watch {
-  position: relative;
+  position: absolute;
   z-index: 1;
-  justify-self: end;
-  width: min(100%, 760px);
-  aspect-ratio: 1.25 / 1;
+  top: 50%;
+  right: clamp(-280px, -12vw, -120px);
+  width: min(105vw, 2000px);
   margin: 0;
+  transform: translateY(-50%);
   animation: hero-arrive 850ms 100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 .hero-watch-image {
-  position: absolute;
-  top: 50%;
-  right: 0;
   display: block;
-  width: 170%;
+  width: 100%;
   max-width: none;
   height: auto;
-  transform: translateY(-50%);
   filter: drop-shadow(0 24px 24px rgba(24, 38, 48, 0.2));
 }
 
 .hero-complication {
   position: absolute;
   z-index: 2;
-  bottom: 7%;
-  left: 52%;
-  width: 78px;
-  height: 78px;
-  padding: 5px;
-  border: 1px solid rgba(89, 101, 107, 0.54);
+  top: 64%;
+  left: 65%;
+  width: clamp(190px, 17vw, 320px);
+  aspect-ratio: 1;
+  padding: 6px;
+  border: 1px solid rgba(82, 92, 95, 0.74);
   border-radius: 50%;
-  background: linear-gradient(145deg, #fafaf7, #b9c0c3 72%, #f2f1ec);
-  box-shadow: 0 5px 14px rgba(22, 33, 39, 0.24), inset 0 1px rgba(255, 255, 255, 0.96);
-  transform: translateX(-50%);
+  background: linear-gradient(145deg, #f8f6ef, #929da0 55%, #e6e2d7);
+  box-shadow: 0 18px 42px rgba(10, 17, 20, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.95);
+  transform: translate(-50%, -50%) rotate(-8deg);
 }
 
-.hero-subdial {
-  position: relative;
+.movement-complication {
   display: block;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border: 1px solid rgba(87, 100, 105, 0.38);
   border-radius: 50%;
-  background: radial-gradient(circle at 34% 27%, #ffffff, #e5e7e4 72%, #c4c9c8);
-  color: #263b45;
 }
 
-.hero-subdial::before {
-  position: absolute;
-  inset: 3px;
-  border-radius: 50%;
-  background: repeating-conic-gradient(from -1deg, rgba(37, 56, 64, 0.62) 0deg 1.3deg, transparent 1.3deg 6deg);
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
-  content: '';
+.movement-complication svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-.hero-subdial-hand {
-  position: absolute;
-  top: 17%;
-  left: 50%;
-  z-index: 1;
-  width: 1.5px;
-  height: 33%;
-  border-radius: 2px;
-  background: #a34d3e;
-  transform: translateX(-50%) rotate(0deg);
-  transform-origin: 50% 100%;
-  animation: hero-second-tick 60s steps(60, end) infinite;
+.movement-gear {
+  transform-box: view-box;
 }
 
-.hero-subdial-pivot {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 2;
-  width: 6px;
-  height: 6px;
-  border: 1px solid #a34d3e;
-  border-radius: 50%;
-  background: #f4f2ed;
-  transform: translate(-50%, -50%);
+.movement-gear--large {
+  transform-origin: 32.5% 37.9%;
+  animation: movement-turn 18s linear infinite;
 }
 
-.hero-subdial-label {
-  position: absolute;
-  bottom: 15%;
-  left: 50%;
-  color: #52616a;
-  font-size: 0.39rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  transform: translateX(-50%);
+.movement-gear--medium {
+  transform-origin: 62.9% 52.9%;
+  animation: movement-turn-reverse 14s linear infinite;
 }
 
-@keyframes hero-second-tick {
-  to { transform: translateX(-50%) rotate(360deg); }
+.movement-gear--small {
+  transform-origin: 45% 72.5%;
+  animation: movement-turn 11s linear infinite;
+}
+
+.movement-balance {
+  transform-box: view-box;
+  transform-origin: 69.6% 28.3%;
+  animation: movement-balance 700ms steps(2, end) infinite;
+}
+
+@keyframes movement-turn {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes movement-turn-reverse {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes movement-balance {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(8deg); }
 }
 
 .hero-section h1 {
@@ -4702,9 +4687,19 @@ a:focus-visible,
   }
 
   .hero-watch {
-    justify-self: center;
-    width: min(100%, 700px);
-    aspect-ratio: 1.35 / 1;
+    position: relative;
+    top: auto;
+    right: auto;
+    justify-self: end;
+    width: min(150vw, 1100px);
+    margin: -24px -25vw 0 0;
+    transform: none;
+  }
+
+  .hero-complication {
+    top: 64%;
+    left: 65%;
+    width: clamp(160px, 28vw, 250px);
   }
 
   .brand-strip {
@@ -4729,18 +4724,18 @@ a:focus-visible,
   }
 
   .hero-watch {
-    width: min(100%, 340px);
-    aspect-ratio: 1.25 / 1;
+    width: min(150vw, 760px);
+    margin-right: -25vw;
   }
 
   .hero-complication {
-    width: 66px;
-    height: 66px;
+    width: clamp(138px, 38vw, 190px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-subdial-hand {
+  .movement-gear,
+  .movement-balance {
     animation: none;
   }
 }
