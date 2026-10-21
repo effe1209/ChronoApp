@@ -31,7 +31,6 @@ import OutfitModal from './components/OutfitModal';
 import ModifyWatchModal from './components/ModifyWatchModal';
 import InfoWatchModal from './components/InfoWatchModal';
 import StatsModal from './components/StatsModal';
-import WatchMovementComplication from './components/WatchMovementComplication';
 
 // Stili (invariati)
 import 'swiper/css';
@@ -1109,6 +1108,33 @@ const BackgroundLayer = useMemo(() => {
         )}
         </div>
       <div id="home-section" className="hero-section">
+        <figure className="hero-watch">
+          <img
+            className="hero-watch-image"
+            src="/orologio_fin.png"
+            alt="Orologio classico argentato inclinato, con quadrante romano"
+          />
+        </figure>
+        <svg className="hero-flow-overlay" viewBox="0 0 1000 650" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="hero-flow-gradient" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#a8eaff" stopOpacity="0.15" />
+              <stop offset="34%" stopColor="#9fe9ff" />
+              <stop offset="68%" stopColor="#f4b1df" />
+              <stop offset="100%" stopColor="#9eeaff" stopOpacity="0.62" />
+            </linearGradient>
+            <filter id="hero-flow-glow" x="-20%" y="-40%" width="140%" height="180%">
+              <feGaussianBlur stdDeviation="3.5" result="glow" />
+              <feMerge>
+                <feMergeNode in="glow" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          <path className="hero-flow-line hero-flow-line--upper" d="M-30 168 C145 184 217 274 384 292 S634 348 760 272 S927 154 1030 110" />
+          <path className="hero-flow-line hero-flow-line--lower" d="M-30 214 C150 244 263 347 438 370 S682 448 828 384 S958 322 1030 334" />
+          <path className="hero-flow-streak" pathLength="1000" d="M-30 214 C150 244 263 347 438 370 S682 448 828 384 S958 322 1030 334" />
+        </svg>
         <div className="hero-copy">
           <p className="hero-eyebrow"><span aria-hidden="true" /> IL TUO WATCH JOURNAL</p>
           <div className="titleList">
@@ -1119,16 +1145,6 @@ const BackgroundLayer = useMemo(() => {
             Esplora la collezione <span aria-hidden="true">→</span>
           </a>
         </div>
-        <figure className="hero-watch">
-          <img
-            className="hero-watch-image"
-            src="/orologio_fin.png"
-            alt="Orologio classico argentato inclinato, con quadrante romano"
-          />
-          <figcaption className="hero-complication">
-            <WatchMovementComplication />
-          </figcaption>
-        </figure>
       </div>
 
       <div className="brand-strip" aria-label="Marchi di orologi">
