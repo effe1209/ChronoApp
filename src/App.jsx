@@ -1120,23 +1120,23 @@ const BackgroundLayer = useMemo(() => {
         <div className="hero-clock">
           <Clock />
         </div>
+      </div>
 
-        <div className="brand-strip" aria-label="Marchi di orologi">
-          <div className="brand-strip-heading">
-            <span>Grandi nomi, storie senza tempo</span>
-            <span className="brand-strip-caption">Un universo da esplorare</span>
-          </div>
-          <LogoLoop
-            logos={techLogos}
-            speed={34}
-            direction="left"
-            logoHeight={20}
-            gap={24}
-            hoverSpeed={0}
-            scaleOnHover
-            ariaLabel="Marchi di orologi"
-          />
+      <div className="brand-strip" aria-label="Marchi di orologi">
+        <div className="brand-strip-heading">
+          <span>Grandi nomi, storie senza tempo</span>
+          <span className="brand-strip-caption">Un universo da esplorare</span>
         </div>
+        <LogoLoop
+          logos={techLogos}
+          speed={34}
+          direction="left"
+          logoHeight={20}
+          gap={24}
+          hoverSpeed={0}
+          scaleOnHover
+          ariaLabel="Marchi di orologi"
+        />
       </div>
 
       {message && <p className="message" onClick={() => setMessage(null)}>{message}</p>}
@@ -1164,7 +1164,7 @@ const BackgroundLayer = useMemo(() => {
               color={isDark ? "#F59E0B" : "#25627e"}
               cursorBallColor={isDark ? "#D8E9F2" : "#C0A062"}
               cursorBallSize={2}
-              ballCount={15}
+              ballCount={20}
               accentBallCount={3}
               animationSize={15}
               enableMouseInteraction={false}

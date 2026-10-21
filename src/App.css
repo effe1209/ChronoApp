@@ -4432,3 +4432,121 @@ a:focus-visible,
     height: auto !important;
   }
 }
+
+/* Hero: clock grande, sovrapposto al testo ma disposto nel flusso della griglia. */
+.hero-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(360px, auto);
+  align-items: stretch;
+  column-gap: 0;
+  row-gap: 0;
+  overflow: clip;
+}
+
+.hero-copy,
+.hero-clock {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  align-self: center;
+  max-width: 760px;
+}
+
+.hero-clock {
+  position: relative;
+  z-index: 1;
+  justify-self: end;
+  align-self: center;
+  margin-right: clamp(-175px, -12vw, -110px);
+  transform: scale(2.6);
+  transform-origin: center;
+  animation: none;
+  pointer-events: none;
+}
+
+.hero-clock .clockContainer {
+  width: 190px !important;
+  height: 190px !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+/* La fascia e il carosello dei marchi attraversano tutta la larghezza della pagina. */
+.brand-strip {
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  max-width: none;
+  margin: 18px 0 38px;
+  padding: 12px clamp(18px, 4vw, 52px) 10px;
+  overflow: hidden;
+  transform: translateX(-50%);
+}
+
+.brand-strip .brand-strip-heading {
+  width: min(100%, 1160px);
+  margin: 0 auto 8px;
+}
+
+.brand-strip .logoloop {
+  width: 100%;
+}
+
+/* Lascia che le bolle si vedano libere intorno al contenuto dell'account. */
+.profile-info {
+  border-color: transparent;
+  background: transparent !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+.profile-info-content > .profile-collection-value {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  text-shadow: 0 1px 12px var(--ui-surface-strong);
+}
+
+.profile-collection-value strong {
+  text-shadow: 0 1px 14px var(--ui-surface-strong);
+}
+
+@media (max-width: 720px) {
+  .hero-section {
+    grid-template-rows: minmax(330px, auto);
+    padding: 34px 10px 22px;
+  }
+
+  .hero-copy {
+    max-width: min(100%, 620px);
+  }
+
+  .hero-clock {
+    margin-right: -112px;
+    transform: scale(1.9);
+  }
+
+  .brand-strip {
+    margin-top: 10px;
+    margin-bottom: 28px;
+    padding-inline: 14px;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero-section {
+    grid-template-rows: minmax(320px, auto);
+    padding: 34px 4px 20px;
+  }
+
+  .hero-clock {
+    margin-right: -96px;
+    transform: scale(1.72);
+  }
+}
