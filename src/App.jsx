@@ -1162,7 +1162,7 @@ const BackgroundLayer = useMemo(() => {
             <MetaBalls
               className="profile-info-ambient"
               color={isDark ? "#F59E0B" : "#25627e"}
-              cursorBallColor={isDark ? "#C0A062" : "#1f4d63ff"}
+              cursorBallColor={isDark ? "#D8E9F2" : "#C0A062"}
               cursorBallSize={2}
               ballCount={10}
               animationSize={15}

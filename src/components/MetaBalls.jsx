@@ -169,7 +169,8 @@ const MetaBalls = ({
       const h1 = hash31(idx);
       const st = h1[0] * (2 * Math.PI);
       const dtFactor = 0.1 * Math.PI + h1[1] * (0.4 * Math.PI - 0.1 * Math.PI);
-      const baseScale = 5.0 + h1[1] * (10.0 - 5.0);
+      // Normalized orbit radius: vary from the center to just beyond the panel edges.
+      const baseScale = 0.35 + h1[1] * (1.25 - 0.35);
       const h2 = hash33(h1);
       const toggle = Math.floor(h2[0] * 2.0);
       const radiusVal = 0.5 + h2[2] * (2.0 - 0.5);
@@ -219,6 +220,7 @@ const MetaBalls = ({
       animationFrameId = requestAnimationFrame(update);
       const elapsed = (t - startTime) * 0.001;
       program.uniforms.iTime.value = elapsed;
+      const aspectRatio = gl.canvas.width / Math.max(gl.canvas.height, 1);
 
       for (let i = 0; i < effectiveBallCount; i++) {
         const p = ballParams[i];
@@ -226,8 +228,9 @@ const MetaBalls = ({
         const th = p.st + dt;
         const x = Math.cos(th);
         const y = Math.sin(th + dt * p.toggle);
-        const posX = x * p.baseScale * clumpFactor;
-        const posY = y * p.baseScale * clumpFactor;
+        const halfHeight = (animationSize * 0.5) * p.baseScale * clumpFactor;
+        const posX = x * halfHeight * aspectRatio;
+        const posY = y * halfHeight;
         metaBallsUniform[i].set(posX, posY, p.radius);
       }
 
