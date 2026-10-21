@@ -1080,10 +1080,8 @@ const BackgroundLayer = useMemo(() => {
             onLogout={handleLogout}
             onAddWatchToggle={() => setShowForm(!showForm)}
             isFormVisible={showForm}
-            panelHeight={64}
             baseItemSize={50}
             magnification={70}
-            isDark={isDark}
           />
           </GlassSurface>
         )}
@@ -1113,8 +1111,6 @@ const BackgroundLayer = useMemo(() => {
             logoHeight={20}
             gap={24}
             hoverSpeed={0}
-            fadeOut
-            fadeOutColor={isDark ? "#101a25" : "#f4f7fa"}
             scaleOnHover
             ariaLabel="Marchi di orologi"
           />

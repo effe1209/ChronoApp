@@ -31,8 +31,8 @@ const ModifyWatchModal = ({
     : (updatedWatch.imageUrl || "orologio_back.svg");
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="modal-overlay modify-watch-overlay">
+      <div className="modal-content modify-watch-modal">
         <h2>Modifica Orologio</h2>
         
         <img 
@@ -43,8 +43,8 @@ const ModifyWatchModal = ({
           onError={(e) => { e.target.src = "orologio_back.svg"; }}
         />
         
-        <div className="formModify" style={{ fontFamily: "minork" }}>
-          <div>
+        <div className="formModify modify-watch-form">
+          <div className="modify-watch-field">
             <label>Nome: </label>
             <input
               type="text"
@@ -53,7 +53,7 @@ const ModifyWatchModal = ({
             />
           </div>
 
-          <div>
+          <div className="modify-watch-field">
             <label>Marca: </label>
             <input
               type="text"
@@ -62,7 +62,7 @@ const ModifyWatchModal = ({
             />
           </div>
 
-          <div>
+          <div className="modify-watch-field">
             <label>Anno: </label>
             <input
               type="text"
@@ -71,60 +71,51 @@ const ModifyWatchModal = ({
             />
           </div>
 
-          <div>
+          <div className="modify-watch-field">
             <label>Prezzo: </label>
-          <input
-            type="number"
-            value={updatedWatch.money || ''}
-            onChange={(e) => setUpdatedWatch({ ...updatedWatch, money: e.target.value ? Number(e.target.value) : null })}
-          />
+            <input
+              type="number"
+              value={updatedWatch.money || ''}
+              onChange={(e) => setUpdatedWatch({ ...updatedWatch, money: e.target.value ? Number(e.target.value) : null })}
+            />
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", width: "100%" }}>
-            <div className="selectMenu">
-              <label>
-                <strong>Movimento: </strong>
-              </label>
-              <div style={{ marginBottom: "10px" }}></div>
-              <select
-                value={updatedWatch.movement}
-                onChange={(e) => setUpdatedWatch({ ...updatedWatch, movement: e.target.value })}
-                style={{ textAlign: "center", display: "flex", border: "1px solid green" }}
+          <div className="modify-watch-field">
+            <label><strong>Movimento</strong></label>
+            <select
+              value={updatedWatch.movement}
+              onChange={(e) => setUpdatedWatch({ ...updatedWatch, movement: e.target.value })}
+            >
+              <option value="">Seleziona il movimento</option>
+              <option value="Automatico">Automatico</option>
+              <option value="Carica Manuale">Carica Manuale</option>
+              <option value="Quarzo">Quarzo</option>
+            </select>
+          </div>
+
+          <div className="modify-watch-field">
+            <label><strong>Colore</strong></label>
+            <div className="color-picker-container">
+              <button
+                type="button"
+                className="color-picker-button"
+                style={{ backgroundColor: updatedWatch.color || ""}}
+                tabIndex="-1"
               >
-                <option className="menuTendina" value="">Seleziona il movimento</option>
-                <option className="menuTendina" value="Automatico">Automatico</option>
-                <option className="menuTendina" value="Carica Manuale">Carica Manuale</option>
-                <option className="menuTendina" value="Quarzo">Quarzo</option>
-              </select>
+                🎨 Scegli un colore
+              </button>
+              <input
+                type="color"
+                id="color-modify"
+                className="color-input-overlay"
+                value={updatedWatch.color || ''}
+                onChange={(e) => setUpdatedWatch({ ...updatedWatch, color: e.target.value })}
+              />
+              {updatedWatch.color && <p className="selected-color">Colore selezionato: {updatedWatch.color}</p>}
             </div>
           </div>
 
-          <div style={{ marginBottom: "10px" }}></div>
-
-          <label>
-            <strong>Colore: </strong>
-          </label>
-          <div className="color-picker-container">
-            <button
-              type="button" 
-              className="color-picker-button"
-              style={{ backgroundColor: updatedWatch.color || ""}}
-              tabIndex="-1" 
-            >
-              🎨 Scegli un colore
-            </button>
-            <input
-              type="color"
-              id="color-modify" // ID univoco
-              className="color-input-overlay"
-              value={updatedWatch.color || ''}
-              onChange={(e) => setUpdatedWatch({ ...updatedWatch, color: e.target.value })}
-            />
-            {updatedWatch.color && <p className="selected-color">Colore selezionato: {updatedWatch.color}</p>}
-          </div>
-
-          {/* Caricamento immagine */}
-          <div className="upload-container">
+          <div className="upload-container modify-watch-field modify-watch-field--wide">
             <input
               type="file"
               accept="image/*"
@@ -139,7 +130,7 @@ const ModifyWatchModal = ({
           </div>
 
           {/* Pulsante Dettagli */}
-          <div style={{ marginBottom: "20px", width: "100%" }}>
+          <div className="modify-watch-field modify-watch-field--wide">
             <button
               type="button"
               className="details-toggle-button"
@@ -151,15 +142,17 @@ const ModifyWatchModal = ({
 
           {/* Lista Checkbox Caratteristiche (riutilizzata) */}
           {isDetailsMenuOpenMOD && (
-            <FeatureCheckboxList
-              featuresList={allFeaturesList}
-              selectedFeatures={updatedWatch.features}
-              onChange={handleUpdatedFeatureChange}
-            />
+            <div className="modify-watch-field modify-watch-field--wide">
+              <FeatureCheckboxList
+                featuresList={allFeaturesList}
+                selectedFeatures={updatedWatch.features}
+                onChange={handleUpdatedFeatureChange}
+              />
+            </div>
           )}
 
           {/* Pulsante Note */}
-          <div style={{ margin: "20px 0 10px 0", width: "100%" }}>
+          <div className="modify-watch-field modify-watch-field--wide">
             <button
               type="button"
               className="details-toggle-button"
@@ -171,18 +164,17 @@ const ModifyWatchModal = ({
 
           {/* Textarea Note */}
           {isNotesVisibleMOD && (
-            <div>
+            <div className="modify-watch-field modify-watch-field--wide">
               <textarea
                 placeholder="Note aggiuntive..."
                 className="notes-textarea"
                 value={updatedWatch.note}
                 onChange={(e) =>
-                setUpdatedWatch({ ...updatedWatch, note: e.target.value })
-              }
-            />
-          </div>
+                  setUpdatedWatch({ ...updatedWatch, note: e.target.value })
+                }
+              />
+            </div>
           )}
-          <div style={{ marginBottom: "20px", width: "100%" }}></div>
         </div>
 
         <div className="buttonForm">

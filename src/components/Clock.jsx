@@ -30,7 +30,9 @@ function Clock() {
     // Posizionamento di numeri e indici sul quadrante.
     const face = document.querySelector(".numbers");
     if (face) {
-      const { width, height } = face.getBoundingClientRect();
+      // clientWidth / clientHeight ignorano le trasformazioni di scala del layout mobile.
+      const width = face.clientWidth;
+      const height = face.clientHeight;
       const centerX = width / 2;
       const centerY = height / 2;
       const numberRadius = Math.min(width, height) * 0.38;
