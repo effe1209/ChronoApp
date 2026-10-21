@@ -7,6 +7,7 @@ import WatchAnalytics from './components/WatchAnalytics';
 import GlassSurface from './components/GlassSurface';
 import TiltedCard from './components/TiltedCard';
 import FloatingLines from './components/FloatingLines';
+import MetaBalls from './components/MetaBalls';
 import InfiniteMenu from './components/InfiniteMenu'
 import InfiniteGridModal from './components/InfiniteGridModal';
 import { SpeedInsights } from "@vercel/speed-insights/react";
@@ -1158,6 +1159,19 @@ const BackgroundLayer = useMemo(() => {
       ) : (
         <>
           <div className="profile-info" id="profile-section">
+            <MetaBalls
+              className="profile-info-ambient"
+              color={isDark ? "#F59E0B" : "#25627e"}
+              cursorBallColor={isDark ? "#C0A062" : "#1f4d63ff"}
+              cursorBallSize={2}
+              ballCount={10}
+              animationSize={15}
+              enableMouseInteraction={true}
+              enableTransparency={true}
+              hoverSmoothness={0.09}
+              clumpFactor={1}
+              speed={0.2}
+            />
             <div className="profile-info-content">
               <div className="circular-text-container">
                 <div className="profile-picture">
