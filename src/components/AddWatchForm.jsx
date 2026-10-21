@@ -30,205 +30,198 @@ const AddWatchForm = ({
   }
 
   return (
-    <>
-    
-      <div className="titleList">
-        <h3>Aggiungi un nuovo orologio</h3>
-      </div>
-      <div className="form">
+    <section className="add-watch-section" aria-labelledby="add-watch-title">
+      <header className="add-watch-heading">
+        <p className="add-watch-eyebrow">LA TUA COLLEZIONE</p>
+        <h2 id="add-watch-title">Aggiungi un orologio</h2>
+        <p>Completa la scheda un passaggio alla volta e arricchisci la tua collezione.</p>
+      </header>
+      <div className="form add-watch-form">
         <Stepper
           initialStep={1}
-          onStepChange={(step) => console.log("Step changed to:", step)}
-          
-          // 1. COLLEGA IL SALVATAGGIO QUI
-          // Quando l'utente preme "Finito" o "Salva" sull'ultimo step, scatta questa funzione
           onFinalStepCompleted={handleAddWatch}
-          
-          // 2. PASSA LA FUNZIONE DI ANNULLAMENTO (Dovrai gestirla dentro Stepper.jsx)
-          onCancel={handleCancel} 
-
-          // Personalizzazione testi bottoni
+          onCancel={handleCancel}
           backButtonText="Indietro"
           nextButtonText="Avanti"
-          finishButtonText="Salva" // Testo per l'ultimo step (se il tuo Stepper lo supporta)
           isDark={isDark}
         >
         <Step>
-        <h3>Nome</h3>
-        <input
-          type="text"
-          placeholder="Nome"
-          value={newWatch.name}
-          onChange={(e) =>
-            setNewWatch({ ...newWatch, name: e.target.value })
-          }
-        />
-        </Step>
-        <Step>
-        <h3>Marca</h3>
-        <input
-          type="text"
-          placeholder="Marca"
-          value={newWatch.brand}
-          onChange={(e) =>
-            setNewWatch({ ...newWatch, brand: e.target.value })
-          }
-        />
-        </Step>
-        <Step>
-        <h3>Anno</h3>
-        <input
-          type="number"
-          placeholder="Anno"
-          value={newWatch.year}
-          onChange={(e) =>
-            setNewWatch({ ...newWatch, year: e.target.value })
-          }
-        />
-        </Step>
-        <Step>
-        <h3 style={{marginBottom:"10px !important"}}>Prezzo di Acquisto</h3>
-        <input
-          type="number"
-          placeholder="Prezzo (€)"
-          value={newWatch.money || ''} // Usa '' per input controllato
-          onChange={(e) =>
-            setNewWatch({ ...newWatch, money: e.target.value ? Number(e.target.value) : null })
-          }
-        />
-        </Step>
-        <Step>
-        <h3>Caratteristiche</h3>
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center", width: "100%"}}>
-          <div className="selectMenu">
-            <label>
-              <strong>Movimento: </strong>
-            </label>
-            <div style={{ marginBottom: "10px" }}></div>
-            <select
-              value={newWatch.movement}
-              onChange={(e) => setNewWatch({ ...newWatch, movement: e.target.value })}
-              style={{textAlign: "center", display: "flex"}}
-            >
-              <option className="menuTendina" value="">Seleziona il movimento</option>
-              <option className="menuTendina" value="Automatico">🌀 Automatico</option>
-              <option className="menuTendina" value="Carica Manuale">🤏 Carica Manuale</option>
-              <option className="menuTendina" value="Quarzo">🔋 Quarzo</option>
-            </select>
+          <div className="add-watch-field">
+            <label htmlFor="add-watch-name">Nome</label>
+            <input
+              id="add-watch-name"
+              type="text"
+              placeholder="Es. Speedmaster Professional"
+              value={newWatch.name}
+              onChange={(e) => setNewWatch({ ...newWatch, name: e.target.value })}
+            />
           </div>
-          <label>
-          <strong>Colore: </strong>
-        </label>
-        <div className="color-picker-container">
-          <button
-            type="button" 
-            className="color-picker-button"
-            style={{ backgroundColor: newWatch.color}}
-            tabIndex="-1" 
-          >
-            🎨 Scegli un colore
-          </button>
-          <input
-            type="color"
-            id="color"
-            className="color-input-overlay"
-            value={newWatch.color || ''}
-            onChange={(e) => setNewWatch({ ...newWatch, color: e.target.value })}
-          />
-          {newWatch.color && <p className="selected-color">Colore selezionato: {newWatch.color}</p>}
-      </div>
-        </div>
+        </Step>
+        <Step>
+          <div className="add-watch-field">
+            <label htmlFor="add-watch-brand">Marca</label>
+            <input
+              id="add-watch-brand"
+              type="text"
+              placeholder="Es. Omega"
+              value={newWatch.brand}
+              onChange={(e) => setNewWatch({ ...newWatch, brand: e.target.value })}
+            />
+          </div>
+        </Step>
+        <Step>
+          <div className="add-watch-field">
+            <label htmlFor="add-watch-year">Anno</label>
+            <input
+              id="add-watch-year"
+              type="number"
+              placeholder="Es. 2024"
+              value={newWatch.year}
+              onChange={(e) => setNewWatch({ ...newWatch, year: e.target.value })}
+            />
+          </div>
+        </Step>
+        <Step>
+          <div className="add-watch-field">
+            <label htmlFor="add-watch-price">Prezzo di acquisto</label>
+            <input
+              id="add-watch-price"
+              type="number"
+              placeholder="Importo in euro"
+              value={newWatch.money || ''}
+              onChange={(e) => setNewWatch({ ...newWatch, money: e.target.value ? Number(e.target.value) : null })}
+            />
+          </div>
+        </Step>
+        <Step>
+          <div className="add-watch-step-heading">
+            <h3>Caratteristiche</h3>
+            <p>Scegli il movimento e il colore del tuo orologio.</p>
+          </div>
+          <div className="add-watch-feature-fields">
+            <div className="add-watch-control">
+              <label htmlFor="add-watch-movement">Movimento</label>
+              <select
+                id="add-watch-movement"
+                value={newWatch.movement}
+                onChange={(e) => setNewWatch({ ...newWatch, movement: e.target.value })}
+              >
+                <option value="">Seleziona il movimento</option>
+                <option value="Automatico">🌀 Automatico</option>
+                <option value="Carica Manuale">🤏 Carica manuale</option>
+                <option value="Quarzo">🔋 Quarzo</option>
+              </select>
+            </div>
+            <div className="add-watch-control">
+              <label htmlFor="add-watch-color">Colore</label>
+              <div className="color-picker-container">
+                <button
+                  type="button"
+                  className="color-picker-button"
+                  style={{ backgroundColor: newWatch.color }}
+                  tabIndex="-1"
+                  aria-hidden="true"
+                >
+                  🎨 Scegli un colore
+                </button>
+                <input
+                  type="color"
+                  id="add-watch-color"
+                  className="color-input-overlay"
+                  aria-label="Seleziona il colore dell'orologio"
+                  value={newWatch.color || '#ffffff'}
+                  onChange={(e) => setNewWatch({ ...newWatch, color: e.target.value })}
+                />
+                {newWatch.color && <p className="selected-color">Colore selezionato: {newWatch.color}</p>}
+              </div>
+            </div>
+          </div>
         </Step>
         
       
 
         <Step>
-          <h3>Immagine</h3>
-        <div className="upload-container">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            ref={fileInputRef}
-            className="hidden-input"
-            id="file-upload-add" // ID univoco
-            multiple={false} // Assicura un solo file
-          />
-          <button type="button" className="upload-button" onClick={() => fileInputRef.current.click()}>
-            📸 Seleziona un'immagine
-          </button>
-        </div>
-        {/* Anteprima immagine (se 'image' è un oggetto File) */}
-        {newWatch.image && typeof newWatch.image === 'object' && (
+          <div className="add-watch-step-heading">
+            <h3>Immagine</h3>
+            <p>Aggiungi una foto per riconoscere subito il tuo segnatempo.</p>
+          </div>
+          <div className="upload-container add-watch-upload">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              ref={fileInputRef}
+              className="hidden-input"
+              id="file-upload-add"
+              multiple={false}
+            />
+            <button type="button" className="upload-button" onClick={() => fileInputRef.current.click()}>
+              📸 Seleziona un'immagine
+            </button>
+          </div>
+          {newWatch.image && typeof newWatch.image === 'object' && (
             <img
               src={URL.createObjectURL(newWatch.image)}
-              alt="Anteprima"
-              className="preview-image"
-              width="100"
-              onLoad={() => URL.revokeObjectURL(newWatch.image)} // Pulisci memoria
+              alt="Anteprima dell'orologio"
+              className="preview-image add-watch-preview"
+              onLoad={() => URL.revokeObjectURL(newWatch.image)}
             />
-        )}
+          )}
         </Step>
         <Step>
-          <h3>Dettagli Orologi</h3>
-        {/* Pulsante Dettagli */}
-        <div style={{ margin: "20px 0 10px 0", width: "100%" }}>
-          <button
-            type="button"
-            className="details-toggle-button"
-            onClick={() => setIsDetailsMenuOpen(!isDetailsMenuOpen)}
-          >
-            {isDetailsMenuOpen ? 'Chiudi Dettagli ▴' : 'Caratteristiche Aggiuntive ▾'}
-          </button>
-        </div>
-
-        {/* Lista Checkbox Caratteristiche */}
-        {isDetailsMenuOpen && (
-          <FeatureCheckboxList
-            featuresList={allFeaturesList}
-            selectedFeatures={newWatch.features}
-            onChange={handleFeatureChange}
-            isLoading={featuresLoading}
-            error={featuresError}
-          />
-        )}
+          <div className="add-watch-step-heading">
+            <h3>Dettagli tecnici</h3>
+            <p>Se vuoi, seleziona le caratteristiche che descrivono il tuo orologio.</p>
+          </div>
+          <div className="add-watch-step-action">
+            <button
+              type="button"
+              className="details-toggle-button"
+              onClick={() => setIsDetailsMenuOpen(!isDetailsMenuOpen)}
+              aria-expanded={isDetailsMenuOpen}
+            >
+              {isDetailsMenuOpen ? 'Chiudi dettagli ▴' : 'Scegli le caratteristiche ▾'}
+            </button>
+          </div>
+          {isDetailsMenuOpen && (
+            <FeatureCheckboxList
+              featuresList={allFeaturesList}
+              selectedFeatures={newWatch.features}
+              onChange={handleFeatureChange}
+              isLoading={featuresLoading}
+              error={featuresError}
+            />
+          )}
         </Step>
 
         <Step>
-          <h3>Caratteristiche Aggiuntive</h3>
-        {/* Pulsante Note */}
-        <div style={{ margin: "20px 0 10px 0", width: "100%" }}>
-          <button
-            type="button"
-            className="details-toggle-button"
-            onClick={() => setIsNotesVisible(!isNotesVisible)}
-          >
-            {isNotesVisible ? 'Chiudi Note ▴' : 'Apri Note ▾'}
-          </button>
-        </div>
-        {/* Textarea Note */}
-        {isNotesVisible && (
-          <div>
+          <div className="add-watch-step-heading">
+            <h3>Note personali</h3>
+            <p>Annota la storia, la data di acquisto o altri dettagli che vuoi ricordare.</p>
+          </div>
+          <div className="add-watch-step-action">
+            <button
+              type="button"
+              className="details-toggle-button"
+              onClick={() => setIsNotesVisible(!isNotesVisible)}
+              aria-expanded={isNotesVisible}
+            >
+              {isNotesVisible ? 'Nascondi le note ▴' : 'Aggiungi una nota ▾'}
+            </button>
+          </div>
+          {isNotesVisible && (
             <textarea
               placeholder="Note aggiuntive (es. data acquisto, storia, difetti...)"
               className="notes-textarea"
               value={newWatch.note}
-            onChange={(e) =>
-              setNewWatch({ ...newWatch, note: e.target.value })
-            }
-          />
-        </div>
-        )}
-        
-        {/* <div style={{ marginBottom: "30px" }}></div>
-        <div className="buttonForm">
-          <button onClick={handleAddWatch}>Salva</button>
-          <button onClick={handleCancel}>Annulla</button>
-        </div> */}
+              onChange={(e) => setNewWatch({ ...newWatch, note: e.target.value })}
+              aria-label="Note aggiuntive sull'orologio"
+            />
+          )}
         </Step>
         </Stepper>
       </div>
-    </>
+    </section>
   );
 };
 

@@ -239,18 +239,18 @@ function StepIndicator({ step, currentStep, onClickStep, disableStepIndicators, 
         variants={{
           inactive: { scale: 1, backgroundColor: isDark ? 'var(--bg-card_DARK)' : '#FFFFFF', 
       color: isDark ? 'var(--text-primary_DARK)' : '#000000' },
-          active: { scale: 1, backgroundColor: isDark ? 'var(--accent-primary_DARK)' : 'var(--accent-primary)', 
-      color: isDark ? 'var(--text-primary_DARK)' : '#000' },
-          complete: { scale: 1, backgroundColor: isDark ? 'var(--accent-primary_DARK)' : 'var(--accent-primary) ', 
-      color: isDark ? 'var(--text-primary_DARK)' : '#000000' }
+          active: { scale: 1, backgroundColor: isDark ? 'var(--accent-primary_DARK)' : 'var(--accent-primary)',
+      color: isDark ? '#172630' : '#FFFFFF' },
+          complete: { scale: 1, backgroundColor: isDark ? 'var(--accent-primary_DARK)' : 'var(--accent-primary)',
+      color: isDark ? '#172630' : '#FFFFFF' }
         }}
         transition={{ duration: 0.3 }}
         className="step-indicator-inner"
       >
         {status === 'complete' ? (
-          <CheckIcon className="check-icon" />
+          <CheckIcon className="check-icon" style={{ color: isDark ? '#172630' : '#FFFFFF' }} />
         ) : status === 'active' ? (
-          <div className="active-dot" />
+          <div className="active-dot" style={{ backgroundColor: isDark ? '#172630' : '#FFFFFF' }} />
         ) : (
           <span className="step-number">{step}</span>
         )}
