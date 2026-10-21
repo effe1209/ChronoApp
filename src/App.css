@@ -4433,22 +4433,25 @@ a:focus-visible,
   }
 }
 
-/* Hero fotografico: il quadrante occupa il lato destro come nell'immagine di riferimento. */
+/* Hero: immagine ritagliata sul quadrante e piccola complicazione calendario. */
 .hero-section {
   position: relative;
   left: 50%;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.85fr);
   grid-template-rows: 1fr;
   align-items: center;
+  column-gap: clamp(28px, 5vw, 76px);
   width: 100vw;
-  min-height: clamp(470px, 42vw, 700px);
+  min-height: clamp(540px, 48vw, 720px);
   margin: 0;
-  padding: clamp(88px, 9vw, 138px) max(clamp(24px, 8vw, 150px), calc((100vw - 1600px) / 2))
-    clamp(62px, 7vw, 100px);
+  padding: clamp(112px, 11vw, 154px) max(clamp(24px, 8vw, 150px), calc((100vw - 1600px) / 2))
+    clamp(72px, 7vw, 100px);
   overflow: hidden;
   border-bottom: 0;
-  background: var(--ui-bg);
+  background:
+    radial-gradient(ellipse at 76% 48%, var(--ui-accent-soft), transparent 38%),
+    linear-gradient(135deg, var(--ui-bg), color-mix(in srgb, var(--ui-bg) 88%, var(--ui-accent-soft)));
   transform: translateX(-50%);
 }
 
@@ -4456,21 +4459,9 @@ a:focus-visible,
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image:
-    linear-gradient(90deg, rgba(244, 247, 250, 0.5) 0%, rgba(244, 247, 250, 0.37) 30%, rgba(244, 247, 250, 0.08) 53%, transparent 67%),
-    linear-gradient(0deg, var(--ui-bg) 0%, transparent 20%),
-    url('/orologio-hero.webp');
-  background-position: center, center, center 47%;
-  background-size: cover;
+  background: linear-gradient(180deg, transparent 76%, var(--ui-bg));
   content: '';
   pointer-events: none;
-}
-
-.dark-mode .hero-section::before {
-  background-image:
-    linear-gradient(90deg, rgba(8, 16, 24, 0.7) 0%, rgba(8, 16, 24, 0.45) 33%, rgba(8, 16, 24, 0.08) 57%, transparent 68%),
-    linear-gradient(0deg, var(--ui-bg) 0%, transparent 20%),
-    url('/orologio-hero.webp');
 }
 
 .hero-copy {
@@ -4478,6 +4469,104 @@ a:focus-visible,
   z-index: 1;
   max-width: 760px;
   animation: hero-arrive 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.hero-watch {
+  position: relative;
+  z-index: 1;
+  justify-self: end;
+  width: min(100%, 500px);
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--ui-text) 14%, transparent);
+  border-radius: 30px;
+  background: color-mix(in srgb, var(--ui-surface-strong) 72%, transparent);
+  box-shadow: 0 30px 84px rgba(24, 47, 60, 0.18), inset 0 1px rgba(255, 255, 255, 0.8);
+  animation: hero-arrive 850ms 100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.dark-mode .hero-watch {
+  border-color: rgba(255, 255, 255, 0.13);
+  box-shadow: 0 30px 84px rgba(0, 0, 0, 0.35), inset 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.hero-watch-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 23px;
+  object-fit: cover;
+  object-position: 92% center;
+}
+
+.hero-complication {
+  position: absolute;
+  right: auto;
+  bottom: 28px;
+  left: -24px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 182px;
+  padding: 9px 16px 9px 9px;
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+  background: var(--ui-surface-strong);
+  box-shadow: 0 14px 34px rgba(24, 47, 60, 0.16), inset 0 1px rgba(255, 255, 255, 0.8);
+  color: var(--ui-text);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  backdrop-filter: blur(18px) saturate(1.25);
+}
+
+.dark-mode .hero-complication {
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.32), inset 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.hero-complication-window {
+  display: grid;
+  width: 48px;
+  height: 54px;
+  align-content: center;
+  justify-items: center;
+  border: 1px solid color-mix(in srgb, var(--ui-accent) 25%, transparent);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--ui-bg) 86%, var(--ui-accent-soft));
+  box-shadow: inset 0 1px 4px rgba(24, 47, 60, 0.08);
+}
+
+.hero-complication-window span {
+  color: var(--ui-muted);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+}
+
+.hero-complication-window strong {
+  font-family: var(--font-Title);
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.hero-complication-copy {
+  display: grid;
+  gap: 4px;
+  text-align: left;
+}
+
+.hero-complication-copy small {
+  color: var(--ui-muted);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+}
+
+.hero-complication-copy strong {
+  font-size: 0.9rem;
+  font-weight: 650;
 }
 
 .hero-section h1 {
@@ -4591,27 +4680,19 @@ a:focus-visible,
   text-shadow: 0 2px 12px var(--ui-accent-soft);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 820px) {
   .hero-section {
-    min-height: 590px;
-    padding: 92px 22px 50px;
-  }
-
-  .hero-section::before {
-    background-image:
-      linear-gradient(180deg, rgba(244, 247, 250, 0.76) 0%, rgba(244, 247, 250, 0.56) 48%, rgba(244, 247, 250, 0.14) 100%),
-      url('/orologio-hero.webp');
-    background-position: center, 61% center;
-  }
-
-  .dark-mode .hero-section::before {
-    background-image:
-      linear-gradient(180deg, rgba(8, 16, 24, 0.77) 0%, rgba(8, 16, 24, 0.58) 52%, rgba(8, 16, 24, 0.18) 100%),
-      url('/orologio-hero.webp');
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    row-gap: 36px;
+    min-height: 0;
+    padding: 96px 26px 52px;
   }
 
   .hero-copy {
     max-width: min(100%, 620px);
+    justify-self: center;
+    width: 100%;
   }
 
   .hero-section h1 {
@@ -4624,6 +4705,15 @@ a:focus-visible,
     font-size: 0.96rem;
   }
 
+  .hero-watch {
+    justify-self: center;
+    width: min(100%, 390px);
+  }
+
+  .hero-complication {
+    left: -12px;
+  }
+
   .brand-strip {
     margin-top: 10px;
     margin-bottom: 28px;
@@ -4633,8 +4723,8 @@ a:focus-visible,
 
 @media (max-width: 430px) {
   .hero-section {
-    min-height: 560px;
     padding: 82px 18px 42px;
+    row-gap: 30px;
   }
 
   .hero-section h1 {
@@ -4643,5 +4733,20 @@ a:focus-visible,
 
   .hero-cta {
     margin-top: 22px;
+  }
+
+  .hero-watch {
+    width: min(100%, 340px);
+    padding: 6px;
+    border-radius: 24px;
+  }
+
+  .hero-watch-image {
+    border-radius: 18px;
+  }
+
+  .hero-complication {
+    left: 2px;
+    bottom: 18px;
   }
 }

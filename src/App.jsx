@@ -1059,6 +1059,13 @@ const BackgroundLayer = useMemo(() => {
       );
     }, [isDark, floatingConfig.bg, floatingConfig.blend]);
 
+  const today = new Date();
+  const calendarWeekday = new Intl.DateTimeFormat('it-IT', { weekday: 'short' })
+    .format(today)
+    .replace(/\.$/, '')
+    .toUpperCase();
+  const calendarDay = new Intl.DateTimeFormat('it-IT', { day: '2-digit' }).format(today);
+
   // --- RENDER ---
   return (
     <>
@@ -1118,6 +1125,23 @@ const BackgroundLayer = useMemo(() => {
             Esplora la collezione <span aria-hidden="true">→</span>
           </a>
         </div>
+        <figure className="hero-watch">
+          <img
+            className="hero-watch-image"
+            src="/orologio-hero.webp"
+            alt="Dettaglio del quadrante argentato di un orologio classico"
+          />
+          <figcaption className="hero-complication" aria-label={`Calendario: ${calendarWeekday} ${calendarDay}`}>
+            <span className="hero-complication-window" aria-hidden="true">
+              <span>{calendarWeekday}</span>
+              <strong>{calendarDay}</strong>
+            </span>
+            <span className="hero-complication-copy">
+              <small>COMPLICAZIONE</small>
+              <strong>Calendario</strong>
+            </span>
+          </figcaption>
+        </figure>
       </div>
 
       <div className="brand-strip" aria-label="Marchi di orologi">
