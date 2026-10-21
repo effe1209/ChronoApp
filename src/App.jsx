@@ -1164,9 +1164,10 @@ const BackgroundLayer = useMemo(() => {
               color={isDark ? "#F59E0B" : "#25627e"}
               cursorBallColor={isDark ? "#D8E9F2" : "#C0A062"}
               cursorBallSize={2}
-              ballCount={10}
+              ballCount={15}
+              accentBallCount={3}
               animationSize={15}
-              enableMouseInteraction={true}
+              enableMouseInteraction={false}
               enableTransparency={true}
               hoverSmoothness={0.09}
               clumpFactor={1}

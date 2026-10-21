@@ -59,8 +59,10 @@ uniform vec3 iColor;
 uniform vec3 iCursorColor;
 uniform float iAnimationSize;
 uniform int iBallCount;
+uniform int iAccentBallCount;
 uniform float iCursorBallSize;
 uniform vec3 iMetaBalls[50];
+uniform vec3 iAccentBalls[10];
 uniform float iClumpFactor;
 uniform bool enableTransparency;
 out vec4 outColor;
@@ -82,14 +84,19 @@ void main() {
     if (i >= iBallCount) break;
     m1 += getMetaBallValue(iMetaBalls[i].xy, iMetaBalls[i].z, coord);
   }
+  float mAccent = 0.0;
+  for (int i = 0; i < 10; i++) {
+    if (i >= iAccentBallCount) break;
+    mAccent += getMetaBallValue(iAccentBalls[i].xy, iAccentBalls[i].z, coord);
+  }
   float m2 = getMetaBallValue(mouseW, iCursorBallSize, coord);
-  float total = m1 + m2;
+  float total = m1 + mAccent + m2;
   float f = smoothstep(-1.0, 1.0, (total - 1.3) / min(1.0, fwidth(total)));
   vec3 cFinal = vec3(0.0);
   if (total > 0.0) {
-    float alpha1 = m1 / total;
-    float alpha2 = m2 / total;
-    cFinal = iColor * alpha1 + iCursorColor * alpha2;
+    float primaryWeight = m1 / total;
+    float accentWeight = (mAccent + m2) / total;
+    cFinal = iColor * primaryWeight + iCursorColor * accentWeight;
   }
   outColor = vec4(cFinal * f, enableTransparency ? f : 1.0);
 }
@@ -103,6 +110,7 @@ const MetaBalls = ({
   hoverSmoothness = 0.05,
   animationSize = 30,
   ballCount = 15,
+  accentBallCount = 3,
   clumpFactor = 1,
   cursorBallSize = 3,
   cursorBallColor = '#ffffff',
@@ -139,6 +147,11 @@ const MetaBalls = ({
       metaBallsUniform.push(new Vec3(0, 0, 0));
     }
 
+    const accentBallsUniform = [];
+    for (let i = 0; i < 10; i++) {
+      accentBallsUniform.push(new Vec3(0, 0, 0));
+    }
+
     const program = new Program(gl, {
       vertex,
       fragment,
@@ -150,8 +163,10 @@ const MetaBalls = ({
         iCursorColor: { value: new Vec3(r2, g2, b2) },
         iAnimationSize: { value: animationSize },
         iBallCount: { value: ballCount },
+        iAccentBallCount: { value: accentBallCount },
         iCursorBallSize: { value: cursorBallSize },
         iMetaBalls: { value: metaBallsUniform },
+        iAccentBalls: { value: accentBallsUniform },
         iClumpFactor: { value: clumpFactor },
         enableTransparency: { value: enableTransparency }
       }
@@ -175,6 +190,19 @@ const MetaBalls = ({
       const toggle = Math.floor(h2[0] * 2.0);
       const radiusVal = 0.5 + h2[2] * (2.0 - 0.5);
       ballParams.push({ st, dtFactor, baseScale, toggle, radius: radiusVal });
+    }
+
+    const maxAccentBalls = 10;
+    const effectiveAccentBallCount = Math.min(accentBallCount, maxAccentBalls);
+    const accentBallParams = [];
+    for (let i = 0; i < effectiveAccentBallCount; i++) {
+      const h1 = hash31(101 + i);
+      const st = h1[0] * (2 * Math.PI);
+      const dtFactor = 0.1 * Math.PI + h1[1] * (0.4 * Math.PI - 0.1 * Math.PI);
+      const baseScale = 0.35 + h1[1] * (1.25 - 0.35);
+      const h2 = hash33(h1);
+      const toggle = Math.floor(h2[0] * 2.0);
+      accentBallParams.push({ st, dtFactor, baseScale, toggle });
     }
 
     const mouseBallPos = { x: 0, y: 0 };
@@ -234,6 +262,18 @@ const MetaBalls = ({
         metaBallsUniform[i].set(posX, posY, p.radius);
       }
 
+      for (let i = 0; i < effectiveAccentBallCount; i++) {
+        const p = accentBallParams[i];
+        const dt = elapsed * speed * p.dtFactor;
+        const th = p.st + dt;
+        const x = Math.cos(th);
+        const y = Math.sin(th + dt * p.toggle);
+        const halfHeight = (animationSize * 0.5) * p.baseScale * clumpFactor;
+        const posX = x * halfHeight * aspectRatio;
+        const posY = y * halfHeight;
+        accentBallsUniform[i].set(posX, posY, cursorBallSize * 0.5);
+      }
+
       let targetX, targetY;
       if (pointerInside) {
         targetX = pointerX;
@@ -271,6 +311,7 @@ const MetaBalls = ({
     hoverSmoothness,
     animationSize,
     ballCount,
+    accentBallCount,
     clumpFactor,
     cursorBallSize,
     enableTransparency
