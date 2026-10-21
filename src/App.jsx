@@ -1013,7 +1013,7 @@ const techLogos = [
 
   const floatingConfig = isDark 
     ? {bg: "#091522", gradient: ["#F4C878"], blend: "screen"}
-    : {bg: "#e9f0f4", gradient: ["#77aeba", "#c982aa"], blend: "screen"};
+    : {bg: "#e9f0f4", gradient: ["#4f91a0", "#b56e93"], blend: "multiply"};
 
 
 const BackgroundLayer = useMemo(() => {
@@ -1137,37 +1137,29 @@ const BackgroundLayer = useMemo(() => {
       ) : (
         <>
           <div className="profile-info" id="profile-section">
-            <div className="circular-text-container">
-              {/* <CircularText
-                text={`${email} • `}
-                onHover="speedUp"
-                spinDuration={20}
-                className="custom-class"
-                position="absolute"
-                fontSize={14}
-              /> */}
-              <MetaBalls
-                // color={isDark ? "#ffcc00" : "#25627e"}
-                // cursorBallColor={isDark ? "#c8a102ff" : "#1f4d63ff"}
-                color={isDark ? "#F59E0B" : "#25627e"}
-                cursorBallColor={isDark ? "#C0A062" : "#1f4d63ff"}
-                cursorBallSize={2}
-                ballCount={10}
-                animationSize={15}
-                enableMouseInteraction={true}
-                enableTransparency={true}
-                hoverSmoothness={0.09}
-                clumpFactor={1}
-                speed={0.2}
-                zIndex={10}
-              />
-              <div className="profile-picture">
+            <MetaBalls
+              className="profile-info-ambient"
+              color={isDark ? "#F59E0B" : "#25627e"}
+              cursorBallColor={isDark ? "#C0A062" : "#1f4d63ff"}
+              cursorBallSize={2}
+              ballCount={10}
+              animationSize={15}
+              enableMouseInteraction={true}
+              enableTransparency={true}
+              hoverSmoothness={0.09}
+              clumpFactor={1}
+              speed={0.2}
+            />
+            <div className="profile-info-content">
+              <div className="circular-text-container">
+                <div className="profile-picture">
                   <UserProfile email={email} isDark={isDark} />
+                </div>
               </div>
+              <h4 className="Saluti">Benvenuto, {nickname}</h4>
+              <p style={{ fontSize: "20px", paddingBottom: "20px"}}>Valore: {totalMoney.toLocaleString('it-IT')} €</p>
             </div>
-            <h4 className="Saluti">Benvenuto, {nickname}</h4>
-            <p style={{ fontSize: "20px", paddingBottom: "20px"}}>Valore: {totalMoney.toLocaleString('it-IT')} €</p>
-           </div>
+          </div>
 
           <AddWatchForm
             showForm={showForm}

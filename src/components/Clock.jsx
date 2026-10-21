@@ -42,7 +42,7 @@ function Clock() {
         const angle = (index * 30 - 60) * (Math.PI / 180);
         num.style.left = `${centerX + numberRadius * Math.cos(angle) - num.clientWidth / 2}px`;
         num.style.top = `${centerY + numberRadius * Math.sin(angle) - num.clientHeight / 2}px`;
-        num.style.transform = `rotate(${index * 30 - 60 + 90}deg)`;
+        num.style.transform = 'none';
       });
 
       face.querySelectorAll(".dot").forEach((dot, index) => {
