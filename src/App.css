@@ -3647,6 +3647,264 @@ a:focus-visible,
   }
 }
 
+/* Funzioni e comandi della galleria: allineamento stabile e hover leggero */
+#function-section .functionButton {
+  align-items: stretch;
+  gap: 16px;
+  padding: clamp(12px, 2vw, 24px);
+}
+
+#function-section .functionButton > .function-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 224px;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 24px;
+  padding: clamp(20px, 3vw, 30px);
+  overflow: hidden;
+  border: 1px solid var(--ui-border);
+  border-radius: 24px;
+  background: linear-gradient(145deg, var(--ui-surface-strong), var(--ui-surface));
+  box-shadow: 0 12px 32px rgba(27, 53, 68, 0.07), inset 0 1px rgba(255, 255, 255, 0.66);
+  transition: transform 240ms cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 240ms ease, border-color 240ms ease;
+}
+
+#function-section .function-card::before {
+  position: absolute;
+  top: -88px;
+  right: -48px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ui-accent) 12%, transparent), transparent 70%);
+  content: "";
+  pointer-events: none;
+  transition: transform 360ms ease;
+}
+
+#function-section .function-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--ui-accent) 28%, var(--ui-border));
+  box-shadow: 0 18px 42px rgba(27, 53, 68, 0.12), inset 0 1px rgba(255, 255, 255, 0.72);
+}
+
+#function-section .function-card:hover::before {
+  transform: scale(1.12);
+}
+
+#function-section .function-card__copy {
+  position: relative;
+  z-index: 1;
+}
+
+#function-section .function-card__eyebrow {
+  color: var(--ui-accent);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+#function-section .function-card__copy h4 {
+  margin: 7px 0 8px;
+  font-size: clamp(1.25rem, 2.2vw, 1.55rem);
+}
+
+#function-section .function-card__copy p {
+  max-width: 35ch;
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+#function-section .function-card .function-card__action {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  width: fit-content;
+  min-width: 218px;
+  min-height: 48px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--ui-accent) 30%, transparent);
+  border-radius: 15px;
+  background: var(--ui-accent);
+  color: #fff;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--ui-accent) 18%, transparent);
+  font-size: 0.85rem;
+  font-weight: 650;
+  text-align: left;
+  transition: transform 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
+}
+
+#function-section .function-card .function-card__action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--ui-accent) 25%, transparent);
+}
+
+#function-section .function-card .function-card__action--secondary {
+  border-color: color-mix(in srgb, var(--ui-accent) 24%, transparent);
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent);
+  box-shadow: none;
+}
+
+#function-section .function-card .function-card__action--secondary:hover {
+  background: color-mix(in srgb, var(--ui-accent) 18%, white);
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--ui-accent) 14%, transparent);
+}
+
+.dark-mode #function-section .function-card .function-card__action {
+  color: #172630;
+}
+
+.dark-mode #function-section .function-card .function-card__action--secondary:hover {
+  background: color-mix(in srgb, var(--ui-accent) 23%, #101b26);
+}
+
+#function-section .function-card__action svg {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#function-section .function-card__arrow {
+  margin-left: auto;
+  transition: transform 180ms ease;
+}
+
+#function-section .function-card__action:hover .function-card__arrow {
+  transform: translateX(3px);
+}
+
+#listWatch.buttonView {
+  display: grid;
+  grid-template-columns: minmax(230px, 1.25fr) repeat(2, minmax(165px, 1fr));
+  align-items: stretch;
+  gap: 12px;
+  margin: 0 0 22px;
+}
+
+#listWatch.buttonView > button {
+  display: flex;
+  width: 100% !important;
+  min-width: 0;
+  min-height: 64px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: 19px;
+  background: var(--ui-surface-strong);
+  color: var(--ui-text);
+  box-shadow: 0 8px 24px rgba(27, 53, 68, 0.07), inset 0 1px rgba(255, 255, 255, 0.7);
+  font-size: 0.88rem;
+  font-weight: 650;
+  text-align: left;
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
+}
+
+#listWatch.buttonView > button:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--ui-accent) 30%, var(--ui-border));
+  box-shadow: 0 12px 28px rgba(27, 53, 68, 0.11), inset 0 1px rgba(255, 255, 255, 0.76);
+}
+
+#listWatch.buttonView > .buttonView__stats {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 16px;
+  justify-content: initial;
+  border-color: rgba(31, 89, 108, 0.32);
+  background: linear-gradient(135deg, #347d91, #25677c);
+  color: #fff;
+  text-align: left;
+}
+
+.dark-mode #listWatch.buttonView > .buttonView__stats {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, #edc77f, #c79a50);
+  color: #172630;
+}
+
+#listWatch.buttonView > .buttonView__control {
+  justify-content: flex-start;
+}
+
+.dark-mode #listWatch.buttonView > .buttonView__control {
+  background: var(--ui-surface-strong);
+  color: var(--ui-text);
+}
+
+.buttonView__control-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--ui-accent) 15%, transparent);
+  border-radius: 13px;
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent);
+}
+
+.buttonView__control-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 760px) {
+  #listWatch.buttonView {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #listWatch.buttonView > .buttonView__stats {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 520px) {
+  #function-section .functionButton {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding: 10px 4px;
+  }
+
+  #function-section .functionButton > .function-card {
+    min-height: 198px;
+    padding: 20px;
+  }
+
+  #listWatch.buttonView {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 9px;
+  }
+
+  #listWatch.buttonView > .buttonView__stats {
+    grid-column: auto;
+  }
+
+  #listWatch.buttonView > .buttonView__gallery {
+    display: flex;
+  }
+}
+
 @media (max-width: 720px) {
   .circular-text-container {
     width: 164px;

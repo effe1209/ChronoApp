@@ -64,15 +64,41 @@ const WatchList = ({
           </span>
           <span className="buttonView__stats-arrow" aria-hidden="true">↗</span>
         </button>
-        <button 
+        <button
+          type="button"
+          className="buttonView__control buttonView__gallery galleriaInfinita"
           onClick={handleInfiniteGrid}
-          style={{ width: "200px", padding: "10px"}} // Stesso stile per coerenza
-          className='galleriaInfinita'
         >
-          🖼️ Galleria
+          <span className="buttonView__control-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect x="3.5" y="4" width="17" height="16" rx="3" />
+              <circle cx="9" cy="9" r="1.5" />
+              <path d="m5 17 4.5-4.5 3 3L15 13l4 4" />
+            </svg>
+          </span>
+          <span>Galleria</span>
         </button>
-        <button onClick={toggleView}>
-          {isCarouselView ? '🍱 Mostra Lista' : '🎞️ Mostra Carosello'}
+        <button
+          type="button"
+          className="buttonView__control buttonView__toggle"
+          onClick={toggleView}
+          aria-label={isCarouselView ? 'Passa alla vista lista' : 'Passa alla vista carosello'}
+        >
+          <span className="buttonView__control-icon" aria-hidden="true">
+            {isCarouselView ? (
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 6h12M8 12h12M8 18h12M3.5 6h.01M3.5 12h.01M3.5 18h.01" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="3.5" y="4" width="7" height="7" rx="1.5" />
+                <rect x="13.5" y="4" width="7" height="7" rx="1.5" />
+                <rect x="3.5" y="13" width="7" height="7" rx="1.5" />
+                <rect x="13.5" y="13" width="7" height="7" rx="1.5" />
+              </svg>
+            )}
+          </span>
+          <span>{isCarouselView ? 'Mostra lista' : 'Mostra carosello'}</span>
         </button>
       </div>
 
