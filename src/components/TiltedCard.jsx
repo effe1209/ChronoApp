@@ -20,6 +20,8 @@ export default function TiltedCard({
   rotateAmplitude = 14,
   showMobileWarning = true,
   showTooltip = true,
+  loading = 'lazy',
+  onError,
   overlayContent = null,
   displayOverlayContent = false
 }) {
@@ -103,6 +105,8 @@ export default function TiltedCard({
           src={imageSrc}
           alt={altText}
           className="tilted-card-img"
+          loading={loading}
+          onError={onError}
           style={{
             width: imageWidth,
             height: imageHeight

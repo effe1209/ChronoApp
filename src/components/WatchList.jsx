@@ -125,8 +125,11 @@ const WatchList = ({
                 {watch.imageUrl ? (
                   <TiltedCard
                     imageSrc={watch.imageUrl} // Usa imageUrl
-                    alt={watch.name}
-                    className="watch-image"
+                    altText={watch.name}
+                    containerHeight="260px"
+                    containerWidth="100%"
+                    imageHeight="100%"
+                    imageWidth="100%"
                     loading="lazy"
                     onError={(e) => { e.target.src = "orologio_back.svg"; }}
                     rotateAmplitude={12}
@@ -136,7 +139,7 @@ const WatchList = ({
                     displayOverlayContent={true}
                   />
                 ) : (
-                  <img src="orologio_back.svg" alt="Default" className="watch-image"/>
+                  <img src="orologio_back.svg" alt={watch.name} className="watch-image"/>
                 )}
                 <div className="CaratteristicheCard">
                   <h3 className="textCard" style={{padding:"5px"}}>{watch.name}</h3>
