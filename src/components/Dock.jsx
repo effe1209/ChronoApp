@@ -75,7 +75,7 @@ const itemWrapperStyles = {
     flexDirection: 'column', // <--- Fondamentale per mettere il testo sotto
     alignItems: 'center',
     justifyContent: 'center', // Centra verticalmente nel pannello
-    height: panelHeight + 30, // Aumenta l'altezza per farci stare il testo
+    height: panelHeight - 4,
     position: 'relative',
     minWidth: baseItemSize, // Assicura che ci sia spazio orizzontale minimo
   };
@@ -84,8 +84,8 @@ const itemWrapperStyles = {
     fontSize: '10px',
     marginTop: '-3px',
     fontFamily: 'minork', // O il tuo font 'minork'
-    color: '#fff',
-    opacity: 1, // 1 = Sempre visibile, 0 = Nascosto
+    color: isDark ? '#aebbc5' : '#6c7a84',
+    opacity: 0.86,
     transition: 'opacity 0.2s',
     whiteSpace: 'nowrap', // Evita che il testo vada a capo
     pointerEvents: 'none' // Evita interferenze col mouse
@@ -109,14 +109,15 @@ const itemWrapperStyles = {
           // Ho ridotto leggermente il size (-15) per dare spazio al testo senza esplodere
           width: `${(isMobile ? baseItemSize : size) - 15}px`, 
           height: `${(isMobile ? baseItemSize : size) - 15}px`,
-          transition: 'all 0.1s ease-out', // Fluidità
+    transition: 'width 220ms cubic-bezier(0.2, 0.7, 0.2, 1), height 220ms cubic-bezier(0.2, 0.7, 0.2, 1), background-color 220ms ease, color 220ms ease, box-shadow 220ms ease',
           cursor: 'pointer',
           borderRadius: '12px',
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
           backgroundColor: isActive ? (isDark ? 'var(--accent-primary_DARK)' : 'var(--accent-primary)') : 'transparent',
-          color: 'white', // Gestione colore icona
+          color: isActive ? (isDark ? '#1b2025' : '#ffffff') : (isDark ? '#dce5eb' : '#536671'),
+          boxShadow: isActive ? '0 5px 14px rgba(34, 74, 91, 0.18)' : 'none',
           zIndex: 10, // L'icona deve stare sopra
         };
 

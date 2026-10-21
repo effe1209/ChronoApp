@@ -22,43 +22,31 @@ function Clock() {
         const minuteHand = document.querySelector('.minute');
         const secondHand = document.querySelector('.second');
 
-        if (hourHand) hourHand.style.transform = `rotate(${hour}deg)`;
-        if (minuteHand) minuteHand.style.transform = `rotate(${minute}deg)`;
-        if (secondHand) secondHand.style.transform = `rotate(${second}deg)`;
+        if (hourHand) hourHand.style.transform = `translate(-50%, -100%) rotate(${hour}deg)`;
+        if (minuteHand) minuteHand.style.transform = `translate(-50%, -100%) rotate(${minute}deg)`;
+        if (secondHand) secondHand.style.transform = `translate(-50%, -100%) rotate(${second}deg)`;
     }
 
-    // Posizionamento numeri
-    const numbers = document.querySelectorAll(".number");
-    if (numbers.length > 0) {
-      const clockRadius = 145; 
-      const clockCenterX = 15; 
-      const clockCenterY = 12; 
-      
-      numbers.forEach((num, index) => {
-          const angle = (index - 2) * 30; 
-          const radian = angle * (Math.PI / 180);
-          const x = clockCenterX + clockRadius * Math.cos(radian) - num.clientWidth / 2;
-          const y = clockCenterY + clockRadius * Math.sin(radian) - num.clientHeight / 2;
-          num.style.left = `${x}px`;
-          num.style.top = `${y}px`;
-          num.style.transform = `rotate(${(angle)+90}deg)`;
+    // Posizionamento di numeri e indici sul quadrante.
+    const face = document.querySelector(".numbers");
+    if (face) {
+      const { width, height } = face.getBoundingClientRect();
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const numberRadius = Math.min(width, height) * 0.38;
+      const indexRadius = Math.min(width, height) * 0.45;
+
+      face.querySelectorAll(".number").forEach((num, index) => {
+        const angle = (index * 30 - 60) * (Math.PI / 180);
+        num.style.left = `${centerX + numberRadius * Math.cos(angle) - num.clientWidth / 2}px`;
+        num.style.top = `${centerY + numberRadius * Math.sin(angle) - num.clientHeight / 2}px`;
+        num.style.transform = `rotate(${index * 30 - 60 + 90}deg)`;
       });
-    }
 
-    // Posizionamento puntini
-    const dots = document.querySelectorAll(".dot");
-    if (dots.length > 0) {
-      const clockRadiusDot = 170; 
-      const clockPointCenterX = 0; 
-      const clockPointCenterY = 0; 
-
-      dots.forEach((dot, index) => {
-          const angle = index * 30; 
-          const radian = angle * (Math.PI / 180);
-          const x = clockPointCenterX + clockRadiusDot * Math.cos(radian) - dot.clientWidth / 2;
-          const y = clockPointCenterY + clockRadiusDot * Math.sin(radian) - dot.clientHeight / 2;
-          dot.style.left = `${x}px`;
-          dot.style.top = `${y}px`;
+      face.querySelectorAll(".dot").forEach((dot, index) => {
+        const angle = (index * 30 - 90) * (Math.PI / 180);
+        dot.style.left = `${centerX + indexRadius * Math.cos(angle) - dot.clientWidth / 2}px`;
+        dot.style.top = `${centerY + indexRadius * Math.sin(angle) - dot.clientHeight / 2}px`;
       });
     }
 

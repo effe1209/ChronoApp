@@ -21,7 +21,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
       
       // --- 1. COLORE PALLINO QUANDO È ATTIVO (NOTTE) ---
       '& .MuiSwitch-thumb': {
-        backgroundColor: 'rgba(37, 98, 126)', // <--- CAMBIA QUI (es. Bianco per la luna)
+        backgroundColor: 'var(--ui-accent, rgba(37, 98, 126))',
       },
 
       '& .MuiSwitch-thumb:before': {
@@ -41,7 +41,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   
   // --- 2. COLORE PALLINO DEFAULT (GIORNO) ---
   '& .MuiSwitch-thumb': {
-    backgroundColor: 'var(--accent-primary_DARK)', // <--- CAMBIA QUI (es. Giallo per il sole)
+    backgroundColor: 'var(--ui-accent, var(--accent-primary_DARK))',
     
     width: 32,
     height: 32,
@@ -61,7 +61,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
   '& .MuiSwitch-track': {
     opacity: 1,
-    backgroundColor: '#ffffffba',
+    backgroundColor: 'rgba(126, 145, 157, 0.28)',
     borderRadius: 20 / 2,
     ...theme.applyStyles('dark', {
       backgroundColor: '#8796A5',

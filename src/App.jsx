@@ -7,14 +7,12 @@ import WatchAnalytics from './components/WatchAnalytics';
 import GlassSurface from './components/GlassSurface';
 import TiltedCard from './components/TiltedCard';
 import FloatingLines from './components/FloatingLines';
-import CircularText from './components/CircularText';
 import MetaBalls from './components/MetaBalls';
 import InfiniteMenu from './components/InfiniteMenu'
 import InfiniteGridModal from './components/InfiniteGridModal';
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import ColorThief from 'colorthief';
 import LogoLoop from './components/LogoLoop';
-import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss } from 'react-icons/si';
 
 // Importa i componenti dock e le icone VSC
 import Dock from './components/Dock'; 
@@ -24,7 +22,6 @@ import { VscHome, VscArchive, VscAccount, VscSettingsGear } from 'react-icons/vs
 
 // Import dei nuovi componenti creati
 import UserProfile from './components/UserProfile';
-import { ScrollingBrands1, ScrollingBrands2, ScrollingBrands3 } from './components/ScrollingBrands';
 import DarkModeSwitch from './components/DarkModeSwitch';
 import Clock from './components/Clock';
 import WatchList from './components/WatchList';
@@ -1015,41 +1012,27 @@ const techLogos = [
   const toggleTheme = () => setIsDark(!isDark);
 
   const floatingConfig = isDark 
-    ? {bg: "#001036ff", gradient: ["#F59E0B"],blend: "screen"}
-    : {bg: "#476d7ed6", gradient: ["#ff8ce2ff", "#77bebaff"], blend: "screen"};
+    ? {bg: "#091522", gradient: ["#F4C878"], blend: "screen"}
+    : {bg: "#e9f0f4", gradient: ["#77aeba", "#c982aa"], blend: "screen"};
 
 
 const BackgroundLayer = useMemo(() => {
       return (
-        <div style={{ 
-            position: 'fixed', 
-            // TRUCCO: Allarghiamo lo sfondo oltre i bordi fisici
-            // Invece di 0, lo tiriamo su e a sinistra
-            top: '-10vh', 
-            left: '-10vw', 
-            
-            // Lo rendiamo più grande dello schermo (120% altezza e larghezza)
-            // Così se la barra degli indirizzi scompare, c'è ancora "sfondo" sotto.
-            width: '120vw', 
-            height: '120vh', 
-            
-            zIndex: -1,
-            pointerEvents: 'none',
-            backgroundColor: floatingConfig.bg, // Colore di fallback fondamentale
-            transition: "background-color 0.3s ease",
-            touchAction: 'none',
-            transform: 'translateZ(0)', // Forza l'accelerazione hardware GPU
+        <div className="ambient-background" style={{
+            backgroundColor: floatingConfig.bg,
+            transition: "background-color 0.6s ease",
         }}>
           <FloatingLines 
             linesGradient={floatingConfig.gradient}
             mixBlendMode={floatingConfig.blend}
             enabledWaves={['top', 'middle', 'bottom']}
-            lineCount={[5, 5, 5]}
+            lineCount={[3, 3, 2]}
             lineDistance={[8, 6, 4]}
+            animationSpeed={0.55}
             bendRadius={5.0}
             bendStrength={-0.5}
             interactive={false} 
-            parallax={true}
+            parallax={false}
           />
         </div>
       );
@@ -1105,62 +1088,36 @@ const BackgroundLayer = useMemo(() => {
           </GlassSurface>
         )}
         </div>
-      <div id="home-section">
-        <Clock /> 
-      
-        {/* <ScrollingBrands1 />
-        <ScrollingBrands2 />
-        <ScrollingBrands3 /> */}
-        <div className={"logo_container1"}>
-        <div style={{position: 'relative'}}>
-      <LogoLoop
-        logos={techLogos}
-        speed={100}
-        direction="left"
-        logoHeight={30}
-        gap={40}
-        hoverSpeed={50}
-        scaleOnHover
-        ariaLabel="Technology partners"
-      />
-      
-    </div>
-    </div>
-    <div className={"logo_container2"}>
-        <div style={{position: 'relative'}}>
-      <LogoLoop
-        logos={techLogos}
-        speed={140}
-        direction="left"
-        logoHeight={30}
-        gap={40}
-        hoverSpeed={50}
-        scaleOnHover
-        ariaLabel="Technology partners"
-      />
-      
-    </div>
-    </div>
-    <div className={"logo_container3"}>
-        <div style={{position: 'relative'}}>
-      <LogoLoop
-        logos={techLogos}
-        speed={120}
-        direction="left"
-        logoHeight={30}
-        gap={40}
-        hoverSpeed={50}
-        scaleOnHover
-        ariaLabel="Technology partners"
-      />
-      
-    </div>
-    </div>
-
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-          <div className="titleList" style={{ display: "flex", alignItems: "center", width: "100%", justifyContent: "center" }}>
-            <h1>La mia collezione di orologi</h1>
+      <div id="home-section" className="hero-section">
+        <div className="hero-copy">
+          <p className="hero-eyebrow"><span aria-hidden="true" /> IL TUO WATCH JOURNAL</p>
+          <div className="titleList">
+            <h1>La mia collezione<br />di orologi</h1>
           </div>
+          <p className="hero-description">Ogni segnatempo custodisce un momento. Qui, la tua collezione prende forma.</p>
+        </div>
+
+        <div className="hero-clock">
+          <Clock />
+        </div>
+
+        <div className="brand-strip" aria-label="Marchi di orologi">
+          <div className="brand-strip-heading">
+            <span>Grandi nomi, storie senza tempo</span>
+            <span className="brand-strip-caption">Un universo da esplorare</span>
+          </div>
+          <LogoLoop
+            logos={techLogos}
+            speed={34}
+            direction="left"
+            logoHeight={20}
+            gap={24}
+            hoverSpeed={0}
+            fadeOut
+            fadeOutColor={isDark ? "#101a25" : "#f4f7fa"}
+            scaleOnHover
+            ariaLabel="Marchi di orologi"
+          />
         </div>
       </div>
 
@@ -1199,13 +1156,13 @@ const BackgroundLayer = useMemo(() => {
                 color={isDark ? "#F59E0B" : "#25627e"}
                 cursorBallColor={isDark ? "#C0A062" : "#1f4d63ff"}
                 cursorBallSize={2}
-                ballCount={16}
-                animationSize={21}
+                ballCount={10}
+                animationSize={15}
                 enableMouseInteraction={true}
                 enableTransparency={true}
-                hoverSmoothness={0.05}
+                hoverSmoothness={0.09}
                 clumpFactor={1}
-                speed={0.3}
+                speed={0.2}
                 zIndex={10}
               />
               <div className="profile-picture">
