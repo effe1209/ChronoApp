@@ -52,7 +52,7 @@ const processData = (watches, key) => {
 
 // --- IL COMPONENTE REACT ---
 
-const WatchAnalytics = ({ watches }) => {
+const WatchAnalytics = ({ watches, isDark = false }) => {
   
   // --- GESTIONE SCROLL BODY ---
   useEffect(() => {
@@ -86,7 +86,21 @@ const WatchAnalytics = ({ watches }) => {
     maintainAspectRatio: false, 
     plugins: {
       legend: {
-        position: 'top',
+        position: 'bottom',
+        labels: {
+          color: isDark ? '#d8e1e7' : '#344b58',
+          usePointStyle: true,
+          pointStyle: 'circle',
+          padding: 18,
+          font: { size: 12, weight: 500 },
+        },
+      },
+      tooltip: {
+        backgroundColor: isDark ? 'rgba(15, 24, 33, .94)' : 'rgba(31, 48, 59, .94)',
+        titleColor: '#ffffff',
+        bodyColor: '#ffffff',
+        padding: 12,
+        cornerRadius: 10,
       },
       title: {
         display: false, 
@@ -95,28 +109,40 @@ const WatchAnalytics = ({ watches }) => {
   };
 
   return (
-    <div className="charts-container">
-      <div className="chart-wrapper">
-        <h4>Distribuzione Marche</h4>
-        <div className="canvas_container" style={{ position: 'relative', height: '300px', width: '100%' }}>
-        {watches && watches.length > 0 ? (
-          <Pie data={brandChartData} options={options} />
-        ) : (
-          <p>Aggiungi un orologio per vedere il grafico.</p>
-        )}
+    <div className="charts-container statistics-charts">
+      <article className="chart-wrapper statistics-chart">
+        <div className="statistics-chart-heading">
+          <span className="statistics-chart-mark statistics-chart-mark--brands" aria-hidden="true">✦</span>
+          <div>
+            <h3>Marche</h3>
+            <p>Come si distribuisce la collezione</p>
+          </div>
         </div>
-      </div>
+        <div className="canvas_container statistics-chart-canvas">
+          {watches && watches.length > 0 ? (
+            <Pie data={brandChartData} options={options} />
+          ) : (
+            <p className="statistics-empty">Aggiungi un orologio per vedere il grafico.</p>
+          )}
+        </div>
+      </article>
 
-      <div className="chart-wrapper">
-        <h4>Distribuzione Movimenti</h4>
-        <div className="canvas_container" style={{ position: 'relative', height: '300px', width: '100%' }}>
-        {watches && watches.length > 0 ? (
-          <Pie data={movementChartData} options={options} />
-        ) : (
-          <p>Aggiungi un orologio per vedere il grafico.</p>
-        )}
-      </div>
-      </div>
+      <article className="chart-wrapper statistics-chart">
+        <div className="statistics-chart-heading">
+          <span className="statistics-chart-mark statistics-chart-mark--movements" aria-hidden="true">◷</span>
+          <div>
+            <h3>Movimenti</h3>
+            <p>La meccanica che anima i tuoi orologi</p>
+          </div>
+        </div>
+        <div className="canvas_container statistics-chart-canvas">
+          {watches && watches.length > 0 ? (
+            <Pie data={movementChartData} options={options} />
+          ) : (
+            <p className="statistics-empty">Aggiungi un orologio per vedere il grafico.</p>
+          )}
+        </div>
+      </article>
     </div>
   );
 };

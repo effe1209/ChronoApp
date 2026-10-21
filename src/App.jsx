@@ -1246,6 +1246,7 @@ const BackgroundLayer = useMemo(() => {
             isVisible={isStatisticheVisible}
             setIsVisible={setIsStatisticheVisible}
             watches={watches}
+            isDark={isDark}
           />
           <InfoWatchModal
             isVisible={isInfoVisible}

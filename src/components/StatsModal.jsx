@@ -2,36 +2,40 @@ import React from 'react';
 import WatchAnalytics from './WatchAnalytics';
 
 // Modale per mostrare le statistiche (WatchAnalytics)
-const StatsModal = ({ isVisible, setIsVisible, watches }) => {
+const StatsModal = ({ isVisible, setIsVisible, watches, isDark }) => {
 
   if (!isVisible) {
     return null;
   }
 
-  // 1. Rimuoviamo il Fragment (<>) e usiamo l'overlay come contenitore principale.
-  //    Aggiungiamo l'onClick per chiudere.
   return (
-    <div className="modal-overlay" onClick={() => setIsVisible(false)}>
-      
-      {/* 2. Il contenuto del modale (infoView-statistiche) ora è DENTRO l'overlay.
-           Aggiungiamo e.stopPropagation() per evitare che il click si propaghi
-           all'overlay e chiuda il modale. 
-      */}
-      <div className="infoView-statistiche" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-content-statistiche">
-          <div className="TileInfo">
-            <h4>Statistiche Collezione</h4>
+    <div className="modal-overlay statistics-overlay" onClick={() => setIsVisible(false)}>
+      <section
+        className="statistics-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="statistics-title"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <header className="statistics-heading">
+          <div>
+            <span className="statistics-eyebrow">PANORAMICA</span>
+            <h2 id="statistics-title">Statistiche collezione</h2>
+            <p>Un riepilogo visivo dei tuoi orologi e delle loro caratteristiche.</p>
           </div>
-          
-          <WatchAnalytics watches={watches} />
+          <div className="statistics-total" aria-label={`${watches.length} orologi in collezione`}>
+            <strong>{watches.length}</strong>
+            <span>{watches.length === 1 ? 'orologio' : 'orologi'}</span>
+          </div>
+        </header>
 
-          <div className="buttonForm">
-            {/* Questo bottone funziona già correttamente */}
-            <button className="funzioniButton" onClick={() => setIsVisible(false)}>Chiudi</button>
-          </div>
-        </div>
-      </div>
-      
+        <WatchAnalytics watches={watches} isDark={isDark} />
+
+        <footer className="statistics-footer">
+          <span>I dati si aggiornano con la tua collezione.</span>
+          <button type="button" onClick={() => setIsVisible(false)}>Chiudi</button>
+        </footer>
+      </section>
     </div>
   );
 };

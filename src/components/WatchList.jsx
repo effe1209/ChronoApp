@@ -50,10 +50,19 @@ const WatchList = ({
     <div>
       <div className="buttonView" id="listWatch">
         <button
+          className="buttonView__stats"
           onClick={handleShowStats}
-          style={{ width: "200px", padding: "10px"}}
         >
-          📊 Mostra Statistiche
+          <span className="buttonView__stats-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 19.5h16M6.5 16V11m5.5 5V5m5.5 11V8" />
+            </svg>
+          </span>
+          <span className="buttonView__stats-copy">
+            <strong>Mostra statistiche</strong>
+            <small>Analisi della collezione</small>
+          </span>
+          <span className="buttonView__stats-arrow" aria-hidden="true">↗</span>
         </button>
         <button 
           onClick={handleInfiniteGrid}
