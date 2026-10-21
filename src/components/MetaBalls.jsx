@@ -184,7 +184,7 @@ const MetaBalls = ({
       const h1 = hash31(idx);
       const st = h1[0] * (2 * Math.PI);
       const dtFactor = 0.1 * Math.PI + h1[1] * (0.4 * Math.PI - 0.1 * Math.PI);
-      // Normalized orbit radius: vary from the center to just beyond the panel edges.
+      // Let the balls roam across the panel while keeping them inside its visible bounds.
       const baseScale = 0.35 + h1[1] * (1.25 - 0.35);
       const h2 = hash33(h1);
       const toggle = Math.floor(h2[0] * 2.0);
@@ -244,6 +244,16 @@ const MetaBalls = ({
 
     const startTime = performance.now();
     let animationFrameId;
+
+    const getBallPosition = (x, y, baseScale, radius, aspectRatio) => {
+      const safeHalfHeight = Math.max(animationSize * 0.5 - radius - 0.35, 0);
+      const orbitScale = Math.min(baseScale * clumpFactor, 0.98);
+      return {
+        x: x * safeHalfHeight * aspectRatio * orbitScale,
+        y: y * safeHalfHeight * orbitScale
+      };
+    };
+
     function update(t) {
       animationFrameId = requestAnimationFrame(update);
       const elapsed = (t - startTime) * 0.001;
@@ -256,10 +266,8 @@ const MetaBalls = ({
         const th = p.st + dt;
         const x = Math.cos(th);
         const y = Math.sin(th + dt * p.toggle);
-        const halfHeight = (animationSize * 0.5) * p.baseScale * clumpFactor;
-        const posX = x * halfHeight * aspectRatio;
-        const posY = y * halfHeight;
-        metaBallsUniform[i].set(posX, posY, p.radius);
+        const position = getBallPosition(x, y, p.baseScale, p.radius, aspectRatio);
+        metaBallsUniform[i].set(position.x, position.y, p.radius);
       }
 
       for (let i = 0; i < effectiveAccentBallCount; i++) {
@@ -268,10 +276,9 @@ const MetaBalls = ({
         const th = p.st + dt;
         const x = Math.cos(th);
         const y = Math.sin(th + dt * p.toggle);
-        const halfHeight = (animationSize * 0.5) * p.baseScale * clumpFactor;
-        const posX = x * halfHeight * aspectRatio;
-        const posY = y * halfHeight;
-        accentBallsUniform[i].set(posX, posY, cursorBallSize * 0.5);
+        const radius = cursorBallSize * 0.5;
+        const position = getBallPosition(x, y, p.baseScale, radius, aspectRatio);
+        accentBallsUniform[i].set(position.x, position.y, radius);
       }
 
       let targetX, targetY;
