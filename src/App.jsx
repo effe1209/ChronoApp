@@ -1280,14 +1280,17 @@ const BackgroundLayer = useMemo(() => {
           <div className="profile-info relative overflow-hidden" id="profile-section">
             <div className="profile-info-video-mask absolute inset-0" aria-hidden="true">
               <video
-                className="profile-info-video absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-luminosity"
-                src={`${import.meta.env.BASE_URL}w7.webm`}
+                className="profile-info-video absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-luminosity"
                 autoPlay
                 loop
                 muted
                 playsInline
+                preload="auto"
                 tabIndex={-1}
-              />
+              >
+                <source src={`${import.meta.env.BASE_URL}w7-optimized.mp4`} type="video/mp4" />
+                <source src={`${import.meta.env.BASE_URL}w7.webm`} type="video/webm" />
+              </video>
             </div>
             <div className="profile-info-content relative z-10">
               <div className="circular-text-container">
