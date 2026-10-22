@@ -1255,6 +1255,14 @@ const BackgroundLayer = useMemo(() => {
           </GlassSurface>
         )}
         </div>
+      <div className="hero-account-backdrop">
+        <div className="hero-account-video-mask" aria-hidden="true">
+          <video className="hero-account-video" autoPlay loop muted playsInline preload="auto" tabIndex={-1}>
+            <source src={`${import.meta.env.BASE_URL}w7-optimized.mp4`} type="video/mp4" />
+            <source src={`${import.meta.env.BASE_URL}w7.webm`} type="video/webm" />
+          </video>
+        </div>
+        <div className="hero-account-content">
       <div id="home-section" className="hero-section">
         <figure className={`hero-watch${isDark ? ' is-dark' : ''}`}>
           <img
@@ -1405,22 +1413,7 @@ const BackgroundLayer = useMemo(() => {
           isDark={isDark} 
         />
       ) : (
-        <>
-          <div className="profile-info relative overflow-hidden" id="profile-section">
-            <div className="profile-info-video-mask absolute inset-0" aria-hidden="true">
-              <video
-                className="profile-info-video absolute inset-0 w-full h-full object-cover"
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-                tabIndex={-1}
-              >
-                <source src={`${import.meta.env.BASE_URL}w7-optimized.mp4`} type="video/mp4" />
-                <source src={`${import.meta.env.BASE_URL}w7.webm`} type="video/webm" />
-              </video>
-            </div>
+        <div className="profile-info relative overflow-hidden" id="profile-section">
             <div className="profile-info-content relative z-10">
               <div className="circular-text-container">
                 <div className="profile-picture">
@@ -1434,7 +1427,12 @@ const BackgroundLayer = useMemo(() => {
               </p>
             </div>
           </div>
+      )}
+        </div>
+      </div>
 
+      {user && (
+        <>
           <AddWatchForm
             showForm={showForm}
             newWatch={newWatch}
