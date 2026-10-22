@@ -2150,19 +2150,82 @@ body.dark-mode {
   height: 62px !important;
   border: 1px solid var(--ui-border);
   border-radius: 24px !important;
-  background: rgba(255, 255, 255, 0.46);
-  box-shadow: 0 10px 34px rgba(28, 54, 71, 0.08), inset 0 1px rgba(255, 255, 255, 0.8);
-  -webkit-backdrop-filter: blur(22px) saturate(1.35);
-  backdrop-filter: blur(22px) saturate(1.35);
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 16% 0%, rgba(255, 255, 255, 0.68), transparent 54%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(236, 244, 248, 0.3) 56%, rgba(255, 255, 255, 0.2));
+  box-shadow:
+    0 12px 36px rgba(28, 54, 71, 0.1),
+    inset 0 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px rgba(255, 255, 255, 0.26);
+  -webkit-backdrop-filter: blur(26px) saturate(1.55);
+  backdrop-filter: blur(26px) saturate(1.55);
+}
+
+.slideWrap_Container > .glass-surface::before {
+  position: absolute;
+  z-index: 0;
+  inset: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: inherit;
+  background: linear-gradient(112deg, rgba(255, 255, 255, 0.38), transparent 34%, transparent 72%, rgba(255, 255, 255, 0.16));
+  content: "";
+  pointer-events: none;
 }
 
 .dark-mode .slideWrap_Container > .glass-surface {
-  background: rgba(18, 29, 41, 0.68);
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.2), inset 0 1px rgba(255, 255, 255, 0.08);
+  border-color: rgba(226, 238, 245, 0.16);
+  background:
+    radial-gradient(ellipse at 16% 0%, rgba(255, 255, 255, 0.16), transparent 56%),
+    linear-gradient(135deg, rgba(21, 36, 50, 0.74), rgba(13, 25, 38, 0.56) 56%, rgba(37, 46, 58, 0.48));
+  box-shadow:
+    0 14px 38px rgba(0, 0, 0, 0.26),
+    inset 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .slideWrap_Container > .glass-surface::before {
+  border-color: rgba(255, 255, 255, 0.13);
+  background: linear-gradient(112deg, rgba(255, 255, 255, 0.16), transparent 35%, transparent 72%, rgba(232, 189, 114, 0.1));
 }
 
 .slideWrap_Container .glass-surface__content {
   padding: 4px 10px;
+}
+
+.theme-switch-glass .MuiSwitch-track {
+  border: 1px solid rgba(255, 255, 255, 0.64);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.56), rgba(148, 169, 180, 0.3)) !important;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.42), inset 0 -2px 4px rgba(45, 74, 89, 0.08);
+  -webkit-backdrop-filter: blur(10px) saturate(1.35);
+  backdrop-filter: blur(10px) saturate(1.35);
+}
+
+.theme-switch-glass .MuiSwitch-switchBase .MuiSwitch-thumb {
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  box-shadow: 0 4px 10px rgba(28, 54, 71, 0.22), inset 0 1px rgba(255, 255, 255, 0.58);
+}
+
+.dark-mode .theme-switch-glass .MuiSwitch-track {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: linear-gradient(135deg, rgba(13, 25, 38, 0.64), rgba(184, 197, 205, 0.24)) !important;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.12), inset 0 -2px 4px rgba(0, 0, 0, 0.14);
+}
+
+.dark-mode .theme-switch-glass .MuiSwitch-switchBase .MuiSwitch-thumb {
+  border-color: rgba(255, 255, 255, 0.38);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.34), inset 0 1px rgba(255, 255, 255, 0.34);
+}
+
+.navigation-glass .dock-menu__button:not(.is-active):hover {
+  background: color-mix(in srgb, var(--ui-accent-soft) 86%, transparent);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.56), 0 5px 14px rgba(28, 54, 71, 0.08);
+  -webkit-backdrop-filter: blur(10px) saturate(1.4);
+  backdrop-filter: blur(10px) saturate(1.4);
+}
+
+.dark-mode .navigation-glass .dock-menu__button:not(.is-active):hover {
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12), 0 5px 16px rgba(0, 0, 0, 0.18);
 }
 
 .hero-section {
@@ -2402,7 +2465,7 @@ body.dark-mode {
   padding: 8px 12px;
   border: 1px solid var(--ui-border);
   border-radius: 999px;
-  background: var(--ui-surface);
+  background: color-mix(in srgb, var(--ui-surface) 78%, transparent);
   color: var(--ui-muted);
   font-family: inherit;
   font-size: 9px;
@@ -2412,7 +2475,14 @@ body.dark-mode {
   text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.72), 0 3px 10px rgba(28, 54, 71, 0.035);
+  -webkit-backdrop-filter: blur(14px) saturate(1.45);
+  backdrop-filter: blur(14px) saturate(1.45);
   transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.dark-mode .brand-strip .brand-pill {
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12), 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .brand-strip .brand-pill:hover,

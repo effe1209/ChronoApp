@@ -1104,7 +1104,7 @@ const BackgroundLayer = useMemo(() => {
           width={100} 
           height={64}
           borderRadius={20}
-          className="my-custom-class"
+          className="my-custom-class theme-switch-glass"
         >
         <DarkModeSwitch 
           isDark={isDark}       // Passiamo il valore
@@ -1120,7 +1120,7 @@ const BackgroundLayer = useMemo(() => {
           width="min(350px, 32vw)"
           height={64}
           borderRadius={20}
-          className="my-custom-class"
+          className="my-custom-class navigation-glass"
         >
           <Dock 
             items={items}
