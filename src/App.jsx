@@ -1215,7 +1215,7 @@ const BackgroundLayer = useMemo(() => {
             <span className="hero-brand-name-frame" aria-hidden="true">
               <img
                 className="hero-brand-name"
-                src="./name_icon.svg"
+                src="./name_icon_plain.svg"
                 alt=""
                 width="1500"
                 height="1500"
