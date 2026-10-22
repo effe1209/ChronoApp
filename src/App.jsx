@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useTransition, useLayoutEffect, useMemo } from "react";
 import { createPortal } from 'react-dom';
+import imageCompression from 'browser-image-compression';
 // Import Supabase e servizi (invariati)
 import { supabase } from './components/supabaseClient';
 import { addWatchService } from './components/watchService';
@@ -415,7 +416,29 @@ const handleAddWatch = async () => {
   try {
     const added = await addWatchService(stateOptions);
     if (!added) return;
-    setMessage('Orologio aggiunto con successo!');
+
+    let outfitEmbeddingWarning = false;
+    if (newWatch.image instanceof File && added.id) {
+      setLoading(true);
+      setMessage('Orologio salvato. Lo preparo anche per gli abbinamenti outfit…');
+      try {
+        const embedding = await getOptimizedOutfitEmbedding(newWatch.image);
+        const { error: embeddingError } = await supabase
+          .from('watches')
+          .update({ embedding })
+          .eq('id', added.id);
+        if (embeddingError) throw embeddingError;
+      } catch (error) {
+        console.error('Impossibile preparare l’orologio per gli abbinamenti outfit:', error);
+        outfitEmbeddingWarning = true;
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    setMessage(outfitEmbeddingWarning
+      ? 'Orologio aggiunto. Non è stato possibile includerlo negli abbinamenti outfit: riprova più tardi.'
+      : 'Orologio aggiunto con successo!');
     handleCancel();
     await fetchWatches(user.id);
   } catch (error) {
@@ -681,6 +704,7 @@ const fetchWatches = async (userid) => {
   
   const handleSaveChanges = async () => {
     setLoading(true);
+    let outfitEmbeddingWarning = false;
     try {
       const { features, image, ...watchData } = updatedWatch;
       delete watchData.imageUrl;
@@ -692,6 +716,16 @@ const fetchWatches = async (userid) => {
         uploadedImagePath = await uploadImage(image);
         if (!uploadedImagePath) throw new Error("L'immagine non è stata caricata; le modifiche non sono state salvate.");
         finalWatchData.image = uploadedImagePath;
+
+        setMessage('Aggiorno l’immagine e la preparo per gli abbinamenti outfit…');
+        try {
+          finalWatchData.embedding = await getOptimizedOutfitEmbedding(image);
+        } catch (embeddingError) {
+          console.error('Impossibile aggiornare il vettore outfit:', embeddingError);
+          // Evita di abbinare la nuova foto usando il vettore della foto precedente.
+          finalWatchData.embedding = null;
+          outfitEmbeddingWarning = true;
+        }
       } else {
         // Se non viene scelta una nuova foto, lascia invariato il valore salvato nel database.
         delete finalWatchData.image;
@@ -742,7 +776,9 @@ const fetchWatches = async (userid) => {
         prevWatches.map(w => w.id === modifyWatch.id ? locallyUpdatedWatch : w)
       );
 
-      setMessage("Orologio aggiornato con successo!");
+      setMessage(outfitEmbeddingWarning
+        ? 'Orologio aggiornato. La foto non è ancora disponibile negli abbinamenti outfit.'
+        : 'Orologio aggiornato con successo!');
       setIsModifyVisible(false);
     } catch (error) {
       console.error("Errore durante il salvataggio delle modifiche:", error);
@@ -827,40 +863,79 @@ async function getOutfitEmbedding(fileOrBlob) {
       formData.append('file', fileOrBlob);
   }
 
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), 45000);
+
   try {
     const response = await fetch('https://effe02-chroneapp-server.hf.space/embed-image', {
       method: 'POST',
       body: formData,
+      signal: controller.signal,
     });
 
     if (!response.ok) {
-        // Logghiamo l'errore del server per capire meglio
-        const errText = await response.text();
-        throw new Error(`Errore Server AI (${response.status}): ${errText}`);
+      throw new Error('Il servizio di analisi non è disponibile. Riprova tra poco.');
     }
-    
+
     const data = await response.json();
-    return data.vector; 
+    if (!Array.isArray(data.vector) || data.vector.length === 0) {
+      throw new Error('L’analisi non ha prodotto un risultato. Prova con un’altra foto.');
+    }
+    return data.vector;
   } catch (error) {
     console.error("Dettaglio errore AI:", error);
-    return null;
+    if (error.name === 'AbortError') {
+      throw new Error('L’analisi sta impiegando troppo tempo. Riprova con una foto più leggera.');
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
   }
+}
+
+async function getOptimizedOutfitEmbedding(file) {
+  const optimizedImage = await imageCompression(file, {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1280,
+    initialQuality: 0.82,
+    useWebWorker: true,
+  });
+  return getOutfitEmbedding(optimizedImage);
 }
 
 const handleImageUpload = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
+  if (!file.type.startsWith('image/')) {
+    setMessage('Seleziona un file immagine, ad esempio JPG, PNG o WebP.');
+    event.target.value = '';
+    return;
+  }
+
   setLoading(true);
-  setMessage("L'AI sta analizzando il tuo stile...");
+  setMessage('Ottimizzo la foto per l’analisi…');
   
   try {
-    const vector = await getOutfitEmbedding(file);
+    let compressionProgress = -1;
+    const optimizedFile = await imageCompression(file, {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1280,
+      initialQuality: 0.82,
+      useWebWorker: true,
+      onProgress: (progress) => {
+        const step = Math.floor(progress / 20) * 20;
+        if (step !== compressionProgress) {
+          compressionProgress = step;
+          setMessage(`Ottimizzo la foto… ${step}%`);
+        }
+      },
+    });
 
-    if (!vector) {
-      throw new Error("Impossibile analizzare l'immagine. Riprova.");
-    }
+    setMessage('Analizzo lo stile della foto…');
+    const vector = await getOutfitEmbedding(optimizedFile);
 
+    setMessage('Cerco gli orologi più adatti nella tua collezione…');
     const { data: matchedWatches, error } = await supabase.rpc('match_watches', {
       query_embedding: vector, 
       match_threshold: 0.1, 
@@ -873,6 +948,7 @@ const handleImageUpload = async (event) => {
       
       // --- MODIFICA QUI ---
       const formattedWatches = matchedWatches.map(w => {
+        const collectionWatch = watches.find((item) => String(item.id) === String(w.id));
         let finalImageUrl = w.image;
 
         // CONTROLLO INTELLIGENTE:
@@ -886,6 +962,7 @@ const handleImageUpload = async (event) => {
         }
 
         return {
+          ...collectionWatch,
           ...w,
           imageUrl: finalImageUrl 
         };
@@ -896,7 +973,7 @@ const handleImageUpload = async (event) => {
       setIsCarouselVisible(true);
       setMessage("Ecco gli orologi che l'AI ha selezionato per te.");
     } else {
-      setMessage("Nessun orologio sembra abbinarsi bene a questo outfit secondo l'AI.");
+      setMessage("Non ho trovato un abbinamento convincente. Prova una foto più nitida, con l’outfit ben visibile.");
     }
 
   } catch (err) {
@@ -1484,13 +1561,19 @@ const BackgroundLayer = useMemo(() => {
           </div>
 
           <OutfitModal
+            key={watchConsigliati.map((watch) => watch.id).join('-')}
             isVisible={isCarouselVisible}
-            setIsVisible={setIsCarouselVisible}
             watchConsigliati={watchConsigliati}
             onClose={() => {
               setIsCarouselVisible(false);
               if(fileInputRefOutfit.current) fileInputRefOutfit.current.value = "";
               setWatchConsigliati([]);
+            }}
+            onOpenWatch={(recommendedWatch) => {
+              const fullWatch = watches.find((watch) => String(watch.id) === String(recommendedWatch.id)) || recommendedWatch;
+              setIsCarouselVisible(false);
+              setWatchConsigliati([]);
+              handleInfoWatch(fullWatch);
             }}
           />
           

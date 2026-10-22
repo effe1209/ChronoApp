@@ -121,7 +121,7 @@ export const addWatchService = async (options) => {
       note: '',
     });
     setMessage('Orologio aggiunto con successo!');
-    return true;
+    return normalizedNewWatch;
 
   } catch (error) {
     console.error("Errore durante l'inserimento:", error);

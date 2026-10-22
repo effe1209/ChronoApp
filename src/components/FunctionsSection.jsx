@@ -24,7 +24,7 @@ const FunctionsSection = ({ onDayWatchClick, onOutfitImageChange, fileInputRefOu
         <div className="function-card__copy">
           <span className="function-card__eyebrow">ABBINAMENTO PERSONALE</span>
           <h4>Completa l'outfit</h4>
-          <p>Carica una foto e trova l'orologio più adatto al tuo stile.</p>
+          <p>Carica una foto nitida dell’outfit: cercherò gli abbinamenti nella tua collezione.</p>
         </div>
 
         <input
