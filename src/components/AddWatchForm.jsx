@@ -7,6 +7,7 @@ import Stepper, { Step } from './Stepper';
 // Riceve tutto lo stato e i gestori da App.jsx
 const AddWatchForm = ({
   showForm,
+  sectionRef,
   newWatch,
   setNewWatch,
   handleImageChange,
@@ -30,7 +31,7 @@ const AddWatchForm = ({
   }
 
   return (
-    <section className="add-watch-section" aria-labelledby="add-watch-title">
+    <section ref={sectionRef} className="add-watch-section" aria-labelledby="add-watch-title">
       <header className="add-watch-heading">
         <p className="add-watch-eyebrow">LA TUA COLLEZIONE</p>
         <h2 id="add-watch-title">Aggiungi un orologio</h2>

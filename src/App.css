@@ -5084,6 +5084,7 @@ a:focus-visible,
 .add-watch-section {
   width: min(100%, 1040px);
   margin: clamp(36px, 6vw, 68px) auto 0;
+  scroll-margin-top: 24px;
 }
 
 .add-watch-heading {

@@ -59,6 +59,7 @@ function App() {
   const [featuresLoading, setFeaturesLoading] = useState(false);
   const [featuresError, setFeaturesError] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const addWatchSectionRef = useRef(null);
   const [newWatch, setNewWatch] = useState({
     name: "",
     brand: "",
@@ -113,6 +114,18 @@ function App() {
   const [color, setColor] = useState("");
   const [isCarouselVisible, setIsCarouselVisible] = useState(false);
   const [isInfiniteGridVisible, setIsInfiniteGridVisible] = useState(false);
+
+  const toggleAddWatchForm = () => setShowForm((isVisible) => !isVisible);
+
+  useEffect(() => {
+    if (!showForm) return undefined;
+
+    const scrollFrame = window.requestAnimationFrame(() => {
+      addWatchSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    return () => window.cancelAnimationFrame(scrollFrame);
+  }, [showForm]);
 
   // --- NUOVO: Stato per tracciare la sezione attiva nel Dock ---
   const [activeSection, setActiveSection] = useState('Home'); 
@@ -1232,7 +1245,7 @@ const BackgroundLayer = useMemo(() => {
           toggleTheme={toggleTheme} // Passiamo la funzione per cambiarlo
           isUserLoggedIn={!!user} 
           onLogout={handleLogout} 
-          onAddWatchToggle={() => setShowForm(!showForm)}
+          onAddWatchToggle={toggleAddWatchForm}
           isFormVisible={showForm}
         />
         </GlassSurface>
@@ -1247,7 +1260,7 @@ const BackgroundLayer = useMemo(() => {
             items={items}
             activeSection={activeSection} 
             onLogout={handleLogout}
-            onAddWatchToggle={() => setShowForm(!showForm)}
+            onAddWatchToggle={toggleAddWatchForm}
             isFormVisible={showForm}
             baseItemSize={50}
             magnification={70}
@@ -1435,6 +1448,7 @@ const BackgroundLayer = useMemo(() => {
         <>
           <AddWatchForm
             showForm={showForm}
+            sectionRef={addWatchSectionRef}
             newWatch={newWatch}
             setNewWatch={setNewWatch}
             handleImageChange={handleImageChange}
