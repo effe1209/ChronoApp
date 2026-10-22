@@ -80,7 +80,7 @@ const Dock = ({
               aria-current={activeSection === item.label ? 'location' : undefined}
               title={item.label}
             >
-              {React.cloneElement(item.icon, { size: (isMobile ? baseItemSize : size) * (isProfileItem ? 0.58 : 0.5) })}
+              {React.cloneElement(item.icon, { size: (isMobile ? baseItemSize : size) * (isProfileItem ? 0.68 : 0.5) })}
             </button>
             <span className="dock-menu__label">
               {item.label}
