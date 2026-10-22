@@ -1,6 +1,6 @@
-# ⌚ ChronoApp - La tua collezione di orologi digitale
+# ⌚ Calibro - La tua collezione di orologi digitale
 
-ChroneApp è un'applicazione web moderna e responsiva progettata per gli appassionati di orologi che desiderano catalogare, gestire e interagire con la propria collezione personale in modo intuitivo e veloce.
+Calibro è un'applicazione web moderna e responsiva progettata per gli appassionati di orologi che desiderano catalogare, gestire e interagire con la propria collezione personale in modo intuitivo e veloce.
 
 ---
 
