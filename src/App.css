@@ -4614,6 +4614,7 @@ a:focus-visible,
   background: #021227;
   margin: 0 0 18px;
   box-shadow: 0 12px 28px rgba(12, 27, 45, 0.16);
+  transition: background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
 }
 
 .hero-brand-mark {
@@ -4635,6 +4636,7 @@ a:focus-visible,
   height: clamp(29px, 3vw, 38px);
   overflow: hidden;
   background: #021227;
+  transition: background-color 300ms ease;
 }
 
 .hero-brand-name {
@@ -4646,6 +4648,21 @@ a:focus-visible,
   max-width: none;
   height: auto;
   transform: translate(-50%, -50%);
+  transition: filter 300ms ease;
+}
+
+.dark-mode .hero-brand-lockup {
+  border-color: #e3d7c0;
+  background: #e3d7c0;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38), 0 0 0 1px rgba(227, 215, 192, 0.2);
+}
+
+.dark-mode .hero-brand-name-frame {
+  background: #e3d7c0;
+}
+
+.dark-mode .hero-brand-name {
+  filter: brightness(0) saturate(100%);
 }
 
 .hero-watch {
