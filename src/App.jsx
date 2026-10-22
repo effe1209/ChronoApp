@@ -64,6 +64,7 @@ function App() {
     name: "",
     brand: "",
     year: "",
+    condition_rating: null,
     image: "",
     movement: "",
     color: "",
@@ -92,6 +93,7 @@ function App() {
     name: '',
     brand: '',
     year: '',
+    condition_rating: null,
     movement: '',
     color: '',
     image: '', 
@@ -580,6 +582,7 @@ const fetchWatches = async (userid) => {
   const handleCancel = () => {
    setNewWatch({ 
       name: "", brand: "", year: "", image: "", movement: "", color: "",
+      condition_rating: null,
       features: [], isFavorite: false, money: null, note: "",
       has_box: false, has_papers: false, accessories: '', has_warranty: false,
       warranty_start: null, warranty_end: null, warranty_provider: '',
@@ -639,6 +642,7 @@ const fetchWatches = async (userid) => {
       name: watchToModify.name,
       brand: watchToModify.brand,
       year: watchToModify.year,
+      condition_rating: watchToModify.condition_rating ?? null,
       movement: watchToModify.movement,
       color: watchToModify.color || '',
       image: watchToModify.image || watchToModify.imageUrl || '',

@@ -4454,8 +4454,10 @@ a:focus-visible,
   display: flex;
   width: 100%;
   min-height: 48px;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 3px;
   text-align: center;
 }
 
@@ -4465,6 +4467,20 @@ a:focus-visible,
   padding: 4px 0 !important;
   text-align: center;
   line-height: 1.3;
+}
+
+.watch-condition-rating {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  padding: 3px 9px;
+  border: 1px solid color-mix(in srgb, var(--ui-accent) 24%, transparent);
+  border-radius: 999px;
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .watch-list .cardBottoni {
@@ -5228,6 +5244,7 @@ a:focus-visible,
 }
 
 .add-watch-form .add-watch-field input,
+.add-watch-form .add-watch-field select,
 .add-watch-form .add-watch-control select {
   box-sizing: border-box;
   width: 100%;
@@ -5248,6 +5265,19 @@ a:focus-visible,
 .add-watch-form .notes-textarea::placeholder {
   color: var(--ui-muted);
   opacity: 0.78;
+}
+
+.condition-rating-field > span {
+  color: var(--ui-text);
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.condition-rating-field small,
+.condition-rating-help {
+  color: var(--ui-muted);
+  font-size: 0.76rem;
+  line-height: 1.4;
 }
 
 .add-watch-form .add-watch-feature-fields {
@@ -5558,6 +5588,11 @@ a:focus-visible,
   font-size: 1.06rem;
   line-height: 1.3;
   text-align: left;
+}
+
+.watch-carousel .watch-condition-rating {
+  align-self: flex-start;
+  margin-top: -8px;
 }
 
 .watch-carousel .cardBottoni {

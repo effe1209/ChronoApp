@@ -3,7 +3,7 @@ import { supabase } from './supabaseClient';
 const BACKUP_FORMAT = 'calibro-collection-backup';
 const BACKUP_VERSION = 1;
 const WATCH_FIELDS = [
-  'name', 'brand', 'year', 'money', 'movement', 'color', 'note', 'isFavorite',
+  'name', 'brand', 'year', 'condition_rating', 'money', 'movement', 'color', 'note', 'isFavorite',
   'has_box', 'has_papers', 'accessories', 'has_warranty', 'warranty_start',
   'warranty_end', 'warranty_provider',
 ];

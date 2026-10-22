@@ -83,6 +83,26 @@ const ModifyWatchModal = ({
           </div>
 
           <div className="modify-watch-field">
+            <label htmlFor="modify-watch-condition">Condizione (scala 1–10)</label>
+            <select
+              id="modify-watch-condition"
+              value={updatedWatch.condition_rating ?? ''}
+              onChange={(event) => setUpdatedWatch({
+                ...updatedWatch,
+                condition_rating: event.target.value ? Number(event.target.value) : null,
+              })}
+            >
+              <option value="">Non valutata</option>
+              {Array.from({ length: 10 }, (_, index) => index + 1).map((rating) => (
+                <option key={rating} value={rating}>
+                  {rating}{rating === 1 ? ' · Da revisionare' : rating === 10 ? ' · Pari al nuovo' : ''}
+                </option>
+              ))}
+            </select>
+            <small className="condition-rating-help">1 = da revisionare · 10 = pari al nuovo</small>
+          </div>
+
+          <div className="modify-watch-field">
             <label><strong>Movimento</strong></label>
             <select
               value={updatedWatch.movement}

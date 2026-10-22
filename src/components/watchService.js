@@ -104,6 +104,7 @@ export const addWatchService = async (options) => {
       name: '',
       brand: '',
       year: '',
+      condition_rating: null,
       image: '',
       movement: '',
       color: '', // O il tuo colore default

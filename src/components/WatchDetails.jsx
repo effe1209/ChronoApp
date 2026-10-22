@@ -38,6 +38,10 @@ const WatchDetails = ({ watch }) => {
           <dd>{watch.year || 'N/D'}</dd>
         </div>
         <div className="watch-detail-item">
+          <dt>Condizione</dt>
+          <dd>{watch.condition_rating ? `${watch.condition_rating}/10` : 'Non valutata'}</dd>
+        </div>
+        <div className="watch-detail-item">
           <dt>Movimento</dt>
           <dd>{watch.movement || 'N/D'}</dd>
         </div>

@@ -96,6 +96,32 @@ const AddWatchForm = ({
         </Step>
         <Step>
           <div className="add-watch-step-heading">
+            <h3>Condizione dell’orologio</h3>
+            <p>Valuta lo stato attuale del segnatempo su una scala da 1 a 10.</p>
+          </div>
+          <label className="add-watch-field condition-rating-field" htmlFor="add-watch-condition">
+            <span>Valutazione</span>
+            <select
+              id="add-watch-condition"
+              value={newWatch.condition_rating ?? ''}
+              onChange={(event) => setNewWatch({
+                ...newWatch,
+                condition_rating: event.target.value ? Number(event.target.value) : null,
+              })}
+            >
+              <option value="">Non valutata</option>
+              {Array.from({ length: 10 }, (_, index) => index + 1).map((rating) => (
+                <option key={rating} value={rating}>
+                  {rating}{rating === 1 ? ' · Da revisionare' : rating === 10 ? ' · Pari al nuovo' : ''}
+                </option>
+              ))}
+            </select>
+            <small>1 = da revisionare · 10 = pari al nuovo</small>
+          </label>
+        </Step>
+
+        <Step>
+          <div className="add-watch-step-heading">
             <h3>Caratteristiche</h3>
             <p>Scegli il movimento e il colore del tuo orologio.</p>
           </div>

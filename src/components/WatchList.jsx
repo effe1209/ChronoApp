@@ -93,6 +93,7 @@ const WatchList = ({
         watch.name,
         watch.brand,
         watch.year,
+        watch.condition_rating,
         watch.movement,
         watch.color,
         watch.note,
@@ -159,11 +160,12 @@ const WatchList = ({
   const exportVisibleWatches = () => {
     if (!sortedWatches.length) return;
     const rows = [
-      ['Nome', 'Marca', 'Anno', 'Movimento', 'Prezzo (€)', 'Colore', 'Preferito', 'Dotazione', 'Garanzia', 'Scadenza garanzia', 'Caratteristiche', 'Note', 'Immagine'],
+      ['Nome', 'Marca', 'Anno', 'Condizione (1-10)', 'Movimento', 'Prezzo (€)', 'Colore', 'Preferito', 'Dotazione', 'Garanzia', 'Scadenza garanzia', 'Caratteristiche', 'Note', 'Immagine'],
       ...sortedWatches.map((watch) => [
         watch.name,
         watch.brand,
         watch.year,
+        watch.condition_rating ?? '',
         watch.movement,
         watch.money,
         watch.color,
@@ -406,6 +408,9 @@ const WatchList = ({
                 )}
                 <div className="CaratteristicheCard">
                   <h3 className="textCard" style={{padding:"5px"}}>{watch.name}</h3>
+                  {watch.condition_rating && (
+                    <span className="watch-condition-rating">Condizione {watch.condition_rating}/10</span>
+                  )}
                 </div>
                 
                 <div className="cardBottoni">
@@ -474,6 +479,9 @@ const WatchList = ({
                   </div>
                   <div className="watchName_Button">
                     <h3 className="textCard">{watch.name}</h3>
+                    {watch.condition_rating && (
+                      <span className="watch-condition-rating">Condizione {watch.condition_rating}/10</span>
+                    )}
                     <div className="cardBottoni">
                       <div className="InfoButton">
                         <button className="modify-btn" onClick={() => handleInfoWatch(watch)}>

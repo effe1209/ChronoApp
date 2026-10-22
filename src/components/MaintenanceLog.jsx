@@ -114,8 +114,8 @@ const MaintenanceLog = ({ watchId, userId, onMaintenanceChanged }) => {
       <div className="maintenance-log__heading">
         <div>
           <span className="watch-detail-eyebrow">CURA DELL’OROLOGIO</span>
-          <h3 id="maintenance-log-title">Registro revisioni</h3>
-          <p>Interventi, costi e prossime scadenze.</p>
+          <h3 id="maintenance-log-title">Storico manutenzioni</h3>
+          <p>Date, costi, interventi e prossime scadenze.</p>
         </div>
         <button
           type="button"
@@ -185,12 +185,10 @@ const MaintenanceLog = ({ watchId, userId, onMaintenanceChanged }) => {
                   Elimina
                 </button>
               </div>
-              {(entry.provider || Number(entry.cost) > 0) && (
-                <p className="maintenance-log__entry-meta">
-                  {entry.provider && <span>{entry.provider}</span>}
-                  {Number(entry.cost) > 0 && <span>{Number(entry.cost).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</span>}
-                </p>
-              )}
+              <p className="maintenance-log__entry-meta">
+                {entry.provider && <span>{entry.provider}</span>}
+                <span>{Number(entry.cost || 0).toLocaleString('it-IT', { style: 'currency', currency: 'EUR' })}</span>
+              </p>
               {entry.description && <p className="maintenance-log__description">{entry.description}</p>}
               {entry.next_service_date && <p className="maintenance-log__next">Prossima revisione: {formatDate(entry.next_service_date)}</p>}
             </li>
