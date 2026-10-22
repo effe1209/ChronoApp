@@ -5408,6 +5408,7 @@ a:focus-visible,
   border-color: color-mix(in srgb, var(--color-danger) 62%, transparent);
   background: color-mix(in srgb, var(--color-danger) 10%, var(--ui-surface-strong));
   color: var(--color-danger);
+  text-color: white;
 }
 
 .add-watch-form .footer-nav .danger-button:hover {
