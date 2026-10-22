@@ -4329,8 +4329,8 @@ a:focus-visible,
 
 .profile-info {
   left: 50%;
-  width: min(calc(100vw - clamp(24px, 6vw, 96px)), 1680px);
-  max-width: 1680px;
+  width: min(calc(100vw - clamp(24px, 6vw, 96px)), 1280px);
+  max-width: 1280px;
   margin: 28px 0 34px;
   transform: translateX(-50%);
 }
