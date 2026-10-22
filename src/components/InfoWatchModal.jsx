@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
 import FavoriteButton from './FavoriteButton';
 import WatchDetails from './WatchDetails';
+import MaintenanceLog from './MaintenanceLog';
 
 const InfoWatchModal = ({ 
   isVisible, 
   setIsVisible, 
   selectedWatch, 
   handleDeleteWatch, 
-  handleFavoriteToggle 
+  handleFavoriteToggle,
+  userId,
 }) => {
 
   useEffect(() => {
@@ -56,6 +58,7 @@ const InfoWatchModal = ({
           </header>
 
           <WatchDetails watch={selectedWatch} />
+          <MaintenanceLog watchId={selectedWatch.id} userId={userId} />
 
           <footer className="watch-detail-footer">
             <button type="button" className="funzioniButton" onClick={() => setIsVisible(false)}>Chiudi</button>

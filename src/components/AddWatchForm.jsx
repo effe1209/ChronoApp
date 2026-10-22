@@ -196,6 +196,65 @@ const AddWatchForm = ({
 
         <Step>
           <div className="add-watch-step-heading">
+            <h3>Dotazione e garanzia</h3>
+            <p>Registra scatola, documenti e copertura del tuo orologio.</p>
+          </div>
+          <div className="watch-equipment-fields">
+            <label className="watch-equipment-check">
+              <input
+                type="checkbox"
+                checked={Boolean(newWatch.has_box)}
+                onChange={(e) => setNewWatch({ ...newWatch, has_box: e.target.checked })}
+              />
+              <span>Scatola originale</span>
+            </label>
+            <label className="watch-equipment-check">
+              <input
+                type="checkbox"
+                checked={Boolean(newWatch.has_papers)}
+                onChange={(e) => setNewWatch({ ...newWatch, has_papers: e.target.checked })}
+              />
+              <span>Documenti e libretti</span>
+            </label>
+            <label className="add-watch-field watch-equipment-fields__wide">
+              <span>Altra dotazione</span>
+              <input
+                type="text"
+                maxLength="500"
+                placeholder="Es. maglie aggiuntive, certificato, astuccio"
+                value={newWatch.accessories || ''}
+                onChange={(e) => setNewWatch({ ...newWatch, accessories: e.target.value })}
+              />
+            </label>
+            <label className="watch-equipment-check watch-equipment-fields__wide">
+              <input
+                type="checkbox"
+                checked={Boolean(newWatch.has_warranty)}
+                onChange={(e) => setNewWatch({ ...newWatch, has_warranty: e.target.checked })}
+              />
+              <span>È coperto da garanzia</span>
+            </label>
+            {newWatch.has_warranty && (
+              <>
+                <label className="add-watch-field">
+                  <span>Inizio garanzia</span>
+                  <input type="date" value={newWatch.warranty_start || ''} onChange={(e) => setNewWatch({ ...newWatch, warranty_start: e.target.value || null })} />
+                </label>
+                <label className="add-watch-field">
+                  <span>Scadenza garanzia</span>
+                  <input type="date" value={newWatch.warranty_end || ''} onChange={(e) => setNewWatch({ ...newWatch, warranty_end: e.target.value || null })} />
+                </label>
+                <label className="add-watch-field watch-equipment-fields__wide">
+                  <span>Rivenditore o centro assistenza</span>
+                  <input type="text" maxLength="160" value={newWatch.warranty_provider || ''} onChange={(e) => setNewWatch({ ...newWatch, warranty_provider: e.target.value })} />
+                </label>
+              </>
+            )}
+          </div>
+        </Step>
+
+        <Step>
+          <div className="add-watch-step-heading">
             <h3>Note personali</h3>
             <p>Annota la storia, la data di acquisto o altri dettagli che vuoi ricordare.</p>
           </div>

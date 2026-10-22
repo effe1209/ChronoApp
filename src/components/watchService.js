@@ -22,7 +22,7 @@ export const addWatchService = async (options) => {
     if (!isValidWatch(newWatch)) {
       setMessage('Compila tutti i campi correttamente!');
       setLoading(false);
-      return; 
+      return false;
     }
     console.log("Avvio dell'inserimento orologio...");
 
@@ -109,15 +109,26 @@ export const addWatchService = async (options) => {
       color: '', // O il tuo colore default
       isFavorite: false,
       money: '',
-      features: [] // <-- RESETTA ANCHE QUESTO
+      features: [],
+      has_box: false,
+      has_papers: false,
+      accessories: '',
+      has_warranty: false,
+      warranty_start: null,
+      warranty_end: null,
+      warranty_provider: '',
+      note: '',
     });
     setMessage('Orologio aggiunto con successo!');
+    return true;
 
   } catch (error) {
     console.error("Errore durante l'inserimento:", error);
     setMessage(
       "Errore durante l'inserimento: " + (error.message || 'Si è verificato un errore.')
     );
+    throw error;
+  } finally {
+    setLoading(false);
   }
-  setLoading(false);
 };

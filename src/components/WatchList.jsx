@@ -42,6 +42,10 @@ const WatchList = ({
   handleInfoWatch,
   handleShowStats,
   handleInfiniteGrid,
+  onCreateBackup,
+  onRestoreBackup,
+  backupInputRef,
+  isBackupBusy,
 }) => {
   const [isCarouselView, setIsCarouselView] = useState(readSavedViewMode);
   const [searchQuery, setSearchQuery] = useState('');
@@ -89,6 +93,10 @@ const WatchList = ({
         watch.movement,
         watch.color,
         watch.note,
+        watch.accessories,
+        watch.warranty_provider,
+        watch.warranty_start,
+        watch.warranty_end,
         ...getWatchFeatures(watch).map((feature) => feature.nome_caratteristica || feature.name),
       ];
       const matchesQuery = !normalizedQuery || searchFields
@@ -148,7 +156,7 @@ const WatchList = ({
   const exportVisibleWatches = () => {
     if (!sortedWatches.length) return;
     const rows = [
-      ['Nome', 'Marca', 'Anno', 'Movimento', 'Prezzo (€)', 'Colore', 'Preferito', 'Caratteristiche', 'Note', 'Immagine'],
+      ['Nome', 'Marca', 'Anno', 'Movimento', 'Prezzo (€)', 'Colore', 'Preferito', 'Dotazione', 'Garanzia', 'Scadenza garanzia', 'Caratteristiche', 'Note', 'Immagine'],
       ...sortedWatches.map((watch) => [
         watch.name,
         watch.brand,
@@ -157,6 +165,9 @@ const WatchList = ({
         watch.money,
         watch.color,
         watch.isFavorite ? 'Sì' : 'No',
+        [watch.has_box && 'Scatola originale', watch.has_papers && 'Documenti', watch.accessories].filter(Boolean).join(', '),
+        watch.has_warranty ? (watch.warranty_provider || 'Attiva') : 'Non indicata',
+        watch.warranty_end || '',
         getWatchFeatures(watch).map((feature) => feature.nome_caratteristica || feature.name || '').filter(Boolean).join(', '),
         watch.note,
         watch.imageUrl || watch.image,
@@ -251,19 +262,49 @@ const WatchList = ({
               />
             </span>
           </label>
-          <button
-            type="button"
-            className="collection-export-button"
-            onClick={exportVisibleWatches}
-            disabled={sortedWatches.length === 0}
-            aria-label={`Esporta ${sortedWatches.length} orologi visibili in formato CSV`}
-          >
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3" />
-            </svg>
-            Esporta CSV
-          </button>
+          <div className="collection-tools__actions">
+            <button
+              type="button"
+              className="collection-export-button"
+              onClick={onCreateBackup}
+              disabled={isBackupBusy}
+            >
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3" />
+              </svg>
+              {isBackupBusy ? 'Attendere…' : 'Backup completo'}
+            </button>
+            <input
+              ref={backupInputRef}
+              className="hidden-input"
+              type="file"
+              accept=".json,application/json"
+              onChange={onRestoreBackup}
+              aria-label="Seleziona un file di backup Calibro da ripristinare"
+            />
+            <button
+              type="button"
+              className="collection-export-button collection-export-button--secondary"
+              onClick={() => backupInputRef.current?.click()}
+              disabled={isBackupBusy}
+            >
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 15V3m0 0L8 7m4-4 4 4M5 14v6h14v-6" />
+              </svg>
+              Ripristina backup
+            </button>
+            <button
+              type="button"
+              className="collection-export-button collection-export-button--secondary"
+              onClick={exportVisibleWatches}
+              disabled={sortedWatches.length === 0}
+              aria-label={`Esporta ${sortedWatches.length} orologi visibili in formato CSV`}
+            >
+              Esporta CSV
+            </button>
+          </div>
         </div>
+        <p className="collection-backup-note">Il backup completo include schede, revisioni, dotazione, garanzie e immagini.</p>
 
         <details className="collection-filters">
           <summary>Filtri e ordinamento</summary>

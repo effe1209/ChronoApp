@@ -155,6 +155,42 @@ const ModifyWatchModal = ({
             </div>
           )}
 
+          <fieldset className="modify-watch-field modify-watch-field--wide watch-equipment-fields">
+            <legend>Dotazione e garanzia</legend>
+            <label className="watch-equipment-check">
+              <input type="checkbox" checked={Boolean(updatedWatch.has_box)} onChange={(e) => setUpdatedWatch({ ...updatedWatch, has_box: e.target.checked })} />
+              <span>Scatola originale</span>
+            </label>
+            <label className="watch-equipment-check">
+              <input type="checkbox" checked={Boolean(updatedWatch.has_papers)} onChange={(e) => setUpdatedWatch({ ...updatedWatch, has_papers: e.target.checked })} />
+              <span>Documenti e libretti</span>
+            </label>
+            <label className="modify-watch-field modify-watch-field--wide">
+              <span>Altra dotazione</span>
+              <input type="text" maxLength="500" value={updatedWatch.accessories || ''} onChange={(e) => setUpdatedWatch({ ...updatedWatch, accessories: e.target.value })} />
+            </label>
+            <label className="watch-equipment-check modify-watch-field--wide">
+              <input type="checkbox" checked={Boolean(updatedWatch.has_warranty)} onChange={(e) => setUpdatedWatch({ ...updatedWatch, has_warranty: e.target.checked })} />
+              <span>È coperto da garanzia</span>
+            </label>
+            {updatedWatch.has_warranty && (
+              <>
+                <label className="modify-watch-field">
+                  <span>Inizio garanzia</span>
+                  <input type="date" value={updatedWatch.warranty_start || ''} onChange={(e) => setUpdatedWatch({ ...updatedWatch, warranty_start: e.target.value || null })} />
+                </label>
+                <label className="modify-watch-field">
+                  <span>Scadenza garanzia</span>
+                  <input type="date" value={updatedWatch.warranty_end || ''} onChange={(e) => setUpdatedWatch({ ...updatedWatch, warranty_end: e.target.value || null })} />
+                </label>
+                <label className="modify-watch-field modify-watch-field--wide">
+                  <span>Rivenditore o centro assistenza</span>
+                  <input type="text" maxLength="160" value={updatedWatch.warranty_provider || ''} onChange={(e) => setUpdatedWatch({ ...updatedWatch, warranty_provider: e.target.value })} />
+                </label>
+              </>
+            )}
+          </fieldset>
+
           {/* Pulsante Note */}
           <div className="modify-watch-field modify-watch-field--wide">
             <button

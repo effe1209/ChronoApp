@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 // Import Supabase e servizi (invariati)
 import { supabase } from './components/supabaseClient';
 import { addWatchService } from './components/watchService';
+import { downloadFullBackup, parseBackupFile, restoreFullBackup } from './components/backupService';
 import AuthForm from './components/AuthForm';
 import WatchAnalytics from './components/WatchAnalytics'; 
 import GlassSurface from './components/GlassSurface';
@@ -45,6 +46,7 @@ function App() {
   const [selectedWatch, setSelectedWatch] = useState(null);
   const fileInputRef = useRef(null);
   const fileInputRefOutfit = useRef(null);
+  const backupInputRef = useRef(null);
   const colorInputRef = useRef(null);
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
@@ -67,6 +69,13 @@ function App() {
     money: null,
     features: [],
     note: "",
+    has_box: false,
+    has_papers: false,
+    accessories: '',
+    has_warranty: false,
+    warranty_start: null,
+    warranty_end: null,
+    warranty_provider: '',
   });
   const [loading, setLoading] = useState(false);
   const [isStatisticheVisible, setIsStatisticheVisible] = useState(false);
@@ -87,8 +96,16 @@ function App() {
     isFavorite: false,
     money: null,
     features: [],
-    note: ""
+    note: "",
+    has_box: false,
+    has_papers: false,
+    accessories: '',
+    has_warranty: false,
+    warranty_start: null,
+    warranty_end: null,
+    warranty_provider: '',
   });
+  const [isBackupBusy, setIsBackupBusy] = useState(false);
   const [allFeaturesList, setAllFeaturesList] = useState([]);
   const [isPending, startTransition] = useTransition();
   const [modalTitle, setModalTitle] = useState(""); 
@@ -374,11 +391,14 @@ const handleAddWatch = async () => {
     newWatch,
     user,
     setLoading,
+    setWatches,
+    setNewWatch,
     setMessage, 
   };
 
   try {
-    await addWatchService(stateOptions);
+    const added = await addWatchService(stateOptions);
+    if (!added) return;
     setMessage('Orologio aggiunto con successo!');
     handleCancel();
     await fetchWatches(user.id);
@@ -473,15 +493,64 @@ const fetchWatches = async (userid) => {
       return { ...watch, caratteristiche: features, imageUrl: watch.image };
     });
     setWatches(userWatches);
+    return true;
   } catch (error) {
     setMessage("Errore durante il recupero degli orologi: " + error.message);
+    return false;
   }
 };
+
+  const handleCreateBackup = async () => {
+    if (!user || isBackupBusy) return;
+    setIsBackupBusy(true);
+    setMessage('Preparazione del backup completo…');
+    try {
+      const counts = await downloadFullBackup(user.id);
+      setMessage(`Backup scaricato: ${counts.watches} orologi e ${counts.maintenance} revisioni, immagini incluse.`);
+    } catch (error) {
+      console.error('Errore durante la creazione del backup:', error);
+      setMessage(`Backup non riuscito: ${error.message}`);
+    } finally {
+      setIsBackupBusy(false);
+    }
+  };
+
+  const handleRestoreBackup = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file || !user || isBackupBusy) return;
+    setIsBackupBusy(true);
+    setMessage('Controllo del backup…');
+    try {
+      const backup = await parseBackupFile(file);
+      const photos = backup.watches.filter((watch) => watch.image?.dataUrl).length;
+      const shouldRestore = window.confirm(
+        `Il backup contiene ${backup.watches.length} orologi, ${backup.maintenance.length} revisioni e ${photos} immagini.\n\n` +
+        'I dati saranno uniti alla collezione: gli orologi e le revisioni con lo stesso identificativo di backup verranno aggiornati; gli altri dati presenti resteranno invariati. Continuare?'
+      );
+      if (!shouldRestore) {
+        setMessage('Ripristino annullato.');
+        return;
+      }
+
+      const counts = await restoreFullBackup(backup, user.id);
+      const refreshed = await fetchWatches(user.id);
+      if (!refreshed) throw new Error('Dati ripristinati, ma la lista non si è aggiornata. Ricarica la pagina.');
+      setMessage(`Ripristino completato: ${counts.watches} orologi e ${counts.maintenance} revisioni uniti alla collezione.`);
+    } catch (error) {
+      console.error('Errore durante il ripristino del backup:', error);
+      setMessage(`Ripristino non riuscito: ${error.message} Se il salvataggio era già iniziato, puoi importare di nuovo lo stesso file: i record riconosciuti verranno aggiornati senza duplicarli.`);
+    } finally {
+      event.target.value = '';
+      setIsBackupBusy(false);
+    }
+  };
 
   const handleCancel = () => {
    setNewWatch({ 
       name: "", brand: "", year: "", image: "", movement: "", color: "",
       features: [], isFavorite: false, money: null, note: "",
+      has_box: false, has_papers: false, accessories: '', has_warranty: false,
+      warranty_start: null, warranty_end: null, warranty_provider: '',
     });
     setMessage(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -546,6 +615,13 @@ const fetchWatches = async (userid) => {
       money: watchToModify.money || null,
       features: featureIDs,
       note: watchToModify.note || "",
+      has_box: Boolean(watchToModify.has_box),
+      has_papers: Boolean(watchToModify.has_papers),
+      accessories: watchToModify.accessories || '',
+      has_warranty: Boolean(watchToModify.has_warranty),
+      warranty_start: watchToModify.warranty_start || null,
+      warranty_end: watchToModify.warranty_end || null,
+      warranty_provider: watchToModify.warranty_provider || '',
     });
     setIsModifyVisible(true);
   };
@@ -1410,6 +1486,10 @@ const BackgroundLayer = useMemo(() => {
               handleInfoWatch={handleInfoWatch} 
               handleShowStats={handleShowStats}
               handleInfiniteGrid={handleInfiniteGrid}
+              onCreateBackup={handleCreateBackup}
+              onRestoreBackup={handleRestoreBackup}
+              backupInputRef={backupInputRef}
+              isBackupBusy={isBackupBusy}
             />
           </div>
         </>
@@ -1426,6 +1506,7 @@ const BackgroundLayer = useMemo(() => {
             selectedWatch={selectedWatch}
             handleDeleteWatch={handleDeleteWatch}
             handleFavoriteToggle={handleFavoriteToggle}
+            userId={user?.id}
           />
           <InfiniteGridModal 
             isVisible={isInfiniteGridVisible} 

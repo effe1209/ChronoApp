@@ -7,6 +7,14 @@ const WatchDetails = ({ watch }) => {
   const formattedPrice = watch.money !== null && watch.money !== undefined && watch.money !== ''
     ? `${Number(watch.money).toLocaleString('it-IT')} €`
     : 'N/D';
+  const formatDate = (date) => date
+    ? new Date(`${date}T12:00:00`).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null;
+  const equipment = [
+    watch.has_box && 'Scatola originale',
+    watch.has_papers && 'Documenti e libretti',
+    watch.accessories?.trim(),
+  ].filter(Boolean);
 
   return (
     <div className="watch-detail-body">
@@ -40,6 +48,22 @@ const WatchDetails = ({ watch }) => {
         <div className="watch-detail-item">
           <dt>Prezzo di acquisto</dt>
           <dd>{formattedPrice}</dd>
+        </div>
+        <div className="watch-detail-item">
+          <dt>Dotazione</dt>
+          <dd>{equipment.length ? equipment.join(' · ') : 'Nessuna dotazione indicata'}</dd>
+        </div>
+        <div className="watch-detail-item">
+          <dt>Garanzia</dt>
+          <dd>
+            {watch.has_warranty ? (
+              <span>
+                {watch.warranty_provider || 'Attiva'}
+                {watch.warranty_start && <> · dal {formatDate(watch.warranty_start)}</>}
+                {watch.warranty_end && <> · fino al {formatDate(watch.warranty_end)}</>}
+              </span>
+            ) : 'Non indicata'}
+          </dd>
         </div>
         <div className="watch-detail-item watch-detail-item--wide">
           <dt>Caratteristiche aggiuntive</dt>

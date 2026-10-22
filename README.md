@@ -24,6 +24,11 @@ Calibro è un'applicazione web moderna e responsiva progettata per gli appassion
 - Gestione Orologi: Inserimento, modifica ed eliminazione degli orologi dalla collezione.
 - Vista Dinamica: Alternanza tra la visualizzazione a Griglia, con la possibilità di selezionare gli orologi preferiti, e la visualizzazione a Carosello.
 - Organizzazione Avanzata: Ricerca testuale, filtri per marca, preferiti, anno e prezzo, ordinamento e esportazione CSV dei risultati.
+- Scheda completa: Dotazione, garanzia e informazioni del centro assistenza per ogni orologio.
+- Registro revisioni: Storico degli interventi con date, costi, fornitori e prossima scadenza.
+- Backup completo: Esportazione e ripristino incrementale di orologi, revisioni e immagini.
+
+Il backup completo è un file JSON autonomo con le immagini incluse. Il ripristino unisce i dati: aggiorna i record con lo stesso identificativo di backup e lascia inalterati gli altri. Per usare dotazione, garanzia, revisioni e backup, applica la migrazione `supabase/migrations/20261022_watch_collection_extensions.sql` al progetto Supabase.
 
 ## 🧠 Funzioni Intelligenti e Interattive
 - Valore Totale: Calcolo in tempo reale del valore complessivo della collezione.
@@ -75,9 +80,10 @@ Linee guida rapide:
 - [x] Selettore delle varie complicazioni
 - [x] Note aggiuntive per ogni orologio
 - [ ] Condizione dell'orologio (Scala 1-10)
-- [ ] Stato Set: Completo (scatola e garanzia), Solo orologio, ecc.
-- [ ] Storico Manutenzioni: Campi per registrare date e costi delle revisioni.
-- [ ] Garanzia (con immagini anche)
+- [x] Dotazione: Scatola, documenti e accessori.
+- [x] Garanzia: Periodo e rivenditore o centro assistenza.
+- [x] Registro revisioni: Date, interventi, costi e prossima scadenza.
+- [x] Backup e ripristino completo con immagini e unione dei dati.
 - [x] Filtri di ricerca avanzati per marca, prezzo, anno
 
 ## 👤 Contributors

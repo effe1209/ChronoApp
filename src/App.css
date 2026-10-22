@@ -6070,6 +6070,14 @@ a:focus-visible,
   gap: 12px;
 }
 
+.collection-tools__actions {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .collection-search {
   display: grid;
   min-width: 0;
@@ -6169,6 +6177,16 @@ a:focus-visible,
   opacity: 0.5;
 }
 
+.collection-export-button--secondary {
+  border-color: var(--ui-border);
+  background: var(--ui-surface-strong);
+  color: var(--ui-accent);
+}
+
+.dark-mode .collection-export-button--secondary {
+  color: var(--ui-accent);
+}
+
 .collection-export-button svg {
   width: 18px;
   height: 18px;
@@ -6176,6 +6194,243 @@ a:focus-visible,
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.collection-backup-note {
+  margin: -7px 0 0;
+  color: var(--ui-muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.watch-equipment-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 12px 16px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--ui-surface-strong) 75%, transparent);
+}
+
+.modify-watch-form .modify-watch-field.watch-equipment-fields {
+  display: grid;
+}
+
+.watch-equipment-fields legend {
+  padding: 0 7px;
+  color: var(--ui-text);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.watch-equipment-fields__wide {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.watch-equipment-fields .watch-equipment-check {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 9px;
+  color: var(--ui-text);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.watch-equipment-check input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  accent-color: var(--ui-accent);
+}
+
+.modify-watch-form .watch-equipment-check input[type="checkbox"] {
+  width: 18px;
+  min-height: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+}
+
+.watch-equipment-fields > .add-watch-field,
+.watch-equipment-fields > .modify-watch-field {
+  width: 100%;
+  margin: 0;
+}
+
+.watch-equipment-fields > .add-watch-field > span,
+.watch-equipment-fields > .modify-watch-field > span {
+  color: var(--ui-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.maintenance-log {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+  padding: clamp(15px, 2.5vw, 22px);
+  border: 1px solid var(--ui-border);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--ui-surface-strong) 78%, transparent);
+}
+
+.maintenance-log__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.maintenance-log__heading h3 {
+  margin: 4px 0;
+  color: var(--ui-text);
+  font-size: 1.05rem;
+}
+
+.maintenance-log__heading p,
+.maintenance-log__empty {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: 0.84rem;
+}
+
+.maintenance-log__add {
+  min-height: 40px;
+  padding: 8px 13px;
+  font-size: 0.8rem;
+}
+
+.maintenance-log__form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+  background: var(--ui-surface);
+}
+
+.maintenance-log__form label {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  color: var(--ui-muted);
+  font-size: 0.77rem;
+  font-weight: 650;
+}
+
+.maintenance-log__form input,
+.maintenance-log__form select,
+.maintenance-log__form textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 9px 11px;
+  border: 1px solid var(--ui-border);
+  border-radius: 11px;
+  background: var(--ui-surface-strong);
+  color: var(--ui-text);
+  font: inherit;
+  font-size: 0.88rem;
+}
+
+.maintenance-log__form textarea {
+  resize: vertical;
+}
+
+.maintenance-log__form-wide,
+.maintenance-log__form-actions {
+  grid-column: 1 / -1;
+}
+
+.maintenance-log__form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.maintenance-log__form-actions .funzioniButton {
+  margin: 0;
+}
+
+.maintenance-log__error {
+  margin: 0;
+  color: #b74436;
+  font-size: 0.84rem;
+}
+
+.maintenance-log__entries {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.maintenance-log__entry {
+  padding: 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: 15px;
+  background: var(--ui-surface);
+}
+
+.maintenance-log__entry-main,
+.maintenance-log__entry-main > div,
+.maintenance-log__entry-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.maintenance-log__entry-main > div {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.maintenance-log__entry-main strong {
+  color: var(--ui-text);
+  font-size: 0.9rem;
+}
+
+.maintenance-log__entry time,
+.maintenance-log__entry-meta,
+.maintenance-log__description,
+.maintenance-log__next {
+  color: var(--ui-muted);
+  font-size: 0.8rem;
+}
+
+.maintenance-log__entry-main button {
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #b74436;
+  font: inherit;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.maintenance-log__entry-meta {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin: 7px 0 0;
+}
+
+.maintenance-log__description,
+.maintenance-log__next {
+  margin: 8px 0 0;
+  line-height: 1.5;
+  white-space: pre-wrap;
 }
 
 .collection-filters {
@@ -6263,8 +6518,29 @@ a:focus-visible,
     flex-direction: column;
   }
 
-  .collection-export-button {
+  .collection-tools__actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .collection-tools__actions .collection-export-button {
     width: 100%;
+  }
+
+  .watch-equipment-fields,
+  .maintenance-log__form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .watch-equipment-fields__wide,
+  .maintenance-log__form-wide,
+  .maintenance-log__form-actions {
+    grid-column: auto;
+  }
+
+  .maintenance-log__heading {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .collection-filters__grid {
