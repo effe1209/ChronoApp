@@ -571,6 +571,9 @@ class InfiniteGridMenu {
   TARGET_FRAME_DURATION = 1000 / 60;
   SPHERE_RADIUS = 2;
 
+  #animationFrameId = null;
+  #stopped = false;
+
   #time = 0;
   #deltaTime = 0;
   #deltaFrames = 0;
@@ -617,6 +620,8 @@ class InfiniteGridMenu {
   }
 
   run(time = 0) {
+    if (this.#stopped) return;
+
     this.#deltaTime = Math.min(32, time - this.#time);
     this.#time = time;
     this.#deltaFrames = this.#deltaTime / this.TARGET_FRAME_DURATION;
@@ -625,7 +630,14 @@ class InfiniteGridMenu {
     this.#animate(this.#deltaTime);
     this.#render();
 
-    requestAnimationFrame(t => this.run(t));
+    this.#animationFrameId = requestAnimationFrame(t => this.run(t));
+  }
+
+  stop() {
+    this.#stopped = true;
+    if (this.#animationFrameId !== null) {
+      cancelAnimationFrame(this.#animationFrameId);
+    }
   }
 
   #init(onInit) {
@@ -908,7 +920,7 @@ const defaultItems = [
   }
 ];
 
-export default function InfiniteMenu({ items = [] }) {
+export default function InfiniteMenu({ items = [], onItemClick }) {
   const canvasRef = useRef(null);
   const [activeItem, setActiveItem] = useState(null);
   const [isMoving, setIsMoving] = useState(false);
@@ -939,10 +951,15 @@ export default function InfiniteMenu({ items = [] }) {
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      sketch?.stop();
     };
   }, [items]);
 
   const handleButtonClick = () => {
+    if (onItemClick && activeItem) {
+      onItemClick(activeItem);
+      return;
+    }
     if (!activeItem?.link) return;
     if (activeItem.link.startsWith('http')) {
       window.open(activeItem.link, '_blank');
@@ -961,9 +978,14 @@ export default function InfiniteMenu({ items = [] }) {
 
           <p className={`face-description ${isMoving ? 'inactive' : 'active'}`}> {activeItem.description}</p>
 
-          <div onClick={handleButtonClick} className={`action-button ${isMoving ? 'inactive' : 'active'}`}>
+          <button
+            type="button"
+            onClick={handleButtonClick}
+            className={`action-button ${isMoving ? 'inactive' : 'active'}`}
+            aria-label={`Apri i dettagli di ${activeItem.title}`}
+          >
             <p className="action-button-icon">&#x2197;</p>
-          </div>
+          </button>
         </>
       )}
     </div>

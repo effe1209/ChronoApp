@@ -8,7 +8,6 @@ import GlassSurface from './components/GlassSurface';
 import TiltedCard from './components/TiltedCard';
 import FloatingLines from './components/FloatingLines';
 import MetaBalls from './components/MetaBalls';
-import InfiniteMenu from './components/InfiniteMenu'
 import InfiniteGridModal from './components/InfiniteGridModal';
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import ColorThief from 'colorthief';
@@ -1115,13 +1114,20 @@ const BackgroundLayer = useMemo(() => {
             alt="Orologio classico argentato inclinato, con quadrante romano"
           />
         </figure>
-        <svg className="hero-flow-overlay" viewBox="0 0 1000 650" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <svg
+          className="hero-flow-overlay"
+          viewBox="0 0 1000 650"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+          focusable="false"
+          style={{ '--hero-flow-glint': isDark ? '#ffe8b5' : '#ffffff' }}
+        >
           <defs>
             <linearGradient id="hero-flow-gradient" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#a8eaff" stopOpacity="0.15" />
-              <stop offset="34%" stopColor="#9fe9ff" />
-              <stop offset="68%" stopColor="#f4b1df" />
-              <stop offset="100%" stopColor="#9eeaff" stopOpacity="0.62" />
+              <stop offset="0%" stopColor={isDark ? '#e8bd72' : '#a8eaff'} stopOpacity="0.15" />
+              <stop offset="34%" stopColor={isDark ? '#e8bd72' : '#9fe9ff'} />
+              <stop offset="68%" stopColor={isDark ? '#fff0d2' : '#f4b1df'} />
+              <stop offset="100%" stopColor={isDark ? '#d6a657' : '#9eeaff'} stopOpacity="0.72" />
             </linearGradient>
             <filter id="hero-flow-glow" x="-20%" y="-40%" width="140%" height="180%">
               <feGaussianBlur stdDeviation="3.5" result="glow" />
@@ -1133,7 +1139,10 @@ const BackgroundLayer = useMemo(() => {
           </defs>
           <path className="hero-flow-line hero-flow-line--upper" d="M-30 168 C145 184 217 274 384 292 S634 348 760 272 S927 154 1030 110" />
           <path className="hero-flow-line hero-flow-line--lower" d="M-30 214 C150 244 263 347 438 370 S682 448 828 384 S958 322 1030 334" />
+          <path className="hero-flow-line hero-flow-line--orbit" d="M170 530 C315 450 330 270 520 255 S795 410 1030 210" />
+          <path className="hero-flow-line hero-flow-line--orbit hero-flow-line--orbit-alt" d="M300 95 C420 245 460 525 650 490 S865 260 1030 355" />
           <path className="hero-flow-streak" pathLength="1000" d="M-30 214 C150 244 263 347 438 370 S682 448 828 384 S958 322 1030 334" />
+          <path className="hero-flow-streak hero-flow-streak--secondary" pathLength="1000" d="M170 530 C315 450 330 270 520 255 S795 410 1030 210" />
         </svg>
         <div className="hero-copy">
           <p className="hero-eyebrow"><span aria-hidden="true" /> IL TUO WATCH JOURNAL</p>
@@ -1186,8 +1195,8 @@ const BackgroundLayer = useMemo(() => {
           <div className="profile-info" id="profile-section">
             <MetaBalls
               className="profile-info-ambient"
-              color={isDark ? "#F59E0B" : "#25627e"}
-              cursorBallColor={isDark ? "#D8E9F2" : "#C0A062"}
+              color={isDark ? "#e8bd72" : "#28677b"}
+              cursorBallColor={isDark ? "#e8bd72" : "#28677b"}
               cursorBallSize={2}
               ballCount={20}
               accentBallCount={3}

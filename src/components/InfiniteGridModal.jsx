@@ -1,11 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
+import InfiniteMenu from './InfiniteMenu';
 
 const InfiniteGridModal = ({ isVisible, setIsVisible, handleInfoWatch, watches }) => {
   const closeGallery = () => setIsVisible(false);
-  const openWatch = (watch) => {
-    handleInfoWatch(watch);
-    closeGallery();
-  };
+  const items = useMemo(() => watches.map((watch) => ({
+    id: watch.id,
+    image: watch.imageUrl || 'orologio_back.svg',
+    title: watch.name,
+    description: watch.brand || 'Dalla tua collezione',
+    link: watch.imageUrl || 'orologio_back.svg',
+  })), [watches]);
 
   useEffect(() => {
     if (!isVisible) return undefined;
@@ -20,6 +24,13 @@ const InfiniteGridModal = ({ isVisible, setIsVisible, handleInfoWatch, watches }
 
   if (!isVisible) return null;
 
+  const handleItemClick = (item) => {
+    const watch = watches.find((entry) => entry.id === item.id);
+    if (!watch) return;
+    handleInfoWatch(watch);
+    closeGallery();
+  };
+
   return (
     <div className="watch-gallery-overlay" onClick={closeGallery}>
       <section
@@ -33,7 +44,7 @@ const InfiniteGridModal = ({ isVisible, setIsVisible, handleInfoWatch, watches }
           <div>
             <span className="watch-gallery-eyebrow">LA COLLEZIONE</span>
             <h2 id="watch-gallery-title">Galleria Orologi</h2>
-            <p>Un colpo d'occhio su ogni segnatempo della tua collezione.</p>
+            <p>Ruota la sfera e scegli un orologio per scoprirne i dettagli.</p>
           </div>
           <div className="watch-gallery-header__actions">
             <span className="watch-gallery-count">
@@ -52,38 +63,20 @@ const InfiniteGridModal = ({ isVisible, setIsVisible, handleInfoWatch, watches }
           </div>
         </header>
 
-        {watches.length > 0 ? (
-          <div className="watch-gallery-grid">
-            {watches.map((watch) => (
-              <button
-                type="button"
-                className="watch-gallery-card"
-                key={watch.id}
-                onClick={() => openWatch(watch)}
-              >
-                <span className="watch-gallery-card__image">
-                  <img
-                    src={watch.imageUrl || 'orologio_back.svg'}
-                    alt=""
-                    loading="lazy"
-                    onError={(event) => { event.currentTarget.src = 'orologio_back.svg'; }}
-                  />
-                  {watch.isFavorite && <span className="watch-gallery-favorite" aria-label="Preferito">★</span>}
-                </span>
-                <span className="watch-gallery-card__copy">
-                  <strong>{watch.name}</strong>
-                  <span>{watch.brand || 'Segnatempo della collezione'}</span>
-                </span>
-                <span className="watch-gallery-card__arrow" aria-hidden="true">↗</span>
-              </button>
-            ))}
-          </div>
-        ) : (
-          <div className="watch-gallery-empty">
-            <span className="watch-gallery-empty__icon" aria-hidden="true">◷</span>
-            <strong>La galleria è pronta per la tua collezione</strong>
-            <p>Aggiungi il tuo primo orologio per vederlo apparire qui.</p>
-          </div>
+        <div className="watch-gallery-stage">
+          {watches.length > 0 ? (
+            <InfiniteMenu items={items} onItemClick={handleItemClick} />
+          ) : (
+            <div className="watch-gallery-empty">
+              <span className="watch-gallery-empty__icon" aria-hidden="true">◷</span>
+              <strong>La galleria è pronta per la tua collezione</strong>
+              <p>Aggiungi il tuo primo orologio per vederlo apparire qui.</p>
+            </div>
+          )}
+        </div>
+
+        {watches.length > 0 && (
+          <p className="watch-gallery-hint">Trascina per esplorare · Seleziona la freccia per aprire i dettagli</p>
         )}
       </section>
     </div>
