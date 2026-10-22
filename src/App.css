@@ -5407,6 +5407,10 @@ a:focus-visible,
 .add-watch-form .footer-nav .danger-button {
   border-color: color-mix(in srgb, var(--color-danger) 62%, transparent);
   background: color-mix(in srgb, var(--color-danger) 10%, var(--ui-surface-strong));
+  color: #ffffff;
+}
+
+.add-watch-form .footer-nav .danger-button .dark-mode {
   color: #101820;
 }
 
