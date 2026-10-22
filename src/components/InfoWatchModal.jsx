@@ -10,6 +10,7 @@ const InfoWatchModal = ({
   handleDeleteWatch, 
   handleFavoriteToggle,
   userId,
+  onMaintenanceChanged,
 }) => {
 
   useEffect(() => {
@@ -58,7 +59,11 @@ const InfoWatchModal = ({
           </header>
 
           <WatchDetails watch={selectedWatch} />
-          <MaintenanceLog watchId={selectedWatch.id} userId={userId} />
+          <MaintenanceLog
+            watchId={selectedWatch.id}
+            userId={userId}
+            onMaintenanceChanged={onMaintenanceChanged}
+          />
 
           <footer className="watch-detail-footer">
             <button type="button" className="funzioniButton" onClick={() => setIsVisible(false)}>Chiudi</button>

@@ -54,6 +54,7 @@ function App() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [watches, setWatches] = useState([]);
+  const [maintenanceRefreshKey, setMaintenanceRefreshKey] = useState(0);
   const [watchConsigliati, setWatchConsigliati] = useState([]);
   const [featuresLoading, setFeaturesLoading] = useState(false);
   const [featuresError, setFeaturesError] = useState('');
@@ -629,6 +630,10 @@ const fetchWatches = async (userid) => {
   const handleInfoWatch = (watchToShow) => {
     setSelectedWatch(watchToShow);
     setIsInfoVisible(true);
+  };
+
+  const handleMaintenanceChanged = () => {
+    setMaintenanceRefreshKey((current) => current + 1);
   };
 
   const handleShowStats = () => {
@@ -1490,6 +1495,8 @@ const BackgroundLayer = useMemo(() => {
               onRestoreBackup={handleRestoreBackup}
               backupInputRef={backupInputRef}
               isBackupBusy={isBackupBusy}
+              userId={user?.id}
+              maintenanceRefreshKey={maintenanceRefreshKey}
             />
           </div>
         </>
@@ -1507,6 +1514,7 @@ const BackgroundLayer = useMemo(() => {
             handleDeleteWatch={handleDeleteWatch}
             handleFavoriteToggle={handleFavoriteToggle}
             userId={user?.id}
+            onMaintenanceChanged={handleMaintenanceChanged}
           />
           <InfiniteGridModal 
             isVisible={isInfiniteGridVisible} 

@@ -6060,6 +6060,137 @@ a:focus-visible,
   box-shadow: 0 10px 28px rgba(30, 55, 72, 0.06), inset 0 1px rgba(255, 255, 255, 0.45);
 }
 
+.maintenance-reminders {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 18px;
+  padding: clamp(15px, 2vw, 20px);
+  border: 1px solid color-mix(in srgb, #c78a2b 36%, var(--ui-border));
+  border-radius: 20px;
+  background: color-mix(in srgb, #f4c66d 13%, var(--ui-surface-strong));
+  box-shadow: 0 8px 24px rgba(30, 55, 72, 0.055);
+}
+
+.dark-mode .maintenance-reminders {
+  background: color-mix(in srgb, #b9802d 13%, var(--ui-surface-strong));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
+}
+
+.maintenance-reminders__heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.maintenance-reminders__icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 14px;
+  background: color-mix(in srgb, #d49a3b 18%, var(--ui-surface-strong));
+  color: #9a6417;
+}
+
+.dark-mode .maintenance-reminders__icon {
+  color: #efbf68;
+}
+
+.maintenance-reminders__icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.maintenance-reminders__heading h3 {
+  margin: 0;
+  color: var(--ui-text);
+  font-size: 0.98rem;
+}
+
+.maintenance-reminders__heading p {
+  margin: 3px 0 0;
+  color: var(--ui-muted);
+  font-size: 0.8rem;
+}
+
+.maintenance-reminders__list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.maintenance-reminders__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--ui-border) 80%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ui-surface-strong) 82%, transparent);
+}
+
+.maintenance-reminders__copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.maintenance-reminders__copy strong {
+  overflow: hidden;
+  color: var(--ui-text);
+  font-size: 0.88rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.maintenance-reminders__copy span {
+  color: var(--ui-muted);
+  font-size: 0.8rem;
+}
+
+.maintenance-reminders__actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.maintenance-reminders__actions button {
+  min-height: 36px;
+  padding: 7px 11px;
+  border: 1px solid var(--ui-border);
+  border-radius: 11px;
+  background: var(--ui-surface-strong);
+  color: var(--ui-text);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.maintenance-reminders__actions .maintenance-reminders__open {
+  border-color: transparent;
+  background: var(--ui-accent);
+  color: #fff;
+}
+
+.maintenance-reminders__actions button:hover {
+  filter: brightness(0.96);
+}
+
+.maintenance-reminders__actions button:focus-visible {
+  outline: 3px solid var(--ui-accent-soft);
+  outline-offset: 2px;
+}
+
 .dark-mode .collection-tools {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16), inset 0 1px rgba(255, 255, 255, 0.04);
 }
@@ -6583,6 +6714,21 @@ a:focus-visible,
   .maintenance-log__heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .maintenance-reminders__item {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .maintenance-reminders__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .maintenance-reminders__actions button {
+    padding-inline: 8px;
   }
 
   .collection-filters__grid {

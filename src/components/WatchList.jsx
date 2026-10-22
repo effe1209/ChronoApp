@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { motion } from 'framer-motion';
 import FavoriteButton from './FavoriteButton';
 import TiltedCard from './TiltedCard';
+import MaintenanceReminderBanner from './MaintenanceReminderBanner';
 
 // Importa gli stili di Swiper necessari
 import 'swiper/css';
@@ -46,6 +47,8 @@ const WatchList = ({
   onRestoreBackup,
   backupInputRef,
   isBackupBusy,
+  userId,
+  maintenanceRefreshKey,
 }) => {
   const [isCarouselView, setIsCarouselView] = useState(readSavedViewMode);
   const [searchQuery, setSearchQuery] = useState('');
@@ -190,6 +193,12 @@ const WatchList = ({
 
   return (
     <div>
+      <MaintenanceReminderBanner
+        watches={watches}
+        userId={userId}
+        refreshKey={maintenanceRefreshKey}
+        onOpenWatch={handleInfoWatch}
+      />
       <div className="buttonView" id="listWatch">
         <button
           className="buttonView__stats"

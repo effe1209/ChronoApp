@@ -23,7 +23,7 @@ const formatDate = (date) => {
   });
 };
 
-const MaintenanceLog = ({ watchId, userId }) => {
+const MaintenanceLog = ({ watchId, userId, onMaintenanceChanged }) => {
   const [entries, setEntries] = useState([]);
   const [form, setForm] = useState(emptyForm);
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -77,6 +77,7 @@ const MaintenanceLog = ({ watchId, userId }) => {
         user_id: userId,
       });
       if (insertError) throw insertError;
+      onMaintenanceChanged?.();
       setForm({ ...emptyForm, service_date: localToday() });
       setIsFormVisible(false);
       await loadEntries();
@@ -100,6 +101,7 @@ const MaintenanceLog = ({ watchId, userId }) => {
       setError(`Non è stato possibile eliminare la voce: ${deleteError.message}`);
       return;
     }
+    onMaintenanceChanged?.();
     try {
       await loadEntries();
     } catch (loadError) {
