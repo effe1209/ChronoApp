@@ -56,6 +56,7 @@ const Dock = ({
     <ul ref={dockRef} className="dock-menu" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
       {systemItems.map((item, index) => {
         const size = getItemSize(index);
+        const isProfileItem = item.label === 'Profile';
         
         // Calcolo stato attivo
         let isActive = activeSection === item.label;
@@ -69,7 +70,7 @@ const Dock = ({
         };
 
         return (
-          <li key={item.label} className="dock-menu__item" style={{ minWidth: baseItemSize }}>
+          <li key={item.label} className={`dock-menu__item${isProfileItem ? ' is-profile' : ''}`} style={{ minWidth: baseItemSize }}>
             <button
               type="button"
               className={`dock-menu__button${isActive ? ' is-active' : ''}`}
@@ -79,7 +80,7 @@ const Dock = ({
               aria-current={activeSection === item.label ? 'location' : undefined}
               title={item.label}
             >
-              {React.cloneElement(item.icon, { size: (isMobile ? baseItemSize * 0.5 : size * 0.5) })}
+              {React.cloneElement(item.icon, { size: (isMobile ? baseItemSize : size) * (isProfileItem ? 0.58 : 0.5) })}
             </button>
             <span className="dock-menu__label">
               {item.label}

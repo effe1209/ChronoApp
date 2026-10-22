@@ -3565,6 +3565,14 @@ a:focus-visible,
   pointer-events: none;
 }
 
+.dock-menu__item.is-profile .dock-menu__label {
+  margin-top: -1px;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.015em;
+  opacity: 1;
+}
+
 .dock-menu__button:focus-visible {
   outline: 2px solid color-mix(in srgb, var(--ui-accent) 62%, white);
   outline-offset: 2px;
