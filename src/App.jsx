@@ -1409,7 +1409,7 @@ const BackgroundLayer = useMemo(() => {
           <div className="profile-info relative overflow-hidden" id="profile-section">
             <div className="profile-info-video-mask absolute inset-0" aria-hidden="true">
               <video
-                className="profile-info-video absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-luminosity"
+                className="profile-info-video absolute inset-0 w-full h-full object-cover"
                 autoPlay
                 loop
                 muted
