@@ -2406,17 +2406,14 @@ body.dark-mode {
   font-size: 9px;
   font-weight: 650;
   letter-spacing: 0.17em;
-  transition: color 220ms ease, border-color 220ms ease, background-color 220ms ease, transform 220ms ease;
-}
-
-.brand-strip .logoloop--scale-hover .logoloop__item:hover .logoloop__node {
-  transform: translateY(-2px) scale(1.04);
+  transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
 }
 
 .brand-strip .logoloop__item:hover .logoloop__node span {
-  border-color: color-mix(in srgb, var(--ui-accent) 35%, transparent);
-  background: var(--ui-accent-soft);
+  border-color: var(--ui-accent);
+  background: color-mix(in srgb, var(--ui-accent-soft) 84%, var(--ui-surface));
   color: var(--ui-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-accent) 15%, transparent);
 }
 
 .profile-info,
@@ -4483,8 +4480,14 @@ a:focus-visible,
   height: auto;
   transition: opacity 140ms ease-in-out;
   filter: drop-shadow(0 28px 34px rgba(24, 38, 48, 0.2));
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 88%, rgba(0, 0, 0, 0.56) 94%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 88%, rgba(0, 0, 0, 0.56) 94%, transparent 100%);
+  -webkit-mask-image:
+    linear-gradient(to right, #000 0%, #000 84%, rgba(0, 0, 0, 0.72) 92%, transparent 100%),
+    linear-gradient(to bottom, #000 0%, #000 88%, rgba(0, 0, 0, 0.56) 94%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, #000 0%, #000 84%, rgba(0, 0, 0, 0.72) 92%, transparent 100%),
+    linear-gradient(to bottom, #000 0%, #000 88%, rgba(0, 0, 0, 0.56) 94%, transparent 100%);
+  mask-composite: intersect;
 }
 
 .hero-watch-image--light {
@@ -4587,7 +4590,7 @@ a:focus-visible,
   margin: 0;
   color: var(--ui-text);
   font-family: var(--font-Title);
-  font-size: clamp(2.7rem, 4.2vw, 4.1rem);
+  font-size: clamp(3.1rem, 5vw, 5rem);
   font-weight: 650;
   line-height: 0.98;
   letter-spacing: -0.075em;
@@ -4710,7 +4713,7 @@ a:focus-visible,
   }
 
   .hero-section h1 {
-    font-size: clamp(2.7rem, 10vw, 4rem) !important;
+    font-size: clamp(2.9rem, 10vw, 4.4rem) !important;
   }
 
   .hero-description {
@@ -4744,7 +4747,7 @@ a:focus-visible,
   }
 
   .hero-section h1 {
-    font-size: clamp(2.4rem, 10vw, 3rem) !important;
+    font-size: clamp(2.6rem, 10vw, 3.3rem) !important;
   }
 
   .hero-cta {

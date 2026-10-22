@@ -1180,7 +1180,6 @@ const BackgroundLayer = useMemo(() => {
           logoHeight={20}
           gap={24}
           hoverSpeed={0}
-          scaleOnHover
           ariaLabel="Marchi di orologi"
         />
       </div>
