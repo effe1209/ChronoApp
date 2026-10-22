@@ -2576,7 +2576,7 @@ body.dark-mode {
   mix-blend-mode: luminosity;
   pointer-events: none;
   backface-visibility: hidden;
-  transform: translate3d(0, 28%, 0) scale(1.2);
+  transform: translate3d(0, 40%, 0) scale(1.2);
   transform-origin: center;
   will-change: transform;
 }
