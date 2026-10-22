@@ -88,8 +88,16 @@ export const addWatchService = async (options) => {
       throw new Error("Errore nel recuperare l'orologio appena creato: " + fetchError.message);
     }
     
-    // Aggiungi l'orologio completo alla lista
-    setWatches((prevWatches) => [...prevWatches, completeNewWatch]);
+    // Mantieni la stessa forma dati usata da fetchWatches, così la scheda
+    // appena aggiunta può essere modificata subito senza attendere un reload.
+    const normalizedNewWatch = {
+      ...completeNewWatch,
+      caratteristiche: (completeNewWatch.Orologi_Caratteristiche || [])
+        .map((joinEntry) => joinEntry?.caratteristiche)
+        .filter(Boolean),
+      imageUrl: completeNewWatch.image,
+    };
+    setWatches((prevWatches) => [...prevWatches, normalizedNewWatch]);
     
     // 9. PASSO 4: Resetta il form (includendo 'features')
     setNewWatch({

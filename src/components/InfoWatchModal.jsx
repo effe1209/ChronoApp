@@ -42,11 +42,9 @@ const InfoWatchModal = ({
               <button
                 type="button"
                 className="modal-delete-btn"
-                onClick={() => {
-                  if (window.confirm('Sei sicuro di voler eliminare questo orologio definitivamente?')) {
-                    handleDeleteWatch(selectedWatch.id, selectedWatch.imageUrl);
-                    setIsVisible(false);
-                  }
+                onClick={async () => {
+                  const deleted = await handleDeleteWatch(selectedWatch.id, selectedWatch.imageUrl);
+                  if (deleted) setIsVisible(false);
                 }}
                 aria-label="Elimina orologio"
               >

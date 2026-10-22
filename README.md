@@ -23,7 +23,7 @@ Calibro è un'applicazione web moderna e responsiva progettata per gli appassion
 - Registrazione e Accesso Utente: Autenticazione sicura tramite Supabase.
 - Gestione Orologi: Inserimento, modifica ed eliminazione degli orologi dalla collezione.
 - Vista Dinamica: Alternanza tra la visualizzazione a Griglia, con la possibilità di selezionare gli orologi preferiti, e la visualizzazione a Carosello.
-- Organizzazione Avanzata: Ordinamento automatico per Orologi Preferiti e per nome.
+- Organizzazione Avanzata: Ricerca testuale, filtri per marca, preferiti, anno e prezzo, ordinamento e esportazione CSV dei risultati.
 
 ## 🧠 Funzioni Intelligenti e Interattive
 - Valore Totale: Calcolo in tempo reale del valore complessivo della collezione.
@@ -78,7 +78,7 @@ Linee guida rapide:
 - [ ] Stato Set: Completo (scatola e garanzia), Solo orologio, ecc.
 - [ ] Storico Manutenzioni: Campi per registrare date e costi delle revisioni.
 - [ ] Garanzia (con immagini anche)
-- [ ] Filtri di ricerca avanzati per marca, prezzo, anno
+- [x] Filtri di ricerca avanzati per marca, prezzo, anno
 
 ## 👤 Contributors
 

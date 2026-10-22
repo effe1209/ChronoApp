@@ -10,39 +10,172 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
+const readSavedViewMode = () => {
+  try {
+    const savedView = JSON.parse(localStorage.getItem('viewMode') || 'false');
+    return typeof savedView === 'boolean' ? savedView : false;
+  } catch {
+    return false;
+  }
+};
+
+const getWatchFeatures = (watch) => {
+  if (Array.isArray(watch.caratteristiche)) return watch.caratteristiche;
+  if (!Array.isArray(watch.Orologi_Caratteristiche)) return [];
+  return watch.Orologi_Caratteristiche
+    .map((entry) => entry?.caratteristiche)
+    .filter(Boolean);
+};
+
+const csvCell = (value) => {
+  let text = String(value ?? '');
+  if (/^[\u0000-\u0020]*[=+\-@]/.test(text)) text = `'${text}`;
+  return `"${text.replace(/"/g, '""')}"`;
+};
+
 // Questo componente gestisce la visualizzazione (lista o carosello)
 // e l'ordinamento degli orologi
 const WatchList = ({ 
   watches, 
   handleModifyWatch, 
-  handleDeleteWatch, 
   handleFavoriteToggle, 
   handleInfoWatch,
   handleShowStats,
   handleInfiniteGrid,
 }) => {
-  
-  const [isCarouselView, setIsCarouselView] = useState(() => {
-    const savedView = localStorage.getItem('viewMode');
-    return savedView ? JSON.parse(savedView) : false;
-  });
+  const [isCarouselView, setIsCarouselView] = useState(readSavedViewMode);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [brandFilter, setBrandFilter] = useState('');
+  const [favoriteOnly, setFavoriteOnly] = useState(false);
+  const [minYear, setMinYear] = useState('');
+  const [maxYear, setMaxYear] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [sortBy, setSortBy] = useState('favorites');
 
   useEffect(() => {
-    localStorage.setItem('viewMode', JSON.stringify(isCarouselView));
+    try {
+      localStorage.setItem('viewMode', JSON.stringify(isCarouselView));
+    } catch {
+      // La modalità resta utilizzabile anche se il browser blocca lo storage.
+    }
   }, [isCarouselView]);
 
   const toggleView = () => {
     setIsCarouselView(prevState => !prevState);
   };
 
-  const sortByName = (a, b) => a.name.localeCompare(b.name);
+  const brands = useMemo(() => {
+    const uniqueBrands = new Map();
+    watches.forEach((watch) => {
+      const brand = String(watch.brand || '').trim();
+      if (brand && !uniqueBrands.has(brand.toLocaleLowerCase('it'))) {
+        uniqueBrands.set(brand.toLocaleLowerCase('it'), brand);
+      }
+    });
+    return [...uniqueBrands.values()].sort((a, b) => a.localeCompare(b, 'it', { sensitivity: 'base' }));
+  }, [watches]);
 
-  // Filtra e ordina
   const sortedWatches = useMemo(() => {
-    const favoriteWatches = watches.filter(w => w.isFavorite).sort(sortByName);
-    const nonFavoriteWatches = watches.filter(w => !w.isFavorite).sort(sortByName);
-    return [...favoriteWatches, ...nonFavoriteWatches];
-  }, [watches]); // Ricalcola solo se 'watches' cambia
+    const normalizedQuery = searchQuery.trim().toLocaleLowerCase('it');
+    const filtered = watches.filter((watch) => {
+      const price = Number(watch.money);
+      const year = Number(watch.year);
+      const hasYear = watch.year !== null && watch.year !== undefined && watch.year !== '' && Number.isFinite(year);
+      const searchFields = [
+        watch.name,
+        watch.brand,
+        watch.year,
+        watch.movement,
+        watch.color,
+        watch.note,
+        ...getWatchFeatures(watch).map((feature) => feature.nome_caratteristica || feature.name),
+      ];
+      const matchesQuery = !normalizedQuery || searchFields
+        .some((field) => String(field || '').toLocaleLowerCase('it').includes(normalizedQuery));
+      const normalizedBrand = String(watch.brand || '').trim().toLocaleLowerCase('it');
+      const matchesBrand = !brandFilter || normalizedBrand === brandFilter.toLocaleLowerCase('it');
+      const matchesFavorites = !favoriteOnly || watch.isFavorite;
+      const matchesMinYear = !minYear || (hasYear && year >= Number(minYear));
+      const matchesMaxYear = !maxYear || (hasYear && year <= Number(maxYear));
+      const hasPrice = watch.money !== null && watch.money !== undefined && watch.money !== '' && Number.isFinite(price);
+      const matchesMinPrice = !minPrice || (hasPrice && price >= Number(minPrice));
+      const matchesMaxPrice = !maxPrice || (hasPrice && price <= Number(maxPrice));
+
+      return matchesQuery && matchesBrand && matchesFavorites
+        && matchesMinYear && matchesMaxYear && matchesMinPrice && matchesMaxPrice;
+    });
+
+    const compareName = (a, b) => String(a.name || '').localeCompare(String(b.name || ''), 'it', { sensitivity: 'base' });
+    const compareNumber = (field, direction) => (a, b) => {
+      const aValue = Number(a[field]);
+      const bValue = Number(b[field]);
+      const aHasValue = a[field] !== null && a[field] !== undefined && a[field] !== '' && Number.isFinite(aValue);
+      const bHasValue = b[field] !== null && b[field] !== undefined && b[field] !== '' && Number.isFinite(bValue);
+      if (!aHasValue) return bHasValue ? 1 : 0;
+      if (!bHasValue) return -1;
+      return (aValue - bValue) * direction;
+    };
+
+    return filtered.sort((a, b) => {
+      if (sortBy === 'name') return compareName(a, b);
+      if (sortBy === 'year-newest') return compareNumber('year', -1)(a, b);
+      if (sortBy === 'year-oldest') return compareNumber('year', 1)(a, b);
+      if (sortBy === 'price-low') return compareNumber('money', 1)(a, b);
+      if (sortBy === 'price-high') return compareNumber('money', -1)(a, b);
+      if (sortBy === 'brand') {
+        return String(a.brand || '').localeCompare(String(b.brand || ''), 'it', { sensitivity: 'base' }) || compareName(a, b);
+      }
+      return Number(Boolean(b.isFavorite)) - Number(Boolean(a.isFavorite)) || compareName(a, b);
+    });
+  }, [watches, searchQuery, brandFilter, favoriteOnly, minYear, maxYear, minPrice, maxPrice, sortBy]);
+
+  const hasActiveFilters = Boolean(
+    searchQuery || brandFilter || favoriteOnly || minYear || maxYear || minPrice || maxPrice || sortBy !== 'favorites'
+  );
+
+  const resetFilters = () => {
+    setSearchQuery('');
+    setBrandFilter('');
+    setFavoriteOnly(false);
+    setMinYear('');
+    setMaxYear('');
+    setMinPrice('');
+    setMaxPrice('');
+    setSortBy('favorites');
+  };
+
+  const exportVisibleWatches = () => {
+    if (!sortedWatches.length) return;
+    const rows = [
+      ['Nome', 'Marca', 'Anno', 'Movimento', 'Prezzo (€)', 'Colore', 'Preferito', 'Caratteristiche', 'Note', 'Immagine'],
+      ...sortedWatches.map((watch) => [
+        watch.name,
+        watch.brand,
+        watch.year,
+        watch.movement,
+        watch.money,
+        watch.color,
+        watch.isFavorite ? 'Sì' : 'No',
+        getWatchFeatures(watch).map((feature) => feature.nome_caratteristica || feature.name || '').filter(Boolean).join(', '),
+        watch.note,
+        watch.imageUrl || watch.image,
+      ]),
+    ];
+    const csv = `\uFEFF${rows.map((row) => row.map(csvCell).join(';')).join('\r\n')}`;
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `calibro-collezione-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  };
+
+  const emptyMessage = watches.length === 0
+    ? 'La collezione è ancora vuota. Aggiungi un orologio per iniziare.'
+    : 'Nessun orologio corrisponde ai filtri selezionati.';
 
   return (
     <div>
@@ -100,10 +233,92 @@ const WatchList = ({
         </button>
       </div>
 
+      <section className="collection-tools" aria-label="Ricerca e filtri della collezione">
+        <div className="collection-tools__top-row">
+          <label className="collection-search">
+            <span className="collection-tools__label">Cerca nella collezione</span>
+            <span className="collection-search__control">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="10.8" cy="10.8" r="6.8" />
+                <path d="m16 16 4.2 4.2" />
+              </svg>
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Nome, marca, movimento, note..."
+                aria-label="Cerca per nome, marca, movimento o note"
+              />
+            </span>
+          </label>
+          <button
+            type="button"
+            className="collection-export-button"
+            onClick={exportVisibleWatches}
+            disabled={sortedWatches.length === 0}
+            aria-label={`Esporta ${sortedWatches.length} orologi visibili in formato CSV`}
+          >
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3" />
+            </svg>
+            Esporta CSV
+          </button>
+        </div>
+
+        <details className="collection-filters">
+          <summary>Filtri e ordinamento</summary>
+          <div className="collection-filters__grid">
+            <label>
+              <span className="collection-tools__label">Marca</span>
+              <select value={brandFilter} onChange={(event) => setBrandFilter(event.target.value)}>
+                <option value="">Tutte le marche</option>
+                {brands.map((brand) => <option key={brand} value={brand}>{brand}</option>)}
+              </select>
+            </label>
+            <label>
+              <span className="collection-tools__label">Ordina per</span>
+              <select value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
+                <option value="favorites">Preferiti e nome</option>
+                <option value="name">Nome A–Z</option>
+                <option value="brand">Marca</option>
+                <option value="year-newest">Anno: più recenti</option>
+                <option value="year-oldest">Anno: più datati</option>
+                <option value="price-low">Prezzo: crescente</option>
+                <option value="price-high">Prezzo: decrescente</option>
+              </select>
+            </label>
+            <label>
+              <span className="collection-tools__label">Anno da</span>
+              <input type="number" min="0" inputMode="numeric" value={minYear} onChange={(event) => setMinYear(event.target.value)} placeholder="Es. 1990" />
+            </label>
+            <label>
+              <span className="collection-tools__label">Anno a</span>
+              <input type="number" min="0" inputMode="numeric" value={maxYear} onChange={(event) => setMaxYear(event.target.value)} placeholder="Es. 2025" />
+            </label>
+            <label>
+              <span className="collection-tools__label">Prezzo da (€)</span>
+              <input type="number" min="0" step="0.01" inputMode="decimal" value={minPrice} onChange={(event) => setMinPrice(event.target.value)} placeholder="Nessun minimo" />
+            </label>
+            <label>
+              <span className="collection-tools__label">Prezzo a (€)</span>
+              <input type="number" min="0" step="0.01" inputMode="decimal" value={maxPrice} onChange={(event) => setMaxPrice(event.target.value)} placeholder="Nessun massimo" />
+            </label>
+            <label className="collection-favorites-filter">
+              <input type="checkbox" checked={favoriteOnly} onChange={(event) => setFavoriteOnly(event.target.checked)} />
+              <span>Solo preferiti</span>
+            </label>
+          </div>
+        </details>
+        <div className="collection-tools__summary" role="status" aria-live="polite">
+          <span>{sortedWatches.length} di {watches.length} {watches.length === 1 ? 'orologio visibile' : 'orologi visibili'}</span>
+          {hasActiveFilters && <button type="button" onClick={resetFilters}>Azzera filtri</button>}
+        </div>
+      </section>
+
       {/* VISTA LISTA */}
       {!isCarouselView && (
         <div className="watch-list">
-          {sortedWatches.map((watch) => (
+          {sortedWatches.length === 0 ? <p className="watch-list-empty">{emptyMessage}</p> : sortedWatches.map((watch) => (
             <motion.div 
               key={watch.id} 
               className="watch-card"
@@ -228,8 +443,8 @@ const WatchList = ({
           </Swiper>
         ) : (
           <div className="watch-carousel-empty">
-            <strong>La collezione è ancora vuota</strong>
-            <span>Aggiungi un orologio per iniziare il tuo carosello.</span>
+            <strong>{emptyMessage}</strong>
+            {watches.length === 0 && <span>Aggiungi un orologio per iniziare il tuo carosello.</span>}
           </div>
         )
       )}

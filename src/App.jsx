@@ -434,15 +434,17 @@ const handleAddWatch = async () => {
 
   const handleDeleteWatch = async (id, imagePath) => {
     const isConfirmed = window.confirm("Sei sicuro di voler eliminare questo orologio?");
-    if (!isConfirmed) return;
+    if (!isConfirmed) return false;
     try {
-      if (imagePath) await deleteImage(imagePath);
       const { error } = await supabase.from("watches").delete().eq("id", id);
       if (error) throw error;
+      if (imagePath) await deleteImage(imagePath);
       setWatches(prevWatches => prevWatches.filter(watch => watch.id !== id));
       setMessage("Orologio eliminato con successo!");
+      return true;
     } catch (error) {
       setMessage("Errore durante l'eliminazione: " + error.message);
+      return false;
     }
   };
 
@@ -465,9 +467,9 @@ const fetchWatches = async (userid) => {
       .eq("userid", userid);
     if (error) throw error;
     const userWatches = data.map((watch) => {
-      const features = watch.Orologi_Caratteristiche.map(
-        (joinEntry) => joinEntry.caratteristiche
-      );
+      const features = (watch.Orologi_Caratteristiche || [])
+        .map((joinEntry) => joinEntry?.caratteristiche)
+        .filter(Boolean);
       return { ...watch, caratteristiche: features, imageUrl: watch.image };
     });
     setWatches(userWatches);
@@ -528,7 +530,7 @@ const fetchWatches = async (userid) => {
   }, [watches]);
 
   const handleModifyWatch = (watchToModify) => {
-    const featureIDs = watchToModify.caratteristiche.map(
+    const featureIDs = (watchToModify.caratteristiche || []).map(
       (feature) => feature.id_caratteristica
     );
     setModifyWatch(watchToModify); 
@@ -1404,11 +1406,9 @@ const BackgroundLayer = useMemo(() => {
             <WatchList 
               watches={watches} 
               handleModifyWatch={handleModifyWatch} 
-              handleDeleteWatch={handleDeleteWatch}
               handleFavoriteToggle={handleFavoriteToggle}
               handleInfoWatch={handleInfoWatch} 
               handleShowStats={handleShowStats}
-              user={user} 
               handleInfiniteGrid={handleInfiniteGrid}
             />
           </div>

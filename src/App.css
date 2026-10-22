@@ -6042,6 +6042,234 @@ a:focus-visible,
   }
 }
 
+.collection-tools {
+  display: grid;
+  gap: 14px;
+  margin: 0 0 24px;
+  padding: clamp(14px, 2vw, 20px);
+  border: 1px solid var(--ui-border);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--ui-surface-strong) 82%, transparent);
+  box-shadow: 0 10px 28px rgba(30, 55, 72, 0.06), inset 0 1px rgba(255, 255, 255, 0.45);
+}
+
+.dark-mode .collection-tools {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16), inset 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.collection-tools__top-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.collection-search {
+  display: grid;
+  min-width: 0;
+  flex: 1 1 auto;
+  gap: 6px;
+}
+
+.collection-tools__label {
+  display: block;
+  color: var(--ui-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+}
+
+.collection-search__control {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.collection-search__control svg {
+  position: absolute;
+  left: 14px;
+  width: 19px;
+  height: 19px;
+  stroke: var(--ui-muted);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.collection-tools input:not([type="checkbox"]),
+.collection-tools select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 13px;
+  outline: none;
+  background: var(--ui-surface-strong);
+  color: var(--ui-text);
+  font: inherit;
+  font-size: 0.9rem;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.collection-search__control input {
+  padding-left: 42px !important;
+}
+
+.collection-tools input::placeholder {
+  color: var(--ui-muted);
+  opacity: 0.8;
+}
+
+.collection-tools input:focus-visible,
+.collection-tools select:focus-visible,
+.collection-tools button:focus-visible,
+.collection-filters summary:focus-visible {
+  border-color: var(--ui-accent);
+  outline: 3px solid var(--ui-accent-soft);
+  outline-offset: 2px;
+}
+
+.collection-export-button {
+  display: inline-flex;
+  min-height: 44px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 1px solid color-mix(in srgb, var(--ui-accent) 30%, transparent);
+  border-radius: 14px;
+  background: var(--ui-accent);
+  color: #fff;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 180ms ease, opacity 180ms ease, box-shadow 180ms ease;
+}
+
+.dark-mode .collection-export-button {
+  color: #18232a;
+}
+
+.collection-export-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 18px color-mix(in srgb, var(--ui-accent) 25%, transparent);
+}
+
+.collection-export-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.collection-export-button svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.collection-filters {
+  border-top: 1px solid var(--ui-border);
+  padding-top: 12px;
+}
+
+.collection-filters summary {
+  width: fit-content;
+  border-radius: 8px;
+  color: var(--ui-accent);
+  font-size: 0.87rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.collection-filters__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  align-items: end;
+  gap: 12px;
+  padding-top: 14px;
+}
+
+.collection-filters__grid > label:not(.collection-favorites-filter) {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+}
+
+.collection-favorites-filter {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 13px;
+  color: var(--ui-text);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.collection-favorites-filter input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--ui-accent);
+}
+
+.collection-tools__summary {
+  display: flex;
+  min-height: 24px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--ui-muted);
+  font-size: 0.8rem;
+}
+
+.collection-tools__summary button {
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: var(--ui-accent);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.watch-list-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: clamp(24px, 6vw, 56px) 18px;
+  border: 1px dashed var(--ui-border);
+  border-radius: 20px;
+  color: var(--ui-muted);
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .collection-tools__top-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .collection-export-button {
+    width: 100%;
+  }
+
+  .collection-filters__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .collection-tools__summary {
+    align-items: flex-start;
+  }
+}
+
 /* Sui telefoni lascia il carosello dei marchi fluido e alleggerisce gli effetti decorativi. */
 @media (max-width: 720px) {
   .slideWrap_Container > .glass-surface {
