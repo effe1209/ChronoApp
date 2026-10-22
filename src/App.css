@@ -5410,7 +5410,7 @@ a:focus-visible,
   color: #ffffff;
 }
 
-.add-watch-form .footer-nav .danger-button.dark-mode {
+.dark-mode .add-watch-form .footer-nav .danger-button {
   color: #101820;
 }
 
