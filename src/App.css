@@ -2527,14 +2527,17 @@ body.dark-mode {
   padding: 26px clamp(20px, 5vw, 56px);
 }
 
-.profile-info > .profile-info-ambient {
+.profile-info > .profile-info-video {
   position: absolute;
   inset: 0;
   z-index: 0;
   width: 100%;
   height: 100%;
   max-width: none;
-  pointer-events: auto;
+  object-fit: cover;
+  opacity: 0.4;
+  mix-blend-mode: luminosity;
+  pointer-events: none;
 }
 
 .profile-info-content {
@@ -4823,6 +4826,15 @@ a:focus-visible,
   text-shadow: none;
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
   backdrop-filter: blur(16px) saturate(1.2);
+}
+
+.profile-info-content > .profile-collection-glass {
+  position: relative;
+  z-index: 10;
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 
 .dark-mode .profile-info-content > .profile-collection-value {

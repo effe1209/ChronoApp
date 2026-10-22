@@ -8,7 +8,6 @@ import WatchAnalytics from './components/WatchAnalytics';
 import GlassSurface from './components/GlassSurface';
 import TiltedCard from './components/TiltedCard';
 import FloatingLines from './components/FloatingLines';
-import MetaBalls from './components/MetaBalls';
 import InfiniteGridModal from './components/InfiniteGridModal';
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import ColorThief from 'colorthief';
@@ -1278,21 +1277,17 @@ const BackgroundLayer = useMemo(() => {
         />
       ) : (
         <>
-          <div className="profile-info" id="profile-section">
-            {!isCompactViewport && <MetaBalls
-              className="profile-info-ambient"
-              color={isDark ? "#e8bd72" : "#28677b"}
-              cursorBallColor={isDark ? "#e8bd72" : "#28677b"}
-              cursorBallSize={2}
-              ballCount={20}
-              accentBallCount={3}
-              animationSize={15}
-              enableMouseInteraction={false}
-              enableTransparency={true}
-              hoverSmoothness={0.09}
-              clumpFactor={1}
-              speed={0.2}
-            />}
+          <div className="profile-info relative overflow-hidden" id="profile-section">
+            <video
+              className="profile-info-video absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-luminosity"
+              src={`${import.meta.env.BASE_URL}w7.webm`}
+              autoPlay
+              loop
+              muted
+              playsInline
+              aria-hidden="true"
+              tabIndex={-1}
+            />
             <div className="profile-info-content">
               <div className="circular-text-container">
                 <div className="profile-picture">
@@ -1300,7 +1295,7 @@ const BackgroundLayer = useMemo(() => {
                 </div>
               </div>
               <h4 className="Saluti">Benvenuto, {nickname}</h4>
-              <p className="profile-collection-value">
+              <p className="profile-collection-value profile-collection-glass backdrop-blur-md bg-white/20 border border-white/30 relative z-10">
                 <span>Valore della collezione</span>
                 <strong>{totalMoney.toLocaleString('it-IT')} €</strong>
               </p>
