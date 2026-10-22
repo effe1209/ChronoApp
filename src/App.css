@@ -4603,6 +4603,18 @@ a:focus-visible,
   animation: hero-arrive 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+.hero-brand-logo {
+  display: block;
+  width: clamp(104px, 12vw, 150px);
+  height: auto;
+  aspect-ratio: 1;
+  margin: 0 0 18px -4px;
+  border: 1px solid rgba(206, 176, 113, 0.6);
+  border-radius: 24px;
+  object-fit: cover;
+  box-shadow: 0 16px 36px rgba(12, 27, 45, 0.2), inset 0 1px rgba(255, 255, 255, 0.25);
+}
+
 .hero-watch {
   position: absolute;
   z-index: 1;
@@ -4913,6 +4925,11 @@ a:focus-visible,
     width: 100%;
   }
 
+  .hero-brand-logo {
+    width: 128px;
+    margin-bottom: 16px;
+  }
+
   .hero-section h1 {
     font-size: clamp(2.9rem, 10vw, 4.4rem) !important;
   }
@@ -4949,6 +4966,11 @@ a:focus-visible,
 
   .hero-section h1 {
     font-size: clamp(2.6rem, 10vw, 3.3rem) !important;
+  }
+
+  .hero-brand-logo {
+    width: 108px;
+    border-radius: 20px;
   }
 
   .hero-cta {
