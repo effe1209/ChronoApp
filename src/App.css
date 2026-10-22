@@ -3160,8 +3160,8 @@ a:focus-visible,
 }
 
 .modify-watch-modal {
-  width: min(100%, 760px);
-  max-width: 760px;
+  width: min(100%, 1040px);
+  max-width: 1040px;
   max-height: calc(100vh - 28px);
   max-height: calc(100dvh - 28px);
   margin: auto;
