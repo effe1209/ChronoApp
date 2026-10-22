@@ -2527,22 +2527,58 @@ body.dark-mode {
   padding: 26px clamp(20px, 5vw, 56px);
 }
 
-.profile-info > .profile-info-video {
+.profile-info > .profile-info-video-mask {
   position: absolute;
   inset: 0;
   z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image:
+    radial-gradient(ellipse at center, #000 30%, rgba(0, 0, 0, 0.94) 48%, transparent 82%),
+    linear-gradient(to bottom, transparent 0%, #000 17%, #000 83%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(ellipse at center, #000 30%, rgba(0, 0, 0, 0.94) 48%, transparent 82%),
+    linear-gradient(to bottom, transparent 0%, #000 17%, #000 83%, transparent 100%);
+  mask-composite: intersect;
+}
+
+.profile-info-video-mask > .profile-info-video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   max-width: none;
   object-fit: cover;
-  opacity: 0.4;
+  opacity: 0.25;
   mix-blend-mode: luminosity;
   pointer-events: none;
 }
 
+.profile-info::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(166deg, transparent 39%, rgba(246, 251, 255, 0.18) 40%, rgba(154, 219, 245, 0.13) 40.2%, transparent 41%),
+    linear-gradient(173deg, transparent 51%, rgba(255, 255, 255, 0.12) 51.5%, transparent 52.5%);
+  content: "";
+  filter: blur(1.2px);
+  opacity: 0.72;
+  pointer-events: none;
+  animation: profile-light-drift 18s ease-in-out infinite alternate;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 72%, transparent 100%);
+}
+
+@keyframes profile-light-drift {
+  from { transform: translateX(-1.5%); }
+  to { transform: translateX(1.5%); }
+}
+
 .profile-info-content {
   position: relative;
-  z-index: 1;
+  z-index: 10;
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -4831,8 +4867,10 @@ a:focus-visible,
 .profile-info-content > .profile-collection-glass {
   position: relative;
   z-index: 10;
-  border-color: rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 15px rgba(16, 31, 43, 0.12), inset 0 1px rgba(255, 255, 255, 0.08);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }

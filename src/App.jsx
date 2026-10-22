@@ -1278,24 +1278,25 @@ const BackgroundLayer = useMemo(() => {
       ) : (
         <>
           <div className="profile-info relative overflow-hidden" id="profile-section">
-            <video
-              className="profile-info-video absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-luminosity"
-              src={`${import.meta.env.BASE_URL}w7.webm`}
-              autoPlay
-              loop
-              muted
-              playsInline
-              aria-hidden="true"
-              tabIndex={-1}
-            />
-            <div className="profile-info-content">
+            <div className="profile-info-video-mask absolute inset-0" aria-hidden="true">
+              <video
+                className="profile-info-video absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-luminosity"
+                src={`${import.meta.env.BASE_URL}w7.webm`}
+                autoPlay
+                loop
+                muted
+                playsInline
+                tabIndex={-1}
+              />
+            </div>
+            <div className="profile-info-content relative z-10">
               <div className="circular-text-container">
                 <div className="profile-picture">
                   <UserProfile email={email} isDark={isDark} />
                 </div>
               </div>
               <h4 className="Saluti">Benvenuto, {nickname}</h4>
-              <p className="profile-collection-value profile-collection-glass backdrop-blur-md bg-white/20 border border-white/30 relative z-10">
+              <p className="profile-collection-value profile-collection-glass backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl shadow-lg relative z-10">
                 <span>Valore della collezione</span>
                 <strong>{totalMoney.toLocaleString('it-IT')} €</strong>
               </p>
