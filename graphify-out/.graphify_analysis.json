@@ -1,0 +1,493 @@
+{
+  "communities": {
+    "0": [
+      "ref_framer_motion",
+      "ref_mui_material",
+      "ref_react",
+      "ref_react_dom",
+      "ref_react_icons",
+      "ref_swiper",
+      "src_app",
+      "src_app_app",
+      "src_app_app_getoutfitembedding",
+      "src_components_authform",
+      "src_components_authform_authform",
+      "src_components_clock",
+      "src_components_clock_clock",
+      "src_components_clock_clock_clock",
+      "src_components_clock_getclockposition",
+      "src_components_clock_romannumerals",
+      "src_components_componentcss_authform",
+      "src_components_componentcss_glasssurface",
+      "src_components_darkmodeswitch",
+      "src_components_darkmodeswitch_darkmodeswitch",
+      "src_components_darkmodeswitch_materialuiswitch",
+      "src_components_daywatchmodal",
+      "src_components_daywatchmodal_daywatchmodal",
+      "src_components_dock",
+      "src_components_dock_dock",
+      "src_components_favoritebutton",
+      "src_components_favoritebutton_favoritebutton",
+      "src_components_functionssection",
+      "src_components_functionssection_functionssection",
+      "src_components_glasssurface",
+      "src_components_glasssurface_glasssurface",
+      "src_components_infowatchmodal",
+      "src_components_infowatchmodal_infowatchmodal",
+      "src_components_outfitmodal",
+      "src_components_outfitmodal_outfitmodal",
+      "src_components_userprofile",
+      "src_components_userprofile_userprofile",
+      "src_components_watchdetails",
+      "src_components_watchdetails_watchdetails",
+      "src_components_watchlist",
+      "src_components_watchlist_watchlist",
+      "src_index",
+      "src_main"
+    ],
+    "1": [
+      "ref_gl_matrix",
+      "src_components_componentcss_infinitemenu",
+      "src_components_infinitegridmodal",
+      "src_components_infinitegridmodal_infinitegridmodal",
+      "src_components_infinitemenu",
+      "src_components_infinitemenu_arcballcontrol",
+      "src_components_infinitemenu_arcballcontrol_constructor",
+      "src_components_infinitemenu_arcballcontrol_project",
+      "src_components_infinitemenu_arcballcontrol_quatfromvectors",
+      "src_components_infinitemenu_arcballcontrol_update",
+      "src_components_infinitemenu_createandsetuptexture",
+      "src_components_infinitemenu_createprogram",
+      "src_components_infinitemenu_createshader",
+      "src_components_infinitemenu_defaultitems",
+      "src_components_infinitemenu_infinitegridmenu",
+      "src_components_infinitemenu_infinitegridmenu_animate",
+      "src_components_infinitemenu_infinitegridmenu_constructor",
+      "src_components_infinitemenu_infinitegridmenu_findnearestvertexindex",
+      "src_components_infinitemenu_infinitegridmenu_getvertexworldposition",
+      "src_components_infinitemenu_infinitegridmenu_init",
+      "src_components_infinitemenu_infinitegridmenu_initdiscinstances",
+      "src_components_infinitemenu_infinitegridmenu_inittexture",
+      "src_components_infinitemenu_infinitegridmenu_oncontrolupdate",
+      "src_components_infinitemenu_infinitegridmenu_render",
+      "src_components_infinitemenu_infinitegridmenu_resize",
+      "src_components_infinitemenu_infinitegridmenu_run",
+      "src_components_infinitemenu_infinitegridmenu_stop",
+      "src_components_infinitemenu_infinitegridmenu_updatecameramatrix",
+      "src_components_infinitemenu_infinitegridmenu_updateprojectionmatrix",
+      "src_components_infinitemenu_infinitemenu",
+      "src_components_infinitemenu_makebuffer",
+      "src_components_infinitemenu_makevertexarray",
+      "src_components_infinitemenu_resizecanvastodisplaysize"
+    ],
+    "2": [
+      "eslint_config",
+      "package",
+      "package_name",
+      "package_private",
+      "package_type",
+      "package_version",
+      "ref_browser_image_compression",
+      "ref_capacitor_cli",
+      "ref_capacitor_core",
+      "ref_capacitor_ios",
+      "ref_colorthief",
+      "ref_emotion_react",
+      "ref_emotion_styled",
+      "ref_eslint",
+      "ref_eslint_js",
+      "ref_eslint_plugin_react_hooks",
+      "ref_eslint_plugin_react_refresh",
+      "ref_gh_pages",
+      "ref_globals",
+      "ref_lucide_react",
+      "ref_md5",
+      "ref_react_avatar",
+      "ref_react_color",
+      "ref_react_router_dom",
+      "ref_react_select",
+      "ref_types_react",
+      "ref_types_react_dom",
+      "ref_vercel_speed_insights",
+      "ref_vite",
+      "ref_vitejs_plugin_react",
+      "vite_config"
+    ],
+    "3": [
+      "package_dependencies",
+      "package_dependencies_browser_image_compression",
+      "package_dependencies_capacitor_cli",
+      "package_dependencies_capacitor_core",
+      "package_dependencies_capacitor_ios",
+      "package_dependencies_chart_js",
+      "package_dependencies_colorthief",
+      "package_dependencies_emotion_react",
+      "package_dependencies_emotion_styled",
+      "package_dependencies_framer_motion",
+      "package_dependencies_gl_matrix",
+      "package_dependencies_lucide_react",
+      "package_dependencies_md5",
+      "package_dependencies_motion",
+      "package_dependencies_mui_material",
+      "package_dependencies_ogl",
+      "package_dependencies_react",
+      "package_dependencies_react_avatar",
+      "package_dependencies_react_chartjs_2",
+      "package_dependencies_react_color",
+      "package_dependencies_react_dom",
+      "package_dependencies_react_icons",
+      "package_dependencies_react_router_dom",
+      "package_dependencies_react_select",
+      "package_dependencies_react_three_fiber",
+      "package_dependencies_supabase_supabase_js",
+      "package_dependencies_swiper",
+      "package_dependencies_three",
+      "package_dependencies_vercel_speed_insights"
+    ],
+    "4": [
+      "src_components_infinitemenu_discgeometry",
+      "src_components_infinitemenu_discgeometry_constructor",
+      "src_components_infinitemenu_face",
+      "src_components_infinitemenu_face_constructor",
+      "src_components_infinitemenu_geometry",
+      "src_components_infinitemenu_geometry_addface",
+      "src_components_infinitemenu_geometry_addvertex",
+      "src_components_infinitemenu_geometry_constructor",
+      "src_components_infinitemenu_geometry_data",
+      "src_components_infinitemenu_geometry_getmidpoint",
+      "src_components_infinitemenu_geometry_indexdata",
+      "src_components_infinitemenu_geometry_lastvertex",
+      "src_components_infinitemenu_geometry_normaldata",
+      "src_components_infinitemenu_geometry_spherize",
+      "src_components_infinitemenu_geometry_subdivide",
+      "src_components_infinitemenu_geometry_uvdata",
+      "src_components_infinitemenu_geometry_vertexdata",
+      "src_components_infinitemenu_icosahedrongeometry",
+      "src_components_infinitemenu_icosahedrongeometry_constructor",
+      "src_components_infinitemenu_vertex",
+      "src_components_infinitemenu_vertex_constructor"
+    ],
+    "5": [
+      "any",
+      "bool",
+      "capacitor",
+      "ios_app_app_appdelegate",
+      "ios_app_app_appdelegate_appdelegate",
+      "ios_app_app_appdelegate_appdelegate_application",
+      "ios_app_app_appdelegate_appdelegate_applicationdidbecomeactive",
+      "ios_app_app_appdelegate_appdelegate_applicationdidenterbackground",
+      "ios_app_app_appdelegate_appdelegate_applicationwillenterforeground",
+      "ios_app_app_appdelegate_appdelegate_applicationwillresignactive",
+      "ios_app_app_appdelegate_appdelegate_applicationwillterminate",
+      "nsuseractivity",
+      "uiapplication",
+      "uiapplicationdelegate",
+      "uikit",
+      "uiresponder",
+      "uiuseractivityrestoring",
+      "uiwindow",
+      "url",
+      "void"
+    ],
+    "6": [
+      "ref_ogl",
+      "src_components_componentcss_iridescence",
+      "src_components_componentcss_metaballs",
+      "src_components_iridescence",
+      "src_components_iridescence_iridescence",
+      "src_components_iridescence_iridescence_handlemousemove",
+      "src_components_iridescence_iridescence_resize",
+      "src_components_iridescence_iridescence_update",
+      "src_components_metaballs",
+      "src_components_metaballs_fract",
+      "src_components_metaballs_hash31",
+      "src_components_metaballs_hash33",
+      "src_components_metaballs_metaballs",
+      "src_components_metaballs_metaballs_onpointerenter",
+      "src_components_metaballs_metaballs_onpointerleave",
+      "src_components_metaballs_metaballs_onpointermove",
+      "src_components_metaballs_metaballs_resize",
+      "src_components_metaballs_metaballs_update",
+      "src_components_metaballs_parsehexcolor"
+    ],
+    "7": [
+      "src_components_addwatchform",
+      "src_components_addwatchform_addwatchform",
+      "src_components_componentcss_stepper",
+      "src_components_featurecheckboxlist",
+      "src_components_featurecheckboxlist_featurecheckboxlist",
+      "src_components_modifywatchmodal",
+      "src_components_modifywatchmodal_modifywatchmodal",
+      "src_components_stepper",
+      "src_components_stepper_checkicon",
+      "src_components_stepper_slidetransition",
+      "src_components_stepper_step",
+      "src_components_stepper_stepconnector",
+      "src_components_stepper_stepcontentwrapper",
+      "src_components_stepper_stepindicator",
+      "src_components_stepper_stepper",
+      "src_components_stepper_stepvariants"
+    ],
+    "8": [
+      "ref_motion",
+      "src_components_circulartext",
+      "src_components_circulartext_circulartext",
+      "src_components_circulartext_getrotationtransition",
+      "src_components_circulartext_gettransition",
+      "src_components_componentcss_circulartext",
+      "src_components_componentcss_tiltedcard",
+      "src_components_tiltedcard",
+      "src_components_tiltedcard_springvalues",
+      "src_components_tiltedcard_tiltedcard",
+      "src_components_tiltedcard_tiltedcard_handlemouse",
+      "src_components_tiltedcard_tiltedcard_handlemouseenter",
+      "src_components_tiltedcard_tiltedcard_handlemouseleave"
+    ],
+    "9": [
+      "package_devdependencies",
+      "package_devdependencies_eslint",
+      "package_devdependencies_eslint_js",
+      "package_devdependencies_eslint_plugin_react_hooks",
+      "package_devdependencies_eslint_plugin_react_refresh",
+      "package_devdependencies_gh_pages",
+      "package_devdependencies_globals",
+      "package_devdependencies_types_react",
+      "package_devdependencies_types_react_dom",
+      "package_devdependencies_vite",
+      "package_devdependencies_vitejs_plugin_react"
+    ],
+    "10": [
+      "ref_react_three_fiber",
+      "ref_three",
+      "src_components_componentcss_floatinglines",
+      "src_components_floatinglines",
+      "src_components_floatinglines_floatinglines",
+      "src_components_floatinglines_hextovec3",
+      "src_components_plasma",
+      "src_components_plasma_hextonormalizedrgb",
+      "src_components_plasma_silk",
+      "src_components_plasma_silkplane"
+    ],
+    "11": [
+      "ref_supabase_supabase_js",
+      "src_components_imageservice",
+      "src_components_imageservice_uploadimage",
+      "src_components_supabaseclient",
+      "src_components_supabaseclient_supabase",
+      "src_components_validation",
+      "src_components_validation_isvalidwatch",
+      "src_components_watchservice",
+      "src_components_watchservice_addwatchservice"
+    ],
+    "12": [
+      "manifest",
+      "manifest_background_color",
+      "manifest_display",
+      "manifest_icons",
+      "manifest_name",
+      "manifest_short_name",
+      "manifest_start_url",
+      "manifest_theme_color"
+    ],
+    "13": [
+      "ref_chart_js",
+      "ref_react_chartjs_2",
+      "src_components_statsmodal",
+      "src_components_statsmodal_statsmodal",
+      "src_components_watchanalytics",
+      "src_components_watchanalytics_generatecolors",
+      "src_components_watchanalytics_processdata",
+      "src_components_watchanalytics_watchanalytics"
+    ],
+    "14": [
+      "src_components_componentcss_logoloop",
+      "src_components_logoloop",
+      "src_components_logoloop_animation_config",
+      "src_components_logoloop_logoloop",
+      "src_components_logoloop_tocsslength",
+      "src_components_logoloop_useanimationloop",
+      "src_components_logoloop_useimageloader",
+      "src_components_logoloop_useresizeobserver"
+    ],
+    "15": [
+      "package_scripts",
+      "package_scripts_build",
+      "package_scripts_deploy",
+      "package_scripts_dev",
+      "package_scripts_lint",
+      "package_scripts_preview",
+      "package_scripts_start"
+    ],
+    "16": [
+      "src_components_watchmovementcomplication",
+      "src_components_watchmovementcomplication_creategearpath",
+      "src_components_watchmovementcomplication_gear",
+      "src_components_watchmovementcomplication_screw",
+      "src_components_watchmovementcomplication_watchmovementcomplication"
+    ],
+    "17": [
+      "src_components_scrollingbrands",
+      "src_components_scrollingbrands_scrollingbrands1",
+      "src_components_scrollingbrands_scrollingbrands2",
+      "src_components_scrollingbrands_scrollingbrands3"
+    ],
+    "18": [
+      "src_components_componentcss_electricborder",
+      "src_components_electricborder",
+      "src_components_electricborder_electricborder"
+    ],
+    "19": [
+      "src_components_selectcomplications",
+      "src_components_selectcomplications_featureslist",
+      "src_components_selectcomplications_watchdetails"
+    ],
+    "20": [
+      "backup_uploadimage_restore",
+      "backup_uploadimage_restore_uploadimage"
+    ],
+    "21": [
+      "backup_addwatch_restore"
+    ],
+    "22": [
+      "src_components_componentcss_dsd"
+    ]
+  },
+  "cohesion": {
+    "0": 0.10963455149501661,
+    "1": 0.11553030303030302,
+    "2": 0.07311827956989247,
+    "3": 0.06896551724137931,
+    "4": 0.12857142857142856,
+    "5": 0.12631578947368421,
+    "6": 0.13450292397660818,
+    "7": 0.23333333333333334,
+    "8": 0.1794871794871795,
+    "9": 0.18181818181818182,
+    "10": 0.26666666666666666,
+    "11": 0.4166666666666667,
+    "12": 0.25,
+    "13": 0.39285714285714285,
+    "14": 0.39285714285714285,
+    "15": 0.2857142857142857,
+    "16": 0.7,
+    "17": 0.5,
+    "18": 0.6666666666666666,
+    "19": 0.6666666666666666,
+    "20": 1.0,
+    "21": 1.0,
+    "22": 1.0
+  },
+  "gods": [
+    {
+      "id": "ref_react",
+      "label": "react",
+      "degree": 33
+    },
+    {
+      "id": "src_app_app",
+      "label": "App()",
+      "degree": 20
+    },
+    {
+      "id": "src_components_infinitemenu_infinitegridmenu",
+      "label": "InfiniteGridMenu",
+      "degree": 16
+    },
+    {
+      "id": "src_components_infinitemenu_geometry",
+      "label": "Geometry",
+      "degree": 15
+    },
+    {
+      "id": "ios_app_app_appdelegate_appdelegate",
+      "label": "AppDelegate",
+      "degree": 10
+    },
+    {
+      "id": "src_components_metaballs_metaballs",
+      "label": "MetaBalls()",
+      "degree": 9
+    },
+    {
+      "id": "src_components_glasssurface_glasssurface",
+      "label": "GlassSurface()",
+      "degree": 7
+    },
+    {
+      "id": "src_components_infinitemenu_infinitemenu",
+      "label": "InfiniteMenu()",
+      "degree": 7
+    },
+    {
+      "id": "src_components_tiltedcard_tiltedcard",
+      "label": "TiltedCard()",
+      "degree": 7
+    },
+    {
+      "id": "src_components_logoloop_logoloop",
+      "label": "LogoLoop",
+      "degree": 7
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Dock()",
+      "target": "react",
+      "source_files": [
+        "src/components/Dock.jsx",
+        "package.json"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "App()",
+      "target": "AddWatchForm()",
+      "source_files": [
+        "src/App.jsx",
+        "src/components/AddWatchForm.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "App()",
+      "target": "FloatingLines()",
+      "source_files": [
+        "src/App.jsx",
+        "src/components/FloatingLines.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "App()",
+      "target": "InfiniteGridModal()",
+      "source_files": [
+        "src/App.jsx",
+        "src/components/InfiniteGridModal.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "App()",
+      "target": "LogoLoop",
+      "source_files": [
+        "src/App.jsx",
+        "src/components/LogoLoop.jsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    }
+  ],
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
+}
