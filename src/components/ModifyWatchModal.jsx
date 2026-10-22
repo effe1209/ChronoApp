@@ -157,14 +157,16 @@ const ModifyWatchModal = ({
 
           <fieldset className="modify-watch-field modify-watch-field--wide watch-equipment-fields">
             <legend>Dotazione e garanzia</legend>
-            <label className="watch-equipment-check">
-              <input type="checkbox" checked={Boolean(updatedWatch.has_box)} onChange={(e) => setUpdatedWatch({ ...updatedWatch, has_box: e.target.checked })} />
-              <span>Scatola originale</span>
-            </label>
-            <label className="watch-equipment-check">
-              <input type="checkbox" checked={Boolean(updatedWatch.has_papers)} onChange={(e) => setUpdatedWatch({ ...updatedWatch, has_papers: e.target.checked })} />
-              <span>Documenti e libretti</span>
-            </label>
+            <div className="watch-equipment-options watch-equipment-fields__wide">
+              <label className="watch-equipment-check">
+                <input type="checkbox" checked={Boolean(updatedWatch.has_box)} onChange={(e) => setUpdatedWatch({ ...updatedWatch, has_box: e.target.checked })} />
+                <span>Scatola originale</span>
+              </label>
+              <label className="watch-equipment-check">
+                <input type="checkbox" checked={Boolean(updatedWatch.has_papers)} onChange={(e) => setUpdatedWatch({ ...updatedWatch, has_papers: e.target.checked })} />
+                <span>Documenti e libretti</span>
+              </label>
+            </div>
             <label className="modify-watch-field modify-watch-field--wide">
               <span>Altra dotazione</span>
               <input type="text" maxLength="500" value={updatedWatch.accessories || ''} onChange={(e) => setUpdatedWatch({ ...updatedWatch, accessories: e.target.value })} />

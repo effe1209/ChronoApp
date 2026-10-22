@@ -106,24 +106,23 @@ export default function Stepper({
 
         {!isCompleted && (
           <div className={`footer-container ${footerClassName}`}>
-  <div className={`footer-nav ${(currentStep !== 1) ? 'spread' : 'end'}`}>
+          <div className="footer-nav spread">
     
 
-    {/* TASTO INDIETRO (Sinistra) */}
-    <div> {/* Avvolgiamo in un div per sicurezza layout */}
       {currentStep !== 1 && (
         <button
+          type="button"
           onClick={handleBack}
-          className={`back-button ${currentStep === 1 ? 'inactive' : ''}`}
+          className="back-button"
           {...backButtonProps}
         >
           {backButtonText}
         </button>
       )}
-    </div>
-      {/* TASTO ANNULLA - Visibile solo se è l'ultimo step E se onCancel esiste */}
-      {(currentStep == 1 || isLastStep) && onCancel && (
+      {/* L'utente può interrompere l'inserimento da qualunque passaggio. */}
+      {onCancel && (
         <button
+          type="button"
           onClick={onCancel}
           className="back-button danger-button"
         >
@@ -132,8 +131,8 @@ export default function Stepper({
       )}
 
       {/* TASTO AVANTI / SALVA */}
-      <button 
-        
+      <button
+        type="button"
         className={`${nextButtonProps.className || ''} next-button ${isLastStep ? 'success-button' : ''}`}
         onClick={isLastStep ? handleComplete : handleNext}
         {...nextButtonProps}

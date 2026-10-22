@@ -200,22 +200,24 @@ const AddWatchForm = ({
             <p>Registra scatola, documenti e copertura del tuo orologio.</p>
           </div>
           <div className="watch-equipment-fields">
-            <label className="watch-equipment-check">
-              <input
-                type="checkbox"
-                checked={Boolean(newWatch.has_box)}
-                onChange={(e) => setNewWatch({ ...newWatch, has_box: e.target.checked })}
-              />
-              <span>Scatola originale</span>
-            </label>
-            <label className="watch-equipment-check">
-              <input
-                type="checkbox"
-                checked={Boolean(newWatch.has_papers)}
-                onChange={(e) => setNewWatch({ ...newWatch, has_papers: e.target.checked })}
-              />
-              <span>Documenti e libretti</span>
-            </label>
+            <div className="watch-equipment-options watch-equipment-fields__wide">
+              <label className="watch-equipment-check">
+                <input
+                  type="checkbox"
+                  checked={Boolean(newWatch.has_box)}
+                  onChange={(e) => setNewWatch({ ...newWatch, has_box: e.target.checked })}
+                />
+                <span>Scatola originale</span>
+              </label>
+              <label className="watch-equipment-check">
+                <input
+                  type="checkbox"
+                  checked={Boolean(newWatch.has_papers)}
+                  onChange={(e) => setNewWatch({ ...newWatch, has_papers: e.target.checked })}
+                />
+                <span>Documenti e libretti</span>
+              </label>
+            </div>
             <label className="add-watch-field watch-equipment-fields__wide">
               <span>Altra dotazione</span>
               <input
