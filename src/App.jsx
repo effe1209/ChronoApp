@@ -1107,11 +1107,24 @@ const BackgroundLayer = useMemo(() => {
         )}
         </div>
       <div id="home-section" className="hero-section">
-        <figure className="hero-watch">
+        <figure className={`hero-watch${isDark ? ' is-dark' : ''}`}>
           <img
-            className="hero-watch-image"
-            src={isDark ? '/orologio_fin_dark.png' : '/orologio_fin.png'}
-            alt="Orologio classico argentato inclinato, con quadrante romano"
+            className="hero-watch-image hero-watch-image--light"
+            src="/orologio_fin.png"
+            alt={isDark ? '' : 'Orologio classico argentato inclinato, con quadrante romano'}
+            aria-hidden={isDark ? 'true' : undefined}
+            loading="eager"
+            decoding="async"
+            fetchPriority={isDark ? 'low' : 'high'}
+          />
+          <img
+            className="hero-watch-image hero-watch-image--dark"
+            src="/orologio_fin_dark.png"
+            alt={isDark ? 'Orologio classico argentato inclinato, con quadrante romano in versione scura' : ''}
+            aria-hidden={!isDark ? 'true' : undefined}
+            loading="eager"
+            decoding="async"
+            fetchPriority={isDark ? 'high' : 'low'}
           />
         </figure>
         <svg
@@ -1159,7 +1172,6 @@ const BackgroundLayer = useMemo(() => {
       <div className="brand-strip" aria-label="Marchi di orologi">
         <div className="brand-strip-heading">
           <span>Grandi nomi, storie senza tempo</span>
-          <span className="brand-strip-caption">Un universo da esplorare</span>
         </div>
         <LogoLoop
           logos={techLogos}
