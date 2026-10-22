@@ -735,12 +735,15 @@ class InfiniteGridMenu {
 
         const x = (i % this.atlasSize) * cellSize;
         const y = Math.floor(i / this.atlasSize) * cellSize;
-        const imageInset = 16;
-        const imageArea = cellSize - imageInset * 2;
-        const scale = Math.min(imageArea / img.naturalWidth, imageArea / img.naturalHeight);
+        const scale = Math.max(cellSize / img.naturalWidth, cellSize / img.naturalHeight);
         const width = img.naturalWidth * scale;
         const height = img.naturalHeight * scale;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(x, y, cellSize, cellSize);
+        ctx.clip();
         ctx.drawImage(img, x + (cellSize - width) / 2, y + (cellSize - height) / 2, width, height);
+        ctx.restore();
       });
 
       gl.bindTexture(gl.TEXTURE_2D, this.tex);

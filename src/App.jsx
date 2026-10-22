@@ -978,6 +978,7 @@ const updateAllWatchEmbeddings = async () => {
   const [isDark, setIsDark] = useState(
     () => localStorage.getItem("theme") === "dark" 
   );
+  const [activeBrandModels, setActiveBrandModels] = useState(null);
 
 //   const techLogos = [
 //   { title: "React"},
@@ -985,35 +986,35 @@ const updateAllWatchEmbeddings = async () => {
 //   { node: <SiTypescript />, title: "TypeScript", href: "https://www.typescriptlang.org" },
 //   { node: <SiTailwindcss />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
 // ];
-const techLogos = [
-  {node: <span>rolex</span>},
-  {node:<span>tissot</span>},
-  {node:<span>audemarspiguet</span>},
-  {node: <span>citizen</span>},
-  {node:<span>casio</span>},
-  {node:<span>orient</span>},
-  {node:<span>hublot</span>},
-  {node:<span>tudor</span>},
-  {node:<span>oris</span>},
-  {node:<span>alpina</span>},
-  {node:<span>bulova</span>},
-  {node:<span>patek philippe</span>},
-  {node:<span>zenith</span>},
-  {node: <span>cartier</span>},
-  {node:<span>seiko</span>},
-  {node: <span>omega</span>},
-  {node:<span>longines</span>},
-  {node:<span>mido</span>},
-  {node: <span>hamilton</span>},
-  {node:<span>iwc</span>},
-  {node: <span>swatch</span>},
-  {node: <span>maurice lacroix</span>},
-  {node: <span>timex</span>},
-  {node: <span>breitling</span>},
-  {node: <span>panerai</span>},
-  {node:  <span>jaeger-lecoultre</span>},
-  {node: <span>lorenz</span>},
-];
+const watchBrands = useMemo(() => [
+  { name: 'Rolex', models: ['Submariner', 'Datejust'] },
+  { name: 'Tissot', models: ['PRX', 'Seastar 1000'] },
+  { name: 'Audemars Piguet', models: ['Royal Oak', 'Code 11.59'] },
+  { name: 'Citizen', models: ['Tsuyosa', 'Promaster'] },
+  { name: 'Casio', models: ['G-Shock', 'Edifice'] },
+  { name: 'Orient', models: ['Bambino', 'Mako'] },
+  { name: 'Hublot', models: ['Big Bang', 'Classic Fusion'] },
+  { name: 'Tudor', models: ['Black Bay', 'Pelagos'] },
+  { name: 'Oris', models: ['Aquis', 'Big Crown Pointer Date'] },
+  { name: 'Alpina', models: ['Alpiner Extreme', 'Startimer Pilot'] },
+  { name: 'Bulova', models: ['Lunar Pilot', 'Jet Star'] },
+  { name: 'Patek Philippe', models: ['Nautilus', 'Calatrava'] },
+  { name: 'Zenith', models: ['Chronomaster', 'Defy'] },
+  { name: 'Cartier', models: ['Tank', 'Santos de Cartier'] },
+  { name: 'Seiko', models: ['Prospex', 'Presage'] },
+  { name: 'Omega', models: ['Speedmaster', 'Seamaster'] },
+  { name: 'Longines', models: ['Spirit', 'Master Collection'] },
+  { name: 'Mido', models: ['Ocean Star', 'Multifort'] },
+  { name: 'Hamilton', models: ['Khaki Field', 'Jazzmaster'] },
+  { name: 'IWC', models: ['Portugieser', "Pilot's Watch"] },
+  { name: 'Swatch', models: ['MoonSwatch', 'Big Bold'] },
+  { name: 'Maurice Lacroix', models: ['Aikon', 'Masterpiece'] },
+  { name: 'Timex', models: ['Marlin', 'Q Timex'] },
+  { name: 'Breitling', models: ['Navitimer', 'Superocean'] },
+  { name: 'Panerai', models: ['Luminor', 'Radiomir'] },
+  { name: 'Jaeger-LeCoultre', models: ['Reverso', 'Master Control'] },
+  { name: 'Lorenz', models: ['Granpremio', 'DI300'] },
+], []);
 
   // 2. PORTA QUI L'EFFETTO (SIDE EFFECT)
   useEffect(() => {
@@ -1174,14 +1175,52 @@ const BackgroundLayer = useMemo(() => {
           <span>Grandi nomi, storie senza tempo</span>
         </div>
         <LogoLoop
-          logos={techLogos}
+          logos={watchBrands}
           speed={34}
           direction="left"
           logoHeight={20}
           gap={24}
           hoverSpeed={0}
           ariaLabel="Marchi di orologi"
+          renderItem={(brand) => {
+            const isSelected = activeBrandModels?.name === brand.name;
+
+            return (
+              <button
+                type="button"
+                className={`brand-pill${isSelected ? ' is-active' : ''}`}
+                aria-label={`${brand.name}, mostra i modelli`}
+                aria-expanded={isSelected}
+                aria-controls="brand-models-panel"
+                onClick={() => setActiveBrandModels((current) => (
+                  current?.name === brand.name ? null : brand
+                ))}
+              >
+                {brand.name}
+              </button>
+            );
+          }}
         />
+        {activeBrandModels && (
+          <div
+            className="brand-models-panel"
+            id="brand-models-panel"
+            role="status"
+            aria-label={`Modelli caratteristici ${activeBrandModels.name}`}
+          >
+            {activeBrandModels.models.map((model) => (
+              <span key={model}>{model}</span>
+            ))}
+            <button
+              className="brand-models-close"
+              type="button"
+              aria-label="Chiudi i modelli"
+              onClick={() => setActiveBrandModels(null)}
+            >
+              ×
+            </button>
+          </div>
+        )}
       </div>
 
       {message && <p className="message" onClick={() => setMessage(null)}>{message}</p>}
