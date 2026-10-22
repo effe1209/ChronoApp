@@ -1201,15 +1201,29 @@ const BackgroundLayer = useMemo(() => {
           <path className="hero-flow-streak hero-flow-streak--secondary" pathLength="1000" d="M170 530 C315 450 330 270 520 255 S795 410 1030 210" />
         </svg>
         <div className="hero-copy">
-          <img
-            className="hero-brand-logo"
-            src="./calibro_logo.webp"
-            alt="Calibro"
-            width="512"
-            height="512"
-            loading="eager"
-            decoding="async"
-          />
+          <div className="hero-brand-lockup" role="img" aria-label="Calibro">
+            <img
+              className="hero-brand-mark"
+              src="./calibro_mark.webp"
+              alt=""
+              width="512"
+              height="512"
+              loading="eager"
+              decoding="async"
+              aria-hidden="true"
+            />
+            <span className="hero-brand-name-frame" aria-hidden="true">
+              <img
+                className="hero-brand-name"
+                src="./name_icon.svg"
+                alt=""
+                width="1500"
+                height="1500"
+                loading="eager"
+                decoding="async"
+              />
+            </span>
+          </div>
           <p className="hero-eyebrow"><span aria-hidden="true" /> IL TUO WATCH JOURNAL</p>
           <div className="titleList">
             <h1>La mia collezione<br />di orologi</h1>
