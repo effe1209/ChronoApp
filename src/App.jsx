@@ -8,7 +8,7 @@ import WatchAnalytics from './components/WatchAnalytics';
 import GlassSurface from './components/GlassSurface';
 import TiltedCard from './components/TiltedCard';
 import FloatingLines from './components/FloatingLines';
-import CollectionValue from './components/CollectionValue';
+import MetaBalls from './components/MetaBalls';
 import InfiniteGridModal from './components/InfiniteGridModal';
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import ColorThief from 'colorthief';
@@ -1279,6 +1279,20 @@ const BackgroundLayer = useMemo(() => {
       ) : (
         <>
           <div className="profile-info" id="profile-section">
+            {!isCompactViewport && <MetaBalls
+              className="profile-info-ambient"
+              color={isDark ? "#e8bd72" : "#28677b"}
+              cursorBallColor={isDark ? "#e8bd72" : "#28677b"}
+              cursorBallSize={2}
+              ballCount={20}
+              accentBallCount={3}
+              animationSize={15}
+              enableMouseInteraction={false}
+              enableTransparency={true}
+              hoverSmoothness={0.09}
+              clumpFactor={1}
+              speed={0.2}
+            />}
             <div className="profile-info-content">
               <div className="circular-text-container">
                 <div className="profile-picture">
@@ -1286,7 +1300,10 @@ const BackgroundLayer = useMemo(() => {
                 </div>
               </div>
               <h4 className="Saluti">Benvenuto, {nickname}</h4>
-              <CollectionValue value={totalMoney.toLocaleString('it-IT')} isDark={isDark} />
+              <p className="profile-collection-value">
+                <span>Valore della collezione</span>
+                <strong>{totalMoney.toLocaleString('it-IT')} €</strong>
+              </p>
             </div>
           </div>
 
