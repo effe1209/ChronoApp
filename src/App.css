@@ -3185,31 +3185,33 @@ a:focus-visible,
 }
 
 .profile-info-content > .profile-collection-value {
+  box-sizing: border-box;
   display: flex;
-  width: min(100%, 440px);
+  width: min(100%, 420px);
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  margin: 10px 0 0;
-  padding: 14px 24px 16px !important;
+  gap: 5px;
+  margin: 8px 0 0;
+  padding: 12px 20px 14px !important;
   border: 1px solid var(--ui-border);
-  border-radius: 20px;
+  border-radius: 17px;
   background: var(--ui-surface-strong);
   color: var(--ui-muted);
-  font-size: 0.75rem !important;
-  font-weight: 650;
-  letter-spacing: 0.1em;
+  font-size: 0.78rem !important;
+  font-weight: 700;
+  letter-spacing: 0.065em;
   line-height: 1.35;
   text-transform: uppercase;
 }
 
 .profile-collection-value strong {
   color: var(--ui-accent);
-  font-family: var(--font-Title);
-  font-size: clamp(1.8rem, 5vw, 2.5rem);
-  font-weight: 600;
-  letter-spacing: -0.045em;
+  font-family: var(--font-all-text);
+  font-size: clamp(1.95rem, 4.5vw, 2.4rem);
+  font-weight: 750;
+  letter-spacing: -0.035em;
   line-height: 1.15;
+  font-variant-numeric: tabular-nums;
   text-transform: none;
 }
 
@@ -4941,17 +4943,6 @@ a:focus-visible,
   text-shadow: none;
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
   backdrop-filter: blur(16px) saturate(1.2);
-}
-
-.profile-info-content > .profile-collection-glass {
-  position: relative;
-  z-index: 10;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 10px 15px rgba(16, 31, 43, 0.12), inset 0 1px rgba(255, 255, 255, 0.08);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
 }
 
 .dark-mode .profile-info-content > .profile-collection-value {

@@ -442,8 +442,14 @@ const handleAddWatch = async () => {
   const deleteImage = async (imagePath) => {
     if (!imagePath) return;
     let filePath = imagePath;
-    if (imagePath.includes('/storage/v1/object/public/fotoWatch/')) {
-        filePath = imagePath.split("/storage/v1/object/public/fotoWatch/")[1];
+    const bucketMarker = '/storage/v1/object/public/fotoWatch/';
+    const markerIndex = String(imagePath).indexOf(bucketMarker);
+    if (markerIndex >= 0) {
+        filePath = String(imagePath).slice(markerIndex + bucketMarker.length).split(/[?#]/)[0];
+    } else if (/^https?:\/\//i.test(String(imagePath))) {
+        return;
+    } else {
+        filePath = String(imagePath).replace(/^\/?fotoWatch\//, '').split(/[?#]/)[0];
     }
     const { error } = await supabase.storage
       .from("fotoWatch")
@@ -480,6 +486,18 @@ const getPublicUrl = (path) => {
   }
 };
 
+const getImageUrl = (imageValue) => {
+  if (!imageValue) return null;
+  const image = String(imageValue).trim();
+  if (/^(https?:|blob:|data:)/i.test(image)) return image;
+  const bucketMarker = '/storage/v1/object/public/fotoWatch/';
+  const markerIndex = image.indexOf(bucketMarker);
+  const bucketRelativePath = markerIndex >= 0
+    ? image.slice(markerIndex + bucketMarker.length).split(/[?#]/)[0]
+    : image.replace(/^\/+/, '').replace(/^fotoWatch\//, '');
+  return getPublicUrl(bucketRelativePath);
+};
+
 const fetchWatches = async (userid) => {
   try {
     const { data, error } = await supabase
@@ -491,7 +509,7 @@ const fetchWatches = async (userid) => {
       const features = (watch.Orologi_Caratteristiche || [])
         .map((joinEntry) => joinEntry?.caratteristiche)
         .filter(Boolean);
-      return { ...watch, caratteristiche: features, imageUrl: watch.image };
+      return { ...watch, caratteristiche: features, imageUrl: getImageUrl(watch.image) };
     });
     setWatches(userWatches);
     return true;
@@ -610,8 +628,8 @@ const fetchWatches = async (userid) => {
       year: watchToModify.year,
       movement: watchToModify.movement,
       color: watchToModify.color || '',
-      image: watchToModify.image || '', 
-      imageUrl: watchToModify.imageUrl || '', 
+      image: watchToModify.image || watchToModify.imageUrl || '',
+      imageUrl: getImageUrl(watchToModify.image || watchToModify.imageUrl),
       isFavorite: watchToModify.isFavorite,
       money: watchToModify.money || null,
       features: featureIDs,
@@ -647,20 +665,19 @@ const fetchWatches = async (userid) => {
   const handleSaveChanges = async () => {
     setLoading(true);
     try {
-      const { features, image, imageUrl, ...watchData } = updatedWatch;
-      let finalWatchData = { ...watchData }; 
-      const oldImagePath = modifyWatch.image; 
+      const { features, image, ...watchData } = updatedWatch;
+      delete watchData.imageUrl;
+      const finalWatchData = { ...watchData };
+      const oldImagePath = modifyWatch.image || modifyWatch.imageUrl;
+      let uploadedImagePath = null;
 
       if (image instanceof File) {
-        const newImagePath = await uploadImage(image);
-        if (newImagePath) {
-            finalWatchData.image = newImagePath; 
-            if (oldImagePath) {
-              await deleteImage(oldImagePath); 
-            }
-        }
+        uploadedImagePath = await uploadImage(image);
+        if (!uploadedImagePath) throw new Error("L'immagine non è stata caricata; le modifiche non sono state salvate.");
+        finalWatchData.image = uploadedImagePath;
       } else {
-        finalWatchData.image = oldImagePath;
+        // Se non viene scelta una nuova foto, lascia invariato il valore salvato nel database.
+        delete finalWatchData.image;
       }
 
       const { data: updatedData, error: updateError } = await supabase
@@ -670,7 +687,13 @@ const fetchWatches = async (userid) => {
         .select()
         .single();
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        if (uploadedImagePath) await deleteImage(uploadedImagePath);
+        throw updateError;
+      }
+
+      // Elimina il file precedente solo dopo che il nuovo riferimento è stato salvato.
+      if (uploadedImagePath && oldImagePath) await deleteImage(oldImagePath);
 
       const watchId = modifyWatch.id;
       const { error: deleteError } = await supabase
@@ -695,7 +718,7 @@ const fetchWatches = async (userid) => {
           ...modifyWatch,
           ...updatedData,
           caratteristiche: updatedFeatures,
-          imageUrl: getPublicUrl(updatedData.image)
+          imageUrl: getImageUrl(updatedData.image)
       };
 
       setWatches(prevWatches => 
@@ -1405,7 +1428,7 @@ const BackgroundLayer = useMemo(() => {
                 </div>
               </div>
               <h4 className="Saluti">Benvenuto, {nickname}</h4>
-              <p className="profile-collection-value profile-collection-glass backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl shadow-lg relative z-10">
+              <p className="profile-collection-value">
                 <span>Valore della collezione</span>
                 <strong>{totalMoney.toLocaleString('it-IT')} €</strong>
               </p>
