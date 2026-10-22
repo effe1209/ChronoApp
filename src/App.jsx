@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useTransition, useLayoutEffect, useMemo } from "react";
+import { createPortal } from 'react-dom';
 // Import Supabase e servizi (invariati)
 import { supabase } from './components/supabaseClient';
 import { addWatchService } from './components/watchService';
@@ -978,7 +979,7 @@ const updateAllWatchEmbeddings = async () => {
   const [isDark, setIsDark] = useState(
     () => localStorage.getItem("theme") === "dark" 
   );
-  const [activeBrandModels, setActiveBrandModels] = useState(null);
+  const [hoveredBrand, setHoveredBrand] = useState(null);
 
 //   const techLogos = [
 //   { title: "React"},
@@ -1015,6 +1016,32 @@ const watchBrands = useMemo(() => [
   { name: 'Jaeger-LeCoultre', models: ['Reverso', 'Master Control'] },
   { name: 'Lorenz', models: ['Granpremio', 'DI300'] },
 ], []);
+
+  const showBrandModels = (event, brand, itemKey) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const tooltipWidth = Math.min(260, window.innerWidth - 24);
+    const left = Math.min(
+      Math.max(rect.left + rect.width / 2, tooltipWidth / 2 + 12),
+      window.innerWidth - tooltipWidth / 2 - 12
+    );
+    const placement = rect.bottom + 84 <= window.innerHeight || rect.top < 92 ? 'below' : 'above';
+    const top = placement === 'below' ? rect.bottom + 9 : rect.top - 9;
+
+    setHoveredBrand({ brand, itemKey, left, top, placement });
+  };
+
+  useEffect(() => {
+    if (!hoveredBrand) return undefined;
+
+    const dismissTooltip = () => setHoveredBrand(null);
+    window.addEventListener('scroll', dismissTooltip, true);
+    window.addEventListener('resize', dismissTooltip);
+
+    return () => {
+      window.removeEventListener('scroll', dismissTooltip, true);
+      window.removeEventListener('resize', dismissTooltip);
+    };
+  }, [hoveredBrand]);
 
   // 2. PORTA QUI L'EFFETTO (SIDE EFFECT)
   useEffect(() => {
@@ -1182,44 +1209,37 @@ const BackgroundLayer = useMemo(() => {
           gap={24}
           hoverSpeed={0}
           ariaLabel="Marchi di orologi"
-          renderItem={(brand) => {
-            const isSelected = activeBrandModels?.name === brand.name;
+          renderItem={(brand, itemKey) => {
+            const isHovered = hoveredBrand?.itemKey === itemKey;
 
             return (
               <button
                 type="button"
-                className={`brand-pill${isSelected ? ' is-active' : ''}`}
+                className={`brand-pill${isHovered ? ' is-active' : ''}`}
                 aria-label={`${brand.name}, mostra i modelli`}
-                aria-expanded={isSelected}
-                aria-controls="brand-models-panel"
-                onClick={() => setActiveBrandModels((current) => (
-                  current?.name === brand.name ? null : brand
-                ))}
+                aria-describedby={isHovered ? 'brand-models-tooltip' : undefined}
+                onMouseEnter={(event) => showBrandModels(event, brand, itemKey)}
+                onMouseLeave={() => setHoveredBrand(null)}
+                onFocus={(event) => showBrandModels(event, brand, itemKey)}
+                onBlur={() => setHoveredBrand(null)}
               >
                 {brand.name}
               </button>
             );
           }}
         />
-        {activeBrandModels && (
+        {hoveredBrand && createPortal(
           <div
-            className="brand-models-panel"
-            id="brand-models-panel"
-            role="status"
-            aria-label={`Modelli caratteristici ${activeBrandModels.name}`}
+            className={`brand-models-tooltip${hoveredBrand.placement === 'above' ? ' is-above' : ''}`}
+            id="brand-models-tooltip"
+            role="tooltip"
+            style={{ left: `${hoveredBrand.left}px`, top: `${hoveredBrand.top}px` }}
           >
-            {activeBrandModels.models.map((model) => (
+            {hoveredBrand.brand.models.map((model) => (
               <span key={model}>{model}</span>
             ))}
-            <button
-              className="brand-models-close"
-              type="button"
-              aria-label="Chiudi i modelli"
-              onClick={() => setActiveBrandModels(null)}
-            >
-              ×
-            </button>
-          </div>
+          </div>,
+          document.body
         )}
       </div>
 
