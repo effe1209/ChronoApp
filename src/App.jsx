@@ -979,7 +979,23 @@ const updateAllWatchEmbeddings = async () => {
   const [isDark, setIsDark] = useState(
     () => localStorage.getItem("theme") === "dark" 
   );
+  const [isCompactViewport, setIsCompactViewport] = useState(
+    () => window.matchMedia('(max-width: 720px)').matches
+  );
   const [hoveredBrand, setHoveredBrand] = useState(null);
+
+  useEffect(() => {
+    const viewportQuery = window.matchMedia('(max-width: 720px)');
+    const updateViewport = (event) => setIsCompactViewport(event.matches);
+
+    if (viewportQuery.addEventListener) {
+      viewportQuery.addEventListener('change', updateViewport);
+      return () => viewportQuery.removeEventListener('change', updateViewport);
+    }
+
+    viewportQuery.addListener(updateViewport);
+    return () => viewportQuery.removeListener(updateViewport);
+  }, []);
 
 //   const techLogos = [
 //   { title: "React"},
@@ -1070,7 +1086,7 @@ const BackgroundLayer = useMemo(() => {
             backgroundColor: floatingConfig.bg,
             transition: "background-color 0.6s ease",
         }}>
-          <FloatingLines 
+          {!isCompactViewport && <FloatingLines
             linesGradient={floatingConfig.gradient}
             mixBlendMode={floatingConfig.blend}
             enabledWaves={['top', 'middle', 'bottom']}
@@ -1081,10 +1097,10 @@ const BackgroundLayer = useMemo(() => {
             bendStrength={-0.5}
             interactive={false} 
             parallax={false}
-          />
+          />}
         </div>
       );
-    }, [isDark, floatingConfig.bg, floatingConfig.blend]);
+    }, [isDark, isCompactViewport, floatingConfig.bg, floatingConfig.blend]);
 
   // --- RENDER ---
   return (
@@ -1207,7 +1223,7 @@ const BackgroundLayer = useMemo(() => {
           direction="left"
           logoHeight={20}
           gap={24}
-          hoverSpeed={0}
+          pauseOnHover={false}
           ariaLabel="Marchi di orologi"
           renderItem={(brand, itemKey) => {
             const isHovered = hoveredBrand?.itemKey === itemKey;
@@ -1263,7 +1279,7 @@ const BackgroundLayer = useMemo(() => {
       ) : (
         <>
           <div className="profile-info" id="profile-section">
-            <MetaBalls
+            {!isCompactViewport && <MetaBalls
               className="profile-info-ambient"
               color={isDark ? "#e8bd72" : "#28677b"}
               cursorBallColor={isDark ? "#e8bd72" : "#28677b"}
@@ -1276,7 +1292,7 @@ const BackgroundLayer = useMemo(() => {
               hoverSmoothness={0.09}
               clumpFactor={1}
               speed={0.2}
-            />
+            />}
             <div className="profile-info-content">
               <div className="circular-text-container">
                 <div className="profile-picture">

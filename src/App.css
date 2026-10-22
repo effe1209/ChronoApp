@@ -5887,3 +5887,55 @@ a:focus-visible,
     transition: none;
   }
 }
+
+/* Sui telefoni lascia il carosello dei marchi fluido e alleggerisce gli effetti decorativi. */
+@media (max-width: 720px) {
+  .slideWrap_Container > .glass-surface {
+    box-shadow: 0 7px 20px rgba(28, 54, 71, 0.08), inset 0 1px rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: blur(10px) saturate(1.15);
+    backdrop-filter: blur(10px) saturate(1.15);
+  }
+
+  .dark-mode .slideWrap_Container > .glass-surface {
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2), inset 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  .brand-strip .brand-pill {
+    background: var(--ui-surface-strong);
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    transition: none;
+  }
+
+  .dark-mode .brand-strip .brand-pill {
+    box-shadow: none;
+  }
+
+  .profile-info-content > .profile-collection-value,
+  .form,
+  #function-section,
+  #watch-list-section,
+  .watch-card,
+  .functionButton > div,
+  .add-watch-section .add-watch-form {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .hero-watch {
+    animation: none;
+  }
+
+  .hero-watch-image {
+    transition: none;
+  }
+
+  .hero-flow-line {
+    filter: none;
+  }
+
+  .hero-flow-streak {
+    display: none;
+  }
+}
