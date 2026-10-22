@@ -1110,7 +1110,7 @@ const BackgroundLayer = useMemo(() => {
         <figure className="hero-watch">
           <img
             className="hero-watch-image"
-            src="/orologio_fin.png"
+            src={isDark ? '/orologio_fin_dark.png' : '/orologio_fin.png'}
             alt="Orologio classico argentato inclinato, con quadrante romano"
           />
         </figure>
@@ -1323,6 +1323,7 @@ const BackgroundLayer = useMemo(() => {
             isVisible={isInfiniteGridVisible} 
             setIsVisible={setIsInfiniteGridVisible} 
             handleInfoWatch={handleInfoWatch}
+            isDark={isDark}
             watches={watches} // Passa la lista completa degli orologi
             handleFavoriteToggle={handleFavoriteToggle}
           />

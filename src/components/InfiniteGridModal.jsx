@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import InfiniteMenu from './InfiniteMenu';
 
-const InfiniteGridModal = ({ isVisible, setIsVisible, handleInfoWatch, watches }) => {
+const InfiniteGridModal = ({ isVisible, setIsVisible, handleInfoWatch, watches, isDark }) => {
   const closeGallery = () => setIsVisible(false);
   const items = useMemo(() => watches.map((watch) => ({
     id: watch.id,
@@ -65,7 +65,11 @@ const InfiniteGridModal = ({ isVisible, setIsVisible, handleInfoWatch, watches }
 
         <div className="watch-gallery-stage">
           {watches.length > 0 ? (
-            <InfiniteMenu items={items} onItemClick={handleItemClick} />
+            <InfiniteMenu
+              items={items}
+              onItemClick={handleItemClick}
+              imageBackgroundColor={isDark ? '#182532' : '#eef3f5'}
+            />
           ) : (
             <div className="watch-gallery-empty">
               <span className="watch-gallery-empty__icon" aria-hidden="true">◷</span>

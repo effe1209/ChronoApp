@@ -599,9 +599,10 @@ class InfiniteGridMenu {
   scaleFactor = 1.0;
   movementActive = false;
 
-  constructor(canvas, items, onActiveItemChange, onMovementChange, onInit = null) {
+  constructor(canvas, items, onActiveItemChange, onMovementChange, onInit = null, imageBackgroundColor = '#eef3f5') {
     this.canvas = canvas;
     this.items = items || [];
+    this.imageBackgroundColor = imageBackgroundColor;
     this.onActiveItemChange = onActiveItemChange || (() => {});
     this.onMovementChange = onMovementChange || (() => {});
     this.#init(onInit);
@@ -714,6 +715,8 @@ class InfiniteGridMenu {
 
     canvas.width = this.atlasSize * cellSize;
     canvas.height = this.atlasSize * cellSize;
+    ctx.fillStyle = this.imageBackgroundColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     Promise.all(
       this.items.map(
@@ -722,14 +725,22 @@ class InfiniteGridMenu {
             const img = new Image();
             img.crossOrigin = 'anonymous';
             img.onload = () => resolve(img);
+            img.onerror = () => resolve(null);
             img.src = item.image;
           })
       )
     ).then(images => {
       images.forEach((img, i) => {
+        if (!img) return;
+
         const x = (i % this.atlasSize) * cellSize;
         const y = Math.floor(i / this.atlasSize) * cellSize;
-        ctx.drawImage(img, x, y, cellSize, cellSize);
+        const imageInset = 16;
+        const imageArea = cellSize - imageInset * 2;
+        const scale = Math.min(imageArea / img.naturalWidth, imageArea / img.naturalHeight);
+        const width = img.naturalWidth * scale;
+        const height = img.naturalHeight * scale;
+        ctx.drawImage(img, x + (cellSize - width) / 2, y + (cellSize - height) / 2, width, height);
       });
 
       gl.bindTexture(gl.TEXTURE_2D, this.tex);
@@ -920,7 +931,7 @@ const defaultItems = [
   }
 ];
 
-export default function InfiniteMenu({ items = [], onItemClick }) {
+export default function InfiniteMenu({ items = [], onItemClick, imageBackgroundColor = '#eef3f5' }) {
   const canvasRef = useRef(null);
   const [activeItem, setActiveItem] = useState(null);
   const [isMoving, setIsMoving] = useState(false);
@@ -935,8 +946,13 @@ export default function InfiniteMenu({ items = [], onItemClick }) {
     };
 
     if (canvas) {
-      sketch = new InfiniteGridMenu(canvas, items.length ? items : defaultItems, handleActiveItem, setIsMoving, sk =>
-        sk.run()
+      sketch = new InfiniteGridMenu(
+        canvas,
+        items.length ? items : defaultItems,
+        handleActiveItem,
+        setIsMoving,
+        (sk) => sk.run(),
+        imageBackgroundColor
       );
     }
 
@@ -953,7 +969,7 @@ export default function InfiniteMenu({ items = [], onItemClick }) {
       window.removeEventListener('resize', handleResize);
       sketch?.stop();
     };
-  }, [items]);
+  }, [items, imageBackgroundColor]);
 
   const handleButtonClick = () => {
     if (onItemClick && activeItem) {
