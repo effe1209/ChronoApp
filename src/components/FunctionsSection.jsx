@@ -45,7 +45,7 @@ const FunctionsSection = ({ onDayWatchClick, onOutfitImageChange, fileInputRefOu
             <circle cx="9" cy="10" r="1.5" />
             <path d="m5 17 4.5-4.5 3 3L15 13l4 4" />
           </svg>
-          <span>Scegli un'immagine</span>
+          <span>Carica una foto</span>
           <span className="function-card__arrow" aria-hidden="true">↗</span>
         </button>
       </article>

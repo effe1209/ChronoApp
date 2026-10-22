@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper/modules';
+import { Navigation, Pagination, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { motion } from 'framer-motion';
 import FavoriteButton from './FavoriteButton';
 import TiltedCard from './TiltedCard';
-import InfiniteMenu from './InfiniteMenu';
 
 // Importa gli stili di Swiper necessari
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
 
 // Questo componente gestisce la visualizzazione (lista o carosello)
 // e l'ordinamento degli orologi
@@ -173,64 +171,67 @@ const WatchList = ({
 
       {/* VISTA CAROSELLO */}
       {isCarouselView && (
-        <Swiper
-          modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
-          spaceBetween={20}
-          slidesPerView={1}
-          navigation
-          pagination={{ clickable: true }}
-          scrollbar={{ draggable: true }}
-          style={{borderRadius:"20px"}}
-          autoplay={{
-            delay: 5000,
-            disableOnInteraction: false,
-          }}
-        >
-        {watches.map((watch) => ( // Usa 'watches' non ordinati per il carosello? o 'sortedWatches'? 
-                                    // Usiamo 'watches' come l'originale
-          <SwiperSlide key={watch.id}>
-            <div className="watch-card carousel-card">
-              <FavoriteButton
+        sortedWatches.length > 0 ? (
+          <Swiper
+            className="watch-carousel"
+            modules={[Navigation, Pagination, A11y]}
+            spaceBetween={16}
+            slidesPerView={1.08}
+            speed={550}
+            grabCursor
+            watchOverflow
+            noSwipingSelector="button"
+            navigation={sortedWatches.length > 1}
+            pagination={sortedWatches.length > 1
+              ? { clickable: true, dynamicBullets: true, dynamicMainBullets: 5 }
+              : false}
+            breakpoints={{
+              520: { slidesPerView: 1.45, spaceBetween: 18 },
+              760: { slidesPerView: 2.1, spaceBetween: 18 },
+              1120: { slidesPerView: 2.8, spaceBetween: 20 },
+            }}
+          >
+            {sortedWatches.map((watch) => (
+              <SwiperSlide key={watch.id}>
+                <article className="watch-card carousel-card">
+                  <FavoriteButton
                     isFavorite={watch.isFavorite}
                     onToggle={() => handleFavoriteToggle(watch.id)}
                   />
-              {watch.imageUrl ? ( // Usa imageUrl
-                <img
-                  src={watch.imageUrl}
-                  alt={watch.name}
-                  className="watch-imageCarosel"
-                  loading="lazy"
-                  onError={(e) => { e.target.src = "orologio_back.svg"; }}
-                />
-              ) : (
-                <img src="orologio_back.svg" alt="Default" className="watch-imageCarosel"/>
-              )}
-              <div className="watchName_Button">
-              <h3 className="textCard" style={{padding:"2%"}}>{watch.name}</h3>
-              <div className="cardBottoni">
-                <div className="InfoButton">
-                  <button
-                    className="modify-btn"
-                      onClick={() => handleInfoWatch(watch)} // Passa l'oggetto
-                    >
-                    Info
-                  </button>
-                </div>
-                  <div className="modifyButton">
-                    <button
-                      className="modify-btn"
-                      onClick={() => handleModifyWatch(watch)} // Passa l'oggetto
-                    >
-                      Modifica
-                    </button>
+                  <div className="carousel-card__image">
+                    <img
+                      src={watch.imageUrl || 'orologio_back.svg'}
+                      alt={watch.name}
+                      className="watch-imageCarosel"
+                      loading="lazy"
+                      onError={(e) => { e.currentTarget.src = 'orologio_back.svg'; }}
+                    />
                   </div>
-                </div>
-                 
-                </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+                  <div className="watchName_Button">
+                    <h3 className="textCard">{watch.name}</h3>
+                    <div className="cardBottoni">
+                      <div className="InfoButton">
+                        <button className="modify-btn" onClick={() => handleInfoWatch(watch)}>
+                          Info
+                        </button>
+                      </div>
+                      <div className="modifyButton">
+                        <button className="modify-btn" onClick={() => handleModifyWatch(watch)}>
+                          Modifica
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : (
+          <div className="watch-carousel-empty">
+            <strong>La collezione è ancora vuota</strong>
+            <span>Aggiungi un orologio per iniziare il tuo carosello.</span>
+          </div>
+        )
       )}
     </div>
   );

@@ -1278,10 +1278,6 @@ input[type="checkbox"]:checked + .slider-v3::before {
   background-color: #ffcc00;
 }
 
-.swiper-horizontal > .swiper-scrollbar, .swiper-scrollbar.swiper-scrollbar-horizontal {
-  position:fixed;
-}
-
 .swiper-slide .watch-card .cardBottoni {
   display: flex;
   flex-direction: row;
@@ -5116,5 +5112,529 @@ a:focus-visible,
   .add-watch-form .details-toggle-button {
     min-height: 48px;
     height: auto;
+  }
+}
+
+/* Carosello della collezione: schede leggibili e navigazione stabile. */
+.watch-carousel {
+  width: 100%;
+  padding: 8px 4px 48px;
+  overflow: hidden;
+}
+
+.watch-carousel .swiper-slide {
+  display: flex;
+  height: auto;
+}
+
+.watch-carousel .carousel-card {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  flex-direction: column;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 22px;
+  background: linear-gradient(145deg, var(--ui-surface-strong), var(--ui-surface));
+  box-shadow: 0 12px 30px rgba(27, 53, 68, 0.09), inset 0 1px rgba(255, 255, 255, 0.66);
+}
+
+.watch-carousel .carousel-card .favoriteButton__button {
+  position: absolute;
+  z-index: 2;
+  top: 22px;
+  right: 22px;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid var(--ui-border);
+  border-radius: 50%;
+  background: var(--ui-surface-strong);
+  color: var(--ui-accent);
+  box-shadow: 0 5px 16px rgba(20, 38, 50, 0.12);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.watch-carousel .carousel-card__image {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1 / 0.88;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ui-border) 76%, transparent);
+  border-radius: 16px;
+  background: radial-gradient(circle at 50% 38%, var(--ui-surface-strong), var(--ui-surface));
+}
+
+.watch-carousel .carousel-card .watch-imageCarosel {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  border-radius: 0;
+  object-fit: contain;
+}
+
+.watch-carousel .watchName_Button {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 0 4px 2px;
+}
+
+.watch-carousel .watchName_Button .textCard {
+  margin: 0;
+  padding: 0;
+  font-size: 1.06rem;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.watch-carousel .cardBottoni {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.watch-carousel .swiper-slide .watch-card .cardBottoni {
+  display: grid;
+  gap: 9px;
+  margin-top: 0;
+}
+
+.watch-carousel .cardBottoni .InfoButton,
+.watch-carousel .cardBottoni .modifyButton {
+  min-width: 0;
+  margin: 0;
+}
+
+.watch-carousel .cardBottoni .modify-btn,
+.watch-carousel .cardBottoni .InfoButton button {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--ui-accent) 28%, transparent);
+  border-radius: 13px;
+  font-size: 0.82rem;
+}
+
+.watch-carousel .swiper-slide .watch-card .cardBottoni .modify-btn {
+  min-height: 42px;
+  padding: 8px 10px;
+  font-size: 0.82rem;
+}
+
+.watch-carousel .cardBottoni .InfoButton button {
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent);
+  box-shadow: none;
+}
+
+.watch-carousel .swiper-button-prev,
+.watch-carousel .swiper-button-next {
+  top: calc(50% - 23px);
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--ui-border);
+  border-radius: 50%;
+  background: var(--ui-surface-strong);
+  color: var(--ui-accent);
+  box-shadow: 0 6px 18px rgba(20, 38, 50, 0.13);
+}
+
+.watch-carousel .swiper-button-prev::after,
+.watch-carousel .swiper-button-next::after {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.watch-carousel .swiper-button-prev {
+  left: 12px;
+}
+
+.watch-carousel .swiper-button-next {
+  right: 12px;
+}
+
+.watch-carousel .swiper-button-disabled {
+  opacity: 0.38;
+}
+
+.watch-carousel .swiper-pagination {
+  bottom: 9px;
+}
+
+.watch-carousel .swiper-pagination-bullet {
+  width: 7px;
+  height: 7px;
+  background: var(--ui-muted);
+  opacity: 0.45;
+  transition: width 180ms ease, opacity 180ms ease, background-color 180ms ease;
+}
+
+.watch-carousel .swiper-pagination-bullet-active {
+  width: 22px;
+  border-radius: 999px;
+  background: var(--ui-accent);
+  opacity: 1;
+}
+
+.watch-carousel-empty {
+  display: grid;
+  min-height: 180px;
+  align-content: center;
+  justify-items: center;
+  gap: 6px;
+  padding: 24px;
+  border: 1px dashed var(--ui-border);
+  border-radius: 22px;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  text-align: center;
+}
+
+.watch-carousel-empty span {
+  color: var(--ui-muted);
+  font-size: 0.88rem;
+}
+
+/* L'azione di caricamento resta evidente anche nel tema chiaro. */
+#function-section .function-card--outfit .function-card__action--secondary {
+  border-color: color-mix(in srgb, var(--ui-accent) 70%, #102d3a);
+  background: var(--ui-accent);
+  color: #fff;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--ui-accent) 28%, transparent);
+}
+
+.dark-mode #function-section .function-card--outfit .function-card__action--secondary {
+  border-color: color-mix(in srgb, var(--ui-accent) 72%, #694c1f);
+  color: #172630;
+}
+
+#function-section .function-card--outfit .function-card__action--secondary:hover {
+  background: color-mix(in srgb, var(--ui-accent) 88%, #102d3a);
+  box-shadow: 0 11px 24px color-mix(in srgb, var(--ui-accent) 32%, transparent);
+}
+
+#function-section .function-card__action:focus-visible,
+.watch-carousel .swiper-button-prev:focus-visible,
+.watch-carousel .swiper-button-next:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ui-accent) 55%, white);
+  outline-offset: 3px;
+}
+
+/* Galleria fotografica della collezione. */
+.watch-gallery-overlay {
+  position: fixed;
+  z-index: 1600;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(12px, 3vw, 36px);
+  background: rgba(13, 25, 34, 0.62);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.watch-gallery-modal {
+  display: flex;
+  width: min(1240px, 100%);
+  max-height: min(88vh, 920px);
+  max-height: min(88dvh, 920px);
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--ui-border);
+  border-radius: clamp(22px, 3vw, 34px);
+  background: linear-gradient(145deg, var(--ui-surface-strong), var(--ui-surface));
+  color: var(--ui-text);
+  box-shadow: 0 30px 90px rgba(7, 20, 29, 0.3), inset 0 1px rgba(255, 255, 255, 0.7);
+}
+
+.watch-gallery-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: clamp(22px, 3.5vw, 38px) clamp(20px, 4vw, 44px) 24px;
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.watch-gallery-eyebrow {
+  color: var(--ui-accent);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+}
+
+.watch-gallery-header h2 {
+  margin: 5px 0 4px;
+  color: var(--ui-text);
+  font-size: clamp(1.45rem, 3vw, 2.05rem);
+  letter-spacing: -0.045em;
+}
+
+.watch-gallery-header p {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: 0.9rem;
+}
+
+.watch-gallery-header__actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.watch-gallery-count {
+  padding: 8px 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 999px;
+  background: var(--ui-surface);
+  color: var(--ui-muted);
+  font-size: 0.76rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.watch-gallery-close {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+  border: 1px solid var(--ui-border);
+  border-radius: 50%;
+  background: var(--ui-surface-strong);
+  color: var(--ui-text);
+  cursor: pointer;
+  transition: transform 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+.watch-gallery-close:hover {
+  transform: rotate(90deg);
+  background: var(--ui-accent);
+  color: #fff;
+}
+
+.watch-gallery-close svg {
+  width: 19px;
+  height: 19px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.watch-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 235px), 1fr));
+  align-content: start;
+  gap: 16px;
+  overflow: auto;
+  padding: 24px clamp(20px, 4vw, 44px) clamp(24px, 4vw, 44px);
+  overscroll-behavior: contain;
+}
+
+.watch-gallery-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 20px;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
+}
+
+.watch-gallery-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--ui-accent) 38%, var(--ui-border));
+  background: var(--ui-surface-strong);
+  box-shadow: 0 14px 30px rgba(27, 53, 68, 0.12);
+}
+
+.watch-gallery-card__image {
+  position: relative;
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1 / 0.88;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 14px;
+  background: radial-gradient(circle at 50% 40%, var(--ui-surface-strong), var(--ui-surface));
+}
+
+.watch-gallery-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.watch-gallery-favorite {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid var(--ui-border);
+  border-radius: 50%;
+  background: var(--ui-surface-strong);
+  color: var(--ui-accent);
+  font-size: 0.9rem;
+}
+
+.watch-gallery-card__copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0 4px 3px;
+}
+
+.watch-gallery-card__copy strong,
+.watch-gallery-card__copy > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.watch-gallery-card__copy strong {
+  font-size: 0.94rem;
+  font-weight: 680;
+}
+
+.watch-gallery-card__copy > span {
+  color: var(--ui-muted);
+  font-size: 0.77rem;
+}
+
+.watch-gallery-card__arrow {
+  position: absolute;
+  right: 14px;
+  bottom: 18px;
+  color: var(--ui-accent);
+  opacity: 0;
+  transform: translate(-3px, 3px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.watch-gallery-card:hover .watch-gallery-card__arrow {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.watch-gallery-card:focus-visible,
+.watch-gallery-close:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ui-accent) 58%, white);
+  outline-offset: 3px;
+}
+
+.watch-gallery-empty {
+  display: grid;
+  flex: 1;
+  align-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 44px 24px 60px;
+  text-align: center;
+}
+
+.watch-gallery-empty__icon {
+  display: grid;
+  width: 62px;
+  height: 62px;
+  margin-bottom: 6px;
+  place-items: center;
+  border-radius: 20px;
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent);
+  font-size: 2rem;
+}
+
+.watch-gallery-empty strong {
+  color: var(--ui-text);
+  font-size: 1.05rem;
+}
+
+.watch-gallery-empty p {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 600px) {
+  .watch-carousel .swiper-button-prev,
+  .watch-carousel .swiper-button-next {
+    display: none;
+  }
+
+  .watch-gallery-overlay {
+    align-items: end;
+    padding: 8px;
+  }
+
+  .watch-gallery-modal {
+    width: 100%;
+    max-height: 92vh;
+    max-height: 92dvh;
+    border-radius: 24px 24px 16px 16px;
+  }
+
+  .watch-gallery-header {
+    gap: 10px;
+    padding: 22px 16px 18px;
+  }
+
+  .watch-gallery-header p {
+    max-width: 250px;
+    font-size: 0.8rem;
+  }
+
+  .watch-gallery-header__actions {
+    gap: 7px;
+  }
+
+  .watch-gallery-count {
+    padding: 7px 9px;
+    font-size: 0.69rem;
+  }
+
+  .watch-gallery-close {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+  }
+
+  .watch-gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .watch-carousel .swiper-pagination-bullet,
+  .watch-gallery-card,
+  .watch-gallery-close,
+  .watch-gallery-card__arrow {
+    transition: none;
   }
 }
