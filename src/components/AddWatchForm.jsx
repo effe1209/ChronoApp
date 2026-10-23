@@ -191,7 +191,7 @@ const AddWatchForm = ({
           <WatchOccasionSelector
             idPrefix="add-watch-occasion"
             value={newWatch.occasions}
-            onChange={(occasions) => setNewWatch({ ...newWatch, occasions })}
+            onChange={(occasions) => setNewWatch((currentWatch) => ({ ...currentWatch, occasions }))}
           />
         </Step>
         
@@ -344,4 +344,3 @@ const AddWatchForm = ({
 };
 
 export default AddWatchForm;
-

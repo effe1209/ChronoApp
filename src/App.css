@@ -1731,7 +1731,7 @@ input::placeholder {
 
 .watch-occasion-selector {
   display: grid;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
   margin: 18px 0 0;
   padding: 14px;
@@ -1758,6 +1758,7 @@ input::placeholder {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  margin-top: 4px;
 }
 
 .watch-occasion-selector__options label {
@@ -1772,13 +1773,31 @@ input::placeholder {
   color: var(--ui-text);
   font-size: 0.76rem;
   cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.watch-occasion-selector__options label:hover,
+.watch-occasion-selector__options label.is-selected {
+  border-color: var(--ui-accent);
+}
+
+.watch-occasion-selector__options label.is-selected {
+  background: var(--ui-accent-soft);
 }
 
 .watch-occasion-selector__options input {
+  box-sizing: border-box;
   width: 16px;
   height: 16px;
   margin: 0;
+  padding: 0;
+  border: 0;
   accent-color: var(--ui-accent);
+}
+
+.watch-occasion-selector__options input:focus-visible {
+  outline: 3px solid var(--ui-accent-soft);
+  outline-offset: 2px;
 }
 
 .outfit-result-card__reason {
