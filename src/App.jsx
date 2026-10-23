@@ -1412,8 +1412,8 @@ const BackgroundLayer = useMemo(() => {
     <>
     {loading && <LoadingModal message={message} />}
     {BackgroundLayer}
-    {createPortal(
-      <div className={`slideWrap_Container${isOverlayOpen ? ' is-overlay-behind' : ''}`}>
+    {!isOverlayOpen && createPortal(
+      <div className="slideWrap_Container">
         <GlassSurface
           width={user ? '100%' : 96}
           height={64}
