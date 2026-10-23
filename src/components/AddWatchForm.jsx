@@ -13,8 +13,6 @@ const AddWatchForm = ({
   setNewWatch,
   handleImageChange,
   fileInputRef,
-  isDetailsMenuOpen,
-  setIsDetailsMenuOpen,
   isNotesVisible,
   setIsNotesVisible,
   allFeaturesList,
@@ -230,25 +228,13 @@ const AddWatchForm = ({
             <h3>Dettagli tecnici</h3>
             <p>Se vuoi, seleziona le caratteristiche che descrivono il tuo orologio.</p>
           </div>
-          <div className="add-watch-step-action">
-            <button
-              type="button"
-              className="details-toggle-button"
-              onClick={() => setIsDetailsMenuOpen(!isDetailsMenuOpen)}
-              aria-expanded={isDetailsMenuOpen}
-            >
-              {isDetailsMenuOpen ? 'Chiudi dettagli ▴' : 'Scegli le caratteristiche ▾'}
-            </button>
-          </div>
-          {isDetailsMenuOpen && (
-            <FeatureCheckboxList
-              featuresList={allFeaturesList}
-              selectedFeatures={newWatch.features}
-              onChange={handleFeatureChange}
-              isLoading={featuresLoading}
-              error={featuresError}
-            />
-          )}
+          <FeatureCheckboxList
+            featuresList={allFeaturesList}
+            selectedFeatures={newWatch.features}
+            onChange={handleFeatureChange}
+            isLoading={featuresLoading}
+            error={featuresError}
+          />
         </Step>
 
         <Step>

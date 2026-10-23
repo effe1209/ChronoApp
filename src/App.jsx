@@ -107,7 +107,6 @@ function App() {
   });
   const [loading, setLoading] = useState(false);
   const [isStatisticheVisible, setIsStatisticheVisible] = useState(false);
-  const [isDetailsMenuOpen, setIsDetailsMenuOpen] = useState(false);
   const [isDetailsMenuOpenMOD, setIsDetailsMenuOpenMOD] = useState(false);
   const [isNotesVisible, setIsNotesVisible] = useState(false);
   const [isNotesVisibleMOD, setIsNotesVisibleMOD] = useState(false);
@@ -1635,8 +1634,6 @@ const BackgroundLayer = useMemo(() => {
             setNewWatch={setNewWatch}
             handleImageChange={handleImageChange}
             fileInputRef={fileInputRef}
-            isDetailsMenuOpen={isDetailsMenuOpen}
-            setIsDetailsMenuOpen={setIsDetailsMenuOpen}
             isNotesVisible={isNotesVisible}
             setIsNotesVisible={setIsNotesVisible}
             allFeaturesList={allFeaturesList}
