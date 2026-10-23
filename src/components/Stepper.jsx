@@ -25,10 +25,16 @@ export default function Stepper({
 }) {
   const [currentStep, setCurrentStep] = useState(initialStep);
   const [direction, setDirection] = useState(0);
+  const indicatorRowRef = useRef(null);
   const stepsArray = Children.toArray(children);
   const totalSteps = stepsArray.length;
   const isCompleted = currentStep > totalSteps;
   const isLastStep = currentStep === totalSteps;
+
+  useLayoutEffect(() => {
+    const activeIndicator = indicatorRowRef.current?.children[(currentStep - 1) * 2];
+    activeIndicator?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }, [currentStep]);
 
   const updateStep = newStep => {
     setCurrentStep(newStep);
@@ -61,7 +67,7 @@ export default function Stepper({
   return (
     <div className="outer-container" {...rest}>
       <div className={`step-circle-container ${stepCircleContainerClassName}`}>
-        <div className={`step-indicator-row ${stepContainerClassName}`}>
+        <div ref={indicatorRowRef} className={`step-indicator-row ${stepContainerClassName}`}>
           {stepsArray.map((_, index) => {
             const stepNumber = index + 1;
             const isNotLastStep = index < totalSteps - 1;
