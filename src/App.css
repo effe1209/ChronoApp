@@ -7516,3 +7516,241 @@ a:focus-visible,
     margin-left: auto;
   }
 }
+
+/* PWA installata su iOS: usa l'area utile sotto la barra di stato e sopra l'indicatore Home. */
+@media (display-mode: standalone) {
+  html,
+  body {
+    min-height: 100dvh;
+  }
+
+  body {
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  #root {
+    min-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  }
+
+  .dock-panel {
+    bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+  }
+}
+
+.collection-export-menu {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.collection-export-menu > summary {
+  list-style: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.collection-export-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.collection-export-menu__chevron {
+  margin-left: 1px;
+  font-size: 1.05em;
+  line-height: 0.7;
+  transition: transform 160ms ease;
+}
+
+.collection-export-menu[open] .collection-export-menu__chevron {
+  transform: rotate(180deg);
+}
+
+.collection-export-menu__panel {
+  position: absolute;
+  top: calc(100% + 7px);
+  right: 0;
+  z-index: 40;
+  display: grid;
+  min-width: 190px;
+  gap: 4px;
+  padding: 7px;
+  border: 1px solid var(--ui-border);
+  border-radius: 14px;
+  background: var(--ui-surface-strong);
+  box-shadow: 0 14px 32px rgba(18, 35, 46, 0.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  backdrop-filter: blur(18px) saturate(1.25);
+}
+
+.collection-export-menu__panel button {
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ui-text);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+}
+
+.collection-export-menu__panel button:hover:not(:disabled),
+.collection-export-menu__panel button:focus-visible {
+  outline: none;
+  background: var(--ui-accent-soft);
+}
+
+.collection-export-menu__panel button:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+.modify-watch-form .watch-occasion-selector__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 136px), 1fr));
+}
+
+.modify-watch-form .watch-occasion-selector__options label,
+.modify-watch-form .watch-equipment-check,
+.modify-watch-form .checkbox-label {
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 9px 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 13px;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: left;
+  white-space: normal;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+.modify-watch-form .watch-occasion-selector__options label:hover,
+.modify-watch-form .watch-equipment-check:hover,
+.modify-watch-form .checkbox-label:hover {
+  border-color: color-mix(in srgb, var(--ui-accent) 55%, var(--ui-border));
+}
+
+.modify-watch-form .watch-occasion-selector__options label.is-selected,
+.modify-watch-form .watch-equipment-check.is-selected {
+  border-color: var(--ui-accent);
+  background: var(--ui-accent-soft);
+}
+
+.modify-watch-form .checkbox-label.selected {
+  border-color: var(--ui-accent);
+  background: var(--ui-accent);
+  color: #fff;
+}
+
+.dark-mode .modify-watch-form .checkbox-label.selected {
+  color: #18232a;
+}
+
+.modify-watch-form .watch-occasion-selector__options input[type="checkbox"],
+.modify-watch-form .watch-equipment-check input[type="checkbox"],
+.modify-watch-form .checkbox-label .checkbox-input {
+  position: static;
+  display: grid;
+  box-sizing: border-box;
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  min-height: 18px;
+  flex: 0 0 18px;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  border: 1.5px solid var(--ui-muted);
+  border-radius: 6px;
+  background: var(--ui-surface-strong);
+  opacity: 1;
+  accent-color: var(--ui-accent);
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.modify-watch-form .watch-occasion-selector__options input[type="checkbox"]::before,
+.modify-watch-form .watch-equipment-check input[type="checkbox"]::before,
+.modify-watch-form .checkbox-label .checkbox-input::before {
+  width: 8px;
+  height: 4px;
+  border-bottom: 2px solid #fff;
+  border-left: 2px solid #fff;
+  content: "";
+  opacity: 0;
+  transform: translateY(-1px) rotate(-45deg) scale(0.5);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.modify-watch-form .watch-occasion-selector__options input[type="checkbox"]:checked,
+.modify-watch-form .watch-equipment-check input[type="checkbox"]:checked,
+.modify-watch-form .checkbox-label .checkbox-input:checked {
+  border-color: var(--ui-accent);
+  background: var(--ui-accent);
+}
+
+.dark-mode .modify-watch-form .watch-occasion-selector__options input[type="checkbox"]::before,
+.dark-mode .modify-watch-form .watch-equipment-check input[type="checkbox"]::before,
+.dark-mode .modify-watch-form .checkbox-label .checkbox-input::before {
+  border-color: #18232a;
+}
+
+.modify-watch-form .watch-occasion-selector__options input[type="checkbox"]:checked::before,
+.modify-watch-form .watch-equipment-check input[type="checkbox"]:checked::before,
+.modify-watch-form .checkbox-label .checkbox-input:checked::before {
+  opacity: 1;
+  transform: translateY(-1px) rotate(-45deg) scale(1);
+}
+
+.modify-watch-form input[type="checkbox"]:focus-visible {
+  outline: 3px solid var(--ui-accent-soft);
+  outline-offset: 2px;
+}
+
+@media (max-width: 560px) {
+  .collection-tools__actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  .collection-export-menu,
+  .collection-export-menu > summary,
+  .collection-tools__actions > .collection-export-button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .collection-export-menu > summary {
+    gap: 6px;
+    padding-right: 8px;
+    padding-left: 8px;
+    font-size: 0.78rem;
+  }
+
+  .collection-export-menu__panel {
+    right: 0;
+    left: 0;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .modify-watch-form .watch-occasion-selector__options {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

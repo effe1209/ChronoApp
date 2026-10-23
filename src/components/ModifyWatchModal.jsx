@@ -187,11 +187,11 @@ const ModifyWatchModal = ({
           <fieldset className="modify-watch-field modify-watch-field--wide watch-equipment-fields">
             <legend>Dotazione e garanzia</legend>
             <div className="watch-equipment-options watch-equipment-fields__wide">
-              <label className="watch-equipment-check">
+              <label className={`watch-equipment-check${updatedWatch.has_box ? ' is-selected' : ''}`}>
                 <input type="checkbox" checked={Boolean(updatedWatch.has_box)} onChange={(e) => setUpdatedWatch({ ...updatedWatch, has_box: e.target.checked })} />
                 <span>Scatola originale</span>
               </label>
-              <label className="watch-equipment-check">
+              <label className={`watch-equipment-check${updatedWatch.has_papers ? ' is-selected' : ''}`}>
                 <input type="checkbox" checked={Boolean(updatedWatch.has_papers)} onChange={(e) => setUpdatedWatch({ ...updatedWatch, has_papers: e.target.checked })} />
                 <span>Documenti e libretti</span>
               </label>
@@ -200,7 +200,7 @@ const ModifyWatchModal = ({
               <span>Altra dotazione</span>
               <input type="text" maxLength="500" value={updatedWatch.accessories || ''} onChange={(e) => setUpdatedWatch({ ...updatedWatch, accessories: e.target.value })} />
             </label>
-            <label className="watch-equipment-check modify-watch-field--wide">
+            <label className={`watch-equipment-check modify-watch-field--wide${updatedWatch.has_warranty ? ' is-selected' : ''}`}>
               <input type="checkbox" checked={Boolean(updatedWatch.has_warranty)} onChange={(e) => setUpdatedWatch({ ...updatedWatch, has_warranty: e.target.checked })} />
               <span>È coperto da garanzia</span>
             </label>

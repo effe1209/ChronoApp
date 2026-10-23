@@ -72,6 +72,11 @@ const WatchList = ({
     setIsCarouselView(prevState => !prevState);
   };
 
+  const closeExportMenu = (event) => {
+    const menu = event.currentTarget.closest('details');
+    if (menu) menu.open = false;
+  };
+
   const brands = useMemo(() => {
     const uniqueBrands = new Map();
     watches.forEach((watch) => {
@@ -274,17 +279,38 @@ const WatchList = ({
             </span>
           </label>
           <div className="collection-tools__actions">
-            <button
-              type="button"
-              className="collection-export-button"
-              onClick={onCreateBackup}
-              disabled={isBackupBusy}
-            >
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3" />
-              </svg>
-              {isBackupBusy ? 'Attendere…' : 'Backup completo'}
-            </button>
+            <details className="collection-export-menu">
+              <summary className="collection-export-button" aria-label="Backup completo o esportazione CSV">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3" />
+                </svg>
+                {isBackupBusy ? 'Attendere…' : 'Backup / esporta'}
+                <span className="collection-export-menu__chevron" aria-hidden="true">⌄</span>
+              </summary>
+              <div className="collection-export-menu__panel">
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    closeExportMenu(event);
+                    onCreateBackup();
+                  }}
+                  disabled={isBackupBusy}
+                >
+                  Backup completo
+                </button>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    closeExportMenu(event);
+                    exportVisibleWatches();
+                  }}
+                  disabled={sortedWatches.length === 0}
+                  aria-label={`Esporta ${sortedWatches.length} orologi visibili in formato CSV`}
+                >
+                  Esporta CSV
+                </button>
+              </div>
+            </details>
             <input
               ref={backupInputRef}
               className="hidden-input"
@@ -298,20 +324,12 @@ const WatchList = ({
               className="collection-export-button collection-export-button--secondary"
               onClick={() => backupInputRef.current?.click()}
               disabled={isBackupBusy}
+              aria-label="Ripristina un backup completo"
             >
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M12 15V3m0 0L8 7m4-4 4 4M5 14v6h14v-6" />
               </svg>
-              Ripristina backup
-            </button>
-            <button
-              type="button"
-              className="collection-export-button collection-export-button--secondary"
-              onClick={exportVisibleWatches}
-              disabled={sortedWatches.length === 0}
-              aria-label={`Esporta ${sortedWatches.length} orologi visibili in formato CSV`}
-            >
-              Esporta CSV
+              Ripristina
             </button>
           </div>
         </div>

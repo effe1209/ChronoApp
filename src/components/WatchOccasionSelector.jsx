@@ -18,12 +18,17 @@ const WatchOccasionSelector = ({ value = [], onChange, idPrefix }) => {
       <div className="watch-occasion-selector__options">
         {OUTFIT_OCCASIONS.map(({ value: occasion, label }) => {
           const inputId = `${idPrefix}-${occasion}`;
+          const isSelected = selectedOccasions.includes(occasion);
           return (
-            <label key={occasion} htmlFor={inputId}>
+            <label
+              key={occasion}
+              htmlFor={inputId}
+              className={isSelected ? 'is-selected' : ''}
+            >
               <input
                 id={inputId}
                 type="checkbox"
-                checked={selectedOccasions.includes(occasion)}
+                checked={isSelected}
                 onChange={() => toggleOccasion(occasion)}
               />
               <span>{label}</span>
