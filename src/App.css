@@ -5640,6 +5640,133 @@ a:focus-visible,
   text-shadow: 0 2px 12px var(--ui-accent-soft);
 }
 
+.notification-settings {
+  box-sizing: border-box;
+  width: min(100%, 420px);
+  margin: 10px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--ui-border);
+  border-radius: 17px;
+  background: color-mix(in srgb, var(--ui-surface-strong) 84%, transparent);
+  text-align: left;
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  backdrop-filter: blur(14px) saturate(1.15);
+}
+
+.notification-settings__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+}
+
+.notification-settings__summary h5 {
+  margin: 0;
+  color: var(--ui-text);
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+.notification-settings__summary p {
+  margin: 3px 0 0;
+  color: var(--ui-muted);
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+
+.notification-settings__toggle,
+.notification-settings__actions button {
+  min-height: 36px;
+  padding: 8px 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 999px;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.notification-settings__toggle:disabled,
+.notification-settings__actions button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.notification-settings__panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 9px;
+  padding: 12px 14px 14px;
+  border-top: 1px solid var(--ui-border);
+}
+
+.notification-settings__option,
+.notification-settings__lead-time {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 10px;
+  color: var(--ui-text);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.notification-settings__option input {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  accent-color: var(--ui-accent);
+}
+
+.notification-settings__lead-time {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.notification-settings__lead-time select {
+  min-height: 36px;
+  padding: 6px 9px;
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  font: inherit;
+  font-size: 0.76rem;
+}
+
+.notification-settings__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 3px;
+}
+
+.notification-settings__actions .notification-settings__save {
+  border-color: transparent;
+  background: var(--ui-accent);
+  color: #fff;
+}
+
+.notification-settings__error {
+  margin: 0;
+  color: var(--ui-danger, #a53742);
+  font-size: 0.76rem;
+}
+
+@media (max-width: 430px) {
+  .notification-settings__summary {
+    align-items: flex-start;
+  }
+
+  .notification-settings__lead-time {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
 @media (max-width: 1200px) {
   .hero-section {
     grid-template-columns: minmax(0, 1fr);
@@ -7693,130 +7820,9 @@ a:focus-visible,
   flex-wrap: wrap;
 }
 
-.maintenance-reminders__settings-toggle {
-  min-height: 38px;
-  margin-left: auto;
-  padding: 8px 13px;
-  border: 1px solid color-mix(in srgb, var(--ui-accent) 35%, var(--ui-border));
-  border-radius: 999px;
-  background: var(--ui-surface-strong);
-  color: var(--ui-text);
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.maintenance-reminders__settings {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: center;
-  gap: 12px 20px;
-  padding: 15px;
-  border: 1px solid var(--ui-border);
-  border-radius: 15px;
-  background: color-mix(in srgb, var(--ui-surface-strong) 82%, transparent);
-}
-
-.maintenance-reminders__setting-toggle,
-.maintenance-reminders__setting-window {
-  display: flex;
-  min-height: 42px;
-  align-items: center;
-  gap: 10px;
-  color: var(--ui-text);
-  font-size: 0.82rem;
-  font-weight: 650;
-}
-
-.maintenance-reminders__setting-toggle input {
-  width: 19px;
-  height: 19px;
-  flex: 0 0 auto;
-  accent-color: var(--ui-accent);
-}
-
-.maintenance-reminders__setting-window {
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.maintenance-reminders__setting-window select {
-  min-height: 38px;
-  padding: 7px 10px;
-  border: 1px solid var(--ui-border);
-  border-radius: 10px;
-  background: var(--ui-surface-strong);
-  color: var(--ui-text);
-  font: inherit;
-}
-
-.maintenance-reminders__settings-actions {
-  display: flex;
-  grid-column: 1 / -1;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.maintenance-reminders__settings-actions button {
-  min-height: 38px;
-  padding: 8px 13px;
-  border: 1px solid var(--ui-border);
-  border-radius: 999px;
-  background: var(--ui-surface-strong);
-  color: var(--ui-text);
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.maintenance-reminders__settings-actions .maintenance-reminders__save {
-  border-color: transparent;
-  background: var(--ui-accent);
-  color: #fff;
-}
-
-.maintenance-reminders__settings-actions button:disabled {
-  opacity: 0.65;
-  cursor: wait;
-}
-
-.maintenance-reminders__error {
-  grid-column: 1 / -1;
-  margin: 0;
-  color: #a53742;
-  font-size: 0.8rem;
-}
-
-.maintenance-reminders__empty {
-  margin: 0;
-  color: var(--ui-muted);
-  font-size: 0.82rem;
-}
-
 @media (max-width: 650px) {
   .maintenance-reminders__heading {
     align-items: flex-start;
-  }
-
-  .maintenance-reminders__settings-toggle {
-    margin-left: 54px;
-  }
-
-  .maintenance-reminders__settings {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 8px;
-    padding: 12px;
-  }
-
-  .maintenance-reminders__setting-window {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .maintenance-reminders__settings-actions {
-    grid-column: 1;
   }
 }
 

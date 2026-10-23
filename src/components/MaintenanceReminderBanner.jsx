@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { supabase } from './supabaseClient';
 import {
   DEFAULT_NOTIFICATION_PREFERENCES,
-  REMINDER_DAY_OPTIONS,
+  NOTIFICATION_PREFERENCES_SAVED_EVENT,
   normalizeNotificationPreferences,
 } from './notificationPreferences';
 
@@ -65,11 +65,7 @@ const MaintenanceReminderBanner = ({ watches, userId, refreshKey = 0, onOpenWatc
   const [entries, setEntries] = useState([]);
   const [dismissed, setDismissed] = useState(() => new Set());
   const [preferences, setPreferences] = useState(DEFAULT_NOTIFICATION_PREFERENCES);
-  const [draftPreferences, setDraftPreferences] = useState(DEFAULT_NOTIFICATION_PREFERENCES);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isLoadingPreferences, setIsLoadingPreferences] = useState(false);
-  const [isSavingPreferences, setIsSavingPreferences] = useState(false);
-  const [settingsError, setSettingsError] = useState('');
+  const [isPreferencesLoaded, setIsPreferencesLoaded] = useState(false);
   const storageKey = userId ? `${STORAGE_PREFIX}${userId}` : null;
 
   useEffect(() => {
@@ -88,13 +84,15 @@ const MaintenanceReminderBanner = ({ watches, userId, refreshKey = 0, onOpenWatc
   useEffect(() => {
     let isCurrent = true;
     setPreferences(DEFAULT_NOTIFICATION_PREFERENCES);
-    setDraftPreferences(DEFAULT_NOTIFICATION_PREFERENCES);
-    setSettingsError('');
-    if (!userId) {
-      setIsLoadingPreferences(false);
-      return () => { isCurrent = false; };
-    }
-    setIsLoadingPreferences(true);
+    setIsPreferencesLoaded(false);
+    if (!userId) return () => { isCurrent = false; };
+
+    const handlePreferencesSaved = (event) => {
+      if (event.detail?.userId !== userId) return;
+      setPreferences(normalizeNotificationPreferences(event.detail.preferences || {}));
+      setIsPreferencesLoaded(true);
+    };
+    window.addEventListener(NOTIFICATION_PREFERENCES_SAVED_EVENT, handlePreferencesSaved);
 
     supabase
       .from('watch_notification_preferences')
@@ -103,23 +101,15 @@ const MaintenanceReminderBanner = ({ watches, userId, refreshKey = 0, onOpenWatc
       .maybeSingle()
       .then(({ data, error }) => {
         if (!isCurrent) return;
-        if (error) {
-          setSettingsError('Non riesco a caricare le preferenze. Verifica di aver applicato la migrazione delle notifiche.');
-          return;
-        }
-        const savedPreferences = normalizeNotificationPreferences(data || {});
-        setPreferences(savedPreferences);
-        setDraftPreferences(savedPreferences);
-        setSettingsError('');
+        if (!error) setPreferences(normalizeNotificationPreferences(data || {}));
+        setIsPreferencesLoaded(true);
       })
-      .catch(() => {
-        if (isCurrent) setSettingsError('Non riesco a caricare le preferenze delle notifiche.');
-      })
-      .finally(() => {
-        if (isCurrent) setIsLoadingPreferences(false);
-      });
+      .catch(() => { if (isCurrent) setIsPreferencesLoaded(true); });
 
-    return () => { isCurrent = false; };
+    return () => {
+      isCurrent = false;
+      window.removeEventListener(NOTIFICATION_PREFERENCES_SAVED_EVENT, handlePreferencesSaved);
+    };
   }, [userId]);
 
   useEffect(() => {
@@ -138,7 +128,7 @@ const MaintenanceReminderBanner = ({ watches, userId, refreshKey = 0, onOpenWatc
       .order('service_date', { ascending: false })
       .then(({ data, error }) => {
         if (!isCurrent) return;
-        // Se la tabella non è ancora disponibile, la galleria resta utilizzabile senza banner.
+        // Se la tabella non è ancora disponibile, la galleria resta utilizzabile senza avvisi.
         setEntries(error ? [] : (data || []));
       })
       .catch(() => { if (isCurrent) setEntries([]); });
@@ -178,35 +168,6 @@ const MaintenanceReminderBanner = ({ watches, userId, refreshKey = 0, onOpenWatc
     }).sort((a, b) => a.daysRemaining - b.daysRemaining);
   }, [watches, entries, dismissed, userId, preferences]);
 
-  const openSettings = () => {
-    setDraftPreferences(preferences);
-    setIsSettingsOpen((isOpen) => !isOpen);
-  };
-
-  const savePreferences = async () => {
-    if (!userId || isSavingPreferences) return;
-    const normalizedPreferences = normalizeNotificationPreferences(draftPreferences);
-    setIsSavingPreferences(true);
-    setSettingsError('');
-    try {
-      const { error } = await supabase
-        .from('watch_notification_preferences')
-        .upsert({
-          user_id: userId,
-          ...normalizedPreferences,
-          updated_at: new Date().toISOString(),
-        }, { onConflict: 'user_id' });
-      if (error) throw error;
-      setPreferences(normalizedPreferences);
-      setDraftPreferences(normalizedPreferences);
-      setIsSettingsOpen(false);
-    } catch {
-      setSettingsError('Salvataggio non riuscito. Applica la migrazione delle preferenze notifiche e riprova.');
-    } finally {
-      setIsSavingPreferences(false);
-    }
-  };
-
   const dismissReminder = (reminder) => {
     const nextDismissed = new Set(dismissed);
     nextDismissed.add(reminder.dismissalId);
@@ -215,11 +176,11 @@ const MaintenanceReminderBanner = ({ watches, userId, refreshKey = 0, onOpenWatc
     try {
       localStorage.setItem(storageKey, JSON.stringify([...nextDismissed]));
     } catch {
-      // Il banner si chiude comunque per la sessione corrente se lo storage non è disponibile.
+      // L'avviso si chiude comunque per la sessione corrente se lo storage non è disponibile.
     }
   };
 
-  if (!userId) return null;
+  if (!userId || !isPreferencesLoaded || reminders.length === 0) return null;
 
   return (
     <section className="maintenance-reminders" aria-label="Avvisi di garanzia e revisione" aria-live="polite">
@@ -232,95 +193,40 @@ const MaintenanceReminderBanner = ({ watches, userId, refreshKey = 0, onOpenWatc
         </span>
         <div>
           <h3>Promemoria della collezione</h3>
-          <p>{reminders.length
-            ? `${reminders.length} ${reminders.length === 1 ? 'scadenza richiede' : 'scadenze richiedono'} attenzione`
-            : `Nessuna scadenza nei prossimi ${preferences.reminder_days_before} giorni`}</p>
+          <p>{`${reminders.length} ${reminders.length === 1 ? 'scadenza richiede' : 'scadenze richiedono'} attenzione`}</p>
         </div>
-        <button
-          className="maintenance-reminders__settings-toggle"
-          type="button"
-          onClick={openSettings}
-          disabled={isLoadingPreferences}
-          aria-expanded={isSettingsOpen}
-        >
-          {isLoadingPreferences ? 'Carico…' : isSettingsOpen ? 'Chiudi impostazioni' : 'Impostazioni'}
-        </button>
       </div>
-      {isSettingsOpen && (
-        <div className="maintenance-reminders__settings" aria-label="Preferenze notifiche">
-          <label className="maintenance-reminders__setting-toggle">
-            <input
-              type="checkbox"
-              checked={draftPreferences.maintenance_enabled}
-              onChange={(event) => setDraftPreferences((current) => ({ ...current, maintenance_enabled: event.target.checked }))}
-            />
-            <span>Avvisi per le prossime revisioni</span>
-          </label>
-          <label className="maintenance-reminders__setting-toggle">
-            <input
-              type="checkbox"
-              checked={draftPreferences.warranty_enabled}
-              onChange={(event) => setDraftPreferences((current) => ({ ...current, warranty_enabled: event.target.checked }))}
-            />
-            <span>Avvisi per le garanzie in scadenza</span>
-          </label>
-          <label className="maintenance-reminders__setting-window">
-            <span>Mostra gli avvisi con questo anticipo</span>
-            <select
-              value={draftPreferences.reminder_days_before}
-              onChange={(event) => setDraftPreferences((current) => ({ ...current, reminder_days_before: Number(event.target.value) }))}
-            >
-              {REMINDER_DAY_OPTIONS.map((days) => <option key={days} value={days}>{days} giorni</option>)}
-            </select>
-          </label>
-          {settingsError && <p className="maintenance-reminders__error" role="alert">{settingsError}</p>}
-          <div className="maintenance-reminders__settings-actions">
-            <button type="button" onClick={() => {
-              setDraftPreferences(preferences);
-              setIsSettingsOpen(false);
-              setSettingsError('');
-            }}>Annulla</button>
-            <button type="button" className="maintenance-reminders__save" onClick={savePreferences} disabled={isSavingPreferences}>
-              {isSavingPreferences ? 'Salvo…' : 'Salva preferenze'}
-            </button>
-          </div>
-        </div>
-      )}
-      {reminders.length ? (
-        <ul className="maintenance-reminders__list">
-          {reminders.map((reminder) => {
-            const label = reminder.type === 'warranty' ? 'Garanzia' : 'Revisione';
-            const dueLabel = reminder.daysRemaining < 0
-              ? `${label} scaduta il ${formatDate(reminder.dueDate)}`
-              : reminder.daysRemaining === 0
-                ? `${label} in scadenza oggi · ${formatDate(reminder.dueDate)}`
-                : `${label} in scadenza tra ${reminder.daysRemaining} ${reminder.daysRemaining === 1 ? 'giorno' : 'giorni'} · ${formatDate(reminder.dueDate)}`;
-            return (
-              <li className="maintenance-reminders__item" key={reminder.dismissalId}>
-                <div className="maintenance-reminders__copy">
-                  <strong>{reminder.watch.name || reminder.watch.brand || 'Orologio'}</strong>
-                  <span>{dueLabel}</span>
-                </div>
-                <div className="maintenance-reminders__actions">
-                  <button type="button" className="maintenance-reminders__open" onClick={() => onOpenWatch(reminder.watch)}>
-                    Apri scheda
-                  </button>
-                  <button
-                    type="button"
-                    className="maintenance-reminders__dismiss"
-                    onClick={() => dismissReminder(reminder)}
-                    aria-label={`Nascondi avviso ${label.toLocaleLowerCase('it')} per ${reminder.watch.name || 'questo orologio'}`}
-                  >
-                    Nascondi avviso
-                  </button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      ) : (
-        <p className="maintenance-reminders__empty">Gli avvisi compariranno qui quando una garanzia o una revisione si avvicina alla scadenza.</p>
-      )}
+      <ul className="maintenance-reminders__list">
+        {reminders.map((reminder) => {
+          const label = reminder.type === 'warranty' ? 'Garanzia' : 'Revisione';
+          const dueLabel = reminder.daysRemaining < 0
+            ? `${label} scaduta il ${formatDate(reminder.dueDate)}`
+            : reminder.daysRemaining === 0
+              ? `${label} in scadenza oggi · ${formatDate(reminder.dueDate)}`
+              : `${label} in scadenza tra ${reminder.daysRemaining} ${reminder.daysRemaining === 1 ? 'giorno' : 'giorni'} · ${formatDate(reminder.dueDate)}`;
+          return (
+            <li className="maintenance-reminders__item" key={reminder.dismissalId}>
+              <div className="maintenance-reminders__copy">
+                <strong>{reminder.watch.name || reminder.watch.brand || 'Orologio'}</strong>
+                <span>{dueLabel}</span>
+              </div>
+              <div className="maintenance-reminders__actions">
+                <button type="button" className="maintenance-reminders__open" onClick={() => onOpenWatch(reminder.watch)}>
+                  Apri scheda
+                </button>
+                <button
+                  type="button"
+                  className="maintenance-reminders__dismiss"
+                  onClick={() => dismissReminder(reminder)}
+                  aria-label={`Nascondi avviso ${label.toLocaleLowerCase('it')} per ${reminder.watch.name || 'questo orologio'}`}
+                >
+                  Nascondi avviso
+                </button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </section>
   );
 };

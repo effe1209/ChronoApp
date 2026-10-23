@@ -23,6 +23,7 @@ import { VscHome, VscArchive, VscAccount, VscSettingsGear } from 'react-icons/vs
 
 // Import dei nuovi componenti creati
 import UserProfile from './components/UserProfile';
+import NotificationSettings from './components/NotificationSettings';
 import DarkModeSwitch from './components/DarkModeSwitch';
 import WatchList from './components/WatchList';
 import AddWatchForm from './components/AddWatchForm';
@@ -1620,6 +1621,7 @@ const BackgroundLayer = useMemo(() => {
                 <strong>{collectionTotals.declaredValue.toLocaleString('it-IT')} €</strong>
                 <small>Spesa di acquisto: {collectionTotals.purchaseSpend.toLocaleString('it-IT')} €</small>
               </p>
+              <NotificationSettings userId={user?.id} />
             </div>
           </div>
       )}

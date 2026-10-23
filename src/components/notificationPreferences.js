@@ -4,6 +4,7 @@ export const DEFAULT_NOTIFICATION_PREFERENCES = Object.freeze({
   reminder_days_before: 90,
 });
 export const REMINDER_DAY_OPTIONS = Object.freeze([30, 60, 90, 180, 365]);
+export const NOTIFICATION_PREFERENCES_SAVED_EVENT = 'chrone:notification-preferences-saved';
 
 export const normalizeNotificationPreferences = (preferences = {}) => {
   const requestedDays = Number(preferences.reminder_days_before);
