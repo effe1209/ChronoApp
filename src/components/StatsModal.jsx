@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import WatchAnalytics from './WatchAnalytics';
 
 // Modale per mostrare le statistiche (WatchAnalytics)
 const StatsModal = ({ isVisible, setIsVisible, watches, isDark }) => {
+  useEffect(() => {
+    if (!isVisible) return undefined;
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') setIsVisible(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isVisible, setIsVisible]);
 
   if (!isVisible) {
     return null;
@@ -21,18 +29,28 @@ const StatsModal = ({ isVisible, setIsVisible, watches, isDark }) => {
           <div>
             <span className="statistics-eyebrow">PANORAMICA</span>
             <h2 id="statistics-title">Statistiche collezione</h2>
-            <p>Un riepilogo visivo dei tuoi orologi e delle loro caratteristiche.</p>
+            <p>Valore, composizione e condizioni dei tuoi segnatempo in un unico spazio.</p>
           </div>
-          <div className="statistics-total" aria-label={`${watches.length} orologi in collezione`}>
-            <strong>{watches.length}</strong>
-            <span>{watches.length === 1 ? 'orologio' : 'orologi'}</span>
+          <div className="statistics-heading-actions">
+            <div className="statistics-total" aria-label={`${watches.length} orologi in collezione`}>
+              <strong>{watches.length}</strong>
+              <span>{watches.length === 1 ? 'orologio' : 'orologi'}</span>
+            </div>
+            <button
+              className="statistics-close"
+              type="button"
+              onClick={() => setIsVisible(false)}
+              aria-label="Chiudi statistiche"
+            >
+              ×
+            </button>
           </div>
         </header>
 
         <WatchAnalytics watches={watches} isDark={isDark} />
 
         <footer className="statistics-footer">
-          <span>I dati si aggiornano con la tua collezione.</span>
+          <span>I valori riflettono i dati inseriti nelle schede degli orologi.</span>
           <button type="button" onClick={() => setIsVisible(false)}>Chiudi</button>
         </footer>
       </section>
