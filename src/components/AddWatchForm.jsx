@@ -124,12 +124,8 @@ const AddWatchForm = ({
           </div>
         </Step>
         <Step>
-          <div className="add-watch-step-heading">
-            <h3>Condizione dell’orologio</h3>
-            <p>Valuta lo stato attuale del segnatempo su una scala da 1 a 10.</p>
-          </div>
           <label className="add-watch-field condition-rating-field" htmlFor="add-watch-condition">
-            <span>Valutazione</span>
+            <span>Condizione dell’orologio</span>
             <select
               id="add-watch-condition"
               value={newWatch.condition_rating ?? ''}
