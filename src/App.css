@@ -2679,27 +2679,27 @@ body.dark-mode {
 }
 
 .theme-switch-glass .MuiSwitch-track {
-  border: 1px solid rgba(255, 255, 255, 0.64);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.56), rgba(148, 169, 180, 0.3)) !important;
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.42), inset 0 -2px 4px rgba(45, 74, 89, 0.08);
+  border: 2px solid rgba(20, 87, 106, 0.54);
+  background: linear-gradient(135deg, rgba(218, 242, 247, 0.98), rgba(105, 158, 174, 0.72)) !important;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.72), inset 0 -2px 5px rgba(18, 66, 82, 0.22), 0 2px 8px rgba(28, 75, 91, 0.18);
   -webkit-backdrop-filter: blur(10px) saturate(1.35);
   backdrop-filter: blur(10px) saturate(1.35);
 }
 
 .theme-switch-glass .MuiSwitch-switchBase .MuiSwitch-thumb {
-  border: 1px solid rgba(255, 255, 255, 0.62);
-  box-shadow: 0 4px 10px rgba(28, 54, 71, 0.22), inset 0 1px rgba(255, 255, 255, 0.58);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 11px rgba(15, 58, 73, 0.34), inset 0 1px rgba(255, 255, 255, 0.72);
 }
 
 .dark-mode .theme-switch-glass .MuiSwitch-track {
-  border-color: rgba(255, 255, 255, 0.22);
-  background: linear-gradient(135deg, rgba(13, 25, 38, 0.64), rgba(184, 197, 205, 0.24)) !important;
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.12), inset 0 -2px 4px rgba(0, 0, 0, 0.14);
+  border-color: rgba(221, 240, 245, 0.46);
+  background: linear-gradient(135deg, rgba(8, 24, 34, 0.96), rgba(42, 77, 91, 0.82)) !important;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.18), inset 0 -2px 5px rgba(0, 0, 0, 0.38), 0 2px 8px rgba(0, 0, 0, 0.26);
 }
 
 .dark-mode .theme-switch-glass .MuiSwitch-switchBase .MuiSwitch-thumb {
-  border-color: rgba(255, 255, 255, 0.38);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.34), inset 0 1px rgba(255, 255, 255, 0.34);
+  border-color: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.42), inset 0 1px rgba(255, 255, 255, 0.42);
 }
 
 .navigation-glass .dock-menu__button:not(.is-active):hover {
@@ -8090,12 +8090,25 @@ a:focus-visible,
 
 .global-navigation-theme {
   display: flex;
-  flex: 0 0 74px;
+  flex: 0 0 94px;
+  min-height: 50px;
   align-items: center;
   justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  border-radius: 25px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(177, 212, 222, 0.3));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.72), inset 0 -1px rgba(24, 76, 93, 0.1);
 }
 
-/* Gli overlay vivono nel contenitore principale: abbassiamo la barra sotto quel livello. */
+.dark-mode .global-navigation-theme {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, rgba(51, 76, 88, 0.72), rgba(13, 29, 40, 0.58));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.13), inset 0 -1px rgba(0, 0, 0, 0.22);
+}
+
+/* Durante una modale la barra non deve restare visibile dietro l'overlay. */
 .slideWrap_Container.is-overlay-behind {
-  z-index: 0;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }

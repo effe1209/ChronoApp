@@ -5,11 +5,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
-  width: 62,
-  height: 34,
-  padding: 7,
+  width: 70,
+  height: 40,
+  padding: 8,
   margin: 0,
-  transform: 'scale(1.2)',
+  transform: 'scale(1.12)',
   
   '& .MuiSwitch-switchBase': {
     margin: 1,
@@ -31,9 +31,11 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
       },
       '& + .MuiSwitch-track': {
         opacity: 1,
-        backgroundColor: '#2E2E2E', 
+        border: '2px solid rgba(255, 255, 255, 0.54)',
+        backgroundColor: 'rgba(12, 29, 39, 0.88)',
+        boxShadow: 'inset 0 1px 4px rgba(0, 0, 0, 0.36), 0 2px 7px rgba(5, 30, 41, 0.24)',
         ...theme.applyStyles('dark', {
-          backgroundColor: '#000000',
+          backgroundColor: 'rgba(6, 16, 24, 0.92)',
         }),
       },
     },
@@ -42,9 +44,10 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   // --- 2. COLORE PALLINO DEFAULT (GIORNO) ---
   '& .MuiSwitch-thumb': {
     backgroundColor: 'var(--ui-accent, var(--accent-primary_DARK))',
-    
-    width: 32,
-    height: 32,
+    border: '2px solid rgba(255, 255, 255, 0.86)',
+    boxShadow: '0 3px 8px rgba(6, 34, 46, 0.35)',
+    width: 34,
+    height: 34,
     '&::before': {
       content: "''",
       position: 'absolute',
@@ -61,10 +64,12 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
   '& .MuiSwitch-track': {
     opacity: 1,
-    backgroundColor: 'rgba(126, 145, 157, 0.28)',
+    border: '2px solid rgba(20, 87, 106, 0.38)',
+    backgroundColor: 'rgba(203, 231, 238, 0.88)',
     borderRadius: 20 / 2,
+    boxShadow: 'inset 0 1px 4px rgba(32, 86, 103, 0.2), 0 2px 7px rgba(19, 73, 90, 0.14)',
     ...theme.applyStyles('dark', {
-      backgroundColor: '#8796A5',
+      backgroundColor: 'rgba(111, 142, 154, 0.7)',
     }),
   },
 }));

@@ -57,6 +57,7 @@ const Dock = ({
       {systemItems.map((item, index) => {
         const size = getItemSize(index);
         const isProfileItem = item.label === 'Profile';
+        const iconSize = Math.round(baseItemSize * 0.5);
         
         // Calcolo stato attivo
         let isActive = activeSection === item.label;
@@ -80,7 +81,7 @@ const Dock = ({
               aria-current={activeSection === item.label ? 'location' : undefined}
               title={item.label}
             >
-              {React.cloneElement(item.icon, { size: (isMobile ? baseItemSize : size) * (isProfileItem ? 0.68 : 0.5) })}
+              {React.cloneElement(item.icon, { size: iconSize })}
             </button>
             <span className="dock-menu__label">
               {item.label}
