@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import FeatureCheckboxList from './FeatureCheckboxList'; // Riutilizza il componente
 import WatchOccasionSelector from './WatchOccasionSelector';
 
@@ -6,6 +6,7 @@ import WatchOccasionSelector from './WatchOccasionSelector';
 const ModifyWatchModal = ({
   isVisible,
   setIsVisible,
+  initialWatch,
   updatedWatch,
   setUpdatedWatch,
   handleModifyImageChange,
@@ -20,6 +21,49 @@ const ModifyWatchModal = ({
   handleUpdatedFeatureChange,
   handleSaveChanges
 }) => {
+  const [showExitPrompt, setShowExitPrompt] = useState(false);
+
+  const hasUnsavedChanges = Boolean(initialWatch && updatedWatch) && [
+    'name', 'brand', 'year', 'money', 'condition_rating', 'movement', 'color',
+    'occasions', 'image', 'imageUrl', 'features', 'note', 'has_box', 'has_papers',
+    'accessories', 'has_warranty', 'warranty_start', 'warranty_end', 'warranty_provider',
+  ].some((field) => {
+    const currentValue = updatedWatch[field];
+    const initialValue = initialWatch[field];
+    if (Array.isArray(currentValue) || Array.isArray(initialValue)) {
+      const normalizeArray = (value) => (Array.isArray(value) ? value.map(String).sort() : []);
+      return JSON.stringify(normalizeArray(currentValue)) !== JSON.stringify(normalizeArray(initialValue));
+    }
+    if (typeof File !== 'undefined' && currentValue instanceof File) {
+      return currentValue !== initialValue;
+    }
+    return currentValue !== initialValue;
+  });
+
+  const requestClose = useCallback(() => {
+    if (hasUnsavedChanges) {
+      setShowExitPrompt(true);
+      return;
+    }
+    setIsVisible(false);
+  }, [hasUnsavedChanges, setIsVisible]);
+
+  useEffect(() => {
+    if (!isVisible) {
+      setShowExitPrompt(false);
+      return undefined;
+    }
+
+    const handleKeyDown = (event) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      if (showExitPrompt) setShowExitPrompt(false);
+      else requestClose();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isVisible, showExitPrompt, requestClose]);
 
   if (!isVisible) {
     return null;
@@ -34,9 +78,20 @@ const ModifyWatchModal = ({
     : (updatedWatch.imageUrl || "orologio_back.svg");
 
   return (
-    <div className="modal-overlay modify-watch-overlay">
-      <div className="modal-content modify-watch-modal">
-        <h2>Modifica Orologio</h2>
+    <div
+      className="modal-overlay modify-watch-overlay"
+      onClick={(event) => {
+        if (event.target === event.currentTarget) requestClose();
+      }}
+    >
+      <div
+        className="modal-content modify-watch-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modify-watch-title"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <h2 id="modify-watch-title">Modifica Orologio</h2>
         
         <img 
           src={previewImageUrl} 
@@ -250,9 +305,42 @@ const ModifyWatchModal = ({
 
         <div className="buttonForm">
           <button className="funzioniButton" onClick={handleSaveChanges}>Salva</button>
-          <button className="funzioniButton" onClick={() => setIsVisible(false)}>Chiudi</button>
+          <button className="funzioniButton" onClick={requestClose}>Chiudi</button>
         </div>
       </div>
+      {showExitPrompt && (
+        <div className="modify-watch-exit-confirmation">
+          <section
+            className="modify-watch-exit-confirmation__card"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="modify-watch-exit-title"
+            aria-describedby="modify-watch-exit-description"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <span className="modify-watch-exit-confirmation__eyebrow">MODIFICHE NON SALVATE</span>
+            <h3 id="modify-watch-exit-title">Vuoi salvare prima di uscire?</h3>
+            <p id="modify-watch-exit-description">Puoi salvare le modifiche, scartarle oppure continuare a modificare l’orologio.</p>
+            <div className="modify-watch-exit-confirmation__actions">
+              <button type="button" className="modify-watch-exit-confirmation__save" onClick={async () => {
+                const saved = await handleSaveChanges();
+                if (saved) setShowExitPrompt(false);
+              }}>
+                Salva
+              </button>
+              <button type="button" className="modify-watch-exit-confirmation__discard" onClick={() => {
+                setShowExitPrompt(false);
+                setIsVisible(false);
+              }}>
+                Scarta modifiche
+              </button>
+              <button type="button" className="modify-watch-exit-confirmation__continue" onClick={() => setShowExitPrompt(false)}>
+                Continua a modificare
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 };

@@ -67,7 +67,7 @@ const OutfitModal = ({
   return (
     <div
       className="modal-overlay outfit-modal-overlay"
-      onMouseDown={(event) => {
+      onClick={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
     >

@@ -111,6 +111,7 @@ function App() {
   const [isInfoVisible, setIsInfoVisible] = useState(false);
   const [isModifyVisible, setIsModifyVisible] = useState(false);
   const [modifyWatch, setModifyWatch] = useState(null);
+  const [modifyWatchBaseline, setModifyWatchBaseline] = useState(null);
   const [updatedWatch, setUpdatedWatch] = useState({
     name: '',
     brand: '',
@@ -683,8 +684,7 @@ const fetchWatches = async (userid) => {
     const featureIDs = (watchToModify.caratteristiche || []).map(
       (feature) => feature.id_caratteristica
     );
-    setModifyWatch(watchToModify); 
-    setUpdatedWatch({
+    const nextUpdatedWatch = {
       name: watchToModify.name,
       brand: watchToModify.brand,
       year: watchToModify.year,
@@ -705,7 +705,10 @@ const fetchWatches = async (userid) => {
       warranty_start: watchToModify.warranty_start || null,
       warranty_end: watchToModify.warranty_end || null,
       warranty_provider: watchToModify.warranty_provider || '',
-    });
+    };
+    setModifyWatch(watchToModify);
+    setUpdatedWatch(nextUpdatedWatch);
+    setModifyWatchBaseline(nextUpdatedWatch);
     setIsModifyVisible(true);
   };
 
@@ -804,9 +807,11 @@ const fetchWatches = async (userid) => {
         ? 'Orologio aggiornato. La foto non è ancora disponibile negli abbinamenti outfit.'
         : 'Orologio aggiornato con successo!');
       setIsModifyVisible(false);
+      return true;
     } catch (error) {
       console.error("Errore durante il salvataggio delle modifiche:", error);
       setMessage("Errore: " + error.message);
+      return false;
     } finally {
         setLoading(false);
     }
@@ -1385,49 +1390,52 @@ const BackgroundLayer = useMemo(() => {
     <>
     {loading && <LoadingModal message={message} />}
     {BackgroundLayer}
-
-    {/* MAIN CONTENT LAYER */}
-    <div 
-      className={`container ${!user ? 'login-page' : ''}`} 
-      id="home"
-      style={{ position: 'relative', zIndex: 1 }} // Assicuro che il contenuto stia sopra
-    >
-      <SpeedInsights/>
+    {createPortal(
       <div className="slideWrap_Container">
-        <GlassSurface 
-          width={100} 
+        <GlassSurface
+          width={100}
           height={64}
           borderRadius={20}
           className="my-custom-class theme-switch-glass"
         >
-        <DarkModeSwitch 
-          isDark={isDark}       // Passiamo il valore
-          toggleTheme={toggleTheme} // Passiamo la funzione per cambiarlo
-          isUserLoggedIn={!!user} 
-          onLogout={handleLogout} 
-          onAddWatchToggle={toggleAddWatchForm}
-          isFormVisible={showForm}
-        />
-        </GlassSurface>
-        {user && (
-          <GlassSurface 
-          width="min(350px, 32vw)"
-          height={64}
-          borderRadius={20}
-          className="my-custom-class navigation-glass"
-        >
-          <Dock 
-            items={items}
-            activeSection={activeSection} 
+          <DarkModeSwitch
+            isDark={isDark}
+            toggleTheme={toggleTheme}
+            isUserLoggedIn={!!user}
             onLogout={handleLogout}
             onAddWatchToggle={toggleAddWatchForm}
             isFormVisible={showForm}
-            baseItemSize={50}
-            magnification={70}
           />
+        </GlassSurface>
+        {user && (
+          <GlassSurface
+            width="min(350px, 32vw)"
+            height={64}
+            borderRadius={20}
+            className="my-custom-class navigation-glass"
+          >
+            <Dock
+              items={items}
+              activeSection={activeSection}
+              onLogout={handleLogout}
+              onAddWatchToggle={toggleAddWatchForm}
+              isFormVisible={showForm}
+              baseItemSize={50}
+              magnification={70}
+            />
           </GlassSurface>
         )}
-        </div>
+      </div>,
+      document.body
+    )}
+
+    {/* MAIN CONTENT LAYER */}
+    <div
+      className={`container ${!user ? 'login-page' : ''}`}
+      id="home"
+      style={{ position: 'relative', zIndex: 1 }} // Assicuro che il contenuto stia sopra
+    >
+      <SpeedInsights/>
       <div className="hero-account-backdrop">
         <div className="hero-account-video-mask" aria-hidden="true">
           <video className="hero-account-video" autoPlay loop muted playsInline preload="auto" tabIndex={-1}>
@@ -1681,6 +1689,7 @@ const BackgroundLayer = useMemo(() => {
             isVisible={isModifyVisible}
             setIsVisible={setIsModifyVisible}
             modifyWatch={modifyWatch}
+            initialWatch={modifyWatchBaseline}
             updatedWatch={updatedWatch}
             setUpdatedWatch={setUpdatedWatch}
             handleModifyImageChange={handleModifyImageChange} 

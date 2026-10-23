@@ -7538,6 +7538,131 @@ a:focus-visible,
   }
 }
 
+/* Barra globale fuori dal flusso di scorrimento: resta sempre raggiungibile su iOS. */
+.slideWrap_Container {
+  position: fixed;
+  z-index: 950;
+  top: max(12px, env(safe-area-inset-top, 0px));
+  left: 50%;
+  width: min(calc(100vw - 40px), 1160px);
+  box-sizing: border-box;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.slideWrap_Container > .glass-surface {
+  pointer-events: auto;
+}
+
+.container {
+  padding-top: 100px;
+}
+
+#home-section,
+#profile-section,
+#function-section,
+#watch-list-section {
+  scroll-margin-top: calc(100px + env(safe-area-inset-top, 0px));
+}
+
+.add-watch-section {
+  scroll-margin-top: calc(100px + env(safe-area-inset-top, 0px));
+}
+
+.modify-watch-exit-confirmation {
+  position: fixed;
+  z-index: 1100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: max(18px, env(safe-area-inset-top, 0px)) 18px max(18px, env(safe-area-inset-bottom, 0px));
+  background: rgba(8, 17, 25, 0.58);
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
+}
+
+.modify-watch-exit-confirmation__card {
+  width: min(100%, 440px);
+  padding: clamp(22px, 5vw, 32px);
+  border: 1px solid var(--ui-border);
+  border-radius: 26px;
+  background: var(--ui-surface-strong);
+  color: var(--ui-text);
+  text-align: left;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.3), inset 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.modify-watch-exit-confirmation__eyebrow {
+  color: var(--ui-accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.modify-watch-exit-confirmation__card h3 {
+  margin: 10px 0 8px;
+  font-family: var(--font-Title);
+  font-size: clamp(1.3rem, 5vw, 1.7rem);
+}
+
+.modify-watch-exit-confirmation__card p {
+  color: var(--ui-muted);
+  line-height: 1.55;
+}
+
+.modify-watch-exit-confirmation__actions {
+  display: grid;
+  gap: 9px;
+  margin-top: 22px;
+}
+
+.modify-watch-exit-confirmation__actions button {
+  min-height: 46px;
+  padding: 10px 16px;
+  border: 1px solid var(--ui-border);
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modify-watch-exit-confirmation__save {
+  background: var(--ui-accent);
+  color: #172630;
+}
+
+.modify-watch-exit-confirmation__discard {
+  background: color-mix(in srgb, var(--ui-danger, #c54853) 11%, var(--ui-surface-strong));
+  color: var(--ui-danger, #b73542);
+}
+
+.modify-watch-exit-confirmation__continue {
+  background: var(--ui-surface);
+  color: var(--ui-text);
+}
+
+@media (max-width: 720px) {
+  .slideWrap_Container {
+    top: max(8px, env(safe-area-inset-top, 0px));
+    width: min(calc(100vw - 24px), 600px);
+  }
+
+  .container {
+    padding-top: 88px;
+  }
+
+  #home-section,
+  #profile-section,
+  #function-section,
+  #watch-list-section {
+    scroll-margin-top: calc(88px + env(safe-area-inset-top, 0px));
+  }
+
+  .add-watch-section {
+    scroll-margin-top: calc(88px + env(safe-area-inset-top, 0px));
+  }
+}
+
 .collection-export-menu {
   position: relative;
   flex: 0 0 auto;
