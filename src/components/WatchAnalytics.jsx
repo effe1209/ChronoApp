@@ -71,6 +71,20 @@ const makeDecadeData = (watches) => {
   return { labels: sorted.map(([label]) => label), values: sorted.map(([, count]) => count) };
 };
 
+const makePurchaseData = (watches) => {
+  const totalsByYear = watches.reduce((result, watch) => {
+    const value = asNumber(watch.money);
+    const year = /^\d{4}-\d{2}-\d{2}$/.test(watch.purchase_date || '')
+      ? Number(watch.purchase_date.slice(0, 4))
+      : null;
+    if (value === null || year === null) return result;
+    result[year] = (result[year] || 0) + value;
+    return result;
+  }, {});
+  const sorted = Object.entries(totalsByYear).sort((first, second) => Number(first[0]) - Number(second[0]));
+  return { labels: sorted.map(([year]) => year), values: sorted.map(([, value]) => value) };
+};
+
 const StatCard = ({ label, value, detail, icon }) => (
   <article className="statistics-kpi">
     <span className="statistics-kpi__icon" aria-hidden="true">{icon}</span>
@@ -88,7 +102,8 @@ const WatchAnalytics = ({ watches = [], isDark = false }) => {
   }, []);
 
   const summary = useMemo(() => {
-    const values = watches.map((watch) => asNumber(watch.money)).filter((value) => value !== null);
+    const purchasePrices = watches.map((watch) => asNumber(watch.money)).filter((value) => value !== null);
+    const declaredValues = watches.map((watch) => asNumber(watch.declared_value)).filter((value) => value !== null);
     const ratings = watches
       .map((watch) => asNumber(watch.condition_rating))
       .filter((rating) => Number.isInteger(rating) && rating >= 1 && rating <= 10);
@@ -98,8 +113,10 @@ const WatchAnalytics = ({ watches = [], isDark = false }) => {
     const movements = makeCountData(watches, 'movement', watches.length || 1);
 
     return {
-      totalValue: values.reduce((sum, value) => sum + value, 0),
-      recordedValues: values.length,
+      totalPurchaseSpend: purchasePrices.reduce((sum, value) => sum + value, 0),
+      recordedPurchases: purchasePrices.length,
+      totalDeclaredValue: declaredValues.reduce((sum, value) => sum + value, 0),
+      recordedDeclaredValues: declaredValues.length,
       averageCondition: ratings.length
         ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
         : null,
@@ -117,6 +134,7 @@ const WatchAnalytics = ({ watches = [], isDark = false }) => {
   const movementData = useMemo(() => makeCountData(watches, 'movement'), [watches]);
   const conditionData = useMemo(() => makeConditionData(watches), [watches]);
   const decadeData = useMemo(() => makeDecadeData(watches), [watches]);
+  const purchaseData = useMemo(() => makePurchaseData(watches), [watches]);
 
   const textColor = isDark ? '#d8e1e7' : '#344b58';
   const gridColor = isDark ? 'rgba(216, 225, 231, 0.12)' : 'rgba(52, 75, 88, 0.1)';
@@ -197,9 +215,15 @@ const WatchAnalytics = ({ watches = [], isDark = false }) => {
       <section className="statistics-kpis" aria-label="Indicatori della collezione">
         <StatCard
           icon="€"
-          label="Valore registrato"
-          value={formatEuro(summary.totalValue)}
-          detail={`${summary.recordedValues} ${summary.recordedValues === 1 ? 'orologio valorizzato' : 'orologi valorizzati'}`}
+          label="Spesa d’acquisto"
+          value={formatEuro(summary.totalPurchaseSpend)}
+          detail={`${summary.recordedPurchases} ${summary.recordedPurchases === 1 ? 'prezzo registrato' : 'prezzi registrati'}`}
+        />
+        <StatCard
+          icon="↗"
+          label="Valore dichiarato"
+          value={formatEuro(summary.totalDeclaredValue)}
+          detail={`${summary.recordedDeclaredValues} ${summary.recordedDeclaredValues === 1 ? 'valore aggiornato' : 'valori aggiornati'}`}
         />
         <StatCard
           icon="✧"
@@ -272,6 +296,16 @@ const WatchAnalytics = ({ watches = [], isDark = false }) => {
           </div>
           <div className="canvas_container statistics-chart-canvas">
             {renderChart(decadeData, Bar, barOptions(false), 'Orologi')}
+          </div>
+        </article>
+
+        <article className="chart-wrapper statistics-chart statistics-chart--purchase">
+          <div className="statistics-chart-heading">
+            <span className="statistics-chart-mark statistics-chart-mark--brands" aria-hidden="true">€</span>
+            <div><h3>Spesa nel tempo</h3><p>Prezzi d’acquisto raggruppati per anno</p></div>
+          </div>
+          <div className="canvas_container statistics-chart-canvas">
+            {renderChart(purchaseData, Bar, barOptions(false), 'Spesa (€)')}
           </div>
         </article>
       </section>

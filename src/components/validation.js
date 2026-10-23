@@ -6,6 +6,8 @@ export const isValidWatch = (watch) => {
     watch.year > 0 &&
     !isNaN(watch.year) &&
     watch.movement.trim() !== "" &&
-    (watch.money === null || (!isNaN(watch.money) && watch.money >= 0))
+    (watch.money === null || (!isNaN(watch.money) && watch.money >= 0)) &&
+    (watch.declared_value === null || watch.declared_value === undefined
+      || (!isNaN(watch.declared_value) && watch.declared_value >= 0))
   );
 };

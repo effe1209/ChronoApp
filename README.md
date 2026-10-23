@@ -24,18 +24,18 @@ Calibro è un'applicazione web moderna e responsiva progettata per gli appassion
 - Gestione Orologi: Inserimento, modifica ed eliminazione degli orologi dalla collezione.
 - Vista Dinamica: Alternanza tra la visualizzazione a Griglia, con la possibilità di selezionare gli orologi preferiti, e la visualizzazione a Carosello.
 - Organizzazione Avanzata: Ricerca testuale, filtri per marca, preferiti, anno e prezzo, ordinamento e esportazione CSV dei risultati.
-- Scheda completa: Condizione da 1 a 10, dotazione, garanzia e informazioni del centro assistenza per ogni orologio.
+- Scheda completa: Condizione da 1 a 10, prezzo e data di acquisto, valore dichiarato, dotazione, garanzia e informazioni del centro assistenza.
 - Registro revisioni: Storico degli interventi con date, costi, fornitori e prossima scadenza.
-- Promemoria revisioni: Avvisi per gli orologi prossimi alla revisione, eliminabili dalla schermata.
-- Backup completo: Esportazione e ripristino incrementale di orologi, revisioni, immagini e preferenze outfit.
+- Promemoria configurabili: Avvisi in app per garanzie e revisioni in scadenza, con anticipo personalizzabile e possibilità di nasconderli.
+- Backup completo: Esportazione e ripristino incrementale di orologi, revisioni, immagini, preferenze outfit e notifiche.
 
-Il backup completo è un file JSON autonomo con le immagini incluse. Il ripristino unisce i dati: aggiorna i record con lo stesso identificativo di backup e lascia inalterati gli altri. Per usare dotazione, garanzia, revisioni e backup, applica la migrazione `supabase/migrations/20261022_watch_collection_extensions.sql`; per condizione, occasioni d’uso e preferenze outfit applica anche le migrazioni `supabase/migrations/20261023_watch_condition_rating.sql` e `supabase/migrations/20261023_watch_outfit_preferences.sql`.
+Il backup completo è un file JSON autonomo con le immagini incluse. Il ripristino unisce i dati: aggiorna i record con lo stesso identificativo di backup e lascia inalterati gli altri. Per usare dotazione, garanzia, revisioni e backup, applica la migrazione `supabase/migrations/20261022_watch_collection_extensions.sql`; applica anche `supabase/migrations/20261023_watch_condition_rating.sql`, `supabase/migrations/20261023_watch_outfit_preferences.sql` e `supabase/migrations/20261023_watch_purchase_notifications.sql` per condizione, occasioni d’uso, preferenze outfit, dati di acquisto e avvisi.
 
 ## 🧠 Funzioni Intelligenti e Interattive
-- Valore Totale: Calcolo in tempo reale del valore complessivo della collezione.
+- Valore della collezione: Confronto tra spesa d’acquisto e valore dichiarato, con andamento degli acquisti per anno.
 - Orologio del Giorno: Selezione casuale di un orologio dalla collezione per suggerire cosa indossare.
 - Completa l'Outfit: Analisi visiva dell’immagine, filtri per occasione e colore, preferenze 👍/👎, confronto tra due orologi e preparazione guidata dei modelli senza analisi AI.
-- Statistiche collezione: Valore registrato, condizione media, dotazione, garanzia, distribuzione per marca e movimento, valutazioni e decenni di produzione.
+- Statistiche collezione: Spesa d’acquisto, valore dichiarato, condizione media, dotazione, garanzia, distribuzione per marca e movimento, valutazioni, decenni di produzione e acquisti per anno.
 
 ## 🎧 Interfaccia Utente e Performance
 - Modalità Scuro/Chiaro: Toggle dinamico della Dark Mode.
@@ -97,9 +97,9 @@ Linee guida rapide:
 ### Prossimi sviluppi
 
 - [ ] Importazione CSV con anteprima, verifica dei campi e rilevamento dei duplicati.
-- [ ] Prezzo e data di acquisto per seguire nel tempo la spesa e il valore dichiarato della collezione.
+- [x] Prezzo e data di acquisto, valore dichiarato e riepilogo della spesa per anno.
 - [ ] Analisi dei costi di manutenzione per anno e per orologio.
-- [ ] Notifiche configurabili per scadenze di garanzia e prossime revisioni.
+- [x] Notifiche configurabili per scadenze di garanzia e prossime revisioni.
 - [ ] Archiviazione degli orologi venduti mantenendo consultabili scheda e manutenzioni.
 
 ## 👤 Contributors

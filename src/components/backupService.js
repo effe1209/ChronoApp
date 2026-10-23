@@ -1,12 +1,17 @@
 import { supabase } from './supabaseClient';
+import {
+  DEFAULT_NOTIFICATION_PREFERENCES,
+  REMINDER_DAY_OPTIONS,
+  normalizeNotificationPreferences,
+} from './notificationPreferences';
 
 const BACKUP_FORMAT = 'calibro-collection-backup';
-const BACKUP_VERSION = 2;
+const BACKUP_VERSION = 3;
 const OUTFIT_OCCASION_VALUES = ['all', 'casual', 'elegante', 'sportivo', 'sera'];
 const WATCH_OCCASION_VALUES = OUTFIT_OCCASION_VALUES.slice(1);
 const OUTFIT_COLOR_VALUES = ['all', 'black', 'silver', 'blue', 'green', 'gold', 'brown', 'orange', 'red', 'purple'];
 const WATCH_FIELDS = [
-  'name', 'brand', 'year', 'condition_rating', 'money', 'movement', 'color', 'occasions', 'note', 'isFavorite',
+  'name', 'brand', 'year', 'condition_rating', 'money', 'purchase_date', 'declared_value', 'movement', 'color', 'occasions', 'note', 'isFavorite',
   'has_box', 'has_papers', 'accessories', 'has_warranty', 'warranty_start',
   'warranty_end', 'warranty_provider',
 ];
@@ -52,6 +57,13 @@ export const createFullBackup = async (userId) => {
     .select('*, Orologi_Caratteristiche(*, caratteristiche(*))')
     .eq('userid', userId);
   if (watchesError) throw watchesError;
+
+  const { data: notificationData, error: notificationError } = await supabase
+    .from('watch_notification_preferences')
+    .select('maintenance_enabled, warranty_enabled, reminder_days_before')
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (notificationError) throw notificationError;
 
   const watchIds = (watches || []).map((watch) => watch.id);
   let maintenance = [];
@@ -119,6 +131,7 @@ export const createFullBackup = async (userId) => {
     watches: backupWatches,
     maintenance: backupMaintenance,
     outfit_feedback: backupOutfitFeedback,
+    notification_preferences: normalizeNotificationPreferences(notificationData || DEFAULT_NOTIFICATION_PREFERENCES),
   };
 };
 
@@ -147,7 +160,7 @@ export const parseBackupFile = async (file) => {
   } catch {
     throw new Error('Il file selezionato non contiene un JSON valido.');
   }
-  if (backup?.format !== BACKUP_FORMAT || ![1, BACKUP_VERSION].includes(backup?.version)) {
+  if (backup?.format !== BACKUP_FORMAT || ![1, 2, BACKUP_VERSION].includes(backup?.version)) {
     throw new Error('Formato o versione del backup non supportati.');
   }
   if (!Array.isArray(backup.watches) || !Array.isArray(backup.maintenance)) {
@@ -156,6 +169,21 @@ export const parseBackupFile = async (file) => {
   if (backup.version === 1) backup.outfit_feedback = [];
   if (!Array.isArray(backup.outfit_feedback)) {
     throw new Error('Il backup contiene preferenze outfit non valide.');
+  }
+  if (backup.version >= 3) {
+    const notificationPreferences = backup.notification_preferences;
+    if (!notificationPreferences || typeof notificationPreferences !== 'object' || Array.isArray(notificationPreferences)) {
+      throw new Error('Il backup contiene preferenze notifiche non valide.');
+    }
+    const reminderDays = Number(notificationPreferences.reminder_days_before);
+    if (typeof notificationPreferences.maintenance_enabled !== 'boolean'
+      || typeof notificationPreferences.warranty_enabled !== 'boolean'
+      || !REMINDER_DAY_OPTIONS.includes(reminderDays)) {
+      throw new Error('Il backup contiene preferenze notifiche non valide.');
+    }
+    backup.notification_preferences = normalizeNotificationPreferences(notificationPreferences);
+  } else {
+    backup.notification_preferences = null;
   }
 
   const watchUids = new Set();
@@ -171,6 +199,14 @@ export const parseBackupFile = async (file) => {
       && (!Array.isArray(watch.fields.occasions)
         || watch.fields.occasions.some((occasion) => !WATCH_OCCASION_VALUES.includes(occasion)))) {
       throw new Error('Il backup contiene occasioni d’uso non valide.');
+    }
+    if (watch.fields.purchase_date != null
+      && !/^\d{4}-\d{2}-\d{2}$/.test(String(watch.fields.purchase_date))) {
+      throw new Error('Il backup contiene una data di acquisto non valida.');
+    }
+    if (watch.fields.declared_value != null
+      && (!Number.isFinite(Number(watch.fields.declared_value)) || Number(watch.fields.declared_value) < 0)) {
+      throw new Error('Il backup contiene un valore dichiarato non valido.');
     }
     if (!Array.isArray(watch.features) || watch.features.some((name) => typeof name !== 'string')) {
       throw new Error('Il backup contiene caratteristiche non valide.');
@@ -238,8 +274,13 @@ export const restoreFullBackup = async (backup, userId) => {
       const { data: publicUrlData } = supabase.storage.from('fotoWatch').getPublicUrl(path);
       imageUrl = publicUrlData.publicUrl;
     }
+    const watchFields = toPlainObject(watch.fields, WATCH_FIELDS);
+    if (backup.version < 3) {
+      watchFields.purchase_date = null;
+      watchFields.declared_value = watchFields.money;
+    }
     rowsToUpsert.push({
-      ...toPlainObject(watch.fields, WATCH_FIELDS),
+      ...watchFields,
       occasions: Array.isArray(watch.fields.occasions) ? watch.fields.occasions : [],
       userid: userId,
       backup_uid: watch.backup_uid,
@@ -320,9 +361,21 @@ export const restoreFullBackup = async (backup, userId) => {
     if (error) throw error;
   }
 
+  if (backup.notification_preferences) {
+    const { error } = await supabase
+      .from('watch_notification_preferences')
+      .upsert({
+        user_id: userId,
+        ...normalizeNotificationPreferences(backup.notification_preferences),
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'user_id' });
+    if (error) throw error;
+  }
+
   return {
     watches: rowsToUpsert.length,
     maintenance: maintenanceRows.length,
     outfitFeedback: outfitFeedbackRows.length,
+    notificationPreferences: Boolean(backup.notification_preferences),
   };
 };

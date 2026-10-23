@@ -24,7 +24,7 @@ const ModifyWatchModal = ({
   const [showExitPrompt, setShowExitPrompt] = useState(false);
 
   const hasUnsavedChanges = Boolean(initialWatch && updatedWatch) && [
-    'name', 'brand', 'year', 'money', 'condition_rating', 'movement', 'color',
+    'name', 'brand', 'year', 'money', 'purchase_date', 'declared_value', 'condition_rating', 'movement', 'color',
     'occasions', 'image', 'imageUrl', 'features', 'note', 'has_box', 'has_papers',
     'accessories', 'has_warranty', 'warranty_start', 'warranty_end', 'warranty_provider',
   ].some((field) => {
@@ -130,11 +130,33 @@ const ModifyWatchModal = ({
           </div>
 
           <div className="modify-watch-field">
-            <label>Prezzo: </label>
+            <label>Prezzo di acquisto</label>
             <input
               type="number"
-              value={updatedWatch.money || ''}
+              value={updatedWatch.money ?? ''}
               onChange={(e) => setUpdatedWatch({ ...updatedWatch, money: e.target.value ? Number(e.target.value) : null })}
+            />
+          </div>
+
+          <div className="modify-watch-field">
+            <label htmlFor="modify-watch-purchase-date">Data di acquisto</label>
+            <input
+              id="modify-watch-purchase-date"
+              type="date"
+              value={updatedWatch.purchase_date || ''}
+              onChange={(event) => setUpdatedWatch({ ...updatedWatch, purchase_date: event.target.value || null })}
+            />
+          </div>
+
+          <div className="modify-watch-field">
+            <label htmlFor="modify-watch-declared-value">Valore dichiarato attuale</label>
+            <input
+              id="modify-watch-declared-value"
+              type="number"
+              min="0"
+              step="0.01"
+              value={updatedWatch.declared_value ?? ''}
+              onChange={(event) => setUpdatedWatch({ ...updatedWatch, declared_value: event.target.value ? Number(event.target.value) : null })}
             />
           </div>
 

@@ -98,6 +98,8 @@ const WatchList = ({
         watch.name,
         watch.brand,
         watch.year,
+        watch.purchase_date,
+        watch.declared_value,
         watch.condition_rating,
         watch.movement,
         watch.color,
@@ -165,7 +167,7 @@ const WatchList = ({
   const exportVisibleWatches = () => {
     if (!sortedWatches.length) return;
     const rows = [
-      ['Nome', 'Marca', 'Anno', 'Condizione (1-10)', 'Movimento', 'Prezzo (€)', 'Colore', 'Preferito', 'Dotazione', 'Garanzia', 'Scadenza garanzia', 'Caratteristiche', 'Note', 'Immagine'],
+      ['Nome', 'Marca', 'Anno', 'Condizione (1-10)', 'Movimento', 'Prezzo di acquisto (€)', 'Data di acquisto', 'Valore dichiarato (€)', 'Colore', 'Preferito', 'Dotazione', 'Garanzia', 'Scadenza garanzia', 'Caratteristiche', 'Note', 'Immagine'],
       ...sortedWatches.map((watch) => [
         watch.name,
         watch.brand,
@@ -173,6 +175,8 @@ const WatchList = ({
         watch.condition_rating ?? '',
         watch.movement,
         watch.money,
+        watch.purchase_date || '',
+        watch.declared_value ?? '',
         watch.color,
         watch.isFavorite ? 'Sì' : 'No',
         [watch.has_box && 'Scatola originale', watch.has_papers && 'Documenti', watch.accessories].filter(Boolean).join(', '),
@@ -353,8 +357,8 @@ const WatchList = ({
                 <option value="brand">Marca</option>
                 <option value="year-newest">Anno: più recenti</option>
                 <option value="year-oldest">Anno: più datati</option>
-                <option value="price-low">Prezzo: crescente</option>
-                <option value="price-high">Prezzo: decrescente</option>
+                <option value="price-low">Acquisto: crescente</option>
+                <option value="price-high">Acquisto: decrescente</option>
               </select>
             </label>
             <label>
@@ -366,11 +370,11 @@ const WatchList = ({
               <input type="number" min="0" inputMode="numeric" value={maxYear} onChange={(event) => setMaxYear(event.target.value)} placeholder="Es. 2025" />
             </label>
             <label>
-              <span className="collection-tools__label">Prezzo da (€)</span>
+              <span className="collection-tools__label">Acquisto da (€)</span>
               <input type="number" min="0" step="0.01" inputMode="decimal" value={minPrice} onChange={(event) => setMinPrice(event.target.value)} placeholder="Nessun minimo" />
             </label>
             <label>
-              <span className="collection-tools__label">Prezzo a (€)</span>
+              <span className="collection-tools__label">Acquisto a (€)</span>
               <input type="number" min="0" step="0.01" inputMode="decimal" value={maxPrice} onChange={(event) => setMaxPrice(event.target.value)} placeholder="Nessun massimo" />
             </label>
             <label className="collection-favorites-filter">

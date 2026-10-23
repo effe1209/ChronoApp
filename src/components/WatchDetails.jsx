@@ -7,6 +7,9 @@ const WatchDetails = ({ watch }) => {
   const formattedPrice = watch.money !== null && watch.money !== undefined && watch.money !== ''
     ? `${Number(watch.money).toLocaleString('it-IT')} €`
     : 'N/D';
+  const formattedDeclaredValue = watch.declared_value !== null && watch.declared_value !== undefined && watch.declared_value !== ''
+    ? `${Number(watch.declared_value).toLocaleString('it-IT')} €`
+    : 'N/D';
   const formatDate = (date) => date
     ? new Date(`${date}T12:00:00`).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })
     : null;
@@ -52,6 +55,14 @@ const WatchDetails = ({ watch }) => {
         <div className="watch-detail-item">
           <dt>Prezzo di acquisto</dt>
           <dd>{formattedPrice}</dd>
+        </div>
+        <div className="watch-detail-item">
+          <dt>Data di acquisto</dt>
+          <dd>{formatDate(watch.purchase_date) || 'N/D'}</dd>
+        </div>
+        <div className="watch-detail-item">
+          <dt>Valore dichiarato</dt>
+          <dd>{formattedDeclaredValue}</dd>
         </div>
         <div className="watch-detail-item">
           <dt>Dotazione</dt>

@@ -111,7 +111,7 @@ const OutfitModal = ({
                       {renderComparisonValue('Movimento', watch.movement)}
                       {renderComparisonValue('Colore', colorLabel)}
                       {renderComparisonValue('Occasioni', occasionLabels)}
-                      {renderComparisonValue('Prezzo registrato', watch.money != null && watch.money !== '' ? `${Number(watch.money).toLocaleString('it-IT')} €` : null)}
+                      {renderComparisonValue('Prezzo di acquisto', watch.money != null && watch.money !== '' ? `${Number(watch.money).toLocaleString('it-IT')} €` : null)}
                     </div>
                     <button type="button" className="outfit-result-card__action" onClick={() => onOpenWatch?.(watch)}>
                       Apri scheda <span aria-hidden="true">↗</span>

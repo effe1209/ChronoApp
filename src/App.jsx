@@ -92,6 +92,8 @@ function App() {
     occasions: [],
     isFavorite: false,
     money: null,
+    purchase_date: null,
+    declared_value: null,
     features: [],
     note: "",
     has_box: false,
@@ -123,6 +125,8 @@ function App() {
     image: '', 
     isFavorite: false,
     money: null,
+    purchase_date: null,
+    declared_value: null,
     features: [],
     note: "",
     has_box: false,
@@ -586,7 +590,7 @@ const fetchWatches = async (userid) => {
     setMessage('Preparazione del backup completo…');
     try {
       const counts = await downloadFullBackup(user.id);
-      setMessage(`Backup scaricato: ${counts.watches} orologi, ${counts.maintenance} revisioni e ${counts.outfitFeedback} preferenze outfit, immagini incluse.`);
+      setMessage(`Backup scaricato: ${counts.watches} orologi, ${counts.maintenance} revisioni, preferenze outfit e avvisi, immagini incluse.`);
     } catch (error) {
       console.error('Errore durante la creazione del backup:', error);
       setMessage(`Backup non riuscito: ${error.message}`);
@@ -604,7 +608,7 @@ const fetchWatches = async (userid) => {
       const backup = await parseBackupFile(file);
       const photos = backup.watches.filter((watch) => watch.image?.dataUrl).length;
       const shouldRestore = window.confirm(
-        `Il backup contiene ${backup.watches.length} orologi, ${backup.maintenance.length} revisioni, ${backup.outfit_feedback.length} preferenze outfit e ${photos} immagini.\n\n` +
+        `Il backup contiene ${backup.watches.length} orologi, ${backup.maintenance.length} revisioni, ${backup.outfit_feedback.length} preferenze outfit, ${backup.notification_preferences ? 'preferenze notifiche' : 'nessuna preferenza notifiche'} e ${photos} immagini.\n\n` +
         'I dati saranno uniti alla collezione: gli orologi e le revisioni con lo stesso identificativo di backup verranno aggiornati; gli altri dati presenti resteranno invariati. Continuare?'
       );
       if (!shouldRestore) {
@@ -615,7 +619,7 @@ const fetchWatches = async (userid) => {
       const counts = await restoreFullBackup(backup, user.id);
       const refreshed = await fetchWatches(user.id);
       if (!refreshed) throw new Error('Dati ripristinati, ma la lista non si è aggiornata. Ricarica la pagina.');
-      setMessage(`Ripristino completato: ${counts.watches} orologi, ${counts.maintenance} revisioni e ${counts.outfitFeedback} preferenze outfit uniti alla collezione.`);
+      setMessage(`Ripristino completato: ${counts.watches} orologi, ${counts.maintenance} revisioni, ${counts.outfitFeedback} preferenze outfit${counts.notificationPreferences ? ' e preferenze notifiche' : ''} uniti alla collezione.`);
     } catch (error) {
       console.error('Errore durante il ripristino del backup:', error);
       setMessage(`Ripristino non riuscito: ${error.message} Se il salvataggio era già iniziato, puoi importare di nuovo lo stesso file: i record riconosciuti verranno aggiornati senza duplicarli.`);
@@ -630,7 +634,7 @@ const fetchWatches = async (userid) => {
       name: "", brand: "", year: "", image: "", movement: "", color: "",
       occasions: [],
       condition_rating: null,
-      features: [], isFavorite: false, money: null, note: "",
+      features: [], isFavorite: false, money: null, purchase_date: null, declared_value: null, note: "",
       has_box: false, has_papers: false, accessories: '', has_warranty: false,
       warranty_start: null, warranty_end: null, warranty_provider: '',
     });
@@ -672,12 +676,19 @@ const fetchWatches = async (userid) => {
     }
   };
 
-  const totalMoney = useMemo(() => {
-    if (!watches || watches.length === 0) return 0;
-    return watches.reduce((acc, watch) => {
-        const moneyValue = Number(watch.money);
-        return Number.isFinite(moneyValue) ? acc + moneyValue : acc;
-    }, 0);
+  const collectionTotals = useMemo(() => {
+    if (!watches || watches.length === 0) return { purchaseSpend: 0, declaredValue: 0 };
+    return watches.reduce((totals, watch) => {
+      const purchasePrice = Number(watch.money);
+      const declaredValue = Number(watch.declared_value);
+      if (watch.money !== null && watch.money !== undefined && watch.money !== '' && Number.isFinite(purchasePrice)) {
+        totals.purchaseSpend += purchasePrice;
+      }
+      if (watch.declared_value !== null && watch.declared_value !== undefined && watch.declared_value !== '' && Number.isFinite(declaredValue)) {
+        totals.declaredValue += declaredValue;
+      }
+      return totals;
+    }, { purchaseSpend: 0, declaredValue: 0 });
   }, [watches]);
 
   const handleModifyWatch = (watchToModify) => {
@@ -695,7 +706,9 @@ const fetchWatches = async (userid) => {
       image: watchToModify.image || watchToModify.imageUrl || '',
       imageUrl: getImageUrl(watchToModify.image || watchToModify.imageUrl),
       isFavorite: watchToModify.isFavorite,
-      money: watchToModify.money || null,
+      money: watchToModify.money ?? null,
+      purchase_date: watchToModify.purchase_date || null,
+      declared_value: watchToModify.declared_value ?? null,
       features: featureIDs,
       note: watchToModify.note || "",
       has_box: Boolean(watchToModify.has_box),
@@ -1603,8 +1616,9 @@ const BackgroundLayer = useMemo(() => {
               </div>
               <h4 className="Saluti">Benvenuto, {nickname}</h4>
               <p className="profile-collection-value">
-                <span>Valore della collezione</span>
-                <strong>{totalMoney.toLocaleString('it-IT')} €</strong>
+                <span>Valore dichiarato della collezione</span>
+                <strong>{collectionTotals.declaredValue.toLocaleString('it-IT')} €</strong>
+                <small>Spesa di acquisto: {collectionTotals.purchaseSpend.toLocaleString('it-IT')} €</small>
               </p>
             </div>
           </div>

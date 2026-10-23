@@ -7689,6 +7689,137 @@ a:focus-visible,
   transform: rotate(180deg);
 }
 
+.maintenance-reminders__heading {
+  flex-wrap: wrap;
+}
+
+.maintenance-reminders__settings-toggle {
+  min-height: 38px;
+  margin-left: auto;
+  padding: 8px 13px;
+  border: 1px solid color-mix(in srgb, var(--ui-accent) 35%, var(--ui-border));
+  border-radius: 999px;
+  background: var(--ui-surface-strong);
+  color: var(--ui-text);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.maintenance-reminders__settings {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: 12px 20px;
+  padding: 15px;
+  border: 1px solid var(--ui-border);
+  border-radius: 15px;
+  background: color-mix(in srgb, var(--ui-surface-strong) 82%, transparent);
+}
+
+.maintenance-reminders__setting-toggle,
+.maintenance-reminders__setting-window {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 10px;
+  color: var(--ui-text);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.maintenance-reminders__setting-toggle input {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 auto;
+  accent-color: var(--ui-accent);
+}
+
+.maintenance-reminders__setting-window {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.maintenance-reminders__setting-window select {
+  min-height: 38px;
+  padding: 7px 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  background: var(--ui-surface-strong);
+  color: var(--ui-text);
+  font: inherit;
+}
+
+.maintenance-reminders__settings-actions {
+  display: flex;
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.maintenance-reminders__settings-actions button {
+  min-height: 38px;
+  padding: 8px 13px;
+  border: 1px solid var(--ui-border);
+  border-radius: 999px;
+  background: var(--ui-surface-strong);
+  color: var(--ui-text);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.maintenance-reminders__settings-actions .maintenance-reminders__save {
+  border-color: transparent;
+  background: var(--ui-accent);
+  color: #fff;
+}
+
+.maintenance-reminders__settings-actions button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.maintenance-reminders__error {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #a53742;
+  font-size: 0.8rem;
+}
+
+.maintenance-reminders__empty {
+  margin: 0;
+  color: var(--ui-muted);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 650px) {
+  .maintenance-reminders__heading {
+    align-items: flex-start;
+  }
+
+  .maintenance-reminders__settings-toggle {
+    margin-left: 54px;
+  }
+
+  .maintenance-reminders__settings {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .maintenance-reminders__setting-window {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .maintenance-reminders__settings-actions {
+    grid-column: 1;
+  }
+}
+
 .collection-export-menu__panel {
   position: absolute;
   top: calc(100% + 7px);
@@ -7877,5 +8008,34 @@ a:focus-visible,
 @media (max-width: 380px) {
   .modify-watch-form .watch-occasion-selector__options {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.profile-collection-value small {
+  margin-top: 3px;
+  color: var(--ui-muted);
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  text-transform: none;
+}
+
+.statistics-kpis {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.statistics-chart--purchase {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 1050px) {
+  .statistics-kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .statistics-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

@@ -111,6 +111,8 @@ export const addWatchService = async (options) => {
       occasions: [],
       isFavorite: false,
       money: '',
+      purchase_date: null,
+      declared_value: null,
       features: [],
       has_box: false,
       has_papers: false,

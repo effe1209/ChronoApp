@@ -89,10 +89,38 @@ const AddWatchForm = ({
             <input
               id="add-watch-price"
               type="number"
+              min="0"
+              step="0.01"
               placeholder="Importo in euro"
-              value={newWatch.money || ''}
+              value={newWatch.money ?? ''}
               onChange={(e) => setNewWatch({ ...newWatch, money: e.target.value ? Number(e.target.value) : null })}
             />
+          </div>
+        </Step>
+        <Step>
+          <div className="add-watch-field">
+            <label htmlFor="add-watch-purchase-date">Data di acquisto</label>
+            <input
+              id="add-watch-purchase-date"
+              type="date"
+              value={newWatch.purchase_date || ''}
+              onChange={(event) => setNewWatch({ ...newWatch, purchase_date: event.target.value || null })}
+            />
+          </div>
+        </Step>
+        <Step>
+          <div className="add-watch-field">
+            <label htmlFor="add-watch-declared-value">Valore dichiarato attuale</label>
+            <input
+              id="add-watch-declared-value"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="Valutazione attuale in euro"
+              value={newWatch.declared_value ?? ''}
+              onChange={(event) => setNewWatch({ ...newWatch, declared_value: event.target.value ? Number(event.target.value) : null })}
+            />
+            <small>Puoi aggiornare questa stima quando cambia il valore dell’orologio.</small>
           </div>
         </Step>
         <Step>
