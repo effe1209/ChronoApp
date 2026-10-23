@@ -8331,3 +8331,56 @@ a:focus-visible,
   outline: 3px solid var(--ui-accent-soft);
   outline-offset: 2px;
 }
+
+/* Un solo design system per tutti i checkbox nativi dell'app. */
+input[type="checkbox"]:not(.MuiSwitch-input) {
+  position: static !important;
+  display: grid !important;
+  box-sizing: border-box !important;
+  width: 18px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  flex: 0 0 18px !important;
+  place-items: center;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 1.5px solid var(--ui-muted) !important;
+  border-radius: 6px !important;
+  outline: none;
+  opacity: 1 !important;
+  appearance: none !important;
+  background: var(--ui-surface-strong) !important;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+}
+
+input[type="checkbox"]:not(.MuiSwitch-input)::before {
+  width: 8px;
+  height: 4px;
+  border-bottom: 2px solid #fff;
+  border-left: 2px solid #fff;
+  content: "";
+  opacity: 0;
+  transform: translateY(-1px) rotate(-45deg) scale(0.5);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+input[type="checkbox"]:not(.MuiSwitch-input):checked {
+  border-color: var(--ui-accent) !important;
+  background: var(--ui-accent) !important;
+}
+
+input[type="checkbox"]:not(.MuiSwitch-input):checked::before {
+  opacity: 1;
+  transform: translateY(-1px) rotate(-45deg) scale(1);
+}
+
+.dark-mode input[type="checkbox"]:not(.MuiSwitch-input)::before {
+  border-color: #18232a;
+}
+
+input[type="checkbox"]:not(.MuiSwitch-input):focus-visible {
+  outline: 3px solid var(--ui-accent-soft);
+  outline-offset: 2px;
+}
