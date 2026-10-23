@@ -7,20 +7,15 @@ const ModifyWatchModal = ({
   isVisible,
   setIsVisible,
   initialWatch,
-  updatedWatch,
-  setUpdatedWatch,
-  handleModifyImageChange,
   fileInputRef,
-  isDetailsMenuOpenMOD,
-  setIsDetailsMenuOpenMOD,
-  isNotesVisibleMOD,
-  setIsNotesVisibleMOD,
   allFeaturesList,
   featuresLoading,
   featuresError,
-  handleUpdatedFeatureChange,
   handleSaveChanges
 }) => {
+  const [updatedWatch, setUpdatedWatch] = useState(initialWatch);
+  const [isDetailsMenuOpenMOD, setIsDetailsMenuOpenMOD] = useState(false);
+  const [isNotesVisibleMOD, setIsNotesVisibleMOD] = useState(false);
   const [showExitPrompt, setShowExitPrompt] = useState(false);
 
   const hasUnsavedChanges = Boolean(initialWatch && updatedWatch) && [
@@ -48,6 +43,35 @@ const ModifyWatchModal = ({
     setIsVisible(false);
   }, [hasUnsavedChanges, setIsVisible]);
 
+  const handleModifyImageChange = (event) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUpdatedWatch((currentWatch) => ({
+        ...currentWatch,
+        image: file,
+        imageUrl: URL.createObjectURL(file),
+      }));
+    }
+  };
+
+  const handleUpdatedFeatureChange = (event) => {
+    const { value, checked } = event.target;
+    const numericValue = Number.parseInt(value, 10);
+    setUpdatedWatch((currentWatch) => ({
+      ...currentWatch,
+      features: checked
+        ? [...currentWatch.features, numericValue]
+        : currentWatch.features.filter((feature) => feature !== numericValue),
+    }));
+  };
+
+  useEffect(() => {
+    if (updatedWatch?.imageUrl?.startsWith('blob:')) {
+      return () => URL.revokeObjectURL(updatedWatch.imageUrl);
+    }
+    return undefined;
+  }, [updatedWatch?.imageUrl]);
+
   useEffect(() => {
     if (!isVisible) {
       setShowExitPrompt(false);
@@ -66,6 +90,9 @@ const ModifyWatchModal = ({
   }, [isVisible, showExitPrompt, requestClose]);
 
   if (!isVisible) {
+    return null;
+  }
+  if (!updatedWatch || !initialWatch) {
     return null;
   }
   
@@ -326,7 +353,7 @@ const ModifyWatchModal = ({
         </div>
 
         <div className="buttonForm">
-          <button className="funzioniButton" onClick={handleSaveChanges}>Salva</button>
+          <button type="button" className="funzioniButton" onClick={() => handleSaveChanges(updatedWatch)}>Salva</button>
           <button className="funzioniButton" onClick={requestClose}>Chiudi</button>
         </div>
       </div>
@@ -345,7 +372,7 @@ const ModifyWatchModal = ({
             <p id="modify-watch-exit-description">Puoi salvare le modifiche, scartarle oppure continuare a modificare l’orologio.</p>
             <div className="modify-watch-exit-confirmation__actions">
               <button type="button" className="modify-watch-exit-confirmation__save" onClick={async () => {
-                const saved = await handleSaveChanges();
+                const saved = await handleSaveChanges(updatedWatch);
                 if (saved) setShowExitPrompt(false);
               }}>
                 Salva
@@ -368,4 +395,3 @@ const ModifyWatchModal = ({
 };
 
 export default ModifyWatchModal;
-

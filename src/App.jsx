@@ -107,36 +107,12 @@ function App() {
   });
   const [loading, setLoading] = useState(false);
   const [isStatisticheVisible, setIsStatisticheVisible] = useState(false);
-  const [isDetailsMenuOpenMOD, setIsDetailsMenuOpenMOD] = useState(false);
+  const [isDetailsMenuOpen, setIsDetailsMenuOpen] = useState(false);
   const [isNotesVisible, setIsNotesVisible] = useState(false);
-  const [isNotesVisibleMOD, setIsNotesVisibleMOD] = useState(false);
   const [isInfoVisible, setIsInfoVisible] = useState(false);
   const [isModifyVisible, setIsModifyVisible] = useState(false);
   const [modifyWatch, setModifyWatch] = useState(null);
   const [modifyWatchBaseline, setModifyWatchBaseline] = useState(null);
-  const [updatedWatch, setUpdatedWatch] = useState({
-    name: '',
-    brand: '',
-    year: '',
-    condition_rating: null,
-    movement: '',
-    color: '',
-    occasions: [],
-    image: '', 
-    isFavorite: false,
-    money: null,
-    purchase_date: null,
-    declared_value: null,
-    features: [],
-    note: "",
-    has_box: false,
-    has_papers: false,
-    accessories: '',
-    has_warranty: false,
-    warranty_start: null,
-    warranty_end: null,
-    warranty_provider: '',
-  });
   const [isBackupBusy, setIsBackupBusy] = useState(false);
   const [allFeaturesList, setAllFeaturesList] = useState([]);
   const [isPending, startTransition] = useTransition();
@@ -641,7 +617,6 @@ const fetchWatches = async (userid) => {
     setMessage(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
     setIsDetailsMenuOpen(false);
-    setIsDetailsMenuOpenMOD(false);
     setIsNotesVisible(false);
     setShowForm(false);
   };
@@ -653,13 +628,6 @@ const fetchWatches = async (userid) => {
     }
   };
   
-  const handleModifyImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setUpdatedWatch((prev) => ({ ...prev, image: file, imageUrl: URL.createObjectURL(file) }));
-    }
-  };
-
   const handleDayWatch = async (userid) => {
     try {
       if (watches && watches.length > 0) {
@@ -720,7 +688,6 @@ const fetchWatches = async (userid) => {
       warranty_provider: watchToModify.warranty_provider || '',
     };
     setModifyWatch(watchToModify);
-    setUpdatedWatch(nextUpdatedWatch);
     setModifyWatchBaseline(nextUpdatedWatch);
     setIsModifyVisible(true);
   };
@@ -742,7 +709,7 @@ const fetchWatches = async (userid) => {
     setIsInfiniteGridVisible(true);
   };
   
-  const handleSaveChanges = async () => {
+  const handleSaveChanges = async (updatedWatch) => {
     setLoading(true);
     let outfitEmbeddingWarning = false;
     try {
@@ -1260,18 +1227,6 @@ const updateAllWatchEmbeddings = async () => {
     });
   };
   
-  const handleUpdatedFeatureChange = (event) => {
-    const { value, checked } = event.target;
-    const numericValue = parseInt(value, 10); 
-    setUpdatedWatch((prev) => {
-      if (checked) {
-        return { ...prev, features: [...prev.features, numericValue] };
-      } else {
-        return { ...prev, features: prev.features.filter((f) => f !== numericValue) };
-      }
-    });
-  };
-
   const [isDark, setIsDark] = useState(
     () => localStorage.getItem("theme") === "dark" 
   );
@@ -1634,6 +1589,8 @@ const BackgroundLayer = useMemo(() => {
             setNewWatch={setNewWatch}
             handleImageChange={handleImageChange}
             fileInputRef={fileInputRef}
+            isDetailsMenuOpen={isDetailsMenuOpen}
+            setIsDetailsMenuOpen={setIsDetailsMenuOpen}
             isNotesVisible={isNotesVisible}
             setIsNotesVisible={setIsNotesVisible}
             allFeaturesList={allFeaturesList}
@@ -1697,22 +1654,14 @@ const BackgroundLayer = useMemo(() => {
           />
 
           <ModifyWatchModal
+            key={isModifyVisible ? modifyWatch?.id : 'closed'}
             isVisible={isModifyVisible}
             setIsVisible={setIsModifyVisible}
-            modifyWatch={modifyWatch}
             initialWatch={modifyWatchBaseline}
-            updatedWatch={updatedWatch}
-            setUpdatedWatch={setUpdatedWatch}
-            handleModifyImageChange={handleModifyImageChange} 
             fileInputRef={fileInputRef} 
-            isDetailsMenuOpenMOD={isDetailsMenuOpenMOD}
-            setIsDetailsMenuOpenMOD={setIsDetailsMenuOpenMOD}
-            isNotesVisibleMOD={isNotesVisibleMOD}
-            setIsNotesVisibleMOD={setIsNotesVisibleMOD}
             allFeaturesList={allFeaturesList}
             featuresLoading={featuresLoading}
             featuresError={featuresError}
-            handleUpdatedFeatureChange={handleUpdatedFeatureChange}
             handleSaveChanges={handleSaveChanges}
           />
 
@@ -1765,4 +1714,3 @@ const BackgroundLayer = useMemo(() => {
 }
 
 export default App;
-

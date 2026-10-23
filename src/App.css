@@ -3777,6 +3777,7 @@ a:focus-visible,
 }
 
 .modify-watch-modal {
+  box-sizing: border-box;
   width: min(100%, 1040px);
   max-width: 1040px;
   max-height: calc(100vh - 28px);
@@ -8145,6 +8146,9 @@ a:focus-visible,
 }
 
 .dark-mode .modify-watch-modal {
+  box-sizing: border-box;
+  width: min(100%, 1040px);
+  max-width: 1040px;
   border-color: rgba(231, 241, 246, 0.14);
   background: linear-gradient(145deg, rgba(28, 43, 57, 0.98), rgba(15, 27, 39, 0.98));
   color: var(--ui-text);
