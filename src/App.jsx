@@ -1415,7 +1415,7 @@ const BackgroundLayer = useMemo(() => {
     {createPortal(
       <div className={`slideWrap_Container${isOverlayOpen ? ' is-overlay-behind' : ''}`}>
         <GlassSurface
-          width={user ? 'min(480px, calc(100vw - 40px))' : 96}
+          width={user ? '100%' : 96}
           height={64}
           borderRadius={32}
           className={`my-custom-class global-navigation-glass theme-switch-glass navigation-glass${user ? ' has-navigation' : ''}`}
