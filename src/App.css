@@ -1706,6 +1706,14 @@ input::placeholder {
   cursor: pointer;
 }
 
+#function-section .outfit-rebuild-control {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: start;
+  gap: 3px;
+}
+
 #function-section .outfit-rebuild-button:disabled {
   opacity: 0.6;
   cursor: progress;
@@ -1715,7 +1723,7 @@ input::placeholder {
   position: relative;
   z-index: 1;
   max-width: 45ch;
-  margin: -14px 0 0;
+  margin: 0;
   color: var(--ui-muted);
   font-size: 0.72rem;
   line-height: 1.45;

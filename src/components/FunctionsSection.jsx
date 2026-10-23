@@ -11,6 +11,7 @@ const FunctionsSection = ({
   outfitColorFamily,
   setOutfitColorFamily,
   onRebuildOutfitEmbeddings,
+  outfitMissingEmbeddingCount,
   isRebuildingOutfit,
   outfitRebuildProgress,
 }) => {
@@ -82,15 +83,21 @@ const FunctionsSection = ({
           <span>Carica una foto</span>
           <span className="function-card__arrow" aria-hidden="true">↗</span>
         </button>
-        <button
-          type="button"
-          className="outfit-rebuild-button"
-          onClick={onRebuildOutfitEmbeddings}
-          disabled={isRebuildingOutfit}
-        >
-          {isRebuildingOutfit ? 'Ricalcolo in corso…' : 'Aggiorna gli orologi già in collezione'}
-        </button>
-        {outfitRebuildProgress && <p className="outfit-rebuild-progress" role="status">{outfitRebuildProgress}</p>}
+        {(outfitMissingEmbeddingCount > 0 || isRebuildingOutfit) && (
+          <div className="outfit-rebuild-control">
+            <button
+              type="button"
+              className="outfit-rebuild-button"
+              onClick={onRebuildOutfitEmbeddings}
+              disabled={isRebuildingOutfit}
+            >
+              {isRebuildingOutfit
+                ? 'Preparo gli orologi…'
+                : `Prepara ${outfitMissingEmbeddingCount} ${outfitMissingEmbeddingCount === 1 ? 'orologio' : 'orologi'} per gli abbinamenti`}
+            </button>
+            {outfitRebuildProgress && <p className="outfit-rebuild-progress" role="status">{outfitRebuildProgress}</p>}
+          </div>
+        )}
       </article>
     </div>
   );

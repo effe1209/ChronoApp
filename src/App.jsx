@@ -41,6 +41,14 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import "./App.css";
 
+const hasOutfitEmbedding = (embedding) => {
+  if (Array.isArray(embedding)) return embedding.length > 0;
+  if (typeof embedding === 'string') {
+    const normalizedEmbedding = embedding.trim();
+    return normalizedEmbedding.length > 2 && normalizedEmbedding !== 'null';
+  }
+  return embedding != null;
+};
 
 function App() {
   // --- STATO (Resta qui) ---
@@ -56,6 +64,10 @@ function App() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [watches, setWatches] = useState([]);
+  const missingOutfitEmbeddingCount = useMemo(
+    () => watches.filter((watch) => watch.image && !hasOutfitEmbedding(watch.embedding)).length,
+    [watches]
+  );
   const [maintenanceRefreshKey, setMaintenanceRefreshKey] = useState(0);
   const [watchConsigliati, setWatchConsigliati] = useState([]);
   const [outfitOccasion, setOutfitOccasion] = useState('all');
@@ -924,9 +936,17 @@ const handleImageUpload = async (event) => {
     return;
   }
 
+  if (watches.length === 0) {
+    setMessage('Aggiungi prima un orologio alla collezione per trovare un abbinamento.');
+    event.target.value = '';
+    return;
+  }
+
   setLoading(true);
   setMessage('Ottimizzo la foto per l’analisi…');
   setOutfitFeedbackMessage('');
+  setIsCarouselVisible(false);
+  setWatchConsigliati([]);
   
   try {
     let compressionProgress = -1;
@@ -1001,7 +1021,11 @@ const handleImageUpload = async (event) => {
       setIsCarouselVisible(true);
       setMessage('Ecco gli abbinamenti dalla tua collezione.');
     } else {
-      setMessage("Non ho trovato un abbinamento convincente. Prova una foto più nitida, con l’outfit ben visibile.");
+      setOutfitFeedbackByWatch({});
+      setWatchConsigliati([]);
+      setMessage(missingOutfitEmbeddingCount > 0
+        ? `Non ho trovato orologi preparati per l’abbinamento. ${missingOutfitEmbeddingCount} ${missingOutfitEmbeddingCount === 1 ? 'orologio ha' : 'orologi hanno'} una foto ma manca l’analisi AI: usa il pulsante qui sotto per prepararli.`
+        : 'L’analisi è riuscita, ma non ha trovato un abbinamento. Prova una foto più nitida o controlla i filtri scelti.');
     }
 
   } catch (err) {
@@ -1064,13 +1088,15 @@ const updateAllWatchEmbeddings = async () => {
   try {
     const { data: allWatches, error: watchesError } = await supabase
       .from('watches')
-      .select('id, name, image')
-      .not('image', 'is', null);
+      .select('id, name, image, embedding')
+      .not('image', 'is', null)
+      .is('embedding', null);
     if (watchesError) throw watchesError;
 
     if (!allWatches?.length) {
-      setOutfitRebuildProgress('Non ci sono immagini da preparare.');
-      setMessage('Non ci sono immagini da preparare per gli abbinamenti outfit.');
+      await fetchWatches(user.id);
+      setOutfitRebuildProgress('Tutti gli orologi con una foto sono già pronti per gli abbinamenti.');
+      setMessage('Tutti gli orologi con una foto sono già pronti per gli abbinamenti outfit.');
       return;
     }
 
@@ -1601,6 +1627,7 @@ const BackgroundLayer = useMemo(() => {
               outfitColorFamily={outfitColorFamily}
               setOutfitColorFamily={setOutfitColorFamily}
               onRebuildOutfitEmbeddings={updateAllWatchEmbeddings}
+              outfitMissingEmbeddingCount={missingOutfitEmbeddingCount}
               isRebuildingOutfit={isRebuildingOutfit}
               outfitRebuildProgress={outfitRebuildProgress}
             />
