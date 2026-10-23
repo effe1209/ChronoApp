@@ -258,7 +258,7 @@ const AddWatchForm = ({
           </div>
           <div className="watch-equipment-fields">
             <div className="watch-equipment-options watch-equipment-fields__wide">
-              <label className="watch-equipment-check">
+              <label className={`watch-equipment-check${newWatch.has_box ? ' is-selected' : ''}`}>
                 <input
                   type="checkbox"
                   checked={Boolean(newWatch.has_box)}
@@ -266,7 +266,7 @@ const AddWatchForm = ({
                 />
                 <span>Scatola originale</span>
               </label>
-              <label className="watch-equipment-check">
+              <label className={`watch-equipment-check${newWatch.has_papers ? ' is-selected' : ''}`}>
                 <input
                   type="checkbox"
                   checked={Boolean(newWatch.has_papers)}
@@ -285,7 +285,7 @@ const AddWatchForm = ({
                 onChange={(e) => setNewWatch({ ...newWatch, accessories: e.target.value })}
               />
             </label>
-            <label className="watch-equipment-check watch-equipment-fields__wide">
+            <label className={`watch-equipment-check watch-equipment-fields__wide${newWatch.has_warranty ? ' is-selected' : ''}`}>
               <input
                 type="checkbox"
                 checked={Boolean(newWatch.has_warranty)}

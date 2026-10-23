@@ -865,11 +865,6 @@
 }
 
 
-/* Nasconde il checkbox */
-input[type="checkbox"] {
-  display: none;
-}
-
 /* Stile dello slider */
 .slider-v3 {
   position: relative;
@@ -8140,4 +8135,185 @@ a:focus-visible,
   border-color: rgba(224, 247, 252, 0.24);
   background: linear-gradient(135deg, rgba(130, 198, 217, 0.18), rgba(4, 20, 30, 0.18));
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.13), inset 0 -1px rgba(0, 0, 0, 0.22);
+}
+
+/* Controlli coerenti in ogni form della collezione. */
+.add-watch-form .add-watch-field select,
+.add-watch-form .add-watch-control select,
+.modify-watch-form .modify-watch-field select,
+.outfit-preferences select,
+.notification-settings__lead-time select,
+.collection-tools select,
+.maintenance-log__form select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  margin: 0;
+  padding: 9px 36px 9px 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 13px;
+  outline: none;
+  appearance: auto;
+  background: var(--ui-surface-strong);
+  color: var(--ui-text);
+  font-family: var(--font-all-text);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  box-shadow: inset 0 1px 2px rgba(22, 41, 53, 0.04);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.add-watch-form .add-watch-field select:focus,
+.add-watch-form .add-watch-control select:focus,
+.modify-watch-form .modify-watch-field select:focus,
+.outfit-preferences select:focus,
+.notification-settings__lead-time select:focus,
+.collection-tools select:focus,
+.maintenance-log__form select:focus {
+  border-color: color-mix(in srgb, var(--ui-accent) 56%, white);
+  box-shadow: 0 0 0 4px var(--ui-accent-soft);
+}
+
+.add-watch-form .watch-occasion-selector__options,
+.modify-watch-form .watch-occasion-selector__options,
+.add-watch-form .details-menu,
+.modify-watch-form .details-menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 136px), 1fr));
+  justify-content: stretch;
+  gap: 8px;
+  width: 100%;
+}
+
+.watch-occasion-selector__options label,
+.watch-equipment-fields .watch-equipment-check,
+.details-menu .checkbox-label,
+.notification-settings__option,
+.collection-favorites-filter {
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 9px 12px;
+  border: 1px solid var(--ui-border);
+  border-radius: 13px;
+  background: var(--ui-surface);
+  color: var(--ui-text);
+  font-family: var(--font-all-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: left;
+  white-space: normal;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+.watch-occasion-selector__options label:hover,
+.watch-equipment-fields .watch-equipment-check:hover,
+.details-menu .checkbox-label:hover,
+.notification-settings__option:hover,
+.collection-favorites-filter:hover {
+  border-color: color-mix(in srgb, var(--ui-accent) 55%, var(--ui-border));
+}
+
+.watch-occasion-selector__options label.is-selected,
+.watch-equipment-fields .watch-equipment-check.is-selected,
+.notification-settings__option:has(input[type="checkbox"]:checked),
+.collection-favorites-filter:has(input[type="checkbox"]:checked) {
+  border-color: var(--ui-accent);
+  background: var(--ui-accent-soft);
+}
+
+.details-menu .checkbox-label.selected {
+  border-color: var(--ui-accent);
+  background: var(--ui-accent);
+  color: #fff;
+}
+
+.dark-mode .details-menu .checkbox-label.selected {
+  color: #18232a;
+}
+
+.watch-occasion-selector__options input[type="checkbox"],
+.watch-equipment-fields .watch-equipment-check input[type="checkbox"],
+.details-menu .checkbox-label .checkbox-input,
+.notification-settings__option input[type="checkbox"],
+.collection-favorites-filter input[type="checkbox"] {
+  position: static;
+  display: grid !important;
+  box-sizing: border-box;
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  min-height: 18px;
+  flex: 0 0 18px;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  border: 1.5px solid var(--ui-muted);
+  border-radius: 6px;
+  outline: none;
+  opacity: 1;
+  appearance: none;
+  background: var(--ui-surface-strong);
+  accent-color: var(--ui-accent);
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.watch-occasion-selector__options input[type="checkbox"]::before,
+.watch-equipment-fields .watch-equipment-check input[type="checkbox"]::before,
+.details-menu .checkbox-label .checkbox-input::before,
+.notification-settings__option input[type="checkbox"]::before,
+.collection-favorites-filter input[type="checkbox"]::before {
+  width: 8px;
+  height: 4px;
+  border-bottom: 2px solid #fff;
+  border-left: 2px solid #fff;
+  content: "";
+  opacity: 0;
+  transform: translateY(-1px) rotate(-45deg) scale(0.5);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.watch-occasion-selector__options input[type="checkbox"]:checked,
+.watch-equipment-fields .watch-equipment-check input[type="checkbox"]:checked,
+.details-menu .checkbox-label .checkbox-input:checked,
+.notification-settings__option input[type="checkbox"]:checked,
+.collection-favorites-filter input[type="checkbox"]:checked {
+  border-color: var(--ui-accent);
+  background: var(--ui-accent);
+}
+
+.dark-mode .watch-occasion-selector__options input[type="checkbox"]::before,
+.dark-mode .watch-equipment-fields .watch-equipment-check input[type="checkbox"]::before,
+.dark-mode .details-menu .checkbox-label .checkbox-input::before,
+.dark-mode .notification-settings__option input[type="checkbox"]::before,
+.dark-mode .collection-favorites-filter input[type="checkbox"]::before {
+  border-color: #18232a;
+}
+
+.watch-occasion-selector__options input[type="checkbox"]:checked::before,
+.watch-equipment-fields .watch-equipment-check input[type="checkbox"]:checked::before,
+.details-menu .checkbox-label .checkbox-input:checked::before,
+.notification-settings__option input[type="checkbox"]:checked::before,
+.collection-favorites-filter input[type="checkbox"]:checked::before {
+  opacity: 1;
+  transform: translateY(-1px) rotate(-45deg) scale(1);
+}
+
+.watch-occasion-selector__options input[type="checkbox"]:focus-visible,
+.watch-equipment-fields .watch-equipment-check input[type="checkbox"]:focus-visible,
+.details-menu .checkbox-label .checkbox-input:focus-visible,
+.notification-settings__option input[type="checkbox"]:focus-visible,
+.collection-favorites-filter input[type="checkbox"]:focus-visible {
+  outline: 3px solid var(--ui-accent-soft);
+  outline-offset: 2px;
 }
