@@ -13,8 +13,6 @@ const AddWatchForm = ({
   setNewWatch,
   handleImageChange,
   fileInputRef,
-  isNotesVisible,
-  setIsNotesVisible,
   allFeaturesList,
   featuresLoading,
   featuresError,
@@ -303,25 +301,13 @@ const AddWatchForm = ({
             <h3>Note personali</h3>
             <p>Annota la storia, la data di acquisto o altri dettagli che vuoi ricordare.</p>
           </div>
-          <div className="add-watch-step-action">
-            <button
-              type="button"
-              className="details-toggle-button"
-              onClick={() => setIsNotesVisible(!isNotesVisible)}
-              aria-expanded={isNotesVisible}
-            >
-              {isNotesVisible ? 'Nascondi le note ▴' : 'Aggiungi una nota ▾'}
-            </button>
-          </div>
-          {isNotesVisible && (
-            <textarea
-              placeholder="Note aggiuntive (es. data acquisto, storia, difetti...)"
-              className="notes-textarea"
-              value={newWatch.note}
-              onChange={(e) => setNewWatch({ ...newWatch, note: e.target.value })}
-              aria-label="Note aggiuntive sull'orologio"
-            />
-          )}
+          <textarea
+            placeholder="Note aggiuntive (es. data acquisto, storia, difetti...)"
+            className="notes-textarea"
+            value={newWatch.note}
+            onChange={(e) => setNewWatch({ ...newWatch, note: e.target.value })}
+            aria-label="Note aggiuntive sull'orologio"
+          />
         </Step>
         </Stepper>
       </div>

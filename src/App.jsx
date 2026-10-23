@@ -108,7 +108,6 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [isStatisticheVisible, setIsStatisticheVisible] = useState(false);
   const [isDetailsMenuOpen, setIsDetailsMenuOpen] = useState(false);
-  const [isNotesVisible, setIsNotesVisible] = useState(false);
   const [isInfoVisible, setIsInfoVisible] = useState(false);
   const [isModifyVisible, setIsModifyVisible] = useState(false);
   const [modifyWatch, setModifyWatch] = useState(null);
@@ -617,7 +616,6 @@ const fetchWatches = async (userid) => {
     setMessage(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
     setIsDetailsMenuOpen(false);
-    setIsNotesVisible(false);
     setShowForm(false);
   };
 
@@ -1591,8 +1589,6 @@ const BackgroundLayer = useMemo(() => {
             fileInputRef={fileInputRef}
             isDetailsMenuOpen={isDetailsMenuOpen}
             setIsDetailsMenuOpen={setIsDetailsMenuOpen}
-            isNotesVisible={isNotesVisible}
-            setIsNotesVisible={setIsNotesVisible}
             allFeaturesList={allFeaturesList}
             featuresLoading={featuresLoading}
             featuresError={featuresError}

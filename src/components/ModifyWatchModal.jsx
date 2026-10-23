@@ -14,7 +14,6 @@ const ModifyWatchModal = ({
   handleSaveChanges
 }) => {
   const [updatedWatch, setUpdatedWatch] = useState(initialWatch);
-  const [isDetailsMenuOpenMOD, setIsDetailsMenuOpenMOD] = useState(false);
   const [isNotesVisibleMOD, setIsNotesVisibleMOD] = useState(false);
   const [showExitPrompt, setShowExitPrompt] = useState(false);
 
@@ -264,29 +263,15 @@ const ModifyWatchModal = ({
             </button>
           </div>
 
-          {/* Pulsante Dettagli */}
           <div className="modify-watch-field modify-watch-field--wide">
-            <button
-              type="button"
-              className="details-toggle-button"
-              onClick={() => setIsDetailsMenuOpenMOD(!isDetailsMenuOpenMOD)}
-            >
-              {isDetailsMenuOpenMOD ? 'Chiudi Dettagli ▴' : 'Caratteristiche Aggiuntive ▾'}
-            </button>
+            <FeatureCheckboxList
+              featuresList={allFeaturesList}
+              selectedFeatures={updatedWatch.features}
+              onChange={handleUpdatedFeatureChange}
+              isLoading={featuresLoading}
+              error={featuresError}
+            />
           </div>
-
-          {/* Lista Checkbox Caratteristiche (riutilizzata) */}
-          {isDetailsMenuOpenMOD && (
-            <div className="modify-watch-field modify-watch-field--wide">
-              <FeatureCheckboxList
-                featuresList={allFeaturesList}
-                selectedFeatures={updatedWatch.features}
-                onChange={handleUpdatedFeatureChange}
-                isLoading={featuresLoading}
-                error={featuresError}
-              />
-            </div>
-          )}
 
           <fieldset className="modify-watch-field modify-watch-field--wide watch-equipment-fields">
             <legend>Dotazione e garanzia</legend>
