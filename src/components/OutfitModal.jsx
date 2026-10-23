@@ -17,6 +17,7 @@ const OutfitModal = ({
   watchConsigliati = [],
   occasion = 'all',
   colorFamily = 'all',
+  filtersRelaxed = false,
   feedbackByWatch = {},
   feedbackMessage = '',
   onFeedback,
@@ -81,7 +82,9 @@ const OutfitModal = ({
           <p>
             {isComparing
               ? 'Metti a confronto i dettagli dei due modelli selezionati.'
-              : `Filtri attivi: ${activeOccasionLabel} · ${activeColorLabel}.`}
+              : filtersRelaxed
+                ? `Nessun orologio corrisponde a tutti i filtri (${activeOccasionLabel} · ${activeColorLabel}): mostro gli abbinamenti visivamente più vicini.`
+                : `Filtri attivi: ${activeOccasionLabel} · ${activeColorLabel}.`}
           </p>
         </div>
 
@@ -151,7 +154,9 @@ const OutfitModal = ({
                       <h3>{watch.name}</h3>
                       {watch.year && <p>Anno {watch.year}</p>}
                       <p className="outfit-result-card__reason">
-                        {getOutfitMatchExplanation(watch, occasion, colorFamily)}
+                        {filtersRelaxed
+                          ? 'Suggerito per affinità visiva con la foto; i filtri non hanno trovato una corrispondenza esatta.'
+                          : getOutfitMatchExplanation(watch, occasion, colorFamily)}
                       </p>
                       <div className="outfit-result-card__feedback" aria-label="Valuta questo abbinamento">
                         <span>È un buon abbinamento?</span>

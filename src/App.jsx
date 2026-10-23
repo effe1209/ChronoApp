@@ -72,6 +72,7 @@ function App() {
   const [watchConsigliati, setWatchConsigliati] = useState([]);
   const [outfitOccasion, setOutfitOccasion] = useState('all');
   const [outfitColorFamily, setOutfitColorFamily] = useState('all');
+  const [outfitFiltersRelaxed, setOutfitFiltersRelaxed] = useState(false);
   const [outfitFeedbackByWatch, setOutfitFeedbackByWatch] = useState({});
   const [outfitFeedbackMessage, setOutfitFeedbackMessage] = useState('');
   const [isRebuildingOutfit, setIsRebuildingOutfit] = useState(false);
@@ -947,6 +948,7 @@ const handleImageUpload = async (event) => {
   setOutfitFeedbackMessage('');
   setIsCarouselVisible(false);
   setWatchConsigliati([]);
+  setOutfitFiltersRelaxed(false);
   
   try {
     let compressionProgress = -1;
@@ -968,13 +970,25 @@ const handleImageUpload = async (event) => {
     const vector = await getOutfitEmbedding(optimizedFile);
 
     setMessage('Cerco gli orologi più adatti nella tua collezione…');
-    const { data: matchedWatches, error } = await supabase.rpc('match_watches', {
+    const hasActiveOutfitFilters = outfitOccasion !== 'all' || outfitColorFamily !== 'all';
+    let { data: matchedWatches, error } = await supabase.rpc('match_watches', {
       query_embedding: vector, 
-      match_threshold: 0.1, 
+      match_threshold: hasActiveOutfitFilters ? -1 : 0.1,
       match_count: Math.max(watches.length, 1),
     });
 
-    if (error) throw error;
+    // Se la soglia larga dà errore o non trova vettori, riprova con la soglia standard.
+    if (hasActiveOutfitFilters && (error || !matchedWatches || matchedWatches.length === 0)) {
+      const fallbackMatch = await supabase.rpc('match_watches', {
+        query_embedding: vector,
+        match_threshold: 0.1,
+        match_count: Math.max(watches.length, 1),
+      });
+      if (fallbackMatch.error) throw fallbackMatch.error;
+      matchedWatches = fallbackMatch.data;
+    } else if (error) {
+      throw error;
+    }
 
     if (matchedWatches && matchedWatches.length > 0) {
       const formattedWatches = matchedWatches.map((watchMatch) => {
@@ -991,12 +1005,9 @@ const handleImageUpload = async (event) => {
       const filteredWatches = formattedWatches.filter((watch) => (
         matchesOutfitFilters(watch, outfitOccasion, outfitColorFamily)
       ));
-
-      if (filteredWatches.length === 0) {
-        setOutfitFeedbackByWatch({});
-        setMessage('Non trovo orologi con questi filtri. Aggiungi l’occasione d’uso nelle schede o scegli un altro colore.');
-        return;
-      }
+      const filtersRelaxed = hasActiveOutfitFilters && filteredWatches.length === 0;
+      const candidates = filtersRelaxed ? formattedWatches : filteredWatches;
+      setOutfitFiltersRelaxed(filtersRelaxed);
 
       const { data: savedFeedback, error: feedbackError } = await supabase
         .from('watch_outfit_feedback')
@@ -1004,7 +1015,7 @@ const handleImageUpload = async (event) => {
         .eq('user_id', user.id)
         .eq('occasion', outfitOccasion)
         .eq('color_family', outfitColorFamily)
-        .in('watch_id', filteredWatches.map((watch) => watch.id));
+        .in('watch_id', candidates.map((watch) => watch.id));
 
       if (feedbackError) console.error('Impossibile caricare le preferenze outfit:', feedbackError);
       const feedbackMap = Object.fromEntries(
@@ -1012,14 +1023,17 @@ const handleImageUpload = async (event) => {
       );
       setOutfitFeedbackByWatch(feedbackMap);
       setWatchConsigliati(
-        filteredWatches
+        candidates
           .sort((first, second) => (
             (feedbackMap[String(second.id)] || 0) - (feedbackMap[String(first.id)] || 0)
+            || (Number(second.similarity) || 0) - (Number(first.similarity) || 0)
           ))
           .slice(0, 8)
       );
       setIsCarouselVisible(true);
-      setMessage('Ecco gli abbinamenti dalla tua collezione.');
+      setMessage(filtersRelaxed
+        ? 'Nessun orologio corrisponde a tutti i filtri: ti mostro i più vicini alla foto.'
+        : 'Ecco gli abbinamenti dalla tua collezione.');
     } else {
       setOutfitFeedbackByWatch({});
       setWatchConsigliati([]);
@@ -1639,6 +1653,7 @@ const BackgroundLayer = useMemo(() => {
             watchConsigliati={watchConsigliati}
             occasion={outfitOccasion}
             colorFamily={outfitColorFamily}
+            filtersRelaxed={outfitFiltersRelaxed}
             feedbackByWatch={outfitFeedbackByWatch}
             feedbackMessage={outfitFeedbackMessage}
             onFeedback={handleOutfitFeedback}
