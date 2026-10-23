@@ -8070,21 +8070,21 @@ a:focus-visible,
 
 /* Un'unica superficie continua per il tema e la navigazione globale. */
 .slideWrap_Container > .global-navigation-glass {
-  width: auto !important;
+  border-radius: 32px !important;
   max-width: min(calc(100vw - 40px), 1160px);
 }
 
 .global-navigation-glass .glass-surface__content {
-  justify-content: center;
+  box-sizing: border-box;
+  justify-content: space-between;
 }
 
 .global-navigation-controls {
   display: flex;
-  width: max-content;
+  width: 100%;
   max-width: 100%;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  justify-content: space-between;
 }
 
 .global-navigation-theme {
@@ -8092,6 +8092,13 @@ a:focus-visible,
   flex: 0 0 74px;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .slideWrap_Container > .global-navigation-glass.has-navigation {
+    width: min(230px, calc(100vw - 24px)) !important;
+    max-width: calc(100vw - 24px);
+  }
 }
 
 /* Gli overlay vivono nel contenitore principale: abbassiamo la barra sotto quel livello. */
