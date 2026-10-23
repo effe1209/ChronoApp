@@ -13,6 +13,6 @@ jobs:
     steps:
       - name: Ping Supabase REST API
         run: |
-          curl -s -i -X GET "https://chrono-app.vercel.app/" \
+          curl -s -i -X GET "https://htopqijsvgaqjrvvgpjh.supabase.co" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
