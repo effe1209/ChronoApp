@@ -1,4 +1,5 @@
 {
+  "id": "/",
   "short_name": "Calibro",
   "name": "Calibro - Collezione di orologi",
   "icons": [
@@ -15,7 +16,8 @@
       "purpose": "any"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "theme_color": "#203944",
   "background_color": "#ffffff"
