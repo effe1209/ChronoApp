@@ -697,6 +697,8 @@
   align-items: center;
   z-index: 1000;
   border-radius: 20px;
+  -webkit-backdrop-filter: blur(12px) saturate(1.08);
+  backdrop-filter: blur(12px) saturate(1.08);
 }
 
 .infoView {
@@ -1495,7 +1497,8 @@ input::placeholder {
   padding: 20px;
   overflow-y: auto;
   background: rgba(10, 20, 27, 0.66);
-  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(12px) saturate(1.08);
+  backdrop-filter: blur(12px) saturate(1.08);
 }
 
 .outfit-modal {
@@ -8063,4 +8066,35 @@ a:focus-visible,
   .statistics-kpis {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+/* Un'unica superficie continua per il tema e la navigazione globale. */
+.slideWrap_Container > .global-navigation-glass {
+  width: auto !important;
+  max-width: min(calc(100vw - 40px), 1160px);
+}
+
+.global-navigation-glass .glass-surface__content {
+  justify-content: center;
+}
+
+.global-navigation-controls {
+  display: flex;
+  width: max-content;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.global-navigation-theme {
+  display: flex;
+  flex: 0 0 74px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Gli overlay vivono nel contenitore principale: abbassiamo la barra sotto quel livello. */
+.slideWrap_Container.is-overlay-behind {
+  z-index: 0;
 }

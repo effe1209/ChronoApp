@@ -1372,6 +1372,14 @@ const watchBrands = useMemo(() => [
   // Funzione helper per cambiare stato (opzionale, ma pulita)
   const toggleTheme = () => setIsDark(!isDark);
 
+  const isOverlayOpen = loading
+    || isModalVisible
+    || isStatisticheVisible
+    || isInfoVisible
+    || isModifyVisible
+    || isCarouselVisible
+    || isInfiniteGridVisible;
+
   const floatingConfig = isDark 
     ? {bg: "#091522", gradient: ["#F4C878"], blend: "screen"}
     : {bg: "#e9f0f4", gradient: ["#4f91a0", "#b56e93"], blend: "multiply"};
@@ -1405,40 +1413,30 @@ const BackgroundLayer = useMemo(() => {
     {loading && <LoadingModal message={message} />}
     {BackgroundLayer}
     {createPortal(
-      <div className="slideWrap_Container">
+      <div className={`slideWrap_Container${isOverlayOpen ? ' is-overlay-behind' : ''}`}>
         <GlassSurface
-          width={100}
+          width="auto"
           height={64}
-          borderRadius={20}
-          className="my-custom-class theme-switch-glass"
+          borderRadius={24}
+          className="my-custom-class global-navigation-glass theme-switch-glass navigation-glass"
         >
-          <DarkModeSwitch
-            isDark={isDark}
-            toggleTheme={toggleTheme}
-            isUserLoggedIn={!!user}
-            onLogout={handleLogout}
-            onAddWatchToggle={toggleAddWatchForm}
-            isFormVisible={showForm}
-          />
+          <div className="global-navigation-controls">
+            <div className="global-navigation-theme">
+              <DarkModeSwitch isDark={isDark} toggleTheme={toggleTheme} />
+            </div>
+            {user && (
+              <Dock
+                items={items}
+                activeSection={activeSection}
+                onLogout={handleLogout}
+                onAddWatchToggle={toggleAddWatchForm}
+                isFormVisible={showForm}
+                baseItemSize={50}
+                magnification={70}
+              />
+            )}
+          </div>
         </GlassSurface>
-        {user && (
-          <GlassSurface
-            width="min(350px, 32vw)"
-            height={64}
-            borderRadius={20}
-            className="my-custom-class navigation-glass"
-          >
-            <Dock
-              items={items}
-              activeSection={activeSection}
-              onLogout={handleLogout}
-              onAddWatchToggle={toggleAddWatchForm}
-              isFormVisible={showForm}
-              baseItemSize={50}
-              magnification={70}
-            />
-          </GlassSurface>
-        )}
       </div>,
       document.body
     )}
