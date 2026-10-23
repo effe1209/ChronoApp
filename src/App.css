@@ -7643,23 +7643,23 @@ a:focus-visible,
 
 @media (max-width: 720px) {
   .slideWrap_Container {
-    top: max(8px, env(safe-area-inset-top, 0px));
+    top: calc(env(safe-area-inset-top, 0px) + 10px);
     width: min(calc(100vw - 24px), 600px);
   }
 
   .container {
-    padding-top: 88px;
+    padding-top: 98px;
   }
 
   #home-section,
   #profile-section,
   #function-section,
   #watch-list-section {
-    scroll-margin-top: calc(88px + env(safe-area-inset-top, 0px));
+    scroll-margin-top: calc(98px + env(safe-area-inset-top, 0px));
   }
 
   .add-watch-section {
-    scroll-margin-top: calc(88px + env(safe-area-inset-top, 0px));
+    scroll-margin-top: calc(98px + env(safe-area-inset-top, 0px));
   }
 }
 
