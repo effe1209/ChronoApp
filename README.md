@@ -24,16 +24,18 @@ Calibro è un'applicazione web moderna e responsiva progettata per gli appassion
 - Gestione Orologi: Inserimento, modifica ed eliminazione degli orologi dalla collezione.
 - Vista Dinamica: Alternanza tra la visualizzazione a Griglia, con la possibilità di selezionare gli orologi preferiti, e la visualizzazione a Carosello.
 - Organizzazione Avanzata: Ricerca testuale, filtri per marca, preferiti, anno e prezzo, ordinamento e esportazione CSV dei risultati.
-- Scheda completa: Dotazione, garanzia e informazioni del centro assistenza per ogni orologio.
+- Scheda completa: Condizione da 1 a 10, dotazione, garanzia e informazioni del centro assistenza per ogni orologio.
 - Registro revisioni: Storico degli interventi con date, costi, fornitori e prossima scadenza.
-- Backup completo: Esportazione e ripristino incrementale di orologi, revisioni e immagini.
+- Promemoria revisioni: Avvisi per gli orologi prossimi alla revisione, eliminabili dalla schermata.
+- Backup completo: Esportazione e ripristino incrementale di orologi, revisioni, immagini e preferenze outfit.
 
-Il backup completo è un file JSON autonomo con le immagini incluse. Il ripristino unisce i dati: aggiorna i record con lo stesso identificativo di backup e lascia inalterati gli altri. Per usare dotazione, garanzia, revisioni e backup, applica la migrazione `supabase/migrations/20261022_watch_collection_extensions.sql` al progetto Supabase.
+Il backup completo è un file JSON autonomo con le immagini incluse. Il ripristino unisce i dati: aggiorna i record con lo stesso identificativo di backup e lascia inalterati gli altri. Per usare dotazione, garanzia, revisioni e backup, applica la migrazione `supabase/migrations/20261022_watch_collection_extensions.sql`; per condizione, occasioni d’uso e preferenze outfit applica anche le migrazioni `supabase/migrations/20261023_watch_condition_rating.sql` e `supabase/migrations/20261023_watch_outfit_preferences.sql`.
 
 ## 🧠 Funzioni Intelligenti e Interattive
 - Valore Totale: Calcolo in tempo reale del valore complessivo della collezione.
 - Orologio del Giorno: Selezione casuale di un orologio dalla collezione per suggerire cosa indossare.
-- Completa l'Outfit (Color Matching): Analisi del colore predominante di un'immagine caricata dall'utente (es. un outfit) e suggerimento degli orologi in collezione con il colore più simile.
+- Completa l'Outfit: Analisi visiva dell’immagine, filtri per occasione e colore, preferenze 👍/👎, confronto tra due orologi e preparazione guidata dei modelli senza analisi AI.
+- Statistiche collezione: Valore registrato, condizione media, dotazione, garanzia, distribuzione per marca e movimento, valutazioni e decenni di produzione.
 
 ## 🎧 Interfaccia Utente e Performance
 - Modalità Scuro/Chiaro: Toggle dinamico della Dark Mode.
@@ -54,12 +56,13 @@ Il backup completo è un file JSON autonomo con le immagini incluse. Il ripristi
 
 ## 📷 Screenshots
 
-(aggiungi qui immagini o GIF del progetto per mostrare UI, carosello, modalità scura, ecc.)
+Screenshot della versione aggiornata dell’applicazione:
 
-![Home](./screenshot/profile_white.png)
-![Watch](./screenshot/main.png)
-![Carosello](./screenshot/carousel.png)
-<!--*(Sostituisci i percorsi con le immagini effettive nella cartella docs/screenshots)*--->
+![Home](./screenshot/home.png)
+![Home in modalità scura](./screenshot/homeBlack.png)
+![Collezione](./screenshot/collection.png)
+![Dettaglio orologio](./screenshot/infoWatch.png)
+![Completa l’outfit](./screenshot/outfitMatch.png)
 
 ## 📈 Contributing
 
@@ -77,14 +80,27 @@ Linee guida rapide:
 
 ## 📍 Roadmap
 
+### Completato
+
 - [x] Selettore delle varie complicazioni
 - [x] Note aggiuntive per ogni orologio
-- [ ] Condizione dell'orologio (Scala 1-10)
+- [x] Condizione dell'orologio (scala 1-10)
 - [x] Dotazione: Scatola, documenti e accessori.
 - [x] Garanzia: Periodo e rivenditore o centro assistenza.
 - [x] Registro revisioni: Date, interventi, costi e prossima scadenza.
+- [x] Promemoria per le revisioni imminenti con possibilità di eliminare l’avviso.
 - [x] Backup e ripristino completo con immagini e unione dei dati.
 - [x] Filtri di ricerca avanzati per marca, prezzo, anno
+- [x] Suggerimenti outfit con filtri, feedback, confronto e gestione dei modelli non ancora analizzati.
+- [x] Schermata statistiche ampliata e responsive.
+
+### Prossimi sviluppi
+
+- [ ] Importazione CSV con anteprima, verifica dei campi e rilevamento dei duplicati.
+- [ ] Prezzo e data di acquisto per seguire nel tempo la spesa e il valore dichiarato della collezione.
+- [ ] Analisi dei costi di manutenzione per anno e per orologio.
+- [ ] Notifiche configurabili per scadenze di garanzia e prossime revisioni.
+- [ ] Archiviazione degli orologi venduti mantenendo consultabili scheda e manutenzioni.
 
 ## 👤 Contributors
 
