@@ -1432,7 +1432,7 @@ const BackgroundLayer = useMemo(() => {
                 onAddWatchToggle={toggleAddWatchForm}
                 isFormVisible={showForm}
                 baseItemSize={50}
-                magnification={70}
+                magnification={58}
               />
             )}
           </div>

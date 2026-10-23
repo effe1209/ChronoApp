@@ -17,7 +17,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     transform: 'translateX(6px)',
     '&.Mui-checked': {
       color: '#fff',
-      transform: 'translateX(22px)',
+      transform: 'translateX(26px)',
       
       // --- 1. COLORE PALLINO QUANDO È ATTIVO (NOTTE) ---
       '& .MuiSwitch-thumb': {

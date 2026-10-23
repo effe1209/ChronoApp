@@ -7,8 +7,8 @@ const Dock = ({
   onLogout, 
   onAddWatchToggle, 
   isFormVisible, 
-  baseItemSize = 50, 
-  magnification = 70
+  baseItemSize = 50,
+  magnification = 58,
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 600); 
@@ -32,19 +32,21 @@ const Dock = ({
     ? fullSystemItems.filter(item => item.label === 'AddWatch' || item.label === 'Logout')
     : fullSystemItems;
 
-  const handleMouseMove = useCallback((e) => {
-    if (!dockRef.current || isMobile) return; 
+  const handleMouseMove = useCallback((event) => {
+    if (!dockRef.current || isMobile) return;
+
     const dockRect = dockRef.current.getBoundingClientRect();
-    const mouseX = e.clientX - dockRect.left;
+    const mouseX = event.clientX - dockRect.left;
     const iconCenters = systemItems.map((_, index) => (baseItemSize * index) + (baseItemSize / 2));
-    const distances = iconCenters.map(center => Math.abs(center - mouseX));
+    const distances = iconCenters.map((center) => Math.abs(center - mouseX));
     setHoveredIndex(distances.indexOf(Math.min(...distances)));
-  }, [systemItems, baseItemSize, magnification, isMobile]); 
+  }, [systemItems, baseItemSize, isMobile]);
 
   const handleMouseLeave = useCallback(() => setHoveredIndex(null), []);
 
   const getItemSize = (index) => {
-    if (hoveredIndex === null || isMobile) return baseItemSize; 
+    if (hoveredIndex === null || isMobile) return baseItemSize;
+
     const distance = Math.abs(hoveredIndex - index);
     if (distance === 0) return magnification;
     if (distance === 1) return baseItemSize + (magnification - baseItemSize) * 0.5;
@@ -65,9 +67,9 @@ const Dock = ({
         if (item.label === 'Logout') isActive = false;
 
         const iconStyles = {
-          width: `${(isMobile ? baseItemSize : size) - 15}px`, 
-          height: `${(isMobile ? baseItemSize : size) - 15}px`,
-          transition: 'width 220ms cubic-bezier(0.2, 0.7, 0.2, 1), height 220ms cubic-bezier(0.2, 0.7, 0.2, 1)',
+          width: `${size - 15}px`,
+          height: `${size - 15}px`,
+          transition: 'width 180ms cubic-bezier(0.2, 0.7, 0.2, 1), height 180ms cubic-bezier(0.2, 0.7, 0.2, 1)',
         };
 
         return (

@@ -4176,7 +4176,7 @@ a:focus-visible,
 }
 
 .dock-menu__label {
-  margin-top: -2px;
+  margin-top: 3px;
   color: var(--ui-muted);
   font-family: var(--font-all-text);
   font-size: 9px;
@@ -4188,7 +4188,7 @@ a:focus-visible,
 }
 
 .dock-menu__item.is-profile .dock-menu__label {
-  margin-top: -1px;
+  margin-top: 3px;
   font-size: 10px;
   font-weight: 650;
   letter-spacing: 0.015em;
