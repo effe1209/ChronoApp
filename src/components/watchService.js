@@ -108,6 +108,7 @@ export const addWatchService = async (options) => {
       image: '',
       movement: '',
       color: '', // O il tuo colore default
+      occasions: [],
       isFavorite: false,
       money: '',
       features: [],

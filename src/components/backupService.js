@@ -1,9 +1,12 @@
 import { supabase } from './supabaseClient';
 
 const BACKUP_FORMAT = 'calibro-collection-backup';
-const BACKUP_VERSION = 1;
+const BACKUP_VERSION = 2;
+const OUTFIT_OCCASION_VALUES = ['all', 'casual', 'elegante', 'sportivo', 'sera'];
+const WATCH_OCCASION_VALUES = OUTFIT_OCCASION_VALUES.slice(1);
+const OUTFIT_COLOR_VALUES = ['all', 'black', 'silver', 'blue', 'green', 'gold', 'brown', 'orange', 'red', 'purple'];
 const WATCH_FIELDS = [
-  'name', 'brand', 'year', 'condition_rating', 'money', 'movement', 'color', 'note', 'isFavorite',
+  'name', 'brand', 'year', 'condition_rating', 'money', 'movement', 'color', 'occasions', 'note', 'isFavorite',
   'has_box', 'has_papers', 'accessories', 'has_warranty', 'warranty_start',
   'warranty_end', 'warranty_provider',
 ];
@@ -52,6 +55,7 @@ export const createFullBackup = async (userId) => {
 
   const watchIds = (watches || []).map((watch) => watch.id);
   let maintenance = [];
+  let outfitFeedback = [];
   if (watchIds.length > 0) {
     const { data, error } = await supabase
       .from('watch_maintenance')
@@ -60,6 +64,14 @@ export const createFullBackup = async (userId) => {
       .in('watch_id', watchIds);
     if (error) throw error;
     maintenance = data || [];
+
+    const { data: feedbackData, error: feedbackError } = await supabase
+      .from('watch_outfit_feedback')
+      .select('watch_id, occasion, color_family, feedback')
+      .eq('user_id', userId)
+      .in('watch_id', watchIds);
+    if (feedbackError) throw feedbackError;
+    outfitFeedback = feedbackData || [];
   }
 
   const backupWatches = await Promise.all((watches || []).map(async (watch) => {
@@ -89,6 +101,16 @@ export const createFullBackup = async (userId) => {
       fields: toPlainObject(entry, MAINTENANCE_FIELDS),
     };
   });
+  const backupOutfitFeedback = outfitFeedback.map((entry) => {
+    const watchBackupUid = watchBackupUidById.get(entry.watch_id);
+    if (!watchBackupUid) throw new Error('Una preferenza outfit non è collegata a un orologio incluso nel backup.');
+    return {
+      watch_backup_uid: watchBackupUid,
+      occasion: entry.occasion,
+      color_family: entry.color_family,
+      feedback: entry.feedback,
+    };
+  });
 
   return {
     format: BACKUP_FORMAT,
@@ -96,6 +118,7 @@ export const createFullBackup = async (userId) => {
     created_at: new Date().toISOString(),
     watches: backupWatches,
     maintenance: backupMaintenance,
+    outfit_feedback: backupOutfitFeedback,
   };
 };
 
@@ -110,7 +133,11 @@ export const downloadFullBackup = async (userId) => {
   link.click();
   link.remove();
   window.setTimeout(() => URL.revokeObjectURL(url), 0);
-  return { watches: backup.watches.length, maintenance: backup.maintenance.length };
+  return {
+    watches: backup.watches.length,
+    maintenance: backup.maintenance.length,
+    outfitFeedback: backup.outfit_feedback.length,
+  };
 };
 
 export const parseBackupFile = async (file) => {
@@ -120,11 +147,15 @@ export const parseBackupFile = async (file) => {
   } catch {
     throw new Error('Il file selezionato non contiene un JSON valido.');
   }
-  if (backup?.format !== BACKUP_FORMAT || backup?.version !== BACKUP_VERSION) {
+  if (backup?.format !== BACKUP_FORMAT || ![1, BACKUP_VERSION].includes(backup?.version)) {
     throw new Error('Formato o versione del backup non supportati.');
   }
   if (!Array.isArray(backup.watches) || !Array.isArray(backup.maintenance)) {
     throw new Error('Il backup non contiene gli elenchi di orologi e revisioni.');
+  }
+  if (backup.version === 1) backup.outfit_feedback = [];
+  if (!Array.isArray(backup.outfit_feedback)) {
+    throw new Error('Il backup contiene preferenze outfit non valide.');
   }
 
   const watchUids = new Set();
@@ -135,6 +166,11 @@ export const parseBackupFile = async (file) => {
     watchUids.add(watch.backup_uid);
     if (!watch.fields || typeof watch.fields !== 'object' || Array.isArray(watch.fields)) {
       throw new Error('Il backup contiene una scheda orologio non valida.');
+    }
+    if (watch.fields.occasions !== undefined
+      && (!Array.isArray(watch.fields.occasions)
+        || watch.fields.occasions.some((occasion) => !WATCH_OCCASION_VALUES.includes(occasion)))) {
+      throw new Error('Il backup contiene occasioni d’uso non valide.');
     }
     if (!Array.isArray(watch.features) || watch.features.some((name) => typeof name !== 'string')) {
       throw new Error('Il backup contiene caratteristiche non valide.');
@@ -156,6 +192,20 @@ export const parseBackupFile = async (file) => {
     if (!entry.fields || typeof entry.fields !== 'object' || Array.isArray(entry.fields)) {
       throw new Error('Il backup contiene una revisione non valida.');
     }
+  });
+  const outfitFeedbackKeys = new Set();
+  backup.outfit_feedback.forEach((entry) => {
+    if (!watchUids.has(entry?.watch_backup_uid)) {
+      throw new Error('Una preferenza outfit fa riferimento a un orologio assente dal backup.');
+    }
+    if (!OUTFIT_OCCASION_VALUES.includes(entry.occasion)
+      || !OUTFIT_COLOR_VALUES.includes(entry.color_family)
+      || ![-1, 1].includes(entry.feedback)) {
+      throw new Error('Il backup contiene una preferenza outfit non valida.');
+    }
+    const key = `${entry.watch_backup_uid}:${entry.occasion}:${entry.color_family}`;
+    if (outfitFeedbackKeys.has(key)) throw new Error('Il backup ripete una preferenza outfit.');
+    outfitFeedbackKeys.add(key);
   });
   return backup;
 };
@@ -190,6 +240,7 @@ export const restoreFullBackup = async (backup, userId) => {
     }
     rowsToUpsert.push({
       ...toPlainObject(watch.fields, WATCH_FIELDS),
+      occasions: Array.isArray(watch.fields.occasions) ? watch.fields.occasions : [],
       userid: userId,
       backup_uid: watch.backup_uid,
       image: imageUrl,
@@ -250,5 +301,28 @@ export const restoreFullBackup = async (backup, userId) => {
     if (error) throw error;
   }
 
-  return { watches: rowsToUpsert.length, maintenance: maintenanceRows.length };
+  const outfitFeedbackRows = (backup.outfit_feedback || []).map((entry) => {
+    const watchId = watchIdByBackupUid.get(entry.watch_backup_uid);
+    if (!watchId) throw new Error('Non è stato possibile collegare una preferenza outfit al relativo orologio.');
+    return {
+      user_id: userId,
+      watch_id: watchId,
+      occasion: entry.occasion,
+      color_family: entry.color_family,
+      feedback: entry.feedback,
+      updated_at: new Date().toISOString(),
+    };
+  });
+  if (outfitFeedbackRows.length) {
+    const { error } = await supabase
+      .from('watch_outfit_feedback')
+      .upsert(outfitFeedbackRows, { onConflict: 'user_id,watch_id,occasion,color_family' });
+    if (error) throw error;
+  }
+
+  return {
+    watches: rowsToUpsert.length,
+    maintenance: maintenanceRows.length,
+    outfitFeedback: outfitFeedbackRows.length,
+  };
 };

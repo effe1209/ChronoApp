@@ -1,6 +1,7 @@
 import React from 'react';
 import FeatureCheckboxList from './FeatureCheckboxList'; // Importa il nuovo componente
 import Stepper, { Step } from './Stepper';
+import WatchOccasionSelector from './WatchOccasionSelector';
 
 
 // Questo è solo il Form per aggiungere un orologio
@@ -163,6 +164,11 @@ const AddWatchForm = ({
               </div>
             </div>
           </div>
+          <WatchOccasionSelector
+            idPrefix="add-watch-occasion"
+            value={newWatch.occasions}
+            onChange={(occasions) => setNewWatch({ ...newWatch, occasions })}
+          />
         </Step>
         
       

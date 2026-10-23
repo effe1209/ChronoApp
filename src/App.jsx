@@ -32,6 +32,7 @@ import OutfitModal from './components/OutfitModal';
 import ModifyWatchModal from './components/ModifyWatchModal';
 import InfoWatchModal from './components/InfoWatchModal';
 import StatsModal from './components/StatsModal';
+import { matchesOutfitFilters } from './components/outfitPreferences';
 
 // Stili (invariati)
 import 'swiper/css';
@@ -57,6 +58,12 @@ function App() {
   const [watches, setWatches] = useState([]);
   const [maintenanceRefreshKey, setMaintenanceRefreshKey] = useState(0);
   const [watchConsigliati, setWatchConsigliati] = useState([]);
+  const [outfitOccasion, setOutfitOccasion] = useState('all');
+  const [outfitColorFamily, setOutfitColorFamily] = useState('all');
+  const [outfitFeedbackByWatch, setOutfitFeedbackByWatch] = useState({});
+  const [outfitFeedbackMessage, setOutfitFeedbackMessage] = useState('');
+  const [isRebuildingOutfit, setIsRebuildingOutfit] = useState(false);
+  const [outfitRebuildProgress, setOutfitRebuildProgress] = useState('');
   const [featuresLoading, setFeaturesLoading] = useState(false);
   const [featuresError, setFeaturesError] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -69,6 +76,7 @@ function App() {
     image: "",
     movement: "",
     color: "",
+    occasions: [],
     isFavorite: false,
     money: null,
     features: [],
@@ -97,6 +105,7 @@ function App() {
     condition_rating: null,
     movement: '',
     color: '',
+    occasions: [],
     image: '', 
     isFavorite: false,
     money: null,
@@ -563,7 +572,7 @@ const fetchWatches = async (userid) => {
     setMessage('Preparazione del backup completo…');
     try {
       const counts = await downloadFullBackup(user.id);
-      setMessage(`Backup scaricato: ${counts.watches} orologi e ${counts.maintenance} revisioni, immagini incluse.`);
+      setMessage(`Backup scaricato: ${counts.watches} orologi, ${counts.maintenance} revisioni e ${counts.outfitFeedback} preferenze outfit, immagini incluse.`);
     } catch (error) {
       console.error('Errore durante la creazione del backup:', error);
       setMessage(`Backup non riuscito: ${error.message}`);
@@ -581,7 +590,7 @@ const fetchWatches = async (userid) => {
       const backup = await parseBackupFile(file);
       const photos = backup.watches.filter((watch) => watch.image?.dataUrl).length;
       const shouldRestore = window.confirm(
-        `Il backup contiene ${backup.watches.length} orologi, ${backup.maintenance.length} revisioni e ${photos} immagini.\n\n` +
+        `Il backup contiene ${backup.watches.length} orologi, ${backup.maintenance.length} revisioni, ${backup.outfit_feedback.length} preferenze outfit e ${photos} immagini.\n\n` +
         'I dati saranno uniti alla collezione: gli orologi e le revisioni con lo stesso identificativo di backup verranno aggiornati; gli altri dati presenti resteranno invariati. Continuare?'
       );
       if (!shouldRestore) {
@@ -592,7 +601,7 @@ const fetchWatches = async (userid) => {
       const counts = await restoreFullBackup(backup, user.id);
       const refreshed = await fetchWatches(user.id);
       if (!refreshed) throw new Error('Dati ripristinati, ma la lista non si è aggiornata. Ricarica la pagina.');
-      setMessage(`Ripristino completato: ${counts.watches} orologi e ${counts.maintenance} revisioni uniti alla collezione.`);
+      setMessage(`Ripristino completato: ${counts.watches} orologi, ${counts.maintenance} revisioni e ${counts.outfitFeedback} preferenze outfit uniti alla collezione.`);
     } catch (error) {
       console.error('Errore durante il ripristino del backup:', error);
       setMessage(`Ripristino non riuscito: ${error.message} Se il salvataggio era già iniziato, puoi importare di nuovo lo stesso file: i record riconosciuti verranno aggiornati senza duplicarli.`);
@@ -605,6 +614,7 @@ const fetchWatches = async (userid) => {
   const handleCancel = () => {
    setNewWatch({ 
       name: "", brand: "", year: "", image: "", movement: "", color: "",
+      occasions: [],
       condition_rating: null,
       features: [], isFavorite: false, money: null, note: "",
       has_box: false, has_papers: false, accessories: '', has_warranty: false,
@@ -668,6 +678,7 @@ const fetchWatches = async (userid) => {
       condition_rating: watchToModify.condition_rating ?? null,
       movement: watchToModify.movement,
       color: watchToModify.color || '',
+      occasions: Array.isArray(watchToModify.occasions) ? watchToModify.occasions : [],
       image: watchToModify.image || watchToModify.imageUrl || '',
       imageUrl: getImageUrl(watchToModify.image || watchToModify.imageUrl),
       isFavorite: watchToModify.isFavorite,
@@ -915,6 +926,7 @@ const handleImageUpload = async (event) => {
 
   setLoading(true);
   setMessage('Ottimizzo la foto per l’analisi…');
+  setOutfitFeedbackMessage('');
   
   try {
     let compressionProgress = -1;
@@ -939,39 +951,55 @@ const handleImageUpload = async (event) => {
     const { data: matchedWatches, error } = await supabase.rpc('match_watches', {
       query_embedding: vector, 
       match_threshold: 0.1, 
-      match_count: 5        
+      match_count: Math.max(watches.length, 1),
     });
 
     if (error) throw error;
 
     if (matchedWatches && matchedWatches.length > 0) {
-      
-      // --- MODIFICA QUI ---
-      const formattedWatches = matchedWatches.map(w => {
-        const collectionWatch = watches.find((item) => String(item.id) === String(w.id));
-        let finalImageUrl = w.image;
-
-        // CONTROLLO INTELLIGENTE:
-        // Se inizia con 'http', è già un link valido, non toccarlo.
-        if (w.image && w.image.startsWith('http')) {
-           finalImageUrl = w.image;
-        } 
-        // Altrimenti usa la funzione helper per calcolarlo
-        else {
-           finalImageUrl = getPublicUrl(w.image);
-        }
+      const formattedWatches = matchedWatches.map((watchMatch) => {
+        const collectionWatch = watches.find((watch) => String(watch.id) === String(watchMatch.id));
+        const image = watchMatch.image || collectionWatch?.image;
+        const finalImageUrl = image?.startsWith('http') ? image : getPublicUrl(image);
 
         return {
           ...collectionWatch,
-          ...w,
-          imageUrl: finalImageUrl 
+          ...watchMatch,
+          imageUrl: finalImageUrl,
         };
       });
-      // --------------------
+      const filteredWatches = formattedWatches.filter((watch) => (
+        matchesOutfitFilters(watch, outfitOccasion, outfitColorFamily)
+      ));
 
-      setWatchConsigliati(formattedWatches);
+      if (filteredWatches.length === 0) {
+        setOutfitFeedbackByWatch({});
+        setMessage('Non trovo orologi con questi filtri. Aggiungi l’occasione d’uso nelle schede o scegli un altro colore.');
+        return;
+      }
+
+      const { data: savedFeedback, error: feedbackError } = await supabase
+        .from('watch_outfit_feedback')
+        .select('watch_id, feedback')
+        .eq('user_id', user.id)
+        .eq('occasion', outfitOccasion)
+        .eq('color_family', outfitColorFamily)
+        .in('watch_id', filteredWatches.map((watch) => watch.id));
+
+      if (feedbackError) console.error('Impossibile caricare le preferenze outfit:', feedbackError);
+      const feedbackMap = Object.fromEntries(
+        (savedFeedback || []).map((entry) => [String(entry.watch_id), entry.feedback])
+      );
+      setOutfitFeedbackByWatch(feedbackMap);
+      setWatchConsigliati(
+        filteredWatches
+          .sort((first, second) => (
+            (feedbackMap[String(second.id)] || 0) - (feedbackMap[String(first.id)] || 0)
+          ))
+          .slice(0, 8)
+      );
       setIsCarouselVisible(true);
-      setMessage("Ecco gli orologi che l'AI ha selezionato per te.");
+      setMessage('Ecco gli abbinamenti dalla tua collezione.');
     } else {
       setMessage("Non ho trovato un abbinamento convincente. Prova una foto più nitida, con l’outfit ben visibile.");
     }
@@ -983,6 +1011,32 @@ const handleImageUpload = async (event) => {
     setLoading(false);
     if (fileInputRefOutfit.current) fileInputRefOutfit.current.value = "";
   }
+};
+
+const handleOutfitFeedback = async (watchId, feedback) => {
+  const feedbackRow = {
+    user_id: user.id,
+    watch_id: watchId,
+    occasion: outfitOccasion,
+    color_family: outfitColorFamily,
+    feedback,
+    updated_at: new Date().toISOString(),
+  };
+
+  const { error } = await supabase
+    .from('watch_outfit_feedback')
+    .upsert(feedbackRow, { onConflict: 'user_id,watch_id,occasion,color_family' });
+
+  if (error) {
+    console.error('Impossibile salvare il feedback outfit:', error);
+    setOutfitFeedbackMessage('Non sono riuscito a salvare il voto. Riprova.');
+    return;
+  }
+
+  setOutfitFeedbackByWatch((current) => ({ ...current, [String(watchId)]: feedback }));
+  setOutfitFeedbackMessage(feedback === 1
+    ? 'Preferenza salvata: terrò questo orologio più in alto con gli stessi filtri.'
+    : 'Preferenza salvata: abbasserò questo orologio nei prossimi abbinamenti.');
 };
 
 // Aggiungilo in cima ad App.jsx o in un file separato
@@ -1001,79 +1055,64 @@ const LoadingModal = ({ message }) => {
 
 // Modifica questa funzione in App.jsx
 const updateAllWatchEmbeddings = async () => {
+  if (!user || isRebuildingOutfit || loading) return;
+  setIsRebuildingOutfit(true);
   setLoading(true);
-  setMessage("Sto calcolando i vettori AI... Apri la console (F12).");
-  
-  const { data: allWatches } = await supabase
-    .from('watches')
-    .select('id, name, image')
-    .not('image', 'is', null);
-
-  if (!allWatches) {
-      setLoading(false);
-      return;
-  }
-
+  setOutfitRebuildProgress('Preparo il ricalcolo degli orologi…');
   let successCount = 0;
   let failCount = 0;
+  try {
+    const { data: allWatches, error: watchesError } = await supabase
+      .from('watches')
+      .select('id, name, image')
+      .not('image', 'is', null);
+    if (watchesError) throw watchesError;
 
-  for (const watch of allWatches) {
-    try {
-       let publicUrl = watch.image;
-
-       // --- FIX CRUCIALE ---
-       // Controllo intelligente: Se inizia già con http/https, è un URL completo.
-       // Non dobbiamo usare getPublicUrl, altrimenti lo raddoppia.
-       if (watch.image.startsWith('http')) {
-           publicUrl = watch.image;
-       } else {
-           // Se è un percorso relativo, puliamo e generiamo l'URL
-           let cleanPath = watch.image;
-           if (cleanPath.startsWith('fotoWatch/')) {
-               cleanPath = cleanPath.replace('fotoWatch/', '');
-           }
-           const { data } = supabase.storage.from("fotoWatch").getPublicUrl(cleanPath);
-           publicUrl = data.publicUrl;
-       }
-
-       console.log(`Processing ${watch.name}: ${publicUrl}`);
-
-       const imgRes = await fetch(publicUrl);
-       if (!imgRes.ok) {
-           console.error(`Errore download ${watch.name} (Status: ${imgRes.status}) - URL: ${publicUrl}`);
-           failCount++;
-           continue; 
-       }
-
-       const blob = await imgRes.blob();
-       
-       if (blob.size < 100 || !blob.type.startsWith('image/')) {
-            console.error(`File non valido per ${watch.name}: ${blob.type}`);
-            failCount++;
-            continue;
-       }
-
-       const vector = await getOutfitEmbedding(blob);
-       
-       if (vector) {
-         await supabase
-           .from('watches')
-           .update({ embedding: vector })
-           .eq('id', watch.id);
-         successCount++;
-         console.log(`✅ Vettorizzato: ${watch.name}`);
-       } else {
-           failCount++;
-       }
-
-    } catch (e) {
-       console.error(`Errore su ${watch.name}`, e);
-       failCount++;
+    if (!allWatches?.length) {
+      setOutfitRebuildProgress('Non ci sono immagini da preparare.');
+      setMessage('Non ci sono immagini da preparare per gli abbinamenti outfit.');
+      return;
     }
+
+    for (let index = 0; index < allWatches.length; index += 1) {
+      const watch = allWatches[index];
+      const progressMessage = `Ricalcolo ${index + 1}/${allWatches.length}: ${watch.name}…`;
+      setOutfitRebuildProgress(progressMessage);
+      setMessage(progressMessage);
+      try {
+        const imageUrl = getImageUrl(watch.image);
+        const imageResponse = await fetch(imageUrl);
+        if (!imageResponse.ok) throw new Error(`Download foto non riuscito (${imageResponse.status}).`);
+        const imageBlob = await imageResponse.blob();
+        if (imageBlob.size < 100 || !imageBlob.type.startsWith('image/')) {
+          throw new Error('Il file non è un’immagine valida.');
+        }
+
+        const embedding = await getOptimizedOutfitEmbedding(imageBlob);
+        const { error: updateError } = await supabase
+          .from('watches')
+          .update({ embedding })
+          .eq('id', watch.id);
+        if (updateError) throw updateError;
+        successCount += 1;
+      } catch (error) {
+        console.error(`Errore nel ricalcolo di ${watch.name}:`, error);
+        failCount += 1;
+      }
+    }
+
+    const refreshed = await fetchWatches(user.id);
+    const summaryMessage = `Completato: ${successCount} orologi pronti${failCount ? `, ${failCount} non riusciti` : ''}${refreshed ? '.' : '. Ricarica la pagina per aggiornare la lista.'}`;
+    setOutfitRebuildProgress(summaryMessage);
+    setMessage(`Abbinamenti aggiornati: ${summaryMessage}`);
+  } catch (error) {
+    console.error('Errore nel ricalcolo degli abbinamenti outfit:', error);
+    setOutfitRebuildProgress(`Ricalcolo non riuscito: ${error.message}`);
+    setMessage(`Ricalcolo non riuscito: ${error.message}`);
+  } finally {
+    setLoading(false);
+    setIsRebuildingOutfit(false);
   }
-  
-  setLoading(false);
-  setMessage(`Finito! Successi: ${successCount}, Errori: ${failCount}.`);
 };
 
  const rgbToHex = (r, g, b) => {
@@ -1557,6 +1596,13 @@ const BackgroundLayer = useMemo(() => {
               onDayWatchClick={() => handleDayWatch(user.id)}
               onOutfitImageChange={handleImageUpload}
               fileInputRefOutfit={fileInputRefOutfit}
+              outfitOccasion={outfitOccasion}
+              setOutfitOccasion={setOutfitOccasion}
+              outfitColorFamily={outfitColorFamily}
+              setOutfitColorFamily={setOutfitColorFamily}
+              onRebuildOutfitEmbeddings={updateAllWatchEmbeddings}
+              isRebuildingOutfit={isRebuildingOutfit}
+              outfitRebuildProgress={outfitRebuildProgress}
             />
           </div>
 
@@ -1564,6 +1610,11 @@ const BackgroundLayer = useMemo(() => {
             key={watchConsigliati.map((watch) => watch.id).join('-')}
             isVisible={isCarouselVisible}
             watchConsigliati={watchConsigliati}
+            occasion={outfitOccasion}
+            colorFamily={outfitColorFamily}
+            feedbackByWatch={outfitFeedbackByWatch}
+            feedbackMessage={outfitFeedbackMessage}
+            onFeedback={handleOutfitFeedback}
             onClose={() => {
               setIsCarouselVisible(false);
               if(fileInputRefOutfit.current) fileInputRefOutfit.current.value = "";
@@ -1646,7 +1697,6 @@ const BackgroundLayer = useMemo(() => {
             watches={watches} // Passa la lista completa degli orologi
             handleFavoriteToggle={handleFavoriteToggle}
           />
-          {/* <button onClick={updateAllWatchEmbeddings}>AGGIORNA AI DB</button> */}
     </div>
     </>
   );

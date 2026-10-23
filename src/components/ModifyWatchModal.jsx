@@ -1,5 +1,6 @@
 import React from 'react';
 import FeatureCheckboxList from './FeatureCheckboxList'; // Riutilizza il componente
+import WatchOccasionSelector from './WatchOccasionSelector';
 
 // Il modale di Modifica, che è un form complesso
 const ModifyWatchModal = ({
@@ -135,6 +136,14 @@ const ModifyWatchModal = ({
               />
               {updatedWatch.color && <p className="selected-color">Colore selezionato: {updatedWatch.color}</p>}
             </div>
+          </div>
+
+          <div className="modify-watch-field modify-watch-field--wide">
+            <WatchOccasionSelector
+              idPrefix="modify-watch-occasion"
+              value={updatedWatch.occasions}
+              onChange={(occasions) => setUpdatedWatch({ ...updatedWatch, occasions })}
+            />
           </div>
 
           <div className="upload-container modify-watch-field modify-watch-field--wide">

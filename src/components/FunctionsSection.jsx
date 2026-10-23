@@ -1,7 +1,19 @@
 import React from 'react';
+import { OUTFIT_COLOR_FAMILIES, OUTFIT_OCCASIONS } from './outfitPreferences';
 
 // Raggruppa i bottoni delle "Funzioni"
-const FunctionsSection = ({ onDayWatchClick, onOutfitImageChange, fileInputRefOutfit }) => {
+const FunctionsSection = ({
+  onDayWatchClick,
+  onOutfitImageChange,
+  fileInputRefOutfit,
+  outfitOccasion,
+  setOutfitOccasion,
+  outfitColorFamily,
+  setOutfitColorFamily,
+  onRebuildOutfitEmbeddings,
+  isRebuildingOutfit,
+  outfitRebuildProgress,
+}) => {
   return (
     <div className="functionButton">
       <article className="function-card function-card--daily">
@@ -27,6 +39,28 @@ const FunctionsSection = ({ onDayWatchClick, onOutfitImageChange, fileInputRefOu
           <p>Carica una foto nitida dell’outfit: cercherò gli abbinamenti nella tua collezione.</p>
         </div>
 
+        <div className="outfit-preferences">
+          <label>
+            <span>Occasione</span>
+            <select value={outfitOccasion} onChange={(event) => setOutfitOccasion(event.target.value)}>
+              <option value="all">Tutte le occasioni</option>
+              {OUTFIT_OCCASIONS.map(({ value, label }) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span>Colore dell’orologio</span>
+            <select value={outfitColorFamily} onChange={(event) => setOutfitColorFamily(event.target.value)}>
+              <option value="all">Tutti i colori</option>
+              {OUTFIT_COLOR_FAMILIES.map(({ value, label }) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </select>
+          </label>
+          <p className="outfit-preferences__help">Per filtrare per occasione, assegna i tag d’uso nelle schede degli orologi.</p>
+        </div>
+
         <input
           type="file"
           accept="image/*"
@@ -48,6 +82,15 @@ const FunctionsSection = ({ onDayWatchClick, onOutfitImageChange, fileInputRefOu
           <span>Carica una foto</span>
           <span className="function-card__arrow" aria-hidden="true">↗</span>
         </button>
+        <button
+          type="button"
+          className="outfit-rebuild-button"
+          onClick={onRebuildOutfitEmbeddings}
+          disabled={isRebuildingOutfit}
+        >
+          {isRebuildingOutfit ? 'Ricalcolo in corso…' : 'Aggiorna gli orologi già in collezione'}
+        </button>
+        {outfitRebuildProgress && <p className="outfit-rebuild-progress" role="status">{outfitRebuildProgress}</p>}
       </article>
     </div>
   );
