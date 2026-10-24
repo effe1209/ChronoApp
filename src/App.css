@@ -6004,8 +6004,8 @@ a:focus-visible,
 }
 
 .add-watch-heading > p:last-child {
-  max-width: 620px;
-  margin-top: 10px;
+  width: min(100%, 620px);
+  margin: 10px auto 0;
   color: var(--ui-muted);
   font-size: 0.98rem;
   line-height: 1.55;
