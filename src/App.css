@@ -4403,6 +4403,7 @@ a:focus-visible,
   font-weight: 650;
   letter-spacing: -0.055em;
   line-height: 1.1;
+  text-align: left;
 }
 
 .statistics-heading p {
@@ -8352,6 +8353,14 @@ a:focus-visible,
   border-color: color-mix(in srgb, var(--ui-accent) 55%, var(--ui-border));
 }
 
+.add-watch-form .watch-occasion-selector__options label:hover:not(.is-selected),
+.add-watch-form .watch-equipment-fields .watch-equipment-check:hover:not(.is-selected),
+.add-watch-form .details-menu .checkbox-label:hover:not(.selected) {
+  border-color: color-mix(in srgb, var(--ui-accent) 55%, var(--ui-border));
+  background: var(--ui-surface);
+  color: var(--ui-text);
+}
+
 .watch-occasion-selector__options label.is-selected,
 .watch-equipment-fields .watch-equipment-check.is-selected,
 .notification-settings__option:has(input[type="checkbox"]:checked),
@@ -8368,6 +8377,17 @@ a:focus-visible,
 
 .dark-mode .details-menu .checkbox-label.selected {
   color: #18232a;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .add-watch-form .watch-occasion-selector__options label:hover:not(.is-selected),
+  .add-watch-form .watch-equipment-fields .watch-equipment-check:hover:not(.is-selected),
+  .add-watch-form .details-menu .checkbox-label:hover:not(.selected) {
+    border-color: var(--ui-border);
+    background: var(--ui-surface);
+    color: var(--ui-text);
+    transition: none;
+  }
 }
 
 .watch-occasion-selector__options input[type="checkbox"],
