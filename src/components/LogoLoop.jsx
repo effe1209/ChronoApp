@@ -56,7 +56,7 @@ const useImageLoader = (seqRef, onLoad, dependencies) => {
   }, [onLoad, seqRef, dependencies]);
 };
 
-const useAnimationLoop = (trackRef, targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical) => {
+const useAnimationLoop = (trackRef, containerRef, targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical, enabled) => {
   const rafRef = useRef(null);
   const lastTimestampRef = useRef(null);
   const offsetRef = useRef(0);
@@ -67,6 +67,11 @@ const useAnimationLoop = (trackRef, targetVelocity, seqWidth, seqHeight, isHover
     if (!track) return;
 
     const seqSize = isVertical ? seqHeight : seqWidth;
+    if (!enabled) {
+      offsetRef.current = 0;
+      track.style.transform = 'translate3d(0, 0, 0)';
+      return;
+    }
 
     if (seqSize > 0) {
       offsetRef.current = ((offsetRef.current % seqSize) + seqSize) % seqSize;
@@ -76,7 +81,27 @@ const useAnimationLoop = (trackRef, targetVelocity, seqWidth, seqHeight, isHover
       track.style.transform = transformValue;
     }
 
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let isInViewport = typeof IntersectionObserver === 'undefined';
+
+    const shouldAnimate = () => (
+      document.visibilityState === 'visible'
+      && isInViewport
+      && !reducedMotionQuery.matches
+    );
+
+    const stopAnimation = () => {
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      lastTimestampRef.current = null;
+    };
+
     const animate = timestamp => {
+      rafRef.current = null;
+      if (!shouldAnimate()) return;
+
       if (lastTimestampRef.current === null) {
         lastTimestampRef.current = timestamp;
       }
@@ -103,16 +128,46 @@ const useAnimationLoop = (trackRef, targetVelocity, seqWidth, seqHeight, isHover
       rafRef.current = requestAnimationFrame(animate);
     };
 
-    rafRef.current = requestAnimationFrame(animate);
+    const syncAnimation = () => {
+      if (shouldAnimate()) {
+        if (rafRef.current === null) {
+          lastTimestampRef.current = null;
+          rafRef.current = requestAnimationFrame(animate);
+        }
+      } else {
+        stopAnimation();
+      }
+    };
+
+    const intersectionObserver = typeof IntersectionObserver === 'undefined'
+      ? null
+      : new IntersectionObserver(([entry]) => {
+        isInViewport = entry.isIntersecting;
+        syncAnimation();
+      });
+    if (intersectionObserver && containerRef.current) {
+      intersectionObserver.observe(containerRef.current);
+    }
+
+    document.addEventListener('visibilitychange', syncAnimation);
+    if (reducedMotionQuery.addEventListener) {
+      reducedMotionQuery.addEventListener('change', syncAnimation);
+    } else {
+      reducedMotionQuery.addListener(syncAnimation);
+    }
+    syncAnimation();
 
     return () => {
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
+      stopAnimation();
+      intersectionObserver?.disconnect();
+      document.removeEventListener('visibilitychange', syncAnimation);
+      if (reducedMotionQuery.removeEventListener) {
+        reducedMotionQuery.removeEventListener('change', syncAnimation);
+      } else {
+        reducedMotionQuery.removeListener(syncAnimation);
       }
-      lastTimestampRef.current = null;
     };
-  }, [targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical, trackRef]);
+  }, [targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical, trackRef, containerRef, enabled]);
 };
 
 export const LogoLoop = memo(
@@ -131,7 +186,8 @@ export const LogoLoop = memo(
     renderItem,
     ariaLabel = 'Partner logos',
     className,
-    style
+    style,
+    enabled = true
   }) => {
     const containerRef = useRef(null);
     const trackRef = useRef(null);
@@ -178,21 +234,31 @@ export const LogoLoop = memo(
         if (sequenceHeight > 0) {
           setSeqHeight(Math.ceil(sequenceHeight));
           const viewport = containerRef.current?.clientHeight ?? parentHeight ?? sequenceHeight;
-          const copiesNeeded = Math.ceil(viewport / sequenceHeight) + ANIMATION_CONFIG.COPY_HEADROOM;
-          setCopyCount(Math.max(ANIMATION_CONFIG.MIN_COPIES, copiesNeeded));
+          const copiesNeeded = enabled
+            ? Math.ceil(viewport / sequenceHeight) + ANIMATION_CONFIG.COPY_HEADROOM
+            : 1;
+          setCopyCount(enabled ? Math.max(ANIMATION_CONFIG.MIN_COPIES, copiesNeeded) : 1);
         }
-      } else if (sequenceWidth > 0) {
-        setSeqWidth(Math.ceil(sequenceWidth));
-        const copiesNeeded = Math.ceil(containerWidth / sequenceWidth) + ANIMATION_CONFIG.COPY_HEADROOM;
-        setCopyCount(Math.max(ANIMATION_CONFIG.MIN_COPIES, copiesNeeded));
-      }
-    }, [isVertical]);
+        } else if (sequenceWidth > 0) {
+          setSeqWidth(Math.ceil(sequenceWidth));
+          const copiesNeeded = enabled
+            ? Math.ceil(containerWidth / sequenceWidth) + ANIMATION_CONFIG.COPY_HEADROOM
+            : 1;
+          setCopyCount(enabled ? Math.max(ANIMATION_CONFIG.MIN_COPIES, copiesNeeded) : 1);
+        }
+    }, [isVertical, enabled]);
 
-    useResizeObserver(updateDimensions, [containerRef, seqRef], [logos, gap, logoHeight, isVertical]);
+    const observedElements = useMemo(() => [containerRef, seqRef], []);
+    const observedDependencies = useMemo(
+      () => [logos, gap, logoHeight, isVertical, enabled],
+      [logos, gap, logoHeight, isVertical, enabled]
+    );
 
-    useImageLoader(seqRef, updateDimensions, [logos, gap, logoHeight, isVertical]);
+    useResizeObserver(updateDimensions, observedElements, observedDependencies);
 
-    useAnimationLoop(trackRef, targetVelocity, seqWidth, seqHeight, isHovered, effectiveHoverSpeed, isVertical);
+    useImageLoader(seqRef, updateDimensions, observedDependencies);
+
+    useAnimationLoop(trackRef, containerRef, targetVelocity, seqWidth, seqHeight, isHovered, effectiveHoverSpeed, isVertical, enabled);
 
     const cssVariables = useMemo(
       () => ({
@@ -208,13 +274,14 @@ export const LogoLoop = memo(
         [
           'logoloop',
           isVertical ? 'logoloop--vertical' : 'logoloop--horizontal',
+          !enabled && 'logoloop--paused',
           fadeOut && 'logoloop--fade',
           scaleOnHover && 'logoloop--scale-hover',
           className
         ]
           .filter(Boolean)
           .join(' '),
-      [isVertical, fadeOut, scaleOnHover, className]
+      [isVertical, enabled, fadeOut, scaleOnHover, className]
     );
 
     const handleMouseEnter = useCallback(() => {

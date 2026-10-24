@@ -1401,12 +1401,14 @@ const BackgroundLayer = useMemo(() => {
     >
       <SpeedInsights/>
       <div className="hero-account-backdrop">
-        <div className="hero-account-video-mask" aria-hidden="true">
-          <video className="hero-account-video" autoPlay loop muted playsInline preload="auto" tabIndex={-1}>
-            <source src={`${import.meta.env.BASE_URL}w7-optimized.mp4`} type="video/mp4" />
-            <source src={`${import.meta.env.BASE_URL}w7.webm`} type="video/webm" />
-          </video>
-        </div>
+        {!isCompactViewport && (
+          <div className="hero-account-video-mask" aria-hidden="true">
+            <video className="hero-account-video" autoPlay loop muted playsInline preload="auto" tabIndex={-1}>
+              <source src={`${import.meta.env.BASE_URL}w7-optimized.mp4`} type="video/mp4" />
+              <source src={`${import.meta.env.BASE_URL}w7.webm`} type="video/webm" />
+            </video>
+          </div>
+        )}
         <div className="hero-account-content">
       <div id="home-section" className="hero-section">
         <figure className={`hero-watch${isDark ? ' is-dark' : ''}`}>
@@ -1505,6 +1507,7 @@ const BackgroundLayer = useMemo(() => {
           logoHeight={20}
           gap={24}
           pauseOnHover={false}
+          enabled={!isCompactViewport}
           ariaLabel="Marchi di orologi"
           renderItem={(brand, itemKey) => {
             const isHovered = hoveredBrand?.itemKey === itemKey;
