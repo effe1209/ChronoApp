@@ -5961,12 +5961,14 @@ a:focus-visible,
 
 /* Form guidato per aggiungere un orologio */
 .add-watch-section {
+  box-sizing: border-box;
   width: min(100%, 1040px);
   margin: clamp(36px, 6vw, 68px) auto 0;
   scroll-margin-top: 24px;
 }
 
 .add-watch-heading {
+  box-sizing: border-box;
   margin: 0 0 20px;
   text-align: left;
 }
@@ -6005,13 +6007,14 @@ a:focus-visible,
 
 .add-watch-heading > p:last-child {
   width: min(100%, 620px);
-  margin: 10px auto 0;
+  margin: 10px 0 0;
   color: var(--ui-muted);
   font-size: 0.98rem;
   line-height: 1.55;
 }
 
 .add-watch-section .add-watch-form {
+  box-sizing: border-box;
   width: 100%;
   max-width: none;
   margin: 0;
