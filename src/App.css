@@ -6000,6 +6000,7 @@ a:focus-visible,
   font-weight: 600;
   letter-spacing: -0.055em;
   line-height: 1.08;
+  text-align: left;
 }
 
 .add-watch-heading > p:last-child {
