@@ -3350,11 +3350,10 @@ body.dark-mode {
   background: var(--ui-surface-strong);
   color: var(--ui-text);
   box-shadow: 0 12px 36px rgba(30, 55, 72, 0.07), inset 0 1px rgba(255, 255, 255, 0.56);
-  transition: transform 240ms cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 240ms ease, border-color 240ms ease;
+  transition: box-shadow 240ms ease, border-color 240ms ease;
 }
 
 .watch-card:hover {
-  transform: translateY(-4px);
   border-color: color-mix(in srgb, var(--ui-accent) 24%, var(--ui-border));
   box-shadow: 0 20px 46px rgba(30, 55, 72, 0.12), inset 0 1px rgba(255, 255, 255, 0.7);
 }
