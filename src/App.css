@@ -8379,6 +8379,12 @@ a:focus-visible,
   color: #18232a;
 }
 
+.add-watch-form .details-menu .checkbox-label.selected {
+  border-color: var(--ui-accent);
+  background: var(--ui-accent-soft);
+  color: var(--ui-text);
+}
+
 @media (hover: none), (pointer: coarse) {
   .add-watch-form .watch-occasion-selector__options label:hover:not(.is-selected),
   .add-watch-form .watch-equipment-fields .watch-equipment-check:hover:not(.is-selected),
